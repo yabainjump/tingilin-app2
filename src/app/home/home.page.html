@@ -1,20 +1,286 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="home">
+  <div class="container">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <!-- Sticky Header -->
+    <div class="header">
+      <div class="header-row">
+        <div class="user">
+          <div class="avatar-wrap">
+            <div
+              class="avatar"
+              style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuBzRQUrMAIROJfXvS1DFKRVdsLcYqSxlk5B0-ZUDjLvR9MVxN8w0P4elx6a8wW7NaclXAorE1txEDxPGywQNSdUWpOTYAL0DuugOi_QmgwBmM8rrFTu_dPCJfp7sPAw-EeTsy86rhmaqTUAng3Z2ZByWek7V66dSuk0q7P9d4Rbywh2rS2xwIfz2zKlcHstHKpWa5gg638gneAZ5QMy_h89v_T3H0At2QBqkN6YY0kDC0AUoboUPXVjSLFw2vdFKTeigMWNc4UxKog')"
+            ></div>
+            <div class="online-dot"></div>
+          </div>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+          <div class="user-meta">
+            <div class="welcome">Welcome back,</div>
+            <div class="name">Alex Johnson</div>
+          </div>
+        </div>
+
+        <div class="right">
+          <div class="wallet">
+            <span class="material-symbols-outlined wallet-ico">account_balance_wallet</span>
+            <span class="wallet-amt">2,500 F</span>
+          </div>
+
+          <button class="notif" type="button" aria-label="Notifications">
+            <span class="material-symbols-outlined">notifications</span>
+            <span class="notif-dot"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Category Chips -->
+      <div class="chips hide-scroll">
+        <button
+          *ngFor="let c of categories"
+          type="button"
+          class="chip"
+          [class.active]="selected === c"
+          (click)="select(c)"
+        >
+          {{ c }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+      <!-- Ending Soon -->
+      <div class="section-head">
+        <h2>Ending Soon 🔥</h2>
+        <button type="button" class="view-all">View All</button>
+      </div>
+
+      <div class="hero-scroll hide-scroll">
+        <!-- Hero Card 1 -->
+        <div class="hero-card">
+          <div class="badge danger">CLOSING IN 2H</div>
+
+          <div
+            class="hero-img"
+            style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuDZ-6ECid6weptYbj5po4JITJtV7Te272TxAkVNRsMRf-VG58ekkD-adzRqGqsQM74vdwB3uZAnh_v53qZ-YDfKr3h3L-0rn5Hy_DpegSAMfd3qYxLyBb8VlAPyuLbqndgBxArnTPRXOGCrl8YNZoGb7sOA0D3FLPwLZcW29py7PdEVdYEmndsYjT2o5-A6PCUe1baqs-m3AwTmDNbURIhkynozpGjfunCk-HkgvUY6DyM7eini3u6diCgMc4--IHq2cyfr_R4TYls')"
+          >
+            <div class="hero-grad"></div>
+          </div>
+
+          <div class="hero-body">
+            <div>
+              <div class="hero-title">iPhone 15 Pro Max</div>
+              <div class="hero-sub">Titanium Blue • 512GB</div>
+            </div>
+
+            <div class="progress">
+              <div class="progress-meta">
+                <span class="sold">942 sold</span>
+                <span class="left">58 left</span>
+              </div>
+              <div class="bar">
+                <div class="bar-fill" style="width:94%"></div>
+              </div>
+            </div>
+
+            <button type="button" class="hero-cta">
+              <span>Buy Ticket</span>
+              <span class="price-pill">100 F</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Hero Card 2 -->
+        <div class="hero-card">
+          <div class="badge warn">HIGH DEMAND</div>
+
+          <div
+            class="hero-img"
+            style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuDfEVk14eW-sqB8-Wbc78Kvr4ZKHOPCMLAPxk-TfC9BNkD1Z_D9CD1-Oq9iuMSCQ0YlyYA294-M07-_1AlidVZrEg0Zd71ZGW8xp08hYZ4Ye-4c-kUFDvrL44Y05w2wqS396hIUD6b99DajTOwDmfmGzhVL52V5CctSHrR8Mex58Z8C517Tly9lsg0u3DWNehh5CeGdAXkUNEgmNSSks9dJt_p-4eLxR_QQQMlUrPcBJXiLqeD817muyfX6VO-zytHm9JXWd68U4uI')"
+          >
+            <div class="hero-grad"></div>
+          </div>
+
+          <div class="hero-body">
+            <div>
+              <div class="hero-title">Alienware m18 Laptop</div>
+              <div class="hero-sub">RTX 4090 • 64GB RAM</div>
+            </div>
+
+            <div class="progress">
+              <div class="progress-meta">
+                <span class="sold">450 sold</span>
+                <span class="left">550 left</span>
+              </div>
+              <div class="bar">
+                <div class="bar-fill" style="width:45%"></div>
+              </div>
+            </div>
+
+            <button type="button" class="hero-cta alt">
+              <span>Buy Ticket</span>
+              <span class="price-pill alt">100 F</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Draws -->
+      <h2 class="live-title">Live Draws</h2>
+
+      <!-- Big card -->
+      <div class="big-card">
+        <div
+          class="big-img"
+          style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuB91PgWmjtIkGmxissLSXllCAtjK1tqMCMCBrZLwdoDuaQ5sucjB8fU5cvHGa44yexamrmfDPvGCRH5VnOpz1MVg_2ZYWkwKXExrctA8MyKx93f4ZJeJQE9Md-BIOSs3EenlcxgwHh7imCkb6FVjOVUBOKarFaVv3OytAXkafz7KNvxHgpicWl3j56SieRIIHooSExsDFYdeVj4qkmk5GONamAlHLPoTJCfZNGVkgjxvRv0ZHqohWhzQtl3s7_z_rzzaplFp6VbWF4')"
+        >
+          <div class="big-grad"></div>
+          <div class="tag hot">HOT</div>
+          <div class="timer">
+            <span class="material-symbols-outlined">timer</span>
+            <span class="t">04:22:15</span>
+          </div>
+        </div>
+
+        <div class="big-body">
+          <div class="big-title">Samsung 55" QLED 4K TV</div>
+          <div class="verify">
+            <span class="material-symbols-outlined">verified</span>
+            Verified Draw #8392
+          </div>
+
+          <div class="progress lg">
+            <div class="progress-meta">
+              <span class="left muted">850 / 1000 tickets sold</span>
+              <span class="sold">Only 150 left!</span>
+            </div>
+            <div class="bar lg">
+              <div class="bar-fill grad" style="width:85%"></div>
+            </div>
+          </div>
+
+          <div class="big-cta-row">
+            <div class="price">
+              100 <span>FCFA</span>
+            </div>
+            <button type="button" class="btn-primary">Buy Ticket</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compact rows (x3) -->
+      <div class="row-card">
+        <div
+          class="row-img"
+          style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuBCB85hayvAh_QihG2KjWRz4XqksQ3p8PCi07NTwxZu24j62zk32bq93xQ44kY7XdxUqxkEOoRMyXFE6hk2B0ar3vOgUMdzjorRVSr4j4G4zkfG7piUqSXCkzjcUtV_KGqEFjrAYB8H9p_H_nnEXqa6vlRrU-nTZIUjGdVaw_9T9abA3-HvIvN2n-c3cGMNPCN_zjd9sWhZ1G8oklRwpUzc165tIWP9k_BCymnU03X3Gv3rXwAhxVDqMiqguIiqOIXmGv2yVgYUZ0Y')"
+        >
+          <div class="mini-badge">New</div>
+        </div>
+
+        <div class="row-body">
+          <div>
+            <div class="row-title">Yamaha YZF-R3 Motorcycle</div>
+            <div class="row-sub">Limited Edition Red</div>
+          </div>
+
+          <div class="row-bottom">
+            <div class="mini-progress">
+              <div class="mini-bar"><div class="mini-fill" style="width:15%"></div></div>
+              <span class="mini-pct">15%</span>
+            </div>
+
+            <div class="row-actions">
+              <div class="row-price">100 FCFA</div>
+              <button class="pill" type="button">Buy Ticket</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row-card">
+        <div
+          class="row-img"
+          style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuDPWEUj3dhZwdF8E36sbT6RkPQiqaz8pqBJ1XbAZfjdqdccfzDmAouOhc4uuiEqsskvNy12TuJ4z8gx7ryruL09Z0cfOcyIyWHbfVDYUul_71t60dp0ggYr6ETRFLblz5RlOZ72JHf8_Ba10liQS0lUcKfiCqPGAhjSkrqOOKQVGDTev5jMpQiD3L_UY_vz4TOvo1q7plUvqD7iXyIUBWZQnhNsdrq1ksehyOuJGbG-Rsnsnlv0vSHyItJsabNB0GmpWds01hDInb8')"
+        ></div>
+
+        <div class="row-body">
+          <div>
+            <div class="row-title">50g 24K Gold Bar</div>
+            <div class="row-sub">PAMP Suisse Certified</div>
+          </div>
+
+          <div class="row-bottom">
+            <div class="mini-progress">
+              <div class="mini-bar"><div class="mini-fill y" style="width:65%"></div></div>
+              <span class="mini-pct y">65%</span>
+            </div>
+
+            <div class="row-actions">
+              <div class="row-price">100 FCFA</div>
+              <button class="pill" type="button">Buy Ticket</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row-card">
+        <div
+          class="row-img"
+          style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuDU__y-31EJs7tLK4Xp1LQMw1sb5kUAZuwmeXYeM_oM2kRz2Ws2DpMYpwa071ctl6CrAGeEbNDezlvxQ9o918ioCEv4fC1Z7InA3S5dao9Uv4E5tENugSRex4rZqyekOdzIDS5ej4bZh8xi4zoo4DiXKCEa627n06TllSz_GOJe-hriYEcNNisZFU2lTNYdJdt7PhVHDXfn6jgu9c2SonTkqRdaksVNNQW6frbOjXRXKpaDKo4vlLGg-_JfmGE4ubx0G_fgfe4RYew')"
+        >
+          <div class="mini-badge danger">3 Left</div>
+        </div>
+
+        <div class="row-body">
+          <div>
+            <div class="row-title">Sony PlayStation 5</div>
+            <div class="row-sub">Slim Edition • 1TB</div>
+          </div>
+
+          <div class="row-bottom">
+            <div class="mini-progress">
+              <div class="mini-bar"><div class="mini-fill r" style="width:99%"></div></div>
+              <span class="mini-pct r">99%</span>
+            </div>
+
+            <div class="row-actions">
+              <div class="row-price">100 FCFA</div>
+              <button class="pill primary" type="button">Buy Ticket</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="spacer"></div>
+    </div>
+
+    <!-- Bottom Navigation (dans la Home, comme ton HTML) -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" routerLink="/home" type="button">
+        <span class="material-symbols-outlined">home</span>
+        <span class="nav-label">Home</span>
+      </button>
+
+      <button class="nav-item" routerLink="/tickets" type="button">
+        <span class="material-symbols-outlined">confirmation_number</span>
+        <span class="nav-label">Tickets</span>
+      </button>
+
+      <div class="nav-center">
+        <button class="nav-plus" type="button" aria-label="Add">
+          <span class="material-symbols-outlined">add</span>
+        </button>
+      </div>
+
+      <button class="nav-item" routerLink="/winners" type="button">
+        <span class="material-symbols-outlined">emoji_events</span>
+        <span class="nav-label">Winners</span>
+      </button>
+
+      <button class="nav-item" routerLink="/account" type="button">
+        <span class="material-symbols-outlined">person</span>
+        <span class="nav-label">Profile</span>
+      </button>
+    </nav>
+
   </div>
 </ion-content>

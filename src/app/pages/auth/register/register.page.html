@@ -1,0 +1,100 @@
+<ion-content [fullscreen]="true" class="register">
+  <div class="topbar">
+    <button class="back" routerLink="/auth/login" aria-label="Retour">
+      <span class="material-symbols-outlined">arrow_back_ios_new</span>
+    </button>
+
+    <div class="top-title">Rejoignez l'aventure</div>
+    <div class="top-spacer"></div>
+  </div>
+
+  <div class="wrap">
+    <h1>Créer un compte</h1>
+    <p class="subtitle">
+      Tentez votre chance pour seulement <span class="primary">100 FCFA</span>.
+    </p>
+
+    <form (ngSubmit)="submit()" class="form">
+      <div class="grid-2">
+        <div class="field">
+          <label>Nom</label>
+          <input type="text" placeholder="Kouassi" [formControl]="form.controls.lastName" />
+        </div>
+
+        <div class="field">
+          <label>Prénom</label>
+          <input type="text" placeholder="Jean" [formControl]="form.controls.firstName" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Username</label>
+        <input type="text" placeholder="jeankouassi" [formControl]="form.controls.username" />
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <input type="email" placeholder="jean.kouassi@exemple.com" [formControl]="form.controls.email" />
+      </div>
+
+      <div class="field">
+        <label>Numéro de téléphone</label>
+
+        <div class="phone-row">
+          <select class="cc-select" [formControl]="form.controls.countryCode">
+            <option *ngFor="let c of countryCodes" [value]="c.code">{{ c.label }}</option>
+          </select>
+
+          <input type="tel" placeholder="00 00 00 00 00" [formControl]="form.controls.phone" />
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>Pays</label>
+          <input type="text" placeholder="Côte d'Ivoire" [formControl]="form.controls.country" />
+        </div>
+
+        <div class="field">
+          <label>Ville</label>
+          <input type="text" placeholder="Abidjan" [formControl]="form.controls.city" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Mot de passe</label>
+        <div class="password">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="••••••••"
+            [formControl]="form.controls.password"
+          />
+          <button type="button" class="eye" (click)="togglePassword()" aria-label="Afficher/Masquer">
+            <span class="material-symbols-outlined">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+          </button>
+        </div>
+
+        <div class="hint">
+          8+ caractères, 1 majuscule, 1 caractère spécial.
+        </div>
+      </div>
+
+      <div class="terms">
+        <ion-checkbox [formControl]="form.controls.terms"></ion-checkbox>
+        <div class="terms-text">
+          J'accepte les <span class="link">conditions générales d'utilisation</span> et la politique de confidentialité.
+        </div>
+      </div>
+
+      <button class="cta" type="submit" [disabled]="loading">
+        <span *ngIf="!loading">Créer un compte</span>
+        <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+      </button>
+    </form>
+
+    <div class="foot">
+      Déjà un compte ?
+      <a routerLink="/auth/login">Se connecter</a>
+    </div>
+  </div>
+</ion-content>

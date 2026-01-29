@@ -1,0 +1,76 @@
+<ion-content [fullscreen]="true" class="login">
+  <!-- Back -->
+  <div class="topbar">
+    <button class="icon-btn" routerLink="/landing" aria-label="Retour">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+  </div>
+
+  <div class="wrap">
+    <div class="head">
+      <div class="logo">
+        <span class="material-symbols-outlined">diamond</span>
+      </div>
+
+      <h1>Bon retour !</h1>
+      <p>
+        Accédez à vos tirages et gagnez gros dès
+        <span class="gold">100 FCFA</span>.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <label>NUMÉRO DE TÉLÉPHONE</label>
+        <div class="input">
+          <span class="material-symbols-outlined left">smartphone</span>
+          <input type="tel" placeholder="Ex: 6XXXXXXXX" [formControl]="form.controls.identifier" />
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="row">
+          <label>MOT DE PASSE</label>
+          <a class="link" routerLink="/auth/forgot-password">OUBLIÉ ?</a>
+        </div>
+
+        <div class="input">
+          <span class="material-symbols-outlined left">lock</span>
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="••••••••"
+            [formControl]="form.controls.password"
+          />
+          <button type="button" class="eye" (click)="togglePassword()" aria-label="Afficher/Masquer">
+            <span class="material-symbols-outlined">
+              {{ showPassword ? 'visibility' : 'visibility_off' }}
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <button class="cta" (click)="submit()" [disabled]="loading">
+        <span *ngIf="!loading">Se connecter</span>
+        <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+      </button>
+    </div>
+
+    <div class="social">
+      <div class="sep">
+        <div class="line"></div>
+        <div class="txt">OU CONTINUER AVEC</div>
+        <div class="line"></div>
+      </div>
+
+      <div class="social-btns">
+        <button class="social-btn" type="button" aria-label="Google"><span class="g">G</span></button>
+        <button class="social-btn" type="button" aria-label="Apple"><span class="a"></span></button>
+      </div>
+    </div>
+
+    <div class="foot">
+      <span>Nouveau ici ?</span>
+      <a routerLink="/auth/register">Créer un compte</a>
+    </div>
+  </div>
+</ion-content>

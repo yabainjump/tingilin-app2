@@ -13,4 +13,9 @@ export class TabsPage implements OnInit {
   ngOnInit() {
   }
 
+   onAdd(): void {
+    // Placeholder (plus tard: modal / buy ticket / create draw etc.)
+    console.log('Add action');
+  }
+
 }
