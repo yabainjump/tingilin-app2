@@ -1,2 +1,37 @@
 // For information on how to create your own theme, please refer to:
 // https://ionicframework.com/docs/theming/
+:root {
+  /** Primary **/
+  --ion-color-primary: #0d59f2;
+  --ion-color-primary-rgb: 13, 89, 242;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #0b4ed5;
+  --ion-color-primary-tint: #246af3;
+
+  /** Accent (custom) **/
+  --ion-color-accent: #f59e0b;
+  --ion-color-accent-rgb: 245, 158, 11;
+  --ion-color-accent-contrast: #ffffff;
+  --ion-color-accent-contrast-rgb: 255, 255, 255;
+  --ion-color-accent-shade: #d88b0a;
+  --ion-color-accent-tint: #f6a824;
+
+  /** App background **/
+  --app-bg: #f5f6f8;
+
+  /** Typography **/
+  --ion-font-family:
+    "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial,
+    sans-serif;
+}
+
+/* Enregistre la couleur "accent" dans Ionic */
+.ion-color-accent {
+  --ion-color-base: var(--ion-color-accent);
+  --ion-color-base-rgb: var(--ion-color-accent-rgb);
+  --ion-color-contrast: var(--ion-color-accent-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-accent-contrast-rgb);
+  --ion-color-shade: var(--ion-color-accent-shade);
+  --ion-color-tint: var(--ion-color-accent-tint);
+}

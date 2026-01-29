@@ -1,0 +1,178 @@
+<ion-header class="app-header">
+  <ion-toolbar class="app-toolbar">
+    <div class="header-row">
+      <div class="brand">
+        <div class="brand-icon">
+          <span class="material-symbols-outlined">confirmation_number</span>
+        </div>
+        <div class="brand-name">LotteryApp</div>
+      </div>
+
+      <a class="header-link" routerLink="/login">Connexion</a>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="app-content" [fullscreen]="true">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
+
+    <div class="hero-inner">
+      <div class="hero-text">
+        <span class="pill">Nouveau Concept</span>
+
+        <h1 class="hero-title">Votre prochain iPhone<br />pour le prix d'un café</h1>
+        <p class="hero-subtitle">Gagnez gros, dépensez peu.</p>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-image"></div>
+
+        <div class="price-badge">
+          <div class="price-badge-inner">
+            <div class="price-badge-top">PRIX</div>
+            <div class="price-badge-mid">{{ ticketPrice }}</div>
+            <div class="price-badge-bot">FCFA</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how">
+    <div class="how-head">
+      <h2>Comment ça marche ?</h2>
+      <span class="how-tag">Simple &amp; Rapide</span>
+    </div>
+
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-icon">
+          <span class="material-symbols-outlined filled">shopping_bag</span>
+        </div>
+        <div class="step-text">
+          <div class="step-kicker">ÉTAPE 1</div>
+          <div class="step-title">Choisissez</div>
+          <div class="step-desc">Sélectionnez le produit de vos rêves.</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-icon">
+          <span class="material-symbols-outlined filled">confirmation_number</span>
+        </div>
+        <div class="step-text">
+          <div class="step-kicker">ÉTAPE 2</div>
+          <div class="step-title">Achetez</div>
+          <div class="step-desc">Prenez votre ticket unique à 100 FCFA.</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-icon">
+          <span class="material-symbols-outlined filled">trophy</span>
+        </div>
+        <div class="step-text">
+          <div class="step-kicker">ÉTAPE 3</div>
+          <div class="step-title">Attendez</div>
+          <div class="step-desc">Tirage au sort automatique.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT OF THE DAY -->
+  <section class="pod">
+    <div class="pod-head">
+      <div class="live-dot">
+        <span class="ping"></span>
+        <span class="dot"></span>
+      </div>
+      <h2>Produit du jour</h2>
+    </div>
+
+    <div class="pod-card">
+      <div class="pod-media">
+        <div class="pod-img"></div>
+        <div class="pod-brand">Apple</div>
+
+        <div class="pod-overlay">
+          <div class="pod-overlay-inner">
+            <div class="pod-value">Valeur réelle: 950,000 FCFA</div>
+            <div class="pod-name">iPhone 15 Pro Max</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pod-body">
+        <div class="count-row">
+          <div class="count-left">
+            <span class="material-symbols-outlined">timer</span>
+            <span>Fin du tirage</span>
+          </div>
+          <div class="count-right">{{ countdown }}</div>
+        </div>
+
+        <ion-progress-bar class="progress" [value]="progress"></ion-progress-bar>
+
+        <div class="meta-row">
+          <div class="meta-muted">{{ sold }} vendus</div>
+          <div class="meta-strong">{{ total }} tickets total</div>
+        </div>
+
+        <button class="cta">
+          <div class="cta-left">
+            <div class="cta-kicker">Prix du ticket</div>
+            <div class="cta-price">{{ ticketPrice }} FCFA</div>
+          </div>
+          <div class="cta-right">
+            Participer
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST -->
+  <section class="trust">
+    <div class="trust-grid">
+      <div class="trust-item">
+        <div class="trust-icon green">
+          <span class="material-symbols-outlined">verified_user</span>
+        </div>
+        <div class="trust-label">PAIEMENT SÉCURISÉ</div>
+      </div>
+
+      <div class="trust-item">
+        <div class="trust-icon amber">
+          <span class="material-symbols-outlined">emoji_events</span>
+        </div>
+        <div class="trust-label">GAGNANTS CERTIFIÉS</div>
+      </div>
+
+      <div class="trust-item">
+        <div class="trust-icon purple">
+          <span class="material-symbols-outlined">lock</span>
+        </div>
+        <div class="trust-label">DONNÉES PRIVÉES</div>
+      </div>
+    </div>
+
+    <div class="payments">
+      <div class="payments-title">Paiements 100% Mobile Money</div>
+      <div class="payments-logos">
+        <div class="logo">Orange</div>
+        <div class="logo">MTN</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- espace pour ne pas être caché par le footer -->
+  <div class="spacer"></div>
+</ion-content>
+
+
