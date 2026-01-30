@@ -9,46 +9,80 @@
   font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
 }
 
+/* ✅ évite que le shell Ionic mette un fond blanc */
+ion-tabs,
+.tabs-shell {
+  background: transparent;
+}
+
+/* ✅ TAB BAR */
 ion-tab-bar.lotto-tabbar {
+  /* kill default Ionic styles */
+  --background: transparent;
+  --border: 0;
+  border: 0 !important;
+
   height: 64px;
   border-radius: 18px;
 
-  /* float like your design */
   margin: 0 18px calc(18px + env(safe-area-inset-bottom));
   padding: 0 8px;
 
   background: var(--barbg);
-  border: 1px solid rgba(255,255,255,0.10);
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
   backdrop-filter: blur(18px);
 
-  box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
   overflow: visible;
+
+  /* au-dessus du contenu */
+  z-index: 30;
 }
 
-/* Reserve center space for the FAB */
-ion-tab-bar.lotto-tabbar ion-tab-button:nth-child(2) { margin-right: 28px; }
-ion-tab-bar.lotto-tabbar ion-tab-button:nth-child(3) { margin-left: 28px; }
+/* ✅ Reserve space for the center FAB */
+ion-tab-bar.lotto-tabbar ion-tab-button:nth-child(2) {
+  margin-right: 28px;
+}
+ion-tab-bar.lotto-tabbar ion-tab-button:nth-child(3) {
+  margin-left: 28px;
+}
 
+/* ✅ TAB BUTTON */
 ion-tab-button {
+  /* remove default backgrounds/ripple weirdness */
+  --background: transparent;
+  --background-focused: transparent;
+  --background-focused-opacity: 0;
+  --background-activated: transparent;
+  --background-activated-opacity: 0;
+
   --color: var(--muted);
   --color-selected: var(--primary);
+
   --padding-top: 8px;
   --padding-bottom: 8px;
+
+  background: transparent !important;
+  border: 0;
 }
 
+/* label + icon */
 ion-tab-button .material-symbols-outlined {
   font-size: 26px;
+  line-height: 1;
 }
 
 ion-tab-button ion-label {
   font-size: 10px;
   font-weight: 700;
   margin-top: 4px;
+  line-height: 1;
 }
 
-/* Center FAB */
+/* ✅ FAB center (au-dessus de la tabbar) */
 ion-fab.center-fab {
-  bottom: calc(18px + env(safe-area-inset-bottom) + 32px); /* raised */
+  z-index: 40;
+  bottom: calc(18px + env(safe-area-inset-bottom) + 32px);
 }
 
 ion-fab-button {
@@ -57,6 +91,8 @@ ion-fab-button {
 
   --background: var(--primary);
   --color: #fff;
+
+  /* Ionic shadow override */
   --box-shadow: 0 0 20px rgba(166, 13, 242, 0.5);
 
   border: 4px solid var(--bg);

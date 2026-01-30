@@ -1,8 +1,8 @@
 <ion-content [fullscreen]="true" class="home">
-  <div class="container">
+  <div class="screen">
 
-    <!-- Sticky Header -->
-    <div class="header">
+    <!-- Sticky Header (reste dans le scroll IonContent) -->
+    <div class="header sticky-header">
       <div class="header-row">
         <div class="user">
           <div class="avatar-wrap">
@@ -46,7 +46,7 @@
       </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- Main Content (PAS de main overflow-y-auto ici) -->
     <div class="content">
       <!-- Ending Soon -->
       <div class="section-head">
@@ -250,37 +250,9 @@
         </div>
       </div>
 
-      <div class="spacer"></div>
+      <!-- ✅ IMPORTANT: espace pour TabBar + FAB -->
+      <div class="bottom-spacer"></div>
     </div>
-
-    <!-- Bottom Navigation (dans la Home, comme ton HTML) -->
-    <nav class="bottom-nav">
-      <button class="nav-item active" routerLink="/home" type="button">
-        <span class="material-symbols-outlined">home</span>
-        <span class="nav-label">Home</span>
-      </button>
-
-      <button class="nav-item" routerLink="/tickets" type="button">
-        <span class="material-symbols-outlined">confirmation_number</span>
-        <span class="nav-label">Tickets</span>
-      </button>
-
-      <div class="nav-center">
-        <button class="nav-plus" type="button" aria-label="Add">
-          <span class="material-symbols-outlined">add</span>
-        </button>
-      </div>
-
-      <button class="nav-item" routerLink="/winners" type="button">
-        <span class="material-symbols-outlined">emoji_events</span>
-        <span class="nav-label">Winners</span>
-      </button>
-
-      <button class="nav-item" routerLink="/account" type="button">
-        <span class="material-symbols-outlined">person</span>
-        <span class="nav-label">Profile</span>
-      </button>
-    </nav>
 
   </div>
 </ion-content>
