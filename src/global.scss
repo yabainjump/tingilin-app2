@@ -35,3 +35,12 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+ion-content {
+  --overflow: auto !important;
+}
+
+ion-content::part(scroll) {
+  overflow-y: auto !important;
+  pointer-events: auto !important;
+}

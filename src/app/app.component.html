@@ -1,3 +1,7 @@
 <ion-app>
+  <ng-container *ngIf="loading$ | async">
+    <ion-progress-bar type="indeterminate"></ion-progress-bar>
+  </ng-container>
+
   <ion-router-outlet></ion-router-outlet>
 </ion-app>

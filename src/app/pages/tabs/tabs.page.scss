@@ -1,103 +1,71 @@
 :host {
+  display: block;
+  height: 100%;
+}
+
+/* 🔥 IMPORTANT : remettre le contenu au-dessus */
+ion-router-outlet {
+  position: relative !important;
+  z-index: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Tabbar reste en dessous en “dock”, pas overlay plein écran */
+ion-tab-bar.lotto-tabbar {
+  position: relative !important;
+  z-index: 2 !important;
+  pointer-events: auto !important;
+}
+
+/* Au cas où un parent a mis pointer-events none */
+ion-tabs,
+ion-content {
+  pointer-events: auto !important;
+}
+
+/* Si tu gardes ton style */
+:host {
   --primary: #a60df2;
   --bg: #1c1022;
   --muted: #b09cba;
   --barbg: rgba(35, 27, 39, 0.90);
 }
 
-.material-symbols-outlined {
-  font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
-}
-
-/* ✅ évite que le shell Ionic mette un fond blanc */
-ion-tabs,
-.tabs-shell {
-  background: transparent;
-}
-
-/* ✅ TAB BAR */
 ion-tab-bar.lotto-tabbar {
-  /* kill default Ionic styles */
-  --background: transparent;
+  --background: var(--barbg);
   --border: 0;
-  border: 0 !important;
-
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
   height: 64px;
-  border-radius: 18px;
-
-  margin: 0 18px calc(18px + env(safe-area-inset-bottom));
-  padding: 0 8px;
-
-  background: var(--barbg);
-  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  padding-bottom: env(safe-area-inset-bottom);
   backdrop-filter: blur(18px);
-
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
-  overflow: visible;
-
-  /* au-dessus du contenu */
-  z-index: 30;
 }
 
-/* ✅ Reserve space for the center FAB */
-ion-tab-bar.lotto-tabbar ion-tab-button:nth-child(2) {
-  margin-right: 28px;
-}
-ion-tab-bar.lotto-tabbar ion-tab-button:nth-child(3) {
-  margin-left: 28px;
-}
-
-/* ✅ TAB BUTTON */
 ion-tab-button {
-  /* remove default backgrounds/ripple weirdness */
-  --background: transparent;
-  --background-focused: transparent;
-  --background-focused-opacity: 0;
-  --background-activated: transparent;
-  --background-activated-opacity: 0;
-
   --color: var(--muted);
   --color-selected: var(--primary);
-
-  --padding-top: 8px;
-  --padding-bottom: 8px;
-
+  --background: transparent;
+  --background-focused: transparent;
+  --background-activated: transparent;
   background: transparent !important;
-  border: 0;
 }
 
-/* label + icon */
-ion-tab-button .material-symbols-outlined {
-  font-size: 26px;
-  line-height: 1;
-}
 
-ion-tab-button ion-label {
-  font-size: 10px;
-  font-weight: 700;
-  margin-top: 4px;
-  line-height: 1;
-}
-
-/* ✅ FAB center (au-dessus de la tabbar) */
-ion-fab.center-fab {
-  z-index: 40;
-  bottom: calc(18px + env(safe-area-inset-bottom) + 32px);
-}
-
-ion-fab-button {
+.add-circle {
   width: 56px;
   height: 56px;
+  border-radius: 999px;
+  background: var(--primary);
 
-  --background: var(--primary);
-  --color: #fff;
+  display: grid;
+  place-items: center;
 
-  /* Ionic shadow override */
-  --box-shadow: 0 0 20px rgba(166, 13, 242, 0.5);
+  transform: translateY(-18px);
 
   border: 4px solid var(--bg);
+  box-shadow: 0 0 20px rgba(166, 13, 242, 0.55);
 }
 
-ion-fab-button .material-symbols-outlined {
+.add-circle .material-symbols-outlined {
   font-size: 28px;
+  color: #fff;
 }

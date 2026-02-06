@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { finalize } from 'rxjs';
-import { AuthService } from '../../../services/auth/auth';
+import { AuthService } from '../../../services/auth/auth.service';
 
 
 @Component({

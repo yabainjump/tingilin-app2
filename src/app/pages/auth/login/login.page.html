@@ -36,11 +36,8 @@
 
         <div class="input">
           <span class="material-symbols-outlined left">lock</span>
-          <input
-            [type]="showPassword ? 'text' : 'password'"
-            placeholder="••••••••"
-            [formControl]="form.controls.password"
-          />
+          <input [type]="showPassword ? 'text' : 'password'" placeholder="••••••••"
+            [formControl]="form.controls.password" />
           <button type="button" class="eye" (click)="togglePassword()" aria-label="Afficher/Masquer">
             <span class="material-symbols-outlined">
               {{ showPassword ? 'visibility' : 'visibility_off' }}

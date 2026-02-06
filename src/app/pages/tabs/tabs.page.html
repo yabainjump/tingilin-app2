@@ -1,34 +1,32 @@
-<ion-tabs class="tabs-shell">
+<ion-tabs>
   <ion-router-outlet></ion-router-outlet>
 
-  <!-- Center + button -->
-  <ion-fab vertical="bottom" horizontal="center" slot="fixed" class="center-fab">
-    <ion-fab-button (click)="onAdd()">
-      <span class="material-symbols-outlined">add</span>
-    </ion-fab-button>
-  </ion-fab>
-
-  <!-- Custom-looking tab bar -->
   <ion-tab-bar slot="bottom" class="lotto-tabbar">
-  <ion-tab-button tab="home" [routerLink]="['/tabs/home']" routerDirection="root">
-    <span class="material-symbols-outlined">home</span>
-    <ion-label>Home</ion-label>
-  </ion-tab-button>
+    <ion-tab-button tab="home" href="/tabs/home" routerDirection="root">
+      <span class="material-symbols-outlined">home</span>
+      <ion-label>Home</ion-label>
+    </ion-tab-button>
 
-  <ion-tab-button tab="tickets" [routerLink]="['/tabs/tickets']" routerDirection="root">
-    <span class="material-symbols-outlined">confirmation_number</span>
-    <ion-label>Tickets</ion-label>
-  </ion-tab-button>
+    <ion-tab-button tab="tickets" href="/tabs/tickets" routerDirection="root">
+      <span class="material-symbols-outlined">confirmation_number</span>
+      <ion-label>Tickets</ion-label>
+    </ion-tab-button>
 
-  <ion-tab-button tab="winners" [routerLink]="['/tabs/winners']" routerDirection="root">
-    <span class="material-symbols-outlined">emoji_events</span>
-    <ion-label>Winners</ion-label>
-  </ion-tab-button>
+    <!-- bouton central -->
+    <ion-tab-button tab="add" class="add-btn" (click)="onAdd()">
+      <div class="add-circle">
+        <span class="material-symbols-outlined">add</span>
+      </div>
+    </ion-tab-button>
 
-  <ion-tab-button tab="account" [routerLink]="['/tabs/account']" routerDirection="root">
-    <span class="material-symbols-outlined">person</span>
-    <ion-label>Profile</ion-label>
-  </ion-tab-button>
-</ion-tab-bar>
+    <ion-tab-button tab="winners" href="/tabs/winners" routerDirection="root">
+      <span class="material-symbols-outlined">emoji_events</span>
+      <ion-label>Winners</ion-label>
+    </ion-tab-button>
 
+    <ion-tab-button tab="account" href="/tabs/account" routerDirection="root">
+      <span class="material-symbols-outlined">person</span>
+      <ion-label>Profile</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
 </ion-tabs>

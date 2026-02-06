@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { finalize } from 'rxjs';
-import { AuthService } from '../../../services/auth/auth';
+import { AuthService } from '../../../services/auth/auth.service';
 
 const PASSWORD_RULE = /^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/;
 // 8+ caractères, 1 majuscule, 1 caractère spécial
@@ -98,7 +98,7 @@ export class RegisterPage {
       .subscribe({
         next: async () => {
           await this.showToast('Compte créé. Connecte-toi maintenant.');
-          this.router.navigateByUrl('/auth/login');
+          this.router.navigateByUrl('/tabs/home', { replaceUrl: true });
         },
         error: async (err) => {
           await this.showToast(this.readError(err) || "Impossible de créer le compte.");
