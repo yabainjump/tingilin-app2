@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LoadingService } from './core/loading/loading.service';
+import { AuthStateService } from './services/auth/auth-state.service';
 
 @Component({
   selector: 'app-root',
@@ -7,7 +8,14 @@ import { LoadingService } from './core/loading/loading.service';
   styleUrls: ['app.component.scss'],
   standalone: false,
 })
-export class AppComponent {
-   loading$ = this.loading.loading$;
-  constructor(private loading: LoadingService) {}
+export class AppComponent implements OnInit {
+  loading$ = this.loading.loading$;
+  constructor(
+    private loading: LoadingService,
+    private authState: AuthStateService,
+  ) {}
+
+  ngOnInit(): void {
+    this.authState.bootstrap();
+  }
 }

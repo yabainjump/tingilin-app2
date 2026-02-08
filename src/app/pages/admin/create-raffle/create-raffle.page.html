@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Créer un raffle</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Produit</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item>
+        <ion-input label="Titre" labelPlacement="stacked" formControlName="title"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-textarea label="Description" labelPlacement="stacked" formControlName="description"></ion-textarea>
+      </ion-item>
+
+      <div style="margin: 14px 0;">
+        <ion-button expand="block" (click)="pickImage()" [disabled]="submitting">
+          Photo / Importer
+        </ion-button>
+
+        <div *ngIf="previewUrl" style="margin-top: 10px;">
+          <img [src]="previewUrl" style="width:100%; border-radius:12px;" />
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Raffle</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content [formGroup]="form">
+      <ion-item>
+        <ion-input type="number" label="Ticket price" labelPlacement="stacked" formControlName="ticketPrice"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input label="Currency" labelPlacement="stacked" formControlName="currency"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-datetime presentation="date-time" formControlName="endAt"></ion-datetime>
+      </ion-item>
+
+      <ion-item>
+        <ion-toggle formControlName="publishNow">Publier maintenant (LIVE)</ion-toggle>
+      </ion-item>
+
+      <ion-button expand="block" (click)="submit()" [disabled]="submitting">
+        Créer
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

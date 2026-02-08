@@ -13,12 +13,16 @@ type HomeCategory = { id: string; label: string };
   standalone: false,
 })
 export class HomePage implements OnInit {
+  ionViewWillEnter(): void {
+    this.loadAll('refresh');
+  }
+
   // Skeleton flags (liés au HTML)
   showFeaturedSkeleton = true;
   showEndingSoonSkeleton = true;
   showRowsSkeleton = true;
   heroCards: DrawCard[] = [];
-
+ 
   // Header
   loadingHeader = true;
   loadingCategories = true;
@@ -159,16 +163,15 @@ export class HomePage implements OnInit {
   }
 
   percent(d: DrawCard): number {
-  const total = d.total ?? 0;
-  const sold = d.sold ?? 0;
-  if (!total) return 0;
-  return Math.max(0, Math.min(100, (sold / total) * 100));
-}
+    const total = d.total ?? 0;
+    const sold = d.sold ?? 0;
+    if (!total) return 0;
+    return Math.max(0, Math.min(100, (sold / total) * 100));
+  }
 
-left(d: DrawCard): number {
-  const total = d.total ?? 0;
-  const sold = d.sold ?? 0;
-  return Math.max(0, total - sold);
-}
-
+  left(d: DrawCard): number {
+    const total = d.total ?? 0;
+    const sold = d.sold ?? 0;
+    return Math.max(0, total - sold);
+  }
 }

@@ -62,6 +62,10 @@ const routes: Routes = [
   { path: 'account', redirectTo: 'tabs/account', pathMatch: 'full' },
 
   { path: '**', redirectTo: 'landing' },
+  {
+    path: 'create-raffle',
+    loadChildren: () => import('./pages/admin/create-raffle/create-raffle.module').then( m => m.CreateRafflePageModule)
+  },
 ];
 @NgModule({
   imports: [
