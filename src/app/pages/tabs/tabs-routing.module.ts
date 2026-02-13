@@ -25,7 +25,15 @@ const routes: Routes = [
       {
         path: 'account',
         loadChildren: () =>
-          import('../account/account.module').then((m) => m.AccountPageModule),
+          import('../profile/profile.module').then((m) => m.ProfilePageModule),
+      },
+
+      {
+        path: 'admin/create-raffle',
+        loadChildren: () =>
+          import('../admin/create-raffle/create-raffle.module').then(
+            (m) => m.CreateRafflePageModule,
+          ),
       },
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
@@ -37,4 +45,3 @@ const routes: Routes = [
   exports: [RouterModule],
 })
 export class TabsPageRoutingModule {}
-

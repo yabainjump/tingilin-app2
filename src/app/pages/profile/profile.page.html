@@ -1,0 +1,180 @@
+<ion-content [fullscreen]="true" class="premium-bg">
+  <div class="page">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="top-actions">
+        <button class="icon-btn" type="button" (click)="back()">
+          <span class="material-icons-round">arrow_back</span>
+        </button>
+
+        <button class="icon-btn" type="button" (click)="settings()">
+          <span class="material-icons-round">settings</span>
+        </button>
+      </div>
+
+      <!-- AVATAR + NAME + BALANCE -->
+      <ng-container *ngIf="!loadingHeader; else headerSkeleton">
+        <div class="avatar-wrap">
+          <div class="avatar-ring">
+            <div class="avatar-inner">
+              <img
+                class="avatar"
+                [src]="user?.avatar || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCCjJdKxKA3bCtuEqSixjWaB3vlVBjuocZ8MNiD2PMwNwxHxP7dzHi1AXS1BhgxL0f1vCBaVzLbT0p9UNWjpR4pPqwS-9XMu1mO9m1Ycg8aaJrCC1eaqnluScpExHje1eVScj9xEiM-e-YqVMnYrIfIrMNFsKFthMyR8EuBVOmMJs1iwIUiihUnC-7t6Rby-aKsKNr6NRL7L8L9zbZ9UvYMKUgjB2mc69LA0IORjdSufkPKhahMCPIUnRU6Xd6o27Iq3oItJQoVMEE'"
+                alt="avatar"
+              />
+            </div>
+          </div>
+
+          <!-- edit avatar -->
+          <button class="avatar-edit" type="button" (click)="editAvatar()">
+            <span class="material-icons-round">edit</span>
+          </button>
+        </div>
+
+        <!-- FirstName + LastName sous la photo -->
+        <h1 class="name">
+          {{ (user?.firstName || '') + ' ' + (user?.lastName || '') }}
+        </h1>
+
+        <div class="balance-pill">
+          <div class="balance-meta">
+            <div class="balance-label">SOLDE ACTUEL</div>
+            <div class="balance-value">{{ balanceLabel }}</div>
+          </div>
+
+          <button class="balance-add" type="button" (click)="topUp()">
+            <span class="material-icons-round">add</span>
+          </button>
+        </div>
+      </ng-container>
+
+      <ng-template #headerSkeleton>
+        <div class="avatar-wrap">
+          <ion-skeleton-text animated class="sk-avatar"></ion-skeleton-text>
+        </div>
+        <ion-skeleton-text animated class="sk-name"></ion-skeleton-text>
+        <ion-skeleton-text animated class="sk-balance"></ion-skeleton-text>
+      </ng-template>
+    </div>
+
+    <!-- BODY -->
+    <div class="body">
+
+      <!-- STATS -->
+      <ng-container *ngIf="!loadingStats; else statsSkeleton">
+        <div class="glass-card stats-card">
+          <div class="stat">
+            <div class="stat-ico">
+              <span class="material-icons-round">confirmation_number</span>
+            </div>
+            <div class="stat-val">{{ stats?.ticketsBought ?? 0 }}</div>
+            <div class="stat-lbl">TICKETS ACHETÉS</div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="stat">
+            <div class="stat-ico alt">
+              <span class="material-icons-round">inventory_2</span>
+            </div>
+            <div class="stat-val">{{ stats?.productsWon ?? 0 }}</div>
+            <div class="stat-lbl">PRODUITS GAGNÉS</div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #statsSkeleton>
+        <div class="glass-card stats-card skel">
+          <div class="stat">
+            <ion-skeleton-text animated class="sk-ico"></ion-skeleton-text>
+            <ion-skeleton-text animated class="sk-num"></ion-skeleton-text>
+            <ion-skeleton-text animated class="sk-small"></ion-skeleton-text>
+          </div>
+          <div class="divider"></div>
+          <div class="stat">
+            <ion-skeleton-text animated class="sk-ico"></ion-skeleton-text>
+            <ion-skeleton-text animated class="sk-num"></ion-skeleton-text>
+            <ion-skeleton-text animated class="sk-small"></ion-skeleton-text>
+          </div>
+        </div>
+      </ng-template>
+
+      <!-- HISTORY TITLE -->
+      <div class="section-head">
+        <h2>Historique des Jeux</h2>
+        <button class="view-all" type="button" (click)="goHistory()">
+          Tout voir
+        </button>
+      </div>
+
+      <!-- HISTORY LIST -->
+      <ng-container *ngIf="!loadingHistory; else historySkeleton">
+        <div class="history-list">
+          <button
+            class="glass-panel history-item"
+            [class.is-lost]="h.result === 'LOST'"
+            type="button"
+            *ngFor="let h of history"
+            (click)="openHistoryItem(h)"
+          >
+            <div class="thumb">
+              <img [src]="h.imageUrl || 'assets/img/placeholder.png'" alt="product" />
+              <div class="thumb-grad"></div>
+            </div>
+
+            <div class="h-body">
+              <div class="h-top">
+                <div class="h-title">{{ h.title }}</div>
+
+                <div class="badge won" *ngIf="h.result === 'WON'">
+                  <span class="material-icons-round">emoji_events</span>
+                  <span>Gagné</span>
+                </div>
+
+                <div class="badge lost" *ngIf="h.result === 'LOST'">
+                  Perdu
+                </div>
+              </div>
+
+              <div class="h-meta">
+                <div class="meta">
+                  <span class="material-icons-round">calendar_today</span>
+                  <span>{{ h.dateLabel }}</span>
+                </div>
+
+                <div class="meta">
+                  <span class="material-icons-round">local_activity</span>
+                  <span>{{ h.ticketsLabel }}</span>
+                </div>
+              </div>
+            </div>
+          </button>
+        </div>
+      </ng-container>
+
+      <ng-template #historySkeleton>
+        <div class="history-list">
+          <div class="glass-panel history-item skel" *ngFor="let _ of [1,2,3,4,5]">
+            <ion-skeleton-text animated class="sk-thumb"></ion-skeleton-text>
+            <div class="h-body">
+              <ion-skeleton-text animated class="sk-line"></ion-skeleton-text>
+              <ion-skeleton-text animated class="sk-line sm"></ion-skeleton-text>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+      <!-- LOGOUT -->
+      <div class="logout-wrap">
+        <button class="logout" type="button" (click)="logout()">
+          <span class="material-icons-round">logout</span>
+          Déconnexion
+        </button>
+      </div>
+
+      <div class="bottom-spacer"></div>
+    </div>
+
+  </div>
+</ion-content>

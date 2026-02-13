@@ -30,7 +30,7 @@ export class TabsPage implements OnInit {
   }
 
   goCreateRaffle(): void {
-    this.nav.navigateForward('../admin/create-raffle');
+    this.nav.navigateForward('/tabs/admin/create-raffle');
   }
   ngOnInit() {}
 

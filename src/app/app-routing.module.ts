@@ -63,7 +63,7 @@ const routes: Routes = [
 
   { path: '**', redirectTo: 'landing' },
   {
-    path: 'create-raffle',
+    path: 'admin/create-raffle',
     loadChildren: () => import('./pages/admin/create-raffle/create-raffle.module').then( m => m.CreateRafflePageModule)
   },
 ];
