@@ -1,13 +1,17 @@
 <ion-content [fullscreen]="true" class="home">
+  <!-- background glow -->
+  <div class="bg-glow" aria-hidden="true"></div>
+
   <div class="screen">
 
-    <!-- Sticky Header (reste dans le scroll IonContent) -->
+    <!-- HEADER -->
     <div class="header sticky-header">
       <div class="header-row">
+
         <div class="user">
           <div class="avatar-wrap">
             <div class="avatar"
-              style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuBzRQUrMAIROJfXvS1DFKRVdsLcYqSxlk5B0-ZUDjLvR9MVxN8w0P4elx6a8wW7NaclXAorE1txEDxPGywQNSdUWpOTYAL0DuugOi_QmgwBmM8rrFTu_dPCJfp7sPAw-EeTsy86rhmaqTUAng3Z2ZByWek7V66dSuk0q7P9d4Rbywh2rS2xwIfz2zKlcHstHKpWa5gg638gneAZ5QMy_h89v_T3H0At2QBqkN6YY0kDC0AUoboUPXVjSLFw2vdFKTeigMWNc4UxKog')">
+              [style.backgroundImage]="'url(' + (user?.avatarUrl || user?.avatar || 'https://via.placeholder.com/200') + ')'">
             </div>
             <div class="online-dot"></div>
           </div>
@@ -19,11 +23,10 @@
             </ng-container>
 
             <ng-template #headerSkel>
-              <ion-skeleton-text animated style="width:90px;height:10px;"></ion-skeleton-text>
-              <ion-skeleton-text animated style="width:140px;height:18px;margin-top:6px;"></ion-skeleton-text>
+              <ion-skeleton-text animated class="sk sk-welcome"></ion-skeleton-text>
+              <ion-skeleton-text animated class="sk sk-name"></ion-skeleton-text>
             </ng-template>
           </div>
-
         </div>
 
         <div class="right">
@@ -35,16 +38,16 @@
             </ng-container>
 
             <ng-template #walletSkel>
-              <ion-skeleton-text animated style="width:70px;height:14px;"></ion-skeleton-text>
+              <ion-skeleton-text animated class="sk sk-wallet"></ion-skeleton-text>
             </ng-template>
           </div>
-
 
           <button class="notif" type="button" aria-label="Notifications">
             <span class="material-symbols-outlined">notifications</span>
             <span class="notif-dot"></span>
           </button>
         </div>
+
       </div>
 
       <!-- Category Chips -->
@@ -57,53 +60,51 @@
         </ng-container>
 
         <ng-template #chipsSkel>
-          <ion-skeleton-text animated class="chip-skel" *ngFor="let _ of [1,2,3,4,5]"></ion-skeleton-text>
+          <ion-skeleton-text animated class="chip-skel" *ngFor="let _ of [1,2,3,4]"></ion-skeleton-text>
         </ng-template>
       </div>
-
     </div>
-    <!-- ✅ FIN HEADER -->
 
-    <!-- ✅ Main Content (en dehors du header) -->
+    <!-- CONTENT -->
     <div class="content">
 
       <!-- Ending Soon -->
       <div class="section-head">
-        <h2>Ending Soon 🔥</h2>
+        <h2>Ending Soon <span class="fire">🔥</span></h2>
         <button type="button" class="view-all">View All</button>
       </div>
 
       <div class="hero-scroll hide-scroll">
-        <!-- Skeletons -->
+        <!-- Skeleton -->
         <ng-container *ngIf="showEndingSoonSkeleton; else heroData">
           <div class="hero-card skel" *ngFor="let _ of [1,2]">
-            <ion-skeleton-text animated style="height:160px;width:100%"></ion-skeleton-text>
-            <div style="padding:12px 14px 14px; margin-top:-28px;">
-              <ion-skeleton-text animated style="height:18px;width:70%"></ion-skeleton-text>
-              <ion-skeleton-text animated style="height:12px;width:45%; margin-top:8px;"></ion-skeleton-text>
-              <ion-skeleton-text animated style="height:8px;width:100%; margin-top:12px;"></ion-skeleton-text>
-              <ion-skeleton-text animated
-                style="height:40px;width:100%; margin-top:12px; border-radius:999px;"></ion-skeleton-text>
+            <ion-skeleton-text animated class="sk-hero-img"></ion-skeleton-text>
+            <div class="hero-body">
+              <ion-skeleton-text animated class="sk-line lg"></ion-skeleton-text>
+              <ion-skeleton-text animated class="sk-line sm"></ion-skeleton-text>
+              <ion-skeleton-text animated class="sk-line bar"></ion-skeleton-text>
+              <ion-skeleton-text animated class="sk-btn"></ion-skeleton-text>
             </div>
           </div>
         </ng-container>
 
         <!-- Data -->
         <ng-template #heroData>
-          <div class="hero-card" *ngFor="let d of heroCards; trackBy: trackById">
+          <div class="hero-card" *ngFor="let d of heroCards; trackBy: trackById" (click)="openRaffle(d)">
             <div class="badge" [ngClass]="d.badgeType || 'warn'">
               {{ d.badgeText || 'ENDING SOON' }}
             </div>
 
             <div class="hero-img"
-              [style.background-image]="'url(' + (d.imageUrl || 'https://via.placeholder.com/600x400') + ')'">
+              [style.backgroundImage]="'url(' + (d.imageUrl || 'https://via.placeholder.com/600x400') + ')'">
               <div class="hero-grad"></div>
             </div>
 
             <div class="hero-body">
-              <div>
-                <div class="hero-title">{{ d.title }}</div>
-                <div class="hero-sub">{{ d.subtitle || '' }}</div>
+              <div class="hero-title">{{ d.title }}</div>
+
+              <div class="hero-sub" *ngIf="d.endAt || d.endsAt">
+                Fin {{ (d.endsAt || d.endAt) | date:'dd MMM, HH:mm' }}
               </div>
 
               <div class="progress">
@@ -117,29 +118,34 @@
                 </div>
               </div>
 
-              <button type="button" class="hero-cta" [class.alt]="false">
+              <button type="button" class="hero-cta">
                 <span>Buy Ticket</span>
-                <span class="price-pill">100 F</span>
+                <span class="price-pill">
+                  {{ d.ticketPrice ?? 0 }} {{ d.currency || 'XAF' }}
+                </span>
               </button>
             </div>
           </div>
         </ng-template>
       </div>
 
-
       <!-- Live Draws -->
       <h2 class="live-title">Live Draws</h2>
 
-      <!-- FEATURED (content ou skeleton) -->
+      <!-- Featured -->
       <ng-container *ngIf="!showFeaturedSkeleton && featured; else featuredSkeleton">
-        <div class="big-card">
+        <div class="big-card" (click)="openRaffle(featured)">
           <div class="big-img"
-            [style.background-image]="'url(' + (featured.imageUrl || 'https://via.placeholder.com/800x450') + ')'">
+            [style.backgroundImage]="'url(' + (featured.imageUrl || 'https://via.placeholder.com/800x450') + ')'">
             <div class="big-grad"></div>
-            <div class="tag hot">HOT</div>
-            <div class="timer">
+
+            <div class="tag" [ngClass]="featured.badgeType || 'hot'">
+              {{ featured.badgeText || 'HOT' }}
+            </div>
+
+            <div class="timer" *ngIf="featured.endAt || featured.endsAt">
               <span class="material-symbols-outlined">timer</span>
-              <span class="t">04:22:15</span>
+              <span class="t">Fin {{ (featured.endsAt || featured.endAt) | date:'dd MMM, HH:mm' }}</span>
             </div>
           </div>
 
@@ -148,22 +154,22 @@
 
             <div class="verify">
               <span class="material-symbols-outlined">verified</span>
-              Verified Draw #8392
+              Verified Draw
             </div>
 
             <div class="progress lg">
               <div class="progress-meta">
-                <span class="left muted">850 / 1000 tickets sold</span>
-                <span class="sold">Only 150 left!</span>
+                <span class="left muted">{{ featured.sold ?? 0 }} / {{ featured.total ?? 0 }} tickets sold</span>
+                <span class="sold">Only {{ left(featured) }} left!</span>
               </div>
               <div class="bar lg">
-                <div class="bar-fill grad" style="width:85%"></div>
+                <div class="bar-fill grad" [style.width.%]="percent(featured)"></div>
               </div>
             </div>
 
             <div class="big-cta-row">
               <div class="price">
-                100 <span>FCFA</span>
+                {{ featured.ticketPrice ?? 0 }} <span>{{ featured.currency || 'XAF' }}</span>
               </div>
               <button type="button" class="btn-primary">Buy Ticket</button>
             </div>
@@ -173,43 +179,39 @@
 
       <ng-template #featuredSkeleton>
         <div class="big-card skel">
-          <ion-skeleton-text animated class="skel-img"></ion-skeleton-text>
-          <ion-skeleton-text animated class="skel-line md"></ion-skeleton-text>
-          <ion-skeleton-text animated class="skel-line sm"></ion-skeleton-text>
-          <ion-skeleton-text animated class="skel-btn"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk-big-img"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk-line lg"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk-line sm"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk-btn"></ion-skeleton-text>
         </div>
       </ng-template>
 
-      <!-- ROWS (content ou skeleton) -->
+      <!-- Rows -->
       <ng-container *ngIf="!showRowsSkeleton && liveRows?.length; else rowsSkeleton">
-        <div class="row-card" *ngFor="let r of liveRows; trackBy: trackById">
+        <div class="row-card" *ngFor="let r of liveRows; trackBy: trackById" (click)="openRaffle(r)">
           <div class="row-img"
-            [style.background-image]="'url(' + (r.imageUrl || 'https://via.placeholder.com/300x300') + ')'"></div>
+            [style.backgroundImage]="'url(' + (r.imageUrl || 'https://via.placeholder.com/300x300') + ')'"></div>
 
           <div class="row-body">
-            <div>
-              <div class="row-title">{{ r.title }}</div>
-              <div class="row-sub">{{ r.subtitle || '' }}</div>
-            </div>
+            <div class="row-title">{{ r.title }}</div>
+            <div class="row-sub">{{ r.sold ?? 0 }} sold • {{ left(r) }} left</div>
 
             <div class="row-actions">
-              <div class="row-price">100 FCFA</div>
+              <div class="row-price">{{ r.ticketPrice ?? 0 }} {{ r.currency || 'XAF' }}</div>
               <button class="pill" type="button">Buy Ticket</button>
             </div>
           </div>
         </div>
       </ng-container>
 
-
       <ng-template #rowsSkeleton>
         <div class="row-card skel" *ngFor="let _ of [1,2,3]">
-          <ion-skeleton-text animated class="skel-row-img"></ion-skeleton-text>
-          <ion-skeleton-text animated class="skel-line md"></ion-skeleton-text>
-          <ion-skeleton-text animated class="skel-line sm"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk-row-img"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk-line lg"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk-line sm"></ion-skeleton-text>
         </div>
       </ng-template>
 
-      <!-- IMPORTANT: espace pour TabBar + FAB -->
       <div class="bottom-spacer"></div>
     </div>
   </div>

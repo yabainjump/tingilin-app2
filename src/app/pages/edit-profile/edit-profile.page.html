@@ -1,0 +1,142 @@
+<ion-content [fullscreen]="true" class="edit-bg">
+  <div class="screen">
+
+    <!-- Header sticky -->
+    <header class="topbar">
+      <button class="top-btn" type="button" (click)="back()">
+        <span class="material-icons-round">arrow_back_ios_new</span>
+      </button>
+
+      <h1 class="top-title">Modifier le profil</h1>
+      <div class="top-spacer"></div>
+    </header>
+
+    <!-- Content -->
+    <main class="content no-scrollbar">
+
+      <ng-container *ngIf="!loading; else skel">
+
+        <!-- Avatar -->
+        <div class="avatar-block">
+          <div class="avatar-ring">
+            <div class="avatar-frame">
+              <img class="avatar-img" [src]="avatarPreview || user?.avatar || defaultAvatar" alt="avatar" />
+              <div class="avatar-hover">
+                <span class="material-icons-round">camera_alt</span>
+              </div>
+            </div>
+          </div>
+
+          <button class="avatar-edit-btn" type="button" (click)="pickAvatar()">
+            <span class="material-icons-round">edit</span>
+          </button>
+        </div>
+
+        <button class="avatar-link" type="button" (click)="pickAvatar()">Modifier la photo</button>
+
+        <!-- Badges -->
+        <div class="badges">
+          <span class="badge active">
+            <span class="dot"></span>
+            STATUS: {{ user?.status || 'ACTIVE' }}
+          </span>
+
+          <span class="badge role">
+            <span class="material-icons-round ico">badge</span>
+            ROLE: {{ user?.role || 'USER' }}
+          </span>
+        </div>
+
+        <!-- Form -->
+        <form class="form" [formGroup]="form">
+          <div class="row">
+            <div class="field">
+              <label>Prénom</label>
+              <input type="text" formControlName="firstName" placeholder="Votre prénom" />
+            </div>
+
+            <div class="field">
+              <label>Nom</label>
+              <input type="text" formControlName="lastName" placeholder="Votre nom" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Email</label>
+
+            <div class="input-ico readonly">
+              <span class="material-icons-round left">mail</span>
+              <input type="email" formControlName="email" readonly />
+              <span class="material-icons-round right">lock</span>
+            </div>
+
+            <p class="hint">L'adresse email ne peut pas être modifiée.</p>
+          </div>
+
+          <div class="field">
+            <label>Téléphone</label>
+            <div class="input-ico">
+              <span class="material-icons-round left">smartphone</span>
+              <input type="tel" formControlName="phone" placeholder="+237 6xx xx xx xx" />
+            </div>
+          </div>
+
+          <!-- Security -->
+          <div class="sec-label">Sécurité</div>
+
+          <button class="sec-card" type="button" (click)="goChangePassword()">
+            <div class="sec-left">
+              <div class="sec-icon">
+                <span class="material-icons-round">vpn_key</span>
+              </div>
+              <div class="sec-text">
+                <div class="sec-title">Mot de passe</div>
+                <div class="sec-sub">Dernière modification il y a 3 mois</div>
+              </div>
+            </div>
+            <span class="material-icons-round sec-chevron">chevron_right</span>
+          </button>
+        </form>
+
+      </ng-container>
+
+      <!-- Skeleton -->
+      <ng-template #skel>
+        <div class="avatar-block">
+          <ion-skeleton-text animated class="sk-avatar"></ion-skeleton-text>
+        </div>
+
+        <ion-skeleton-text animated class="sk-link"></ion-skeleton-text>
+
+        <div class="badges">
+          <ion-skeleton-text animated class="sk-badge"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk-badge"></ion-skeleton-text>
+        </div>
+
+        <div class="form">
+          <div class="row">
+            <ion-skeleton-text animated class="sk-input"></ion-skeleton-text>
+            <ion-skeleton-text animated class="sk-input"></ion-skeleton-text>
+          </div>
+          <ion-skeleton-text animated class="sk-input"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk-hint"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk-input"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk-sec"></ion-skeleton-text>
+        </div>
+      </ng-template>
+
+      <div class="bottom-space"></div>
+    </main>
+
+    <!-- Footer fixed -->
+    <footer class="cta">
+      <button class="save-btn" type="button" (click)="save()" [disabled]="loading || submitting || form.invalid">
+        <span>Enregistrer les modifications</span>
+        <span class="material-icons-round">save</span>
+      </button>
+    </footer>
+
+    <!-- file input fallback web -->
+    <input #fileInput type="file" accept="image/*" hidden (change)="onFileSelected($event)" />
+  </div>
+</ion-content>

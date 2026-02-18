@@ -3,6 +3,8 @@ import { finalize } from 'rxjs/operators';
 import { skeletonController } from '../shared/utils/skeleton-timing';
 import { HomeApiService } from '../services/home/home-api.service';
 import { DrawCard, UserSummary } from '../services/home/home.models';
+import { Router } from '@angular/router';
+import { Subscription, interval } from 'rxjs';
 
 type HomeCategory = { id: string; label: string };
 
@@ -14,15 +16,24 @@ type HomeCategory = { id: string; label: string };
 })
 export class HomePage implements OnInit {
   ionViewWillEnter(): void {
+    this.startClock();
+  }
+
+  ionViewWillLeave(): void {
+    this.stopClock();
+  }
+
+  doRefresh(ev: CustomEvent): void {
     this.loadAll('refresh');
   }
 
-  // Skeleton flags (liés au HTML)
+  // Skeleton flags
   showFeaturedSkeleton = true;
   showEndingSoonSkeleton = true;
   showRowsSkeleton = true;
+
   heroCards: DrawCard[] = [];
- 
+
   // Header
   loadingHeader = true;
   loadingCategories = true;
@@ -34,10 +45,12 @@ export class HomePage implements OnInit {
 
   endingSoon: DrawCard[] = [];
   featured: DrawCard | null = null;
+  liveRows: DrawCard[] = [];
 
-  liveRows: DrawCard[] = []; // ✅ UNE seule déclaration
-
-  constructor(private api: HomeApiService) {}
+  constructor(
+    private api: HomeApiService,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.loadAll('init');
@@ -58,13 +71,9 @@ export class HomePage implements OnInit {
 
     this.api
       .getUserSummary()
-      .pipe(
-        finalize(() => {
-          void sk.hide((v) => (this.loadingHeader = v));
-        }),
-      )
+      .pipe(finalize(() => void sk.hide((v) => (this.loadingHeader = v))))
       .subscribe({
-        next: (data: UserSummary) => (this.user = data),
+        next: (data) => (this.user = data),
         error: () => (this.user = null),
       });
   }
@@ -75,17 +84,10 @@ export class HomePage implements OnInit {
 
     this.api
       .getCategories()
-      .pipe(
-        finalize(() => {
-          void sk.hide((v) => (this.loadingCategories = v));
-        }),
-      )
+      .pipe(finalize(() => void sk.hide((v) => (this.loadingCategories = v))))
       .subscribe({
-        next: (data: any[]) => {
-          // attend un format [{id,label}]
-          this.categories = (
-            data?.length ? data : [{ id: 'all', label: 'All' }]
-          ) as HomeCategory[];
+        next: (data) => {
+          this.categories = data?.length ? data : [{ id: 'all', label: 'All' }];
           if (!this.categories.some((c) => c.id === this.selectedCategoryId)) {
             this.selectedCategoryId = this.categories[0].id;
           }
@@ -103,16 +105,16 @@ export class HomePage implements OnInit {
     skFeatured.scheduleShow((v) => (this.showFeaturedSkeleton = v));
     skRows.scheduleShow((v) => (this.showRowsSkeleton = v));
 
-    // 1) Ending Soon (carousel)
+    // 1) Ending Soon
     this.api
       .getEndingSoon(this.selectedCategoryId)
       .pipe(
-        finalize(() => {
-          void skHero.hide((v) => (this.showEndingSoonSkeleton = v));
-        }),
+        finalize(
+          () => void skHero.hide((v) => (this.showEndingSoonSkeleton = v)),
+        ),
       )
       .subscribe({
-        next: (rows: DrawCard[]) => {
+        next: (rows) => {
           this.endingSoon = rows ?? [];
           this.heroCards = this.endingSoon;
         },
@@ -122,16 +124,18 @@ export class HomePage implements OnInit {
         },
       });
 
-    // 2) Live Draws (featured + rows)
+    // 2) Live rows (featured + list)
     this.api
       .getLiveRows(this.selectedCategoryId)
       .pipe(
         finalize(() => {
           void skRows.hide((v) => (this.showRowsSkeleton = v));
+          void skFeatured.hide((v) => (this.showFeaturedSkeleton = v));
+          done?.();
         }),
       )
       .subscribe({
-        next: (rows: DrawCard[]) => {
+        next: (rows) => {
           const all = rows ?? [];
           this.featured = all.length ? all[0] : null;
           this.liveRows = all.slice(1);
@@ -139,10 +143,6 @@ export class HomePage implements OnInit {
         error: () => {
           this.featured = null;
           this.liveRows = [];
-        },
-        complete: () => {
-          void skFeatured.hide((v) => (this.showFeaturedSkeleton = v));
-          done?.();
         },
       });
   }
@@ -173,5 +173,47 @@ export class HomePage implements OnInit {
     const total = d.total ?? 0;
     const sold = d.sold ?? 0;
     return Math.max(0, total - sold);
+  }
+
+  openRaffle(d: DrawCard): void {
+    this.router.navigate(['/tabs/raffle-details', d.id]);
+  }
+
+  private clockSub?: Subscription;
+  nowMs = Date.now();
+
+  private startClock(): void {
+    if (this.clockSub) return;
+    this.clockSub = interval(1000).subscribe(() => {
+      this.nowMs = Date.now();
+    });
+  }
+
+  private stopClock(): void {
+    this.clockSub?.unsubscribe();
+    this.clockSub = undefined;
+  }
+
+  remainingMs(d: DrawCard): number {
+    const iso = d.endsAt;
+    if (!iso) return 0;
+
+    const end = new Date(iso).getTime();
+    if (Number.isNaN(end)) return 0;
+
+    return Math.max(0, end - this.nowMs);
+  }
+
+  countdownText(d: DrawCard): string {
+    const ms = this.remainingMs(d);
+    if (!ms) return 'Terminé';
+
+    const totalSec = Math.floor(ms / 1000);
+    const hh = Math.floor(totalSec / 3600);
+    const mm = Math.floor((totalSec % 3600) / 60);
+    const ss = totalSec % 60;
+
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
   }
 }

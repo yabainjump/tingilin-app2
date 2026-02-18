@@ -23,9 +23,24 @@ const routes: Routes = [
           import('../winners/winners.module').then((m) => m.WinnersPageModule),
       },
       {
-        path: 'account',
+        path: 'profile',
         loadChildren: () =>
           import('../profile/profile.module').then((m) => m.ProfilePageModule),
+      },
+
+      {
+        path: 'edit-profile',
+        loadChildren: () =>
+          import('../edit-profile/edit-profile.module').then(
+            (m) => m.EditProfilePageModule,
+          ),
+      },
+      {
+        path: 'raffle-details/:id',
+        loadChildren: () =>
+          import('../raffle-details/raffle-details.module').then(
+            (m) => m.RaffleDetailsPageModule,
+          ),
       },
 
       {
@@ -35,6 +50,7 @@ const routes: Routes = [
             (m) => m.CreateRafflePageModule,
           ),
       },
+
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
   },

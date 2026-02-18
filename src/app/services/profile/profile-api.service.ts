@@ -12,6 +12,7 @@ export interface ProfileUser {
   phone?: string;
   role?: 'USER' | 'ADMIN' | 'MODERATOR';
   avatar?: string;
+  status?: 'ACTIVE' | 'SUSPEND';
   profile?: Record<string, any>;
 }
 
@@ -42,11 +43,18 @@ export class ProfileApiService {
   ) {}
 
   me(): Observable<ProfileUser | null> {
-    if (!this.auth.isLoggedIn()) return of(null);
-
     return this.http
       .get<ProfileUser>(`${this.baseUrl}/users/me`)
       .pipe(catchError(() => of(null)));
+  }
+
+  updateMe(dto: {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    avatar?: string;
+  }): Observable<ProfileUser> {
+    return this.http.patch<ProfileUser>(`${this.baseUrl}/users/me`, dto);
   }
 
   stats(): Observable<ProfileStats> {

@@ -88,8 +88,8 @@ export class ProfilePage {
   }
 
   settings() {
-    // si tu n’as pas encore une page settings, laisse vide ou route plus tard
-    // this.nav.navigateForward('/tabs/settings');
+    
+    this.nav.navigateForward('/tabs/edit-profile');
   }
 
   async logout() {

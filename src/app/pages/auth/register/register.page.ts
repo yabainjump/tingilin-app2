@@ -12,7 +12,7 @@ const PASSWORD_RULE = /^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/;
   selector: 'app-register',
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class RegisterPage {
   loading = false;
@@ -24,7 +24,7 @@ export class RegisterPage {
     { code: '+237', label: '🇨🇲 +237' },
     { code: '+221', label: '🇸🇳 +221' },
     { code: '+234', label: '🇳🇬 +234' },
-    { code: '+33',  label: '🇫🇷 +33'  },
+    { code: '+33', label: '🇫🇷 +33' },
   ];
 
   form = this.fb.group({
@@ -44,7 +44,7 @@ export class RegisterPage {
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
-    private toast: ToastController
+    private toast: ToastController,
   ) {}
 
   togglePassword(): void {
@@ -57,7 +57,7 @@ export class RegisterPage {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       await this.showToast(
-        "Vérifie les champs. Mot de passe: 8+ caractères, 1 majuscule, 1 caractère spécial."
+        'Vérifie les champs. Mot de passe: 8+ caractères, 1 majuscule, 1 caractère spécial.',
       );
       return;
     }
@@ -83,25 +83,27 @@ export class RegisterPage {
       country: v.country?.trim(),
       city: v.city?.trim(),
       password: v.password,
-      avatar: 'defpic.jpg', // comme l’historique
+      avatar: '../asset/img/profile.svg',
     };
 
-    const payloadMinimal: any = {
-      email: v.email?.trim(),
-      password: v.password,
+    const dto = {
+      email: String(payloadFull.email).trim().toLowerCase(),
+      password: String(payloadFull.password),
+      firstName: String(payloadFull.firstName ?? ''),
+      lastName: String(payloadFull.lastName ?? ''),
+      phone: String(payloadFull.phone ?? ''),
     };
 
     this.auth
-      .register(payloadFull, false) // <- si backend OK
-      // .register(payloadMinimal, false) // <- si backend pas encore OK
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe({
+      .register(dto).subscribe({
         next: async () => {
           await this.showToast('Compte créé. Connecte-toi maintenant.');
           this.router.navigateByUrl('/tabs/home', { replaceUrl: true });
         },
         error: async (err) => {
-          await this.showToast(this.readError(err) || "Impossible de créer le compte.");
+          await this.showToast(
+            this.readError(err) || 'Impossible de créer le compte.',
+          );
         },
       });
   }
@@ -113,7 +115,11 @@ export class RegisterPage {
   }
 
   private async showToast(message: string): Promise<void> {
-    const t = await this.toast.create({ message, duration: 2400, position: 'top' });
+    const t = await this.toast.create({
+      message,
+      duration: 2400,
+      position: 'top',
+    });
     await t.present();
   }
 }

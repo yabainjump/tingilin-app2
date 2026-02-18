@@ -66,6 +66,14 @@ const routes: Routes = [
     path: 'admin/create-raffle',
     loadChildren: () => import('./pages/admin/create-raffle/create-raffle.module').then( m => m.CreateRafflePageModule)
   },
+  {
+    path: 'edit-profile',
+    loadChildren: () => import('./pages/edit-profile/edit-profile.module').then( m => m.EditProfilePageModule)
+  },
+  {
+    path: 'raffle-details/:id',
+    loadChildren: () => import('./pages/raffle-details/raffle-details.module').then( m => m.RaffleDetailsPageModule)
+  },
 ];
 @NgModule({
   imports: [

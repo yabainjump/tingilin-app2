@@ -5,12 +5,11 @@ import { ToastController } from '@ionic/angular';
 import { finalize } from 'rxjs';
 import { AuthService } from '../../../services/auth/auth.service';
 
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class LoginPage {
   loading = false;
@@ -27,7 +26,7 @@ export class LoginPage {
     private auth: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private toast: ToastController
+    private toast: ToastController,
   ) {}
 
   togglePassword(): void {
@@ -49,16 +48,18 @@ export class LoginPage {
     this.loading = true;
 
     this.auth
-      .login({ email: identifier, password })
-      .pipe(finalize(() => (this.loading = false)))
+      .login(String(identifier).trim().toLowerCase(), String(password))
       .subscribe({
         next: () => {
           // on garde une redirection flexible
-          const redirect = this.route.snapshot.queryParamMap.get('redirect') || '/home';
+          const redirect =
+            this.route.snapshot.queryParamMap.get('redirect') || '/home';
           this.router.navigateByUrl(redirect);
         },
         error: async (err) => {
-          await this.showToast(this.readError(err) || 'Identifiants incorrects.');
+          await this.showToast(
+            this.readError(err) || 'Identifiants incorrects.',
+          );
         },
       });
   }
@@ -73,7 +74,11 @@ export class LoginPage {
   }
 
   private async showToast(message: string): Promise<void> {
-    const t = await this.toast.create({ message, duration: 2200, position: 'top' });
+    const t = await this.toast.create({
+      message,
+      duration: 2200,
+      position: 'top',
+    });
     await t.present();
   }
 }

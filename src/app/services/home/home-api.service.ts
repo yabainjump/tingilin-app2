@@ -1,72 +1,61 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { DrawCard, HomeCategory, UserSummary } from './home.models';
+import { DrawCard, UserSummary, HomeCategory } from './home.models';
 
 @Injectable({ providedIn: 'root' })
 export class HomeApiService {
   private readonly baseUrl = environment.apiBaseUrl;
 
   constructor(private http: HttpClient) {}
- getUserSummary(): Observable<UserSummary> {
-    return this.http.get<any>(`${this.baseUrl}/home/summary`).pipe(
-      map((res) => res?.data ?? res),
-      map((u) => ({
-        id: String(u.id ?? u._id ?? ''),
-        firstName: u.firstName ?? u.firstname ?? 'User',
-        lastName: u.lastName ?? u.lastname ?? '',
-        balance: Number(u.balance ?? u.wallet ?? 0),
-        avatarUrl: u.avatarUrl ?? u.avatar ?? null,
-      })),
-    );
+
+  getUserSummary(): Observable<UserSummary> {
+    return this.http.get<UserSummary>(`${this.baseUrl}/users/me`);
   }
 
   getCategories(): Observable<HomeCategory[]> {
-    return this.http.get<any>(`${this.baseUrl}/home/categories`).pipe(
-      map((res) => res?.data ?? res),
-      map((arr) =>
-        (Array.isArray(arr) ? arr : []).map((c) => ({
-          id: String(c.id ?? c._id ?? c.slug ?? 'all'),
-          label: String(c.label ?? c.name ?? 'All'),
-        })),
-      ),
-    );
+    return of([{ id: 'all', label: 'All' }]);
+  }
+  private toCard(raw: any): DrawCard {
+    const product = raw?.product ?? null;
+
+    return {
+      id: String(raw?._id ?? raw?.id ?? ''),
+      title: String(product?.title ?? raw?.title ?? ''),
+      subtitle: String(product?.description ?? raw?.subtitle ?? ''),
+      imageUrl: product?.imageUrl ?? raw?.imageUrl ?? undefined,
+
+      sold: Number(raw?.ticketsSold ?? raw?.sold ?? 0),
+      total: Number(raw?.totalTickets ?? raw?.total ?? 0),
+
+      // ✅ IMPORTANT: backend = endAt ; frontend = endsAt
+      endsAt: raw?.endAt ?? raw?.endsAt ?? undefined,
+
+      badgeText: raw?.badge ?? raw?.badgeText ?? undefined,
+      badgeType: raw?.badgeType ?? undefined,
+    };
   }
 
   getEndingSoon(categoryId: string): Observable<DrawCard[]> {
-    const params = new HttpParams().set('category', categoryId);
-    return this.http.get<any>(`${this.baseUrl}/draws/ending-soon`, { params }).pipe(
-      map((res) => res?.data ?? res),
-      map((arr) => (Array.isArray(arr) ? arr : []).map((x) => this.normalizeDraw(x))),
-    );
+    const params = new HttpParams()
+      .set('sort', 'endAt')
+      .set('limit', '10')
+      .set('category', categoryId || 'all');
+
+    return this.http
+      .get<any[]>(`${this.baseUrl}/raffles/public`, { params })
+      .pipe(map((rows) => (rows ?? []).map((r) => this.toCard(r))));
   }
 
   getLiveRows(categoryId: string): Observable<DrawCard[]> {
-    const params = new HttpParams().set('category', categoryId);
-    return this.http.get<any>(`${this.baseUrl}/draws/live`, { params }).pipe(
-      map((res) => res?.data ?? res),
-      map((arr) => (Array.isArray(arr) ? arr : []).map((x) => this.normalizeDraw(x))),
-    );
-  }
+    const params = new HttpParams()
+      .set('sort', 'createdAt')
+      .set('limit', '30')
+      .set('category', categoryId || 'all');
 
-  private normalizeDraw(x: any): DrawCard {
-    const sold = Number(x.sold ?? x.ticketsSold ?? x.soldTickets ?? 0);
-    const total = Number(x.total ?? x.ticketsTotal ?? x.totalTickets ?? 0);
-
-    return {
-      id: String(x.id ?? x._id ?? ''),
-      title: String(x.title ?? x.name ?? 'Untitled'),
-      subtitle: x.subtitle ?? x.description ?? x.variant ?? '',
-      imageUrl: x.imageUrl ?? x.image ?? x.cover ?? null,
-
-      sold,
-      total,
-
-      endsAt: x.endsAt ?? x.endAt ?? x.closesAt ?? null,
-
-      badgeText: x.badgeText ?? x.tag ?? null,
-      badgeType: x.badgeType ?? 'warn',
-    };
+    return this.http
+      .get<any[]>(`${this.baseUrl}/raffles/public`, { params })
+      .pipe(map((rows) => (rows ?? []).map((r) => this.toCard(r))));
   }
 }

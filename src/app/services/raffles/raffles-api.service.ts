@@ -8,7 +8,7 @@ export interface AdminCreateRaffleRequest {
   product: {
     title: string;
     description?: string;
-    imageUrl: string;      // dataUrl ou URL
+    imageUrl: string; // dataUrl ou URL
     categoryId?: string;
     realValue?: number;
   };
@@ -23,6 +23,24 @@ export interface AdminCreateRaffleRequest {
   };
 }
 
+export interface RaffleDetailsDto {
+  _id: string;
+  ticketPrice: number;
+  currency: string;
+  totalTickets: number;
+  ticketsSold: number;
+  startAt?: string;
+  endAt?: string;
+  rules?: string;
+  badge?: string;
+  product?: {
+    _id: string;
+    title: string;
+    imageUrl?: string;
+    description?: string;
+  };
+}
+
 @Injectable({ providedIn: 'root' })
 export class RafflesApiService {
   private readonly baseUrl = environment.apiBaseUrl;
@@ -30,6 +48,13 @@ export class RafflesApiService {
   constructor(private http: HttpClient) {}
 
   adminCreateWithProduct(dto: AdminCreateRaffleRequest): Observable<any> {
-    return this.http.post(`${this.baseUrl}/raffles/admin/create-with-product`, dto);
+    return this.http.post(
+      `${this.baseUrl}/raffles/admin/create-with-product`,
+      dto,
+    );
+  }
+
+  getPublicById(id: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/raffles/public/${id}`);
   }
 }

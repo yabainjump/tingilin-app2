@@ -1,0 +1,178 @@
+<ion-content [fullscreen]="true" class="details">
+  <div class="screen">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-top">
+        <button class="icon-btn" type="button" (click)="back()">
+          <ion-icon name="arrow-back"></ion-icon>
+        </button>
+
+        <div class="hero-actions">
+          <button class="icon-btn" type="button" (click)="toggleFav()">
+            <ion-icon name="heart-outline"></ion-icon>
+          </button>
+          <button class="icon-btn" type="button" (click)="share()">
+            <ion-icon name="share-social-outline"></ion-icon>
+          </button>
+        </div>
+      </div>
+
+      <ng-container *ngIf="!loading && raffle; else heroSkel">
+        <div
+          class="hero-img"
+          [style.background-image]="'url(' + (raffle.imageUrl || 'https://via.placeholder.com/900x600') + ')'"
+        >
+          <div class="hero-grad"></div>
+
+          <div class="hero-badge">OFFICIAL PARTNER</div>
+        </div>
+      </ng-container>
+
+      <ng-template #heroSkel>
+        <div class="hero-img skel">
+          <ion-skeleton-text animated class="skel-block"></ion-skeleton-text>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- BODY -->
+    <div class="body">
+      <ng-container *ngIf="!loading && raffle; else bodySkel">
+
+        <!-- TITLE -->
+        <div class="title-row">
+          <div class="title-wrap">
+            <h1 class="title">{{ raffle.title }}</h1>
+            <p class="desc">
+              {{ raffle.description || raffle.subtitle || '—' }}
+            </p>
+          </div>
+         
+          <div class="value">
+            <div class="value-label">Be The NEXT</div>
+            <div class="value-amt">WINNER</div>
+          </div>
+        </div>
+
+        <!-- PROGRESS -->
+        <div class="progress-card">
+          <div class="progress-top">
+            <span>Tickets Sold</span>
+            <span class="progress-n">
+              {{ sold }} <span class="muted">/ {{ total }}</span>
+            </span>
+          </div>
+
+          <div class="bar">
+            <div class="bar-pattern"></div>
+            <div class="bar-fill" [style.width.%]="percent"></div>
+          </div>
+
+          <div class="progress-bottom">
+            <div class="fast">
+              <ion-icon name="flame"></ion-icon>
+              <span>Selling fast</span>
+            </div>
+            <div class="muted">{{ remaining }} remaining</div>
+          </div>
+        </div>
+
+        <!-- STATS GRID -->
+        <div class="grid">
+          <div class="g-card">
+            <div class="g-ico"><ion-icon name="cash-outline"></ion-icon></div>
+            <div class="g-lbl">PRICE</div>
+            <div class="g-val">{{ ticketPrice }} {{ currency }}</div>
+          </div>
+
+          <div class="g-card">
+            <div class="g-ico"><ion-icon name="calendar-outline"></ion-icon></div>
+            <div class="g-lbl">DRAW</div>
+            <div class="g-val">{{ raffle.endsAt ? (raffle.endsAt | date:'MMM d') : '—' }}</div>
+          </div>
+
+          <div class="g-card">
+            <div class="g-ico"><ion-icon name="checkmark-circle-outline"></ion-icon></div>
+            <div class="g-lbl">STATE</div>
+            <div class="g-val">{{ raffle.status || 'LIVE' }}</div>
+          </div>
+        </div>
+
+        <!-- STEPPER -->
+        <div class="stepper">
+          <div class="stepper-title">
+            <span>Select Tickets</span>
+            <span class="pill">Max {{ maxQty }}</span>
+          </div>
+
+          <div class="stepper-card">
+            <div class="stepper-left">
+              <button class="step-btn" type="button" (click)="dec()">
+                <ion-icon name="remove"></ion-icon>
+              </button>
+
+              <div class="qty">{{ qty }}</div>
+
+              <button class="step-btn plus" type="button" (click)="inc()">
+                <ion-icon name="add"></ion-icon>
+              </button>
+            </div>
+
+            <div class="stepper-right">
+              <div class="muted">Total Price</div>
+              <div class="total-amt">{{ totalPrice }} {{ currency }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WINNERS -->
+        <div class="winners-head">
+          <div class="winners-title">
+            <ion-icon name="trophy" class="trophy"></ion-icon>
+            <span>Previous Winners</span>
+          </div>
+          <button class="see-all" type="button">SEE ALL</button>
+        </div>
+
+        <div class="winners">
+          <div class="w-card" *ngFor="let w of winners">
+            <div class="w-avatar" [style.background-image]="'url(' + w.avatar + ')'"></div>
+            <div class="w-win">WIN</div>
+            <div class="w-name">{{ w.name }}</div>
+            <div class="w-note">{{ w.note }}</div>
+          </div>
+        </div>
+
+        <div class="bottom-spacer"></div>
+      </ng-container>
+
+      <ng-template #bodySkel>
+        <div class="skel-body">
+          <ion-skeleton-text animated class="sk-line lg"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk-line md"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk-block"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk-block"></ion-skeleton-text>
+        </div>
+        <div class="bottom-spacer"></div>
+      </ng-template>
+    </div>
+
+  </div>
+</ion-content>
+
+<ion-footer class="footer" translucent="true">
+  <div class="footer-inner">
+    <div class="total">
+      <div class="total-lbl">TOTAL</div>
+      <div class="total-val">{{ totalPrice }} <span>{{ currency }}</span></div>
+    </div>
+
+    <button class="cta" type="button" (click)="participate()" [disabled]="loading || !raffle">
+      <span>Participate Now</span>
+      <span class="cta-dot">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </span>
+    </button>
+  </div>
+</ion-footer>

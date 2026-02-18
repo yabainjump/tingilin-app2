@@ -9,6 +9,7 @@ export interface UserSummary {
   lastName?: string;
   balance?: number;
   avatarUrl?: string;
+  avatar?: string; 
 }
 
 export interface DrawCard {
@@ -20,7 +21,13 @@ export interface DrawCard {
   sold?: number;
   total?: number;
 
-  endsAt?: string;       // ISO date si tu as
-  badgeText?: string;    // ex: "Closing in 2h"
+  endsAt?: string;       
+  endAt?: string;        
+
+  badgeText?: string;
   badgeType?: 'danger' | 'warn' | 'hot';
+
+  ticketPrice?: number;  
+  currency?: string;     
 }
+
