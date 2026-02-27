@@ -121,10 +121,11 @@ export class RaffleDetailsPage implements OnInit {
   }
 
   inc() {
-    if (this.tickets < 10) this.tickets++;
+    if (this.tickets < 10) this.tickets +=1;
   }
+
   dec() {
-    if (this.tickets > 1) this.tickets--;
+    if (this.tickets > 1) this.tickets -=1;
   }
 
   get totalPrice(): number {

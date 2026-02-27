@@ -10,8 +10,7 @@
 
         <div class="user">
           <div class="avatar-wrap">
-            <div class="avatar"
-              [style.backgroundImage]="'url(' + (user?.avatarUrl || user?.avatar || 'https://via.placeholder.com/200') + ')'">
+            <div class="avatar" [style.backgroundImage]="'url(' + (user?.avatarUrl || user?.avatar ) + ')'">
             </div>
             <div class="online-dot"></div>
           </div>
@@ -104,7 +103,8 @@
               <div class="hero-title">{{ d.title }}</div>
 
               <div class="hero-sub" *ngIf="d.endAt || d.endsAt">
-                Fin {{ (d.endsAt || d.endAt) | date:'dd MMM, HH:mm' }}
+                <!-- Fin {{ (d.endsAt || d.endAt) | date:'dd MMM, HH:mm' }} -->
+                Fin dans {{ countdownText(d) }}
               </div>
 
               <div class="progress">
@@ -145,7 +145,8 @@
 
             <div class="timer" *ngIf="featured.endAt || featured.endsAt">
               <span class="material-symbols-outlined">timer</span>
-              <span class="t">Fin {{ (featured.endsAt || featured.endAt) | date:'dd MMM, HH:mm' }}</span>
+              <!-- <span class="t">Fin {{ (featured.endsAt || featured.endAt) | date:'dd MMM, HH:mm' }}</span> -->
+              <span class="t">{{ countdownText(featured) }}</span>
             </div>
           </div>
 

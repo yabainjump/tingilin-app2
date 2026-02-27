@@ -29,5 +29,6 @@ export interface DrawCard {
 
   ticketPrice?: number;  
   currency?: string;     
+  status?: 'DRAFT' | 'LIVE' | 'CLOSED' | 'DRAWN';
 }
 
