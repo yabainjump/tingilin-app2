@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavController, ToastController } from '@ionic/angular';
 import { finalize, interval, Subscription } from 'rxjs';
 import {
@@ -15,6 +15,7 @@ import {
 })
 export class RaffleDetailsPage implements OnInit {
   loading = true;
+  quantity: number = 1;
 
   raffle: RaffleDetailsDto | null = null;
 
@@ -40,10 +41,39 @@ export class RaffleDetailsPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private api: RafflesPublicApiService,
     private nav: NavController,
     private toast: ToastController,
   ) {}
+
+  goToPayment() {
+    const r: any = this.raffle; // ✅ bypass typing juste ici
+
+    const raffleId = r?._id || r?.id || r?.raffleId;
+    if (!raffleId) return;
+
+    const unit = Number(r?.ticketPrice ?? r?.ticket_price ?? 0);
+
+    // ✅ MODIF: utiliser la quantité UI (qty), pas "quantity"
+    const qty = Math.max(1, Number(this.qty || 1));
+    const amount = qty * unit;
+
+    const title =
+      r?.product?.title || r?.productTitle || r?.title || r?.name || 'Tombola';
+
+    const imageUrl =
+      r?.product?.imageUrl ||
+      r?.product?.image ||
+      r?.productImage ||
+      r?.imageUrl ||
+      r?.image ||
+      '';
+
+    this.router.navigate(['/tabs/payment-confirmation'], {
+      queryParams: { raffleId, title, imageUrl, qty, unit, amount },
+    });
+  }
 
   ionViewWillEnter() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -120,17 +150,24 @@ export class RaffleDetailsPage implements OnInit {
     return Math.max(0, total - sold);
   }
 
+  // ✅ MODIF: inc/dec doivent modifier qty (et synchroniser quantity)
   inc() {
-    if (this.tickets < 10) this.tickets +=1;
+    if (this.qty < this.maxQty) {
+      this.qty += 1;
+      this.quantity = this.qty;
+    }
   }
 
   dec() {
-    if (this.tickets > 1) this.tickets -=1;
+    if (this.qty > 1) {
+      this.qty -= 1;
+      this.quantity = this.qty;
+    }
   }
 
   get totalPrice(): number {
-    const qty = this.qty ?? 0; 
-    const price = this.ticketPrice ?? 0; 
+    const qty = this.qty ?? 0;
+    const price = this.ticketPrice ?? 0;
     return qty * price;
   }
 

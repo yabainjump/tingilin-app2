@@ -42,6 +42,27 @@ const routes: Routes = [
             (m) => m.RaffleDetailsPageModule,
           ),
       },
+      {
+        path: 'payment-confirmation',
+        loadChildren: () =>
+          import('../payment-confirmation/payment-confirmation.module').then(
+            (m) => m.PaymentConfirmationPageModule,
+          ),
+      },
+      {
+        path: 'participations',
+        loadChildren: () =>
+          import('../participations/participations.module').then(
+            (m) => m.ParticipationsPageModule,
+          ),
+      },
+      {
+        path: 'ticket-details/:raffleId',
+        loadChildren: () =>
+          import('../ticket-details/ticket-details.module').then(
+            (m) => m.TicketDetailsPageModule,
+          ),
+      },
 
       {
         path: 'admin/create-raffle',

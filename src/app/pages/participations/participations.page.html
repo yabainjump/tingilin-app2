@@ -1,0 +1,83 @@
+<ion-header translucent="true" class="hdr">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mes Participations</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="bg">
+  <div class="wrap">
+
+    <!-- Toggle En cours / Terminés (inspiré de ta maquette) :contentReference[oaicite:3]{index=3} -->
+    <div class="toggle">
+      <ion-segment [(ngModel)]="filter" mode="md" class="seg">
+        <ion-segment-button value="ongoing">
+          <ion-label>En cours</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="completed">
+          <ion-label>Terminés</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <ng-container *ngIf="loading">
+      <div class="skel-card" *ngFor="let _ of [1,2,3]"></div>
+    </ng-container>
+
+    <ng-container *ngIf="!loading">
+
+      <div class="empty" *ngIf="filtered.length === 0">
+        <ion-icon name="ticket-outline"></ion-icon>
+        <div>Aucune participation pour l’instant</div>
+      </div>
+
+      <div class="card" *ngFor="let it of filtered">
+        <div class="glow"></div>
+
+        <div class="top">
+          <div class="img"
+            [style.backgroundImage]="'url(' + ((it.raffle?.imageUrl || 'https://via.placeholder.com/300x300')) + ')'">
+          </div>
+
+          <div class="info">
+            <div class="row">
+              <div class="title">{{ it.raffle?.title || 'Tombola' }}</div>
+
+              <!-- Badge result: prêt (WIN/LOSE/NONE) -->
+              <div class="badge vip" *ngIf="!it.isCompleted">LIVE</div>
+              <div class="badge win" *ngIf="it.isCompleted && it.result === 'WIN'">Gagné</div>
+              <div class="badge lose" *ngIf="it.isCompleted && it.result === 'LOSE'">Perdu</div>
+            </div>
+
+            <div class="ref">{{ it.maskedTicketRef }}</div>
+
+            <div class="tickets">
+              <ion-icon name="ticket"></ion-icon>
+              <span>{{ it.ticketsCount }} Tickets</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="prog">
+          <div class="prog-row">
+            <span class="muted">Progression du tirage</span>
+            <span class="pct">{{ it.progressPct | number:'1.0-0' }}%</span>
+          </div>
+          <div class="bar">
+            <div class="fill" [style.width.%]="it.progressPct"></div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn" type="button" (click)="openDetails(it)">
+            Détails <ion-icon name="chevron-forward"></ion-icon>
+          </button>
+        </div>
+      </div>
+
+    </ng-container>
+
+  </div>
+</ion-content>

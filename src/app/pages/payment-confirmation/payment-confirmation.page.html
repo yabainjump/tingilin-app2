@@ -1,0 +1,104 @@
+<ion-header translucent="true" class="header-glass">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="" (click)="back()"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>Confirmation</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button fill="clear" disabled="true"></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="page-bg">
+  <div class="container">
+
+    <!-- Product / raffle card -->
+    <div class="glass-card product-card">
+      <div class="glow-dot"></div>
+
+      <div class="product-img" [style.backgroundImage]="'url(' + (imageUrl || fallbackImage) + ')'"></div>
+
+      <div class="product-body">
+        <div class="chip">TINGUILIN</div>
+        <div class="title">{{ title }}</div>
+
+        <div class="divider"></div>
+
+        <div class="totals">
+          <div>
+            <div class="label">TOTAL</div>
+            <div class="sub">{{ quantity }} ticket{{ quantity > 1 ? 's' : '' }}</div>
+          </div>
+          <div class="amount">{{ amount }} FCFA</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment method -->
+    <div class="section">
+      <div class="section-title">Méthode de paiement</div>
+
+      <div class="methods">
+        <button class="method-card orange" [class.selected]="paymentMethod === 'ORANGE'"
+          (click)="paymentMethod = 'ORANGE'">
+          <div class="method-top">
+            <div class="logo orange-logo"><img class="tgl1" src="../../../assets/img/orange_money.jpg" alt=""></div>
+            <div class="radio" [class.on]="paymentMethod === 'ORANGE'"></div>
+          </div>
+          <div class="method-name">Orange Money</div>
+        </button>
+
+        <button class="method-card mtn" [class.selected]="paymentMethod === 'MTN'" (click)="paymentMethod = 'MTN'">
+          <div class="method-top">
+            <div class="logo mtn-logo"><img class="tgl2" src="../../../assets/img/MobileMoney.jpg" alt=""></div>
+            <div class="radio" [class.on]="paymentMethod === 'MTN'"></div>
+          </div>
+          <div class="method-name">MTN MoMo</div>
+        </button>
+      </div>
+
+      <div class="hint">
+        Le choix final du moyen de paiement se fait sur la page de paiement ouverte (paymentLink).
+      </div>
+    </div>
+
+    <!-- Phone -->
+    <div class="section">
+      <div class="section-title">Numéro de téléphone</div>
+
+      <div class="phone-wrap">
+        <div class="phone-left">
+          <span class="flag">🇨🇲</span>
+          <span class="code">+237</span>
+        </div>
+
+        <ion-input class="phone-input" type="tel" inputmode="numeric" placeholder="6 90 00 00 00"
+          [(ngModel)]="userPhone">
+        </ion-input>
+
+        <ion-icon name="phone-portrait-outline" class="phone-ico"></ion-icon>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="pay-btn" (click)="confirmPayment()" [disabled]="loading">
+        <span>Confirmer le paiement</span>
+        <ion-icon name="arrow-forward-outline"></ion-icon>
+      </button>
+
+      <button class="verify-btn" *ngIf="transactionId" (click)="verifyPayment()" [disabled]="loading">
+        Vérifier le paiement
+      </button>
+
+      <div class="secure">
+        <ion-icon name="lock-closed-outline"></ion-icon>
+        <span>Paiement 100% sécurisé</span>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

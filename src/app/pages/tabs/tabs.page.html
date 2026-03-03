@@ -8,9 +8,9 @@
       <ion-label>Home</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="tickets">
-      <span class="material-symbols-outlined">confirmation_number</span>
-      <ion-label>Tickets</ion-label>
+    <ion-tab-button tab="participations" href="/tabs/participations">
+      <ion-icon name="ticket-outline"></ion-icon>
+      <ion-label>Tikets</ion-label>
     </ion-tab-button>
 
 
@@ -32,10 +32,10 @@
   </ion-fab> -->
 
   <ion-fab *ngIf="isAdmin" class="center-fab" vertical="bottom" horizontal="center">
-  <ion-fab-button (click)="goCreateRaffle()">
-    <ion-icon name="add"></ion-icon>
-  </ion-fab-button>
-</ion-fab>
+    <ion-fab-button (click)="goCreateRaffle()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 
 </ion-tabs>

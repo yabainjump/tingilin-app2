@@ -19,10 +19,8 @@
       </div>
 
       <ng-container *ngIf="!loading && raffle; else heroSkel">
-        <div
-          class="hero-img"
-          [style.background-image]="'url(' + (raffle.imageUrl || 'https://via.placeholder.com/900x600') + ')'"
-        >
+        <div class="hero-img"
+          [style.background-image]="'url(' + (raffle.imageUrl) + ')'">
           <div class="hero-grad"></div>
 
           <div class="hero-badge">OFFICIAL PARTNER</div>
@@ -48,7 +46,7 @@
               {{ raffle.description || raffle.subtitle || '—' }}
             </p>
           </div>
-         
+
           <div class="value">
             <div class="value-label">Be The NEXT</div>
             <div class="value-amt">WINNER</div>
@@ -168,7 +166,7 @@
       <div class="total-val">{{ totalPrice }} <span>{{ currency }}</span></div>
     </div>
 
-    <button class="cta" type="button" (click)="participate()" [disabled]="loading || !raffle">
+    <button class="cta" type="button" (click)="goToPayment()" [disabled]="loading || !raffle">
       <span>Participate Now</span>
       <span class="cta-dot">
         <ion-icon name="arrow-forward"></ion-icon>

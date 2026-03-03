@@ -1,0 +1,105 @@
+<ion-header translucent="true" class="hdr">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/participations"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Ticket Details</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="share()">
+        <ion-icon name="share-social-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="bg">
+  <div class="wrap" *ngIf="!loading; else skel">
+
+  
+    <div class="hero-card">
+      <div class="hero-img"
+        [style.backgroundImage]="'url(' + ((raffle?.imageUrl || 'https://via.placeholder.com/900x600')) + ')'">
+        <div class="hero-grad"></div>
+        <div class="status" [class.active]="isActive">{{ isActive ? 'Active Raffle' : 'Completed' }}</div>
+        <div class="hero-text">
+          <div class="h1">{{ raffle?.title || '—' }}</div>
+          <div class="h2">{{ raffle?.subtitle || raffle?.description || '' }}</div>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="cell">
+          <div class="lbl">RAFFLE ID</div>
+          <div class="val mono">#{{ raffleId.slice(-8).toUpperCase() }}</div>
+        </div>
+        <div class="cell">
+          <div class="lbl">DRAW DATE</div>
+          <div class="val">{{ drawDateLabel }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="lbl">Total Spent</div>
+        <div class="big primary">{{ totalSpent }} {{ raffle?.currency || 'XAF' }}</div>
+      </div>
+      <div class="sep"></div>
+      <div class="stat right">
+        <div class="lbl">Tickets Owned</div>
+        <div class="big">{{ ticketsOwned }}</div>
+      </div>
+    </div>
+
+    <button class="share-btn" type="button" (click)="share()">
+      <ion-icon name="share-outline"></ion-icon>
+      Partager pour accélérer
+    </button>
+
+    <div class="tickets-head">
+      <div class="th-title">Your Tickets</div>
+      <div class="view">
+        <button type="button" class="vbtn" [class.on]="viewMode==='grid'" (click)="viewMode='grid'">
+          <ion-icon name="grid-outline"></ion-icon>
+        </button>
+        <button type="button" class="vbtn" [class.on]="viewMode==='list'" (click)="viewMode='list'">
+          <ion-icon name="list-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="ticketsOwned === 0" class="empty">
+      Aucun ticket trouvé pour cette tombola.
+    </div>
+
+    <div class="grid" *ngIf="viewMode==='grid'">
+      <button class="ticket" type="button" *ngFor="let t of tickets" (click)="copy(t.serial)">
+        <div class="ico"><ion-icon name="ticket-outline"></ion-icon></div>
+        <div class="tt">
+          <div class="small">Ticket</div>
+          <div class="serial">#{{ t.serial.slice(-6).toUpperCase() }}</div>
+        </div>
+      </button>
+    </div>
+
+    <div class="list" *ngIf="viewMode==='list'">
+      <div class="row" *ngFor="let t of tickets" (click)="copy(t.serial)">
+        <ion-icon name="ticket-outline"></ion-icon>
+        <div class="rtext">
+          <div class="serial-full">{{ t.serial }}</div>
+          <div class="small">Tap pour copier</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template #skel>
+    <div class="wrap">
+      <div class="skel-block"></div>
+      <div class="skel-block small"></div>
+      <div class="skel-block small"></div>
+    </div>
+  </ng-template>
+</ion-content>

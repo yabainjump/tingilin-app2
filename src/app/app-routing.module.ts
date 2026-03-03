@@ -74,6 +74,18 @@ const routes: Routes = [
     path: 'raffle-details/:id',
     loadChildren: () => import('./pages/raffle-details/raffle-details.module').then( m => m.RaffleDetailsPageModule)
   },
+  {
+    path: 'payment-confirmation',
+    loadChildren: () => import('./pages/payment-confirmation/payment-confirmation.module').then( m => m.PaymentConfirmationPageModule)
+  },
+  {
+    path: 'participations',
+    loadChildren: () => import('./pages/participations/participations.module').then( m => m.ParticipationsPageModule)
+  },
+  {
+    path: 'ticket-details',
+    loadChildren: () => import('./pages/ticket-details/ticket-details.module').then( m => m.TicketDetailsPageModule)
+  },
 ];
 @NgModule({
   imports: [

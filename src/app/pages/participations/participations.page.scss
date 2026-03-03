@@ -1,0 +1,215 @@
+:host {
+  --primary: #a60df2;
+  --bg: #1c1022;
+  --surface: rgba(255, 255, 255, 0.06);
+  --stroke: rgba(255, 255, 255, 0.08);
+}
+
+.hdr ion-toolbar {
+  --background: rgba(28, 16, 34, 0.75);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--stroke);
+}
+
+.bg {
+  --background: transparent;
+  background:
+    radial-gradient(
+      900px 500px at 20% 0%,
+      rgba(166, 13, 242, 0.22),
+      transparent 55%
+    ),
+    radial-gradient(
+      700px 420px at 90% 20%,
+      rgba(166, 13, 242, 0.14),
+      transparent 60%
+    ),
+    var(--bg);
+  color: #fff;
+}
+
+.wrap {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 14px 14px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.toggle {
+  padding-top: 8px;
+}
+.seg {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+}
+ion-segment-button {
+  --color: rgba(255, 255, 255, 0.55);
+  --color-checked: var(--primary);
+  --indicator-color: rgba(255, 255, 255, 0.08);
+}
+
+.card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--surface);
+  border: 1px solid var(--stroke);
+  backdrop-filter: blur(14px);
+  padding: 14px;
+}
+
+.glow {
+  position: absolute;
+  right: -40px;
+  top: -40px;
+  width: 140px;
+  height: 140px;
+  background: rgba(166, 13, 242, 0.2);
+  filter: blur(45px);
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.top {
+  display: flex;
+  gap: 12px;
+}
+
+.img {
+  width: 88px;
+  height: 88px;
+  border-radius: 16px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info {
+  flex: 1;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: start;
+}
+.title {
+  font-weight: 900;
+  font-size: 16px;
+  line-height: 1.15;
+}
+.ref {
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.tickets {
+  margin-top: 8px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: 900;
+  padding: 4px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.badge.vip {
+  background: rgba(255, 170, 0, 0.15);
+  color: #ffcc4d;
+  border-color: rgba(255, 204, 77, 0.25);
+}
+.badge.win {
+  background: rgba(0, 200, 80, 0.14);
+  color: #35e37a;
+  border-color: rgba(53, 227, 122, 0.25);
+}
+.badge.lose {
+  background: rgba(255, 60, 60, 0.14);
+  color: #ff6b6b;
+  border-color: rgba(255, 107, 107, 0.25);
+}
+
+.prog {
+  margin-top: 12px;
+}
+.prog-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  font-size: 12px;
+}
+.muted {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 700;
+}
+.pct {
+  color: var(--primary);
+  font-weight: 900;
+}
+
+.bar {
+  margin-top: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(
+    90deg,
+    rgba(166, 13, 242, 0.65),
+    rgba(166, 13, 242, 1)
+  );
+  box-shadow: 0 0 18px rgba(166, 13, 242, 0.55);
+  border-radius: 999px;
+}
+
+.actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+.btn {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.18);
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 800;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.skel-card {
+  height: 140px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.empty {
+  margin-top: 30px;
+  opacity: 0.7;
+  display: grid;
+  place-items: center;
+  gap: 8px;
+}
+.empty ion-icon {
+  font-size: 28px;
+}
