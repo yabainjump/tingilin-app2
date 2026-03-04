@@ -39,6 +39,15 @@ export class TicketDetailsPage {
   ionViewWillEnter() {
     this.raffleId = this.route.snapshot.paramMap.get('raffleId') || '';
     this.load();
+    console.log(
+      '[ticket-details] paramMap=',
+      this.route.snapshot.paramMap.keys,
+    );
+    console.log(
+      '[ticket-details] raffleId=',
+      this.route.snapshot.paramMap.get('raffleId'),
+      this.route.snapshot.paramMap.get('id'),
+    );
   }
 
   get ticketsOwned(): number {
@@ -62,7 +71,22 @@ export class TicketDetailsPage {
   }
 
   async load() {
-    if (!this.raffleId) return;
+    const raffleId =
+      this.route.snapshot.paramMap.get('raffleId') ||
+      this.route.snapshot.paramMap.get('id') ||
+      '';
+
+    console.log('[ticket-details] raffleId=', raffleId);
+
+    if (!raffleId) {
+      const t = await this.toast.create({
+        message: "Impossible d'afficher le raffle (id manquant)",
+        duration: 1500,
+      });
+      await t.present();
+      history.back();
+      return;
+    }
 
     this.loading = true;
     try {

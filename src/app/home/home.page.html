@@ -41,10 +41,21 @@
             </ng-template>
           </div>
 
-          <button class="notif" type="button" aria-label="Notifications">
+          <!-- <button class="notif" type="button" aria-label="Notifications">
             <span class="material-symbols-outlined">notifications</span>
             <span class="notif-dot"></span>
-          </button>
+          </button> -->
+
+          <ion-tab-button class="notif" href="/tabs/notifications">
+            <span class="material-symbols-outlined">notifications</span>
+            <ion-icon name="notifications-outline"></ion-icon>
+            <ion-label>Notifs</ion-label>
+            <span class="notif-dot"></span>
+
+            <ion-badge *ngIf="(notifState.unreadCount$ | async) as n" [hidden]="n===0">
+              {{ n }}
+            </ion-badge>
+          </ion-tab-button>
         </div>
 
       </div>
@@ -119,9 +130,10 @@
               </div>
 
               <button type="button" class="hero-cta">
-                <span>Buy Ticket</span>
+                <span>Tante de Gagner</span>
                 <span class="price-pill">
-                  {{ d.ticketPrice ?? 0 }} {{ d.currency || 'XAF' }}
+                  <!-- {{ d.ticketPrice ?? 0 }}  --> En 
+                  {{ d.currency || 'XAF' }}
                 </span>
               </button>
             </div>

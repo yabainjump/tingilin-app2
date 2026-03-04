@@ -1,0 +1,40 @@
+<ion-header translucent="true" class="hdr">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Notifications</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="markAllRead()">
+        <ion-icon name="checkmark-done-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="bg">
+  <div class="wrap">
+
+    <ion-refresher slot="fixed" (ionRefresh)="load($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <div class="empty" *ngIf="!loading && items.length === 0">
+      <ion-icon name="notifications-outline"></ion-icon>
+      <div>Aucune notification</div>
+    </div>
+
+    <div class="card" *ngFor="let n of items" (click)="open(n)">
+      <div class="dot" *ngIf="isUnread(n)"></div>
+      <div class="title">{{ n.title }}</div>
+      <div class="body">{{ n.body }}</div>
+      <div class="meta">{{ n.createdAt | date:'MMM d, HH:mm' }}</div>
+    </div>
+
+    <div class="skel" *ngIf="loading">
+      <div class="skel-card" *ngFor="let _ of [1,2,3,4]"></div>
+    </div>
+
+  </div>
+</ion-content>

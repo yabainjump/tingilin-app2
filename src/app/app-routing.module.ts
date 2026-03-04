@@ -86,6 +86,10 @@ const routes: Routes = [
     path: 'ticket-details',
     loadChildren: () => import('./pages/ticket-details/ticket-details.module').then( m => m.TicketDetailsPageModule)
   },
+  {
+    path: 'notifications',
+    loadChildren: () => import('./pages/notifications/notifications.module').then( m => m.NotificationsPageModule)
+  },
 ];
 @NgModule({
   imports: [

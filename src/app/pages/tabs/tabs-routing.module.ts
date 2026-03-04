@@ -50,6 +50,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'notifications',
+        loadChildren: () =>
+          import('../notifications/notifications.module').then(
+            (m) => m.NotificationsPageModule,
+          ),
+      },
+      {
         path: 'participations',
         loadChildren: () =>
           import('../participations/participations.module').then(

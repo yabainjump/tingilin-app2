@@ -32,4 +32,6 @@ export class RafflesPublicApiService {
   getById(id: string): Observable<RaffleDetailsDto> {
     return this.http.get<RaffleDetailsDto>(`${this.baseUrl}/raffles/public/${id}`);
   }
+
+  
 }

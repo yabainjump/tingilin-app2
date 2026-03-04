@@ -25,11 +25,6 @@
     </ion-tab-button>
   </ion-tab-bar>
 
-  <!-- <ion-fab *ngIf="isAdmin$ | async" vertical="bottom" horizontal="center" slot="fixed" class="center-fab">
-    <ion-fab-button (click)="goCreateRaffle()">
-      <span class="material-symbols-outlined">add</span>
-    </ion-fab-button>
-  </ion-fab> -->
 
   <ion-fab *ngIf="isAdmin" class="center-fab" vertical="bottom" horizontal="center">
     <ion-fab-button (click)="goCreateRaffle()">

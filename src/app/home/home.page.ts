@@ -5,6 +5,7 @@ import { HomeApiService } from '../services/home/home-api.service';
 import { DrawCard, UserSummary } from '../services/home/home.models';
 import { Router } from '@angular/router';
 import { Subscription, interval } from 'rxjs';
+import { NotificationsStateService } from '../services/notifications/notifications-state.service';
 
 type HomeCategory = { id: string; label: string };
 
@@ -17,6 +18,7 @@ type HomeCategory = { id: string; label: string };
 export class HomePage implements OnInit {
   ionViewWillEnter(): void {
     this.startClock();
+    this.notifState.refresh();
   }
 
   ionViewWillLeave(): void {
@@ -50,6 +52,7 @@ export class HomePage implements OnInit {
   constructor(
     private api: HomeApiService,
     private router: Router,
+    public notifState: NotificationsStateService,
   ) {}
 
   ngOnInit(): void {
@@ -114,8 +117,11 @@ export class HomePage implements OnInit {
         ),
       )
       .subscribe({
-        next: (rows) => {
-          this.endingSoon = rows ?? [];
+        next: (rows: any[]) => {
+          const all = (rows ?? []).filter((x) => this.isVisibleOnHome(x));
+
+          this.endingSoon = all.filter((x) => this.isPurchasable(x));
+
           this.heroCards = this.endingSoon;
         },
         error: () => {
@@ -135,10 +141,16 @@ export class HomePage implements OnInit {
         }),
       )
       .subscribe({
-        next: (rows) => {
-          const all = rows ?? [];
-          this.featured = all.length ? all[0] : null;
-          this.liveRows = all.slice(1);
+        next: (rows: any[]) => {
+          const all = (rows ?? []).filter((x) => this.isVisibleOnHome(x));
+
+          const featured = all.find((x) => this.isPurchasable(x)) ?? null;
+          this.featured = featured;
+
+          const fid = featured?._id || featured?.id || featured?.raffleId;
+          this.liveRows = fid
+            ? all.filter((x) => (x?._id || x?.id || x?.raffleId) !== fid)
+            : all;
         },
         error: () => {
           this.featured = null;
@@ -158,8 +170,12 @@ export class HomePage implements OnInit {
     this.loadAll('refresh', refresher);
   }
 
-  trackById(_: number, x: { id: string }): string {
-    return x.id;
+  // trackById(_: number, x: { id: string }): string {
+  //   return x.id;
+  // }
+
+  trackById(_: number, x: any): string {
+    return x?._id || x?.id || x?.raffleId || String(_);
   }
 
   percent(d: DrawCard): number {
@@ -215,5 +231,36 @@ export class HomePage implements OnInit {
 
     const pad = (n: number) => String(n).padStart(2, '0');
     return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
+  }
+
+  private getEndMs(x: any): number {
+    const raw = x?.endsAt ?? x?.endAt ?? x?.end_at;
+    const ms = raw ? new Date(raw).getTime() : NaN;
+    return Number.isFinite(ms) ? ms : NaN;
+  }
+
+  private isVisibleOnHome(x: any): boolean {
+    // visible si pas de date fin (fallback) OU fin >= maintenant - 2 jours
+    const end = this.getEndMs(x);
+    if (!Number.isFinite(end)) return true;
+    const keepMs = 2 * 24 * 60 * 60 * 1000;
+    return end >= Date.now() - keepMs;
+  }
+
+  isPurchasable(x: any): boolean {
+    // achetable si pas terminé + status LIVE (si disponible)
+    const st = String(x?.status ?? '').toUpperCase();
+    const end = this.getEndMs(x);
+    const ended = Number.isFinite(end) ? end <= Date.now() : false;
+
+    if (ended) return false;
+    if (st && st !== 'LIVE') return false;
+
+    // stock tickets si dispo
+    const total = Number(x?.total ?? x?.totalTickets ?? 0);
+    const sold = Number(x?.sold ?? x?.ticketsSold ?? 0);
+    if (total > 0 && sold >= total) return false;
+
+    return true;
   }
 }

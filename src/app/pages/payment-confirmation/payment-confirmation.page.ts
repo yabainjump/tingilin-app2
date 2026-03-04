@@ -138,7 +138,7 @@ export class PaymentConfirmationPage {
       if (res?.status === 'SUCCESS') {
         await this.presentToast('Paiement confirmé ✅');
         // exemple : redirige vers mes tickets
-        this.router.navigateByUrl('/tabs/tickets');
+        this.router.navigateByUrl('/tabs/participations');
         return;
       }
 

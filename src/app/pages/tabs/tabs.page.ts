@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { AuthStateService } from 'src/app/services/auth/auth-state.service';
 import { NavController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { NotificationsStateService } from 'src/app/services/notifications/notifications-state.service';
 
 @Component({
   selector: 'app-tabs',
@@ -17,6 +18,7 @@ export class TabsPage implements OnInit {
   constructor(
     private authState: AuthStateService,
     private nav: NavController,
+    public notifState: NotificationsStateService,
     private auth: AuthService,
   ) {
     this.isAdmin$ = this.authState.isAdmin$;
@@ -27,6 +29,7 @@ export class TabsPage implements OnInit {
       next: (u) => (this.isAdmin = u.role === 'ADMIN'),
       error: () => (this.isAdmin = false),
     });
+    this.notifState.refresh();
   }
 
   goCreateRaffle(): void {

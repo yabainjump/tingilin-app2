@@ -18,11 +18,9 @@
         <div class="avatar-wrap">
           <div class="avatar-ring">
             <div class="avatar-inner">
-              <img
-                class="avatar"
+              <img class="avatar"
                 [src]="user?.avatar || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCCjJdKxKA3bCtuEqSixjWaB3vlVBjuocZ8MNiD2PMwNwxHxP7dzHi1AXS1BhgxL0f1vCBaVzLbT0p9UNWjpR4pPqwS-9XMu1mO9m1Ycg8aaJrCC1eaqnluScpExHje1eVScj9xEiM-e-YqVMnYrIfIrMNFsKFthMyR8EuBVOmMJs1iwIUiihUnC-7t6Rby-aKsKNr6NRL7L8L9zbZ9UvYMKUgjB2mc69LA0IORjdSufkPKhahMCPIUnRU6Xd6o27Iq3oItJQoVMEE'"
-                alt="avatar"
-              />
+                alt="avatar" />
             </div>
           </div>
 
@@ -34,7 +32,7 @@
 
         <!-- FirstName + LastName sous la photo -->
         <h1 class="name" style="color: white;">
-          {{ (user?.firstName || '') + ' ' + (user?.lastName || '') }} 
+          {{ (user?.firstName || '') + ' ' + (user?.lastName || '') }}
         </h1>
 
         <div class="balance-pill">
@@ -111,13 +109,8 @@
       <!-- HISTORY LIST -->
       <ng-container *ngIf="!loadingHistory; else historySkeleton">
         <div class="history-list">
-          <button
-            class="glass-panel history-item"
-            [class.is-lost]="h.result === 'LOST'"
-            type="button"
-            *ngFor="let h of history"
-            (click)="openHistoryItem(h)"
-          >
+          <button class="glass-panel history-item" [class.is-lost]="h.result === 'LOST'" type="button"
+            *ngFor="let h of history" (click)="openMyTicketsForRaffle(h.raffleId)">
             <div class="thumb">
               <img [src]="h.imageUrl || 'assets/img/placeholder.png'" alt="product" />
               <div class="thumb-grad"></div>
@@ -127,14 +120,9 @@
               <div class="h-top">
                 <div class="h-title">{{ h.title }}</div>
 
-                <div class="badge won" *ngIf="h.result === 'WON'">
-                  <span class="material-icons-round">emoji_events</span>
-                  <span>Gagné</span>
-                </div>
-
-                <div class="badge lost" *ngIf="h.result === 'LOST'">
-                  Perdu
-                </div>
+                <span class="badge" [class.live]="isRaffleActive(h)" [class.ended]="!isRaffleActive(h)">
+                  {{ raffleBadgeLabel(h) }}
+                </span>
               </div>
 
               <div class="h-meta">

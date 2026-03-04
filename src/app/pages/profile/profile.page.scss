@@ -547,3 +547,15 @@ ion-content.premium-bg {
 .skel .sk-line.sm {
   width: 160px;
 }
+
+.badge.live {
+  background: rgba(0, 224, 84, 0.18);
+  border: 1px solid rgba(0, 224, 84, 0.28);
+  color: #3cff9c;
+}
+
+.badge.ended {
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.75);
+}
