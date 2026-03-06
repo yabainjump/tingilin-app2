@@ -51,6 +51,7 @@ export class HomeApiService {
       currency: String(raw?.currency ?? 'XAF'),
 
       // ✅ date fin (ton modèle s’appelle endsAt côté front)
+      startAt: raw?.startAt ?? undefined,
       endsAt: raw?.endAt ?? raw?.endsAt ?? undefined,
 
       badgeText: raw?.badge ?? raw?.badgeText ?? undefined,

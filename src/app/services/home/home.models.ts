@@ -21,6 +21,7 @@ export interface DrawCard {
   sold?: number;
   total?: number;
 
+  startAt?: string;
   endsAt?: string;       
   endAt?: string;        
 

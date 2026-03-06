@@ -59,6 +59,7 @@ const routes: Routes = [
   { path: 'home', redirectTo: 'tabs/home', pathMatch: 'full' },
   { path: 'tickets', redirectTo: 'tabs/tickets', pathMatch: 'full' },
   { path: 'winners', redirectTo: 'tabs/winners', pathMatch: 'full' },
+  { path: 'referral', redirectTo: 'tabs/referral', pathMatch: 'full' },
   { path: 'account', redirectTo: 'tabs/account', pathMatch: 'full' },
 
   { path: '**', redirectTo: 'landing' },

@@ -37,7 +37,7 @@
           <div class="featured-head">
             <div class="who">
               <div class="avatar"
-                [style.background-image]="'url(' + (featured.avatarUrl || 'assets/img/placeholder.png') + ')'">
+                [style.background-image]="'url(' + avatarSrc(featured.avatar) + ')'">                
                 <div class="verified">
                   <ion-icon name="checkmark-circle"></ion-icon>
                 </div>
@@ -51,7 +51,7 @@
 
             <div class="ticket-chip">
               <ion-icon name="ticket"></ion-icon>
-              <span>#{{ featured.winnerTicketCode }}</span>
+              <span>#{{ featured.ticketCode }}</span>
             </div>
           </div>
 
@@ -108,7 +108,7 @@
           </div>
 
           <div class="r-who">
-            <div class="mini" [style.background-image]="'url(' + (w.avatarUrl || 'assets/img/placeholder.png') + ')'">
+            <div class="mini" [style.background-image]="'url(' + avatarSrc(w.avatar) + ')'">
             </div>
             <div class="r-name">{{ w.winnerName }}</div>
           </div>
@@ -116,7 +116,7 @@
 
         <div class="r-code" [class.gold]="w.badgeTone === 'gold'" [class.pink]="w.badgeTone === 'pink'"
           [class.violet]="w.badgeTone === 'violet'">
-          #{{ w.winnerTicketCode }}
+          #{{ w.ticketCode }}
         </div>
       </button>
     </div>

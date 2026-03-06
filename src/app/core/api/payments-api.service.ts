@@ -52,4 +52,11 @@ export class PaymentsApiService {
       { transactionId },
     );
   }
+
+  useFreeTicket(raffleId: string) {
+    return this.http.post<{ ok: boolean; transactionId: string }>(
+      `${this.base}/payments/free-ticket`,
+      { raffleId },
+    );
+  }
 }

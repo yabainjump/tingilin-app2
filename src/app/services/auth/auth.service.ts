@@ -16,6 +16,7 @@ export type RegisterPayload = {
   email: string;
   phone: string;
   password: string;
+  referralCode?: string;
 };
 
 export interface AuthTokenResponse {
@@ -36,58 +37,29 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  // login(payload: LoginPayload): Observable<AuthTokenResponse> {
-  //   const body: any = {
-  //     password: payload.password,
-  //     ...(payload.phoneOrEmail ? { phoneOrEmail: payload.phoneOrEmail } : {}),
-  //     ...(payload.email ? { email: payload.email } : {}),
-  //     ...(payload.phone ? { phone: payload.phone } : {}),
-  //   };
-
-  //   return this.http
-  //     .post<AuthTokenResponse>(`${this.baseUrl}/auth/login`, body)
-  //     .pipe(tap((res) => this.setToken(res.access_token)));
-  // }
-
   login(email: string, password: string) {
     return this.http
-      .post<{ access_token: string; refresh_token: string }>(
-        `${this.baseUrl}/auth/login`,
-        { email, password }
-      )
-      .pipe(
-        tap((res) => this.setTokens(res.access_token, res.refresh_token))
-      );
+      .post<{
+        access_token: string;
+        refresh_token: string;
+      }>(`${this.baseUrl}/auth/login`, { email, password })
+      .pipe(tap((res) => this.setTokens(res.access_token, res.refresh_token)));
   }
 
-  // register(
-  //   payload: RegisterPayload,
-  //   storeToken = true,
-  // ): Observable<AuthTokenResponse> {
-  //   return this.http
-  //     .post<AuthTokenResponse>(`${this.baseUrl}/auth/register`, payload)
-  //     .pipe(
-  //       tap((res) => {
-  //         if (storeToken) this.setToken(res.access_token);
-  //       }),
-  //     );
-  // }
-
-   register(dto: {
+  register(dto: {
     email: string;
     password: string;
     firstName: string;
     lastName: string;
     phone: string;
+    referralCode?: string;
   }) {
     return this.http
-      .post<{ access_token: string; refresh_token: string }>(
-        `${this.baseUrl}/auth/register`,
-        dto
-      )
-      .pipe(
-        tap((res) => this.setTokens(res.access_token, res.refresh_token))
-      );
+      .post<{
+        access_token: string;
+        refresh_token: string;
+      }>(`${this.baseUrl}/auth/register`, dto)
+      .pipe(tap((res) => this.setTokens(res.access_token, res.refresh_token)));
   }
 
   me<T = any>(): Observable<T> {
@@ -97,6 +69,7 @@ export class AuthService {
   }
 
   forgotPassword(payload: {
+    identifier?: string;
     email?: string;
     phone?: string;
     phoneOrEmail?: string;
@@ -104,10 +77,24 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/auth/forgot-password`, payload);
   }
 
+  resetPassword(payload: {
+    identifier?: string;
+    email?: string;
+    phone?: string;
+    phoneOrEmail?: string;
+    code: string;
+    newPassword: string;
+  }) {
+    return this.http.post<{ ok: boolean; message?: string }>(
+      `${this.baseUrl}/auth/reset-password`,
+      payload,
+    );
+  }
+
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.legacyTokenKey);
-     this.clearTokens();
+    this.clearTokens();
   }
 
   getToken(): string | null {
@@ -133,12 +120,15 @@ export class AuthService {
   }
 
   setTokens(access: string, refresh?: string) {
-    if (access) localStorage.setItem(this.accessKey, access);
+    if (access) {
+      localStorage.setItem(this.accessKey, access);
+      localStorage.removeItem(this.legacyTokenKey);
+    }
     if (refresh) localStorage.setItem(this.refreshKey, refresh);
   }
 
   getAccessToken(): string | null {
-    return localStorage.getItem(this.accessKey);
+    return localStorage.getItem(this.accessKey) || this.getToken();
   }
 
   getRefreshToken(): string | null {
@@ -153,8 +143,7 @@ export class AuthService {
   refresh(refresh_token: string) {
     return this.http.post<{ access_token: string; refresh_token: string }>(
       `${this.baseUrl}/auth/refresh`,
-      { refresh_token }
+      { refresh_token },
     );
   }
-
 }

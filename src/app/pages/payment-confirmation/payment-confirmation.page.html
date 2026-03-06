@@ -13,7 +13,8 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="page-bg">
-  <div class="container">
+  <ng-container *ngIf="!pageLoading; else pageSkeleton">
+    <div class="container">
 
     <!-- Product / raffle card -->
     <div class="glass-card product-card">
@@ -85,6 +86,11 @@
 
     <!-- Actions -->
     <div class="actions">
+      <button class="verify-btn" type="button" (click)="useFreeTicket()"
+        [disabled]="loading || freeTicketsBalance <= 0">
+        Utiliser 1 ticket gratuit ({{ freeTicketsBalance }})
+      </button>
+
       <button class="pay-btn" (click)="confirmPayment()" [disabled]="loading">
         <span>Confirmer le paiement</span>
         <ion-icon name="arrow-forward-outline"></ion-icon>
@@ -100,5 +106,17 @@
       </div>
     </div>
 
-  </div>
+    </div>
+  </ng-container>
+
+  <ng-template #pageSkeleton>
+    <div class="container">
+      <ion-skeleton-text animated class="sk sk-card"></ion-skeleton-text>
+      <ion-skeleton-text animated class="sk sk-title"></ion-skeleton-text>
+      <ion-skeleton-text animated class="sk sk-methods"></ion-skeleton-text>
+      <ion-skeleton-text animated class="sk sk-input"></ion-skeleton-text>
+      <ion-skeleton-text animated class="sk sk-btn"></ion-skeleton-text>
+      <ion-skeleton-text animated class="sk sk-btn sm"></ion-skeleton-text>
+    </div>
+  </ng-template>
 </ion-content>

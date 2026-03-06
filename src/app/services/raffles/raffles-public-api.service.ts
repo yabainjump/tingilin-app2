@@ -15,7 +15,9 @@ export interface RaffleDetailsDto {
   sold?: number;
   total?: number;
 
+  startAt?: string; // ISO
   endsAt?: string;   // ISO
+  endAt?: string;    // ISO (compat backend)
   badgeText?: string;
   badgeType?: 'danger' | 'warn' | 'hot';
 

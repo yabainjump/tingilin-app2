@@ -41,10 +41,6 @@
             </ng-template>
           </div>
 
-          <!-- <button class="notif" type="button" aria-label="Notifications">
-            <span class="material-symbols-outlined">notifications</span>
-            <span class="notif-dot"></span>
-          </button> -->
 
           <ion-tab-button class="notif" href="/tabs/notifications">
             <span class="material-symbols-outlined">notifications</span>
@@ -59,6 +55,10 @@
         </div>
 
       </div>
+      
+      <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
 
       <!-- Category Chips -->
       <div class="chips hide-scroll">
@@ -106,7 +106,7 @@
             </div>
 
             <div class="hero-img"
-              [style.backgroundImage]="'url(' + (d.imageUrl || 'https://via.placeholder.com/600x400') + ')'">
+              [style.backgroundImage]="'url(' + (safeImg(d.imageUrl )|| 'https://via.placeholder.com/600x400') + ')'">
               <div class="hero-grad"></div>
             </div>
 
@@ -120,19 +120,19 @@
 
               <div class="progress">
                 <div class="progress-meta">
-                  <span class="sold">{{ d.sold ?? 0 }} sold</span>
-                  <span class="left">{{ left(d) }} left</span>
+                  <span class="sold">Temps restant</span>
+                  <span class="left">{{ countdownText(d) }}</span>
                 </div>
 
                 <div class="bar">
-                  <div class="bar-fill" [style.width.%]="percent(d)"></div>
+                  <div class="bar-fill" [style.width.%]="timeProgress(d)"></div>
                 </div>
               </div>
 
               <button type="button" class="hero-cta">
                 <span>Tante de Gagner</span>
                 <span class="price-pill">
-                  <!-- {{ d.ticketPrice ?? 0 }}  --> En 
+                  <!-- {{ d.ticketPrice ?? 0 }}  --> En
                   {{ d.currency || 'XAF' }}
                 </span>
               </button>
@@ -172,11 +172,11 @@
 
             <div class="progress lg">
               <div class="progress-meta">
-                <span class="left muted">{{ featured.sold ?? 0 }} / {{ featured.total ?? 0 }} tickets sold</span>
-                <span class="sold">Only {{ left(featured) }} left!</span>
+                <span class="left muted">Temps restant</span>
+                <span class="sold">{{ countdownText(featured) }}</span>
               </div>
               <div class="bar lg">
-                <div class="bar-fill grad" [style.width.%]="percent(featured)"></div>
+                <div class="bar-fill grad" [style.width.%]="timeProgress(featured)"></div>
               </div>
             </div>
 
@@ -207,7 +207,7 @@
 
           <div class="row-body">
             <div class="row-title">{{ r.title }}</div>
-            <div class="row-sub">{{ r.sold ?? 0 }} sold • {{ left(r) }} left</div>
+            <div class="row-sub">Temps restant: {{ countdownText(r) }}</div>
 
             <div class="row-actions">
               <div class="row-price">{{ r.ticketPrice ?? 0 }} {{ r.currency || 'XAF' }}</div>

@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentsApiService } from 'src/app/core/api/payments-api.service';
 import { ToastController, LoadingController } from '@ionic/angular';
+import { ReferralApiService } from 'src/app/services/referral/referral-api.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-payment-confirmation',
@@ -29,18 +31,23 @@ export class PaymentConfirmationPage {
   transactionId?: string;
   paymentLink?: string;
   paymentWithTaxes?: number;
+  freeTicketsBalance = 0;
 
   loading = false;
+  pageLoading = true;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private paymentsApi: PaymentsApiService,
+    private referralApi: ReferralApiService,
     private toastCtrl: ToastController,
     private loadingCtrl: LoadingController,
   ) {}
 
   ionViewWillEnter() {
+    this.pageLoading = true;
+
     // ✅ récupère les paramètres depuis navigation (à adapter selon ton flow)
     // Exemple: /payment-confirmation?raffleId=...&title=...&qty=...&unit=...
     const qp = this.route.snapshot.queryParamMap;
@@ -56,6 +63,15 @@ export class PaymentConfirmationPage {
     if (!this.raffleId) {
       this.presentToast('raffleId manquant');
     }
+
+    this.referralApi
+      .summary()
+      .pipe(finalize(() => (this.pageLoading = false)))
+      .subscribe({
+        next: (s) =>
+          (this.freeTicketsBalance = Number(s?.freeTicketsBalance ?? 0)),
+        error: () => (this.freeTicketsBalance = 0),
+      });
   }
   back() {
     history.back();
@@ -146,6 +162,34 @@ export class PaymentConfirmationPage {
     } catch (e: any) {
       await this.presentToast(
         e?.error?.message || e?.message || 'Erreur verify',
+      );
+    } finally {
+      this.loading = false;
+      await loader.dismiss();
+    }
+  }
+
+  async useFreeTicket() {
+    if (!this.raffleId) return;
+    if (this.freeTicketsBalance <= 0) {
+      await this.presentToast('Aucun ticket gratuit disponible');
+      return;
+    }
+
+    const loader = await this.loadingCtrl.create({
+      message: 'Utilisation du ticket gratuit...',
+    });
+    await loader.present();
+    this.loading = true;
+
+    try {
+      await this.paymentsApi.useFreeTicket(this.raffleId).toPromise();
+      this.freeTicketsBalance = Math.max(0, this.freeTicketsBalance - 1);
+      await this.presentToast('Ticket gratuit utilisé ✅');
+      this.router.navigateByUrl('/tabs/participations');
+    } catch (e: any) {
+      await this.presentToast(
+        e?.error?.message || e?.message || 'Impossible d’utiliser le ticket gratuit',
       );
     } finally {
       this.loading = false;

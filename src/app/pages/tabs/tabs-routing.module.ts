@@ -23,6 +23,13 @@ const routes: Routes = [
           import('../winners/winners.module').then((m) => m.WinnersPageModule),
       },
       {
+        path: 'referral',
+        loadChildren: () =>
+          import('../referral/referral.module').then(
+            (m) => m.ReferralPageModule,
+          ),
+      },
+      {
         path: 'profile',
         loadChildren: () =>
           import('../profile/profile.module').then((m) => m.ProfilePageModule),

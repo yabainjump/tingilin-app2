@@ -49,9 +49,13 @@ export class LoginPage {
 
     this.auth
       .login(String(identifier).trim().toLowerCase(), String(password))
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        }),
+      )
       .subscribe({
         next: () => {
-          // on garde une redirection flexible
           const redirect =
             this.route.snapshot.queryParamMap.get('redirect') || '/home';
           this.router.navigateByUrl(redirect);

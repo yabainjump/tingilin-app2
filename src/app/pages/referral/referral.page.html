@@ -1,0 +1,160 @@
+<ion-content [fullscreen]="true" class="referral-page">
+  <div class="screen">
+    <div class="topbar">
+      <button class="icon-btn" type="button" (click)="back()">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+      <h1>Parrainage &amp; Fidélité</h1>
+      <button class="icon-btn" type="button" (click)="copyLink()">
+        <span class="material-symbols-outlined">help</span>
+      </button>
+    </div>
+
+    <ng-container *ngIf="!loading && summary; else loadingTpl">
+      <section class="hero">
+        <div class="hero-image" [style.backgroundImage]="'url(' + heroImage + ')'">
+          <div class="hero-grad"></div>
+        </div>
+        <h2>Gagnez des tickets gratuits&nbsp;!</h2>
+        <p>
+          Invitez 10 amis (achat requis) ou jouez 10 raffles pour gagner un
+          <span>ticket gratuit</span> !
+        </p>
+      </section>
+
+      <section class="reward-balance">
+        <div class="reward-label">Tickets gratuits disponibles</div>
+        <div class="reward-value">{{ summary.freeTicketsBalance }}</div>
+        <button type="button" class="reward-btn" (click)="openTickets()">
+          Utiliser maintenant
+        </button>
+      </section>
+
+      <section class="card referral">
+        <div class="card-head">
+          <div>
+            <h3>
+              <span class="material-symbols-outlined">group_add</span>
+              Objectif Parrainage
+            </h3>
+            <p>{{ referralProgressLabel }}</p>
+          </div>
+          <div class="chip">+1</div>
+        </div>
+        <div class="bar">
+          <div class="fill referral-fill" [style.width.%]="referralPercent"></div>
+          <div class="knob" [style.left.%]="referralPercent"></div>
+        </div>
+      </section>
+
+      <section class="card loyalty">
+        <div class="card-head">
+          <div>
+            <h3>
+              <span class="material-symbols-outlined">confirmation_number</span>
+              Bonus Fidélité
+            </h3>
+            <p>{{ loyaltyProgressLabel }}</p>
+          </div>
+          <div class="chip blue">+1</div>
+        </div>
+        <div class="bar">
+          <div class="fill loyalty-fill" [style.width.%]="loyaltyPercent"></div>
+          <div class="knob" [style.left.%]="loyaltyPercent"></div>
+        </div>
+      </section>
+
+      <section class="code-card">
+        <p class="code-label">Votre code unique</p>
+        <div class="code-row">
+          <span class="code">{{ summary.referralCode }}</span>
+          <button type="button" (click)="copyCode()">Copier</button>
+        </div>
+
+        <div class="share-row">
+          <button type="button" (click)="share('whatsapp')">
+            <span class="material-symbols-outlined">chat</span>
+            WhatsApp
+          </button>
+          <button type="button" (click)="share('facebook')">
+            <span class="material-symbols-outlined">public</span>
+            Facebook
+          </button>
+          <button type="button" (click)="share('sms')">
+            <span class="material-symbols-outlined">sms</span>
+            SMS
+          </button>
+          <button type="button" (click)="share('other')">
+            <span class="material-symbols-outlined">ios_share</span>
+            Autre
+          </button>
+        </div>
+      </section>
+
+      <section class="history-section">
+        <div class="list-head">
+          <h3>Historique des récompenses</h3>
+          <div class="badge">{{ rewardHistory.length }}</div>
+        </div>
+
+        <div class="empty" *ngIf="!rewardHistory.length">
+          Aucun bonus attribué pour le moment.
+        </div>
+
+        <div class="history-row" *ngFor="let h of rewardHistory">
+          <div class="h-left">
+            <span class="material-symbols-outlined h-ico" [class.ref]="historyTone(h.source) === 'ref'"
+              [class.loy]="historyTone(h.source) === 'loy'">
+              {{ historyIcon(h.source) }}
+            </span>
+            <div class="h-meta">
+              <div class="h-reason">{{ h.reason }}</div>
+              <div class="h-date">{{ historyDate(h.createdAt) }}</div>
+            </div>
+          </div>
+          <div class="h-amount">+{{ h.amount }}</div>
+        </div>
+      </section>
+
+      <section class="list-section">
+        <div class="list-head">
+          <h3>Mes parrainages</h3>
+          <div class="badge">{{ summary.referral.qualifiedReferrals }} actifs</div>
+        </div>
+
+        <div class="empty" *ngIf="!summary.referrals?.length">
+          Aucun filleul pour l’instant.
+        </div>
+
+        <div class="user-row" *ngFor="let r of summary.referrals">
+          <div class="avatar" [style.backgroundImage]="'url(' + avatar(r) + ')'"></div>
+          <div class="user-meta">
+            <div class="name">{{ fullName(r) }}</div>
+            <div class="status" [class.active]="r.active">
+              {{ r.active ? 'Actif (achat validé)' : 'En attente d’achat' }}
+            </div>
+          </div>
+          <span class="material-symbols-outlined state-ico">
+            {{ r.active ? 'check_circle' : 'schedule' }}
+          </span>
+        </div>
+      </section>
+    </ng-container>
+
+    <ng-template #loadingTpl>
+      <div class="sk-wrap">
+        <ion-skeleton-text animated class="sk sk-hero"></ion-skeleton-text>
+        <ion-skeleton-text animated class="sk sk-title"></ion-skeleton-text>
+        <ion-skeleton-text animated class="sk sk-sub"></ion-skeleton-text>
+
+        <ion-skeleton-text animated class="sk sk-card"></ion-skeleton-text>
+        <ion-skeleton-text animated class="sk sk-card"></ion-skeleton-text>
+        <ion-skeleton-text animated class="sk sk-card"></ion-skeleton-text>
+
+        <ion-skeleton-text animated class="sk sk-head"></ion-skeleton-text>
+        <ion-skeleton-text animated class="sk sk-row"></ion-skeleton-text>
+        <ion-skeleton-text animated class="sk sk-row"></ion-skeleton-text>
+      </div>
+    </ng-template>
+  </div>
+</ion-content>

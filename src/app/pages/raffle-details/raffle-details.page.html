@@ -56,23 +56,21 @@
         <!-- PROGRESS -->
         <div class="progress-card">
           <div class="progress-top">
-            <span>Tickets Sold</span>
-            <span class="progress-n">
-              {{ sold }} <span class="muted">/ {{ total }}</span>
-            </span>
+            <span>Temps restant</span>
+            <span class="progress-n">{{ remainingLabel }}</span>
           </div>
 
           <div class="bar">
             <div class="bar-pattern"></div>
-            <div class="bar-fill" [style.width.%]="percent"></div>
+            <div class="bar-fill" [style.width.%]="progressPct"></div>
           </div>
 
           <div class="progress-bottom">
             <div class="fast">
               <ion-icon name="flame"></ion-icon>
-              <span>Selling fast</span>
+              <span>Compte à rebours en cours</span>
             </div>
-            <div class="muted">{{ remaining }} remaining</div>
+            <div class="muted">{{ raffle.status || 'LIVE' }}</div>
           </div>
         </div>
 
@@ -87,7 +85,7 @@
           <div class="g-card">
             <div class="g-ico"><ion-icon name="calendar-outline"></ion-icon></div>
             <div class="g-lbl">DRAW</div>
-            <div class="g-val">{{ raffle.endsAt ? (raffle.endsAt | date:'MMM d') : '—' }}</div>
+            <div class="g-val">{{ (raffle.endsAt || raffle.endAt) ? ((raffle.endsAt || raffle.endAt) | date:'MMM d') : '—' }}</div>
           </div>
 
           <div class="g-card">
@@ -106,13 +104,13 @@
 
           <div class="stepper-card">
             <div class="stepper-left">
-              <button class="step-btn" type="button" (click)="dec()">
+              <button class="step-btn" type="button" (click)="dec()" [disabled]="!canParticipate">
                 <ion-icon name="remove"></ion-icon>
               </button>
 
               <div class="qty">{{ qty }}</div>
 
-              <button class="step-btn plus" type="button" (click)="inc()">
+              <button class="step-btn plus" type="button" (click)="inc()" [disabled]="!canParticipate">
                 <ion-icon name="add"></ion-icon>
               </button>
             </div>
@@ -166,8 +164,8 @@
       <div class="total-val">{{ totalPrice }} <span>{{ currency }}</span></div>
     </div>
 
-    <button class="cta" type="button" (click)="goToPayment()" [disabled]="loading || !raffle">
-      <span>Participate Now</span>
+    <button class="cta" type="button" (click)="goToPayment()" [disabled]="!canParticipate">
+      <span>{{ isRaffleClosed ? 'Raffle Closed' : 'Participate Now' }}</span>
       <span class="cta-dot">
         <ion-icon name="arrow-forward"></ion-icon>
       </span>

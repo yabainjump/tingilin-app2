@@ -333,6 +333,10 @@ ion-content.details {
 .step-btn ion-icon {
   font-size: 18px;
 }
+.step-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
 .qty {
   width: 42px;
   text-align: center;

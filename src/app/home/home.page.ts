@@ -6,6 +6,7 @@ import { DrawCard, UserSummary } from '../services/home/home.models';
 import { Router } from '@angular/router';
 import { Subscription, interval } from 'rxjs';
 import { NotificationsStateService } from '../services/notifications/notifications-state.service';
+import { RafflesApiService } from '../services/raffles/raffles-api.service';
 
 type HomeCategory = { id: string; label: string };
 
@@ -16,17 +17,22 @@ type HomeCategory = { id: string; label: string };
   standalone: false,
 })
 export class HomePage implements OnInit {
+  raffles$ = this.rafflesService.triggerRefresh;
+
   ionViewWillEnter(): void {
     this.startClock();
     this.notifState.refresh();
+    this.rafflesService.triggerRefresh();
   }
 
   ionViewWillLeave(): void {
     this.stopClock();
   }
 
-  doRefresh(ev: CustomEvent): void {
+  doRefresh(ev: any): void {
     this.loadAll('refresh');
+    this.rafflesService.triggerRefresh();
+    setTimeout(() => ev.target.complete(), 300);
   }
 
   // Skeleton flags
@@ -53,6 +59,7 @@ export class HomePage implements OnInit {
     private api: HomeApiService,
     private router: Router,
     public notifState: NotificationsStateService,
+    private rafflesService: RafflesApiService,
   ) {}
 
   ngOnInit(): void {
@@ -178,17 +185,24 @@ export class HomePage implements OnInit {
     return x?._id || x?.id || x?.raffleId || String(_);
   }
 
-  percent(d: DrawCard): number {
-    const total = d.total ?? 0;
-    const sold = d.sold ?? 0;
-    if (!total) return 0;
-    return Math.max(0, Math.min(100, (sold / total) * 100));
-  }
+  timeProgress(d: DrawCard): number {
+    const end = this.getEndMs(d);
+    if (!Number.isFinite(end)) return 0;
 
-  left(d: DrawCard): number {
-    const total = d.total ?? 0;
-    const sold = d.sold ?? 0;
-    return Math.max(0, total - sold);
+    const start = this.getStartMs(d);
+    if (Number.isFinite(start) && end > start) {
+      const elapsed = Math.max(0, Math.min(end - start, this.nowMs - start));
+      return Math.max(0, Math.min(100, (elapsed / (end - start)) * 100));
+    }
+
+    // fallback if startAt is missing: animate over a rolling 24h window
+    const remaining = Math.max(0, end - this.nowMs);
+    const fallbackWindow = 24 * 60 * 60 * 1000;
+    const elapsedFallback = Math.max(0, fallbackWindow - remaining);
+    return Math.max(
+      0,
+      Math.min(100, (elapsedFallback / fallbackWindow) * 100),
+    );
   }
 
   openRaffle(d: DrawCard): void {
@@ -211,10 +225,7 @@ export class HomePage implements OnInit {
   }
 
   remainingMs(d: DrawCard): number {
-    const iso = d.endsAt;
-    if (!iso) return 0;
-
-    const end = new Date(iso).getTime();
+    const end = this.getEndMs(d);
     if (Number.isNaN(end)) return 0;
 
     return Math.max(0, end - this.nowMs);
@@ -235,6 +246,12 @@ export class HomePage implements OnInit {
 
   private getEndMs(x: any): number {
     const raw = x?.endsAt ?? x?.endAt ?? x?.end_at;
+    const ms = raw ? new Date(raw).getTime() : NaN;
+    return Number.isFinite(ms) ? ms : NaN;
+  }
+
+  private getStartMs(x: any): number {
+    const raw = x?.startAt ?? x?.start_at;
     const ms = raw ? new Date(raw).getTime() : NaN;
     return Number.isFinite(ms) ? ms : NaN;
   }
@@ -262,5 +279,13 @@ export class HomePage implements OnInit {
     if (total > 0 && sold >= total) return false;
 
     return true;
+  }
+
+  safeImg(u?: string | null): string {
+    const s = String(u ?? '').trim();
+    if (!s || s === 'null' || s === 'undefined') {
+      return 'assets/img/placeholder.png';
+    }
+    return s;
   }
 }

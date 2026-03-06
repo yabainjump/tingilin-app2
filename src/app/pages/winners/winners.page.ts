@@ -1,18 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
-
-type BadgeTone = 'pink' | 'gold' | 'violet';
-
-type WinnerCard = {
-  raffleId?: string;
-  winnerName: string;
-  avatarUrl?: string;
-  winnerTicketCode: string; // ex: A492
-  prizeTitle: string;
-  prizeImageUrl?: string;
-  drawnAt: string; // ISO
-  badgeTone?: BadgeTone;
-};
+import { finalize } from 'rxjs';
+import {
+  WinnersApiService,
+  WinnerDto,
+} from 'src/app/services/winners/winners-api.service';
 
 @Component({
   selector: 'app-winners',
@@ -21,69 +13,54 @@ type WinnerCard = {
   standalone: false,
 })
 export class WinnersPage implements OnInit {
-  featured: WinnerCard | null = null;
-  recent: WinnerCard[] = [];
+  loading = true;
 
-  constructor(private toast: ToastController) {}
+  featured: WinnerDto | null = null;
+  recent: WinnerDto[] = [];
 
-  ngOnInit() {
-    // TODO: remplacer par un fetch backend (quand l’API "recent winners" sera prête)
-    this.seedDemo();
-  }
+  constructor(
+    private api: WinnersApiService,
+    private toast: ToastController,
+  ) {}
+
+  ngOnInit() {}
 
   ionViewWillEnter() {
-    // Si plus tard tu charges depuis l’API, fais-le ici pour refresh à chaque entrée.
-    // this.load();
+    this.load();
   }
 
-  private seedDemo() {
-    this.featured = {
-      winnerName: 'Moussa Diop',
-      avatarUrl: 'https://i.pravatar.cc/150?img=12',
-      winnerTicketCode: 'A492',
-      prizeTitle: 'iPhone 15 Pro Max',
-      prizeImageUrl:
-        'https://images.unsplash.com/photo-1603898037225-75b2f2f50a8a?auto=format&fit=crop&w=1200&q=60',
-      drawnAt: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
-      badgeTone: 'gold',
-    };
-
-    this.recent = [
-      {
-        winnerName: 'Sarah L.',
-        avatarUrl: 'https://i.pravatar.cc/150?img=47',
-        winnerTicketCode: '8821',
-        prizeTitle: 'Samsung 4K TV',
-        prizeImageUrl:
-          'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=1200&q=60',
-        drawnAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-        badgeTone: 'pink',
-      },
-      {
-        winnerName: 'Jean P.',
-        avatarUrl: 'https://i.pravatar.cc/150?img=13',
-        winnerTicketCode: '1102',
-        prizeTitle: '50k FCFA Cash',
-        prizeImageUrl:
-          'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=1200&q=60',
-        drawnAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-        badgeTone: 'gold',
-      },
-      {
-        winnerName: 'Alice K.',
-        avatarUrl: 'https://i.pravatar.cc/150?img=25',
-        winnerTicketCode: '3391',
-        prizeTitle: 'Grocery Pack XL',
-        prizeImageUrl:
-          'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=60',
-        drawnAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-        badgeTone: 'violet',
-      },
-    ];
+  load() {
+    this.loading = true;
+    this.api
+      .list(20)
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe({
+        next: (res: any) => {
+          const list = Array.isArray(res) ? res : (res?.data ?? []);
+          this.featured = list.length ? list[0] : null;
+          this.recent = list.slice(1);
+        },
+        error: async () => {
+          const t = await this.toast.create({
+            message: 'Impossible de charger les gagnants',
+            duration: 1400,
+          });
+          await t.present();
+          this.featured = null;
+          this.recent = [];
+        },
+      });
   }
 
-  trackByRecent(index: number, item: WinnerCard) {
-    return item.winnerTicketCode || index;
+  trackByRecent(index: number, item: WinnerDto) {
+    return item.raffleId || item.ticketCode || index;
+  }
+
+  avatarUrl(a?: string): string {
+    if (!a) return 'assets/img/placeholder.png';
+    if (a === 'defpic.jpg') return 'assets/img/defpic.jpg';
+    if (a.startsWith('http') || a.startsWith('assets/')) return a;
+    return a;
   }
 
   timeAgo(iso: string): string {
@@ -112,17 +89,46 @@ export class WinnersPage implements OnInit {
 
   async watchCelebration() {
     const t = await this.toast.create({
-      message: 'Vidéo de célébration: bientôt 🎉',
+      message: 'Célébration: bientôt 🎉',
       duration: 1200,
     });
     await t.present();
   }
 
-  async openWinner(w: WinnerCard) {
+  async openWinner(w: WinnerDto) {
     const t = await this.toast.create({
-      message: `Gagnant: ${w.winnerName} — Ticket #${w.winnerTicketCode}`,
+      message: `Gagnant: ${w.winnerName} — #${w.ticketCode}`,
       duration: 1400,
     });
     await t.present();
+  }
+
+  avatarSrc(a?: string | null): string {
+    const s = String(a ?? '').trim();
+
+    if (!s || s === 'null' || s === 'undefined') {
+      return '../../../assets/img/profile.svg';
+    }
+
+    if (s.startsWith('http://') || s.startsWith('https://')) {
+      return s;
+    }
+
+    if (s.startsWith('data:')) {
+      return s;
+    }
+
+    if (s.startsWith('assets/')) {
+      return s;
+    }
+
+    if (s.startsWith('../assets/')) {
+      return s.replace('../', '');
+    }
+    if (s.startsWith('../asset/')) {
+      return s.replace('../asset/', 'assets/');
+    }
+
+    return `assets/img/${s}`;
   }
 }

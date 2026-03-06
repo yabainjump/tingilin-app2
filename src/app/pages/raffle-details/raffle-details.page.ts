@@ -24,6 +24,8 @@ export class RaffleDetailsPage implements OnInit {
 
   tickets = 1;
   remainingLabel = '--:--:--';
+  progressPct = 0;
+  private nowMs = Date.now();
   private tickSub?: Subscription;
 
   winners = [
@@ -47,7 +49,16 @@ export class RaffleDetailsPage implements OnInit {
     private toast: ToastController,
   ) {}
 
-  goToPayment() {
+  async goToPayment() {
+    if (!this.canParticipate) {
+      const t = await this.toast.create({
+        message: 'Ce raffle est clôturé. Achat indisponible.',
+        duration: 1500,
+      });
+      await t.present();
+      return;
+    }
+
     const r: any = this.raffle; // ✅ bypass typing juste ici
 
     const raffleId = r?._id || r?.id || r?.raffleId;
@@ -89,7 +100,7 @@ export class RaffleDetailsPage implements OnInit {
       .subscribe({
         next: (r) => {
           this.raffle = r;
-          this.startCountdown(r.endsAt ?? null);
+          this.startCountdown(this.resolveEndAt(r));
         },
         error: async () => {
           const t = await this.toast.create({
@@ -110,16 +121,29 @@ export class RaffleDetailsPage implements OnInit {
     this.tickSub?.unsubscribe();
   }
 
+  private resolveEndAt(r: RaffleDetailsDto | null): string | null {
+    const raw = r?.endsAt ?? r?.endAt ?? null;
+    return raw ? String(raw) : null;
+  }
+
+  private resolveStartAt(r: RaffleDetailsDto | null): string | null {
+    const raw = r?.startAt ?? null;
+    return raw ? String(raw) : null;
+  }
+
   private startCountdown(endsAt: string | null) {
     this.tickSub?.unsubscribe();
 
     const update = () => {
+      this.nowMs = Date.now();
+
       if (!endsAt) {
         this.remainingLabel = '--:--:--';
+        this.progressPct = 0;
         return;
       }
       const end = new Date(endsAt).getTime();
-      const ms = Math.max(0, end - Date.now());
+      const ms = Math.max(0, end - this.nowMs);
       const s = Math.floor(ms / 1000);
 
       const days = Math.floor(s / 86400);
@@ -131,23 +155,32 @@ export class RaffleDetailsPage implements OnInit {
         days > 0
           ? `${days}j ${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}`
           : `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}`;
+
+      this.progressPct = this.computeProgress(end, this.nowMs);
     };
 
     update();
     this.tickSub = interval(1000).subscribe(update);
   }
 
-  percent(): number {
-    const total = this.raffle?.total ?? 0;
-    const sold = this.raffle?.sold ?? 0;
-    if (!total) return 0;
-    return Math.max(0, Math.min(100, (sold / total) * 100));
-  }
+  private computeProgress(end: number, now: number): number {
+    if (!Number.isFinite(end)) return 0;
+    const startRaw = this.resolveStartAt(this.raffle);
+    const start = startRaw ? new Date(startRaw).getTime() : NaN;
 
-  left(): number {
-    const total = this.raffle?.total ?? 0;
-    const sold = this.raffle?.sold ?? 0;
-    return Math.max(0, total - sold);
+    if (Number.isFinite(start) && end > start) {
+      const elapsed = Math.max(0, Math.min(end - start, now - start));
+      return Math.max(0, Math.min(100, (elapsed / (end - start)) * 100));
+    }
+
+    // fallback si startAt absent
+    const remaining = Math.max(0, end - now);
+    const fallbackWindow = 24 * 60 * 60 * 1000;
+    const elapsedFallback = Math.max(0, fallbackWindow - remaining);
+    return Math.max(
+      0,
+      Math.min(100, (elapsedFallback / fallbackWindow) * 100),
+    );
   }
 
   // ✅ MODIF: inc/dec doivent modifier qty (et synchroniser quantity)
@@ -171,21 +204,7 @@ export class RaffleDetailsPage implements OnInit {
     return qty * price;
   }
 
-  ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id') || '';
-    this.load(id);
-  }
-
-  load(id: string) {
-    this.loading = true;
-    this.api
-      .getById(id)
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe({
-        next: (data) => (this.raffle = data),
-        error: () => (this.raffle = null),
-      });
-  }
+  ngOnInit() {}
 
   back() {
     history.back();
@@ -212,6 +231,23 @@ export class RaffleDetailsPage implements OnInit {
 
   get currency(): string {
     return this.raffle?.currency ?? 'XAF';
+  }
+
+  get isRaffleClosed(): boolean {
+    const status = String(this.raffle?.status ?? '')
+      .trim()
+      .toUpperCase();
+    if (status === 'CLOSED' || status === 'DRAWN') return true;
+
+    const endRaw = this.resolveEndAt(this.raffle);
+    if (!endRaw) return false;
+
+    const end = new Date(endRaw).getTime();
+    return Number.isFinite(end) ? end <= this.nowMs : false;
+  }
+
+  get canParticipate(): boolean {
+    return !!this.raffle && !this.loading && !this.isRaffleClosed;
   }
 
   participate() {

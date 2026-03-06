@@ -316,4 +316,36 @@
   text-transform: uppercase;
 }
 
+.sk {
+  display: block;
+  border-radius: 16px;
+  opacity: 0.7;
+}
+
+.sk-card {
+  height: 140px;
+}
+
+.sk-title {
+  height: 22px;
+  width: 46%;
+}
+
+.sk-methods {
+  height: 120px;
+}
+
+.sk-input {
+  height: 56px;
+}
+
+.sk-btn {
+  height: 56px;
+  border-radius: 18px;
+}
+
+.sk-btn.sm {
+  height: 46px;
+}
+
 

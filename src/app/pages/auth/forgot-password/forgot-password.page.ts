@@ -40,12 +40,9 @@ export class ForgotPasswordPage implements OnDestroy {
 
     this.loading = true;
 
-    // 🔥 IMPORTANT: on garde ton backend NestJS.
-    // Si ton endpoint n’accepte que email, on envoie email quand il y a "@",
-    // sinon on envoie phone. (Tu adaptes le DTO backend ensuite.)
     const payload = identifier.includes('@')
-      ? { email: identifier }
-      : { phone: identifier };
+      ? { identifier, email: identifier }
+      : { identifier, phone: identifier };
 
     this.auth
       .forgotPassword(payload as any)

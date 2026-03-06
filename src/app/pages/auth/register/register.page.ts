@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { finalize } from 'rxjs';
@@ -37,15 +38,26 @@ export class RegisterPage {
     country: ['', [Validators.required]],
     city: ['', [Validators.required]],
     password: ['', [Validators.required, Validators.pattern(PASSWORD_RULE)]],
+    referralCode: [''],
     terms: [false, [Validators.requiredTrue]],
   });
 
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
+    private route: ActivatedRoute,
     private router: Router,
     private toast: ToastController,
   ) {}
+
+  ngOnInit(): void {
+    const ref = String(this.route.snapshot.queryParamMap.get('ref') ?? '')
+      .trim()
+      .toUpperCase();
+    if (ref) {
+      this.form.patchValue({ referralCode: ref });
+    }
+  }
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
@@ -69,11 +81,6 @@ export class RegisterPage {
 
     this.loading = true;
 
-    // ⚠️ IMPORTANT:
-    // Dans ton historique, tu voulais que le backend accepte ces champs.
-    // Si ton endpoint /auth/register n’accepte pas encore ces champs, tu auras 400.
-    // => Dans ce cas, envoie seulement {email, password} le temps d’adapter le DTO NestJS.
-
     const payloadFull: any = {
       lastName: v.lastName?.trim(),
       firstName: v.firstName?.trim(),
@@ -83,7 +90,7 @@ export class RegisterPage {
       country: v.country?.trim(),
       city: v.city?.trim(),
       password: v.password,
-      avatar: '../asset/img/profile.svg',
+      avatar: '../../../../assets/img/profile.svg',
     };
 
     const dto = {
@@ -92,12 +99,19 @@ export class RegisterPage {
       firstName: String(payloadFull.firstName ?? ''),
       lastName: String(payloadFull.lastName ?? ''),
       phone: String(payloadFull.phone ?? ''),
+      referralCode: String(v.referralCode ?? '').trim().toUpperCase() || undefined,
     };
 
     this.auth
-      .register(dto).subscribe({
+      .register(dto)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        }),
+      )
+      .subscribe({
         next: async () => {
-          await this.showToast('Compte créé. Connecte-toi maintenant.');
+          await this.showToast('Compte créé. Bienvenue sur Tinguilin');
           this.router.navigateByUrl('/tabs/home', { replaceUrl: true });
         },
         error: async (err) => {
