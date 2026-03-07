@@ -109,8 +109,8 @@
       <!-- HISTORY LIST -->
       <ng-container *ngIf="!loadingHistory; else historySkeleton">
         <div class="history-list">
-          <button class="glass-panel history-item" [class.is-lost]="h.result === 'LOST'" type="button"
-            *ngFor="let h of history" (click)="openMyTicketsForRaffle(h.raffleId)">
+          <button class="glass-panel history-item" [class.is-lost]="isHistoryLost(h)" type="button"
+            *ngFor="let h of history" (click)="openHistoryItem(h)">
             <div class="thumb">
               <img [src]="h.imageUrl || 'assets/img/placeholder.png'" alt="product" />
               <div class="thumb-grad"></div>
@@ -120,7 +120,9 @@
               <div class="h-top">
                 <div class="h-title">{{ h.title }}</div>
 
-                <span class="badge" [class.live]="isRaffleActive(h)" [class.ended]="!isRaffleActive(h)">
+                <span class="badge" [class.live]="historyBadgeTone(h) === 'live'"
+                  [class.won]="historyBadgeTone(h) === 'won'" [class.lost]="historyBadgeTone(h) === 'lost'"
+                  [class.ended]="historyBadgeTone(h) === 'ended'">
                   {{ raffleBadgeLabel(h) }}
                 </span>
               </div>

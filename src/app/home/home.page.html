@@ -10,7 +10,7 @@
 
         <div class="user">
           <div class="avatar-wrap">
-            <div class="avatar" [style.backgroundImage]="'url(' + (user?.avatarUrl || user?.avatar ) + ')'">
+            <div class="avatar" [style.backgroundImage]="'url(' + safeImg(user?.avatarUrl || user?.avatar) + ')'">
             </div>
             <div class="online-dot"></div>
           </div>
@@ -29,17 +29,10 @@
         </div>
 
         <div class="right">
-          <div class="wallet">
-            <span class="material-symbols-outlined wallet-ico">account_balance_wallet</span>
-
-            <ng-container *ngIf="!loadingHeader && user; else walletSkel">
-              <span class="wallet-amt">{{ (user.balance ?? 0) | number }} F</span>
-            </ng-container>
-
-            <ng-template #walletSkel>
-              <ion-skeleton-text animated class="sk sk-wallet"></ion-skeleton-text>
-            </ng-template>
-          </div>
+          <button class="live-entry" type="button" (click)="openLiveDraws()">
+            <span class="live-dot"></span>
+            <span>Live Draw</span>
+          </button>
 
 
           <ion-tab-button class="notif" href="/tabs/notifications">
@@ -130,10 +123,9 @@
               </div>
 
               <button type="button" class="hero-cta">
-                <span>Tante de Gagner</span>
+                <span>Tente de Gagner</span>
                 <span class="price-pill">
-                  <!-- {{ d.ticketPrice ?? 0 }}  --> En
-                  {{ d.currency || 'XAF' }}
+                  {{ d.ticketPrice ?? 0 }} {{ d.currency || 'XAF' }}
                 </span>
               </button>
             </div>

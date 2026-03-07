@@ -1,10 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { NavController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
-import { finalize } from 'rxjs';
+import { Subscription, finalize, interval } from 'rxjs';
 import {
   WinnersApiService,
   WinnerDto,
 } from 'src/app/services/winners/winners-api.service';
+import { ShareService } from 'src/app/services/share/share.service';
+import {
+  LiveDrawState,
+  WinnersLiveSocketService,
+} from 'src/app/services/winners/winners-live-socket.service';
 
 @Component({
   selector: 'app-winners',
@@ -17,28 +23,69 @@ export class WinnersPage implements OnInit {
 
   featured: WinnerDto | null = null;
   recent: WinnerDto[] = [];
+  scanTickets: string[] = [];
+  activeScanIndex = 0;
+  analysisProgress = 0;
+  analysisLabel = 'SCANNING...';
+  isScanning = true;
+  liveViewers = 0;
+  trustPercent = 99.9;
+  hasRealtime = false;
+
+  private scanSub?: Subscription;
+  private progressSub?: Subscription;
+  private liveSub?: Subscription;
 
   constructor(
     private api: WinnersApiService,
     private toast: ToastController,
+    private nav: NavController,
+    private shareService: ShareService,
+    private liveSocket: WinnersLiveSocketService,
   ) {}
 
   ngOnInit() {}
 
   ionViewWillEnter() {
+    this.connectRealtime();
     this.load();
+  }
+
+  ionViewWillLeave() {
+    this.stopScanAnimation();
+    this.liveSub?.unsubscribe();
+    this.liveSub = undefined;
+    this.liveSocket.disconnect();
+    this.hasRealtime = false;
+  }
+
+  ngOnDestroy(): void {
+    this.stopScanAnimation();
+    this.liveSub?.unsubscribe();
+    this.liveSub = undefined;
+    this.liveSocket.disconnect();
+    this.hasRealtime = false;
   }
 
   load() {
     this.loading = true;
     this.api
-      .list(20)
-      .pipe(finalize(() => (this.loading = false)))
+      .list(30)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          if (!this.hasRealtime) {
+            this.startScanAnimation();
+          }
+        }),
+      )
       .subscribe({
         next: (res: any) => {
           const list = Array.isArray(res) ? res : (res?.data ?? []);
           this.featured = list.length ? list[0] : null;
-          this.recent = list.slice(1);
+          this.recent = list.slice(1, 9);
+          this.scanTickets = this.buildScanTickets(this.featured, this.recent);
+          this.activeScanIndex = Math.min(2, this.scanTickets.length - 1);
         },
         error: async () => {
           const t = await this.toast.create({
@@ -48,8 +95,96 @@ export class WinnersPage implements OnInit {
           await t.present();
           this.featured = null;
           this.recent = [];
+          this.scanTickets = this.buildScanTickets(null, []);
         },
       });
+  }
+
+  private buildScanTickets(
+    featured: WinnerDto | null,
+    recent: WinnerDto[],
+  ): string[] {
+    const fromApi = [
+      featured?.ticketCode,
+      ...recent.map((x) => x.ticketCode),
+    ]
+      .map((x) => String(x ?? '').trim().toUpperCase())
+      .filter(Boolean);
+
+    const fallback = ['X922', 'B738', 'A492', 'C102', 'E551'];
+    const merged = [...fromApi, ...fallback];
+    return merged.slice(0, 5);
+  }
+
+  private startScanAnimation() {
+    this.stopScanAnimation();
+
+    this.isScanning = true;
+    this.analysisLabel = 'SCANNING...';
+    this.analysisProgress = 18;
+
+    this.scanSub = interval(340).subscribe(() => {
+      if (!this.scanTickets.length) return;
+      this.activeScanIndex = (this.activeScanIndex + 1) % this.scanTickets.length;
+    });
+
+    this.progressSub = interval(220).subscribe(() => {
+      const next = this.analysisProgress + Math.floor(Math.random() * 4 + 1);
+      if (next >= 82) {
+        this.analysisProgress = 82;
+        this.analysisLabel = 'VERIFYING...';
+        this.isScanning = false;
+        this.progressSub?.unsubscribe();
+        return;
+      }
+      this.analysisProgress = next;
+    });
+  }
+
+  private stopScanAnimation() {
+    this.scanSub?.unsubscribe();
+    this.progressSub?.unsubscribe();
+    this.scanSub = undefined;
+    this.progressSub = undefined;
+  }
+
+  get centeredTicket(): string {
+    if (!this.scanTickets.length) return '----';
+    return this.scanTickets[this.activeScanIndex] || '----';
+  }
+
+  ticketAtOffset(offset: number): string {
+    if (!this.scanTickets.length) return '----';
+    const len = this.scanTickets.length;
+    const i = (this.activeScanIndex + offset + len * 10) % len;
+    return this.scanTickets[i] || '----';
+  }
+
+  get participantsSeen(): number {
+    if (this.liveViewers > 0) return this.liveViewers;
+    const base = 1200;
+    const delta = (this.recent?.length ?? 0) * 17;
+    return base + delta;
+  }
+
+  get trustPercentLabel(): string {
+    return `${Math.max(0, Math.min(100, this.trustPercent)).toFixed(1)}%`;
+  }
+
+  get featureTitle(): string {
+    return this.featured?.prizeTitle || 'Produit Premium';
+  }
+
+  get featureImage(): string {
+    return this.featured?.prizeImageUrl || 'assets/img/placeholder.png';
+  }
+
+  get selectedAvatar(): string {
+    return this.avatarSrc(this.featured?.avatar);
+  }
+
+  get selectedWinnerName(): string {
+    return this.featured?.winnerName || 'Candidat';
   }
 
   trackByRecent(index: number, item: WinnerDto) {
@@ -79,20 +214,84 @@ export class WinnersPage implements OnInit {
     return `${days}d ago`;
   }
 
-  async openFilters() {
+  back() {
+    this.nav.navigateBack('/tabs/home');
+  }
+
+  async shareLive() {
+    const url = this.shareService.liveShareUrl();
+
+    const mode = await this.shareService.share({
+      title: 'Tingilin - Tirage en direct',
+      text: "Suis les tirages Tingilin en direct.",
+      url,
+    });
+
+    if (mode === 'copied') {
+      const t = await this.toast.create({
+        message: 'Lien copié ✅',
+        duration: 1300,
+      });
+      await t.present();
+    }
+  }
+
+  async seeResults() {
     const t = await this.toast.create({
-      message: 'Filtres: bientôt 🙂',
+      message: 'Résultats complets bientôt disponibles.',
       duration: 1200,
     });
     await t.present();
   }
 
-  async watchCelebration() {
-    const t = await this.toast.create({
-      message: 'Célébration: bientôt 🎉',
-      duration: 1200,
+  private connectRealtime() {
+    this.liveSocket.connect();
+    this.liveSub?.unsubscribe();
+    this.liveSub = this.liveSocket.stream().subscribe((state) => {
+      if (!state) return;
+      this.applyLiveState(state);
     });
-    await t.present();
+  }
+
+  private applyLiveState(state: LiveDrawState) {
+    this.hasRealtime = true;
+    this.stopScanAnimation();
+
+    this.liveViewers = Number.isFinite(state?.viewersLive)
+      ? Math.max(0, Number(state.viewersLive))
+      : this.liveViewers;
+
+    this.trustPercent = Number.isFinite(state?.trustPercent)
+      ? Number(state.trustPercent)
+      : this.trustPercent;
+
+    this.analysisProgress = Number.isFinite(state?.analysisProgress)
+      ? Math.max(0, Math.min(100, Number(state.analysisProgress)))
+      : this.analysisProgress;
+
+    this.analysisLabel =
+      state?.analysisLabel === 'VERIFYING...' ? 'VERIFYING...' : 'SCANNING...';
+
+    const scanTickets = Array.isArray(state?.scan?.tickets)
+      ? state.scan.tickets
+          .map((x) => String(x ?? '').trim().toUpperCase())
+          .filter(Boolean)
+      : [];
+
+    if (scanTickets.length) {
+      this.scanTickets = scanTickets;
+      const nextIdx = Number(state?.scan?.activeIndex ?? 0);
+      this.activeScanIndex = Math.max(
+        0,
+        Math.min(scanTickets.length - 1, Number.isFinite(nextIdx) ? nextIdx : 0),
+      );
+    }
+
+    const recent = Array.isArray(state?.recent) ? state.recent : [];
+    if (recent.length) {
+      this.featured = recent[0] || null;
+      this.recent = recent.slice(1, 9);
+    }
   }
 
   async openWinner(w: WinnerDto) {

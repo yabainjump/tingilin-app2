@@ -23,14 +23,13 @@ export interface ProfileStats {
   productsWon: number;
 }
 
-export type HistoryResult = 'WON' | 'LOST';
+export type HistoryResult = 'WON' | 'LOST' | 'NONE';
 
 export interface ProfileHistoryItem {
   title: string;
   dateLabel: string;
   ticketsLabel: string;
-  // result: HistoryResult;
-  result?: 'LOST' | 'WIN' | 'NONE';
+  result?: HistoryResult | 'WIN' | 'LOSE';
   imageUrl?: string;
   raffleId: string;
   status?: string;

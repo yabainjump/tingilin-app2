@@ -316,6 +316,14 @@
   text-transform: uppercase;
 }
 
+.btn-skeleton {
+  width: 160px;
+  height: 18px;
+  border-radius: 999px;
+  opacity: 0.45;
+  margin: 0 auto;
+}
+
 .sk {
   display: block;
   border-radius: 16px;

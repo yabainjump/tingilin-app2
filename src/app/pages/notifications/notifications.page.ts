@@ -78,4 +78,14 @@ export class NotificationsPage {
   isUnread(n: NotificationDto) {
     return !n.readAt;
   }
+
+  actionLabel(n: NotificationDto): string | null {
+    const t = String(n?.type ?? '').toUpperCase();
+    if (t === 'PAYMENT_FAILED') return 'Reessayer';
+    if (t === 'ENDING_SOON') return 'Participer';
+    if (t === 'DRAW_STARTED') return 'Voir en direct';
+    if (t === 'DRAW_RESULT') return 'Voir resultat';
+    if (t === 'FREE_TICKET_AVAILABLE') return 'Utiliser';
+    return null;
+  }
 }

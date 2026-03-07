@@ -209,6 +209,10 @@ export class HomePage implements OnInit {
     this.router.navigate(['/tabs/raffle-details', d.id]);
   }
 
+  openLiveDraws(): void {
+    this.router.navigate(['/tabs/winners']);
+  }
+
   private clockSub?: Subscription;
   nowMs = Date.now();
 

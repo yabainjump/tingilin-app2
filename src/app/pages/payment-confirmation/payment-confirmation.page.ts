@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentsApiService } from 'src/app/core/api/payments-api.service';
-import { ToastController, LoadingController } from '@ionic/angular';
-import { ReferralApiService } from 'src/app/services/referral/referral-api.service';
-import { finalize } from 'rxjs/operators';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-payment-confirmation',
@@ -31,7 +29,6 @@ export class PaymentConfirmationPage {
   transactionId?: string;
   paymentLink?: string;
   paymentWithTaxes?: number;
-  freeTicketsBalance = 0;
 
   loading = false;
   pageLoading = true;
@@ -40,9 +37,7 @@ export class PaymentConfirmationPage {
     private route: ActivatedRoute,
     private router: Router,
     private paymentsApi: PaymentsApiService,
-    private referralApi: ReferralApiService,
     private toastCtrl: ToastController,
-    private loadingCtrl: LoadingController,
   ) {}
 
   ionViewWillEnter() {
@@ -63,15 +58,7 @@ export class PaymentConfirmationPage {
     if (!this.raffleId) {
       this.presentToast('raffleId manquant');
     }
-
-    this.referralApi
-      .summary()
-      .pipe(finalize(() => (this.pageLoading = false)))
-      .subscribe({
-        next: (s) =>
-          (this.freeTicketsBalance = Number(s?.freeTicketsBalance ?? 0)),
-        error: () => (this.freeTicketsBalance = 0),
-      });
+    this.pageLoading = false;
   }
   back() {
     history.back();
@@ -85,10 +72,6 @@ export class PaymentConfirmationPage {
       return this.presentToast('Entre un numéro valide');
     }
 
-    const loader = await this.loadingCtrl.create({
-      message: 'Création du paiement...',
-    });
-    await loader.present();
     this.loading = true;
 
     try {
@@ -133,17 +116,12 @@ export class PaymentConfirmationPage {
       );
     } finally {
       this.loading = false;
-      await loader.dismiss();
     }
   }
 
   async verifyPayment() {
     if (!this.transactionId) return;
 
-    const loader = await this.loadingCtrl.create({
-      message: 'Vérification du paiement...',
-    });
-    await loader.present();
     this.loading = true;
 
     try {
@@ -165,35 +143,6 @@ export class PaymentConfirmationPage {
       );
     } finally {
       this.loading = false;
-      await loader.dismiss();
-    }
-  }
-
-  async useFreeTicket() {
-    if (!this.raffleId) return;
-    if (this.freeTicketsBalance <= 0) {
-      await this.presentToast('Aucun ticket gratuit disponible');
-      return;
-    }
-
-    const loader = await this.loadingCtrl.create({
-      message: 'Utilisation du ticket gratuit...',
-    });
-    await loader.present();
-    this.loading = true;
-
-    try {
-      await this.paymentsApi.useFreeTicket(this.raffleId).toPromise();
-      this.freeTicketsBalance = Math.max(0, this.freeTicketsBalance - 1);
-      await this.presentToast('Ticket gratuit utilisé ✅');
-      this.router.navigateByUrl('/tabs/participations');
-    } catch (e: any) {
-      await this.presentToast(
-        e?.error?.message || e?.message || 'Impossible d’utiliser le ticket gratuit',
-      );
-    } finally {
-      this.loading = false;
-      await loader.dismiss();
     }
   }
 

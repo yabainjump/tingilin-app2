@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import {
-  LoadingController,
   NavController,
   ToastController,
 } from '@ionic/angular';
@@ -38,7 +37,6 @@ export class CreateRafflePage {
   constructor(
     private fb: FormBuilder,
     private api: RafflesApiService,
-    private loadingCtrl: LoadingController,
     private toast: ToastController,
     private nav: NavController,
   ) {
@@ -47,17 +45,56 @@ export class CreateRafflePage {
       description: this.fb.nonNullable.control(''),
       imageUrl: this.fb.nonNullable.control('', [Validators.required]),
       categoryId: this.fb.nonNullable.control(''),
-      realValue: this.fb.nonNullable.control(0),
+      realValue: this.fb.nonNullable.control(0, [Validators.min(0)]),
 
       ticketPrice: this.fb.nonNullable.control(100, [
         Validators.required,
         Validators.min(1),
       ]),
-      currency: this.fb.nonNullable.control('XAF'),
+      currency: this.fb.nonNullable.control('XAF', [Validators.required]),
       endAt: this.fb.nonNullable.control('', [Validators.required]),
 
       publishNow: this.fb.nonNullable.control(true),
     });
+  }
+
+  get titleControl() {
+    return this.form.controls['title'];
+  }
+
+  get imageControl() {
+    return this.form.controls['imageUrl'];
+  }
+
+  get safeTicketPrice(): number {
+    const v = Number(this.form.controls['ticketPrice']?.value ?? 0);
+    return Number.isFinite(v) ? Math.max(0, v) : 0;
+  }
+
+  get safeRealValue(): number {
+    const v = Number(this.form.controls['realValue']?.value ?? 0);
+    return Number.isFinite(v) ? Math.max(0, v) : 0;
+  }
+
+  // Seuil minimal pour couvrir le prix du produit.
+  get coverageTicketTarget(): number {
+    const ticketPrice = this.safeTicketPrice;
+    if (ticketPrice <= 0) return 0;
+    return Math.ceil(this.safeRealValue / ticketPrice);
+  }
+
+  get projectedCoverageAmount(): number {
+    return this.coverageTicketTarget * this.safeTicketPrice;
+  }
+
+  async showHelp(): Promise<void> {
+    const t = await this.toast.create({
+      message:
+        'Renseigne le prix réel du produit pour suivre le seuil à atteindre avant tirage.',
+      duration: 2400,
+      position: 'top',
+    });
+    await t.present();
   }
 
   async pickImage(): Promise<void> {
@@ -92,6 +129,7 @@ export class CreateRafflePage {
     if (this.submitting) return;
 
     if (this.form.invalid) {
+      this.form.markAllAsTouched();
       const t = await this.toast.create({
         message: 'Formulaire incomplet',
         duration: 1500,
@@ -101,8 +139,6 @@ export class CreateRafflePage {
     }
 
     this.submitting = true;
-    const loading = await this.loadingCtrl.create({ message: 'Création...' });
-    await loading.present();
 
     const v = this.form.getRawValue() as CreateRaffleForm;
 
@@ -130,7 +166,6 @@ export class CreateRafflePage {
       })
       .subscribe({
         next: async () => {
-          await loading.dismiss();
           this.submitting = false;
 
           const t = await this.toast.create({
@@ -143,7 +178,6 @@ export class CreateRafflePage {
           this.nav.navigateBack('/tabs/home');
         },
         error: async (err: unknown) => {
-          await loading.dismiss();
           this.submitting = false;
 
           const message =

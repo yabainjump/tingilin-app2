@@ -29,6 +29,14 @@
       <div class="dot" *ngIf="isUnread(n)"></div>
       <div class="title">{{ n.title }}</div>
       <div class="body">{{ n.body }}</div>
+      <button
+        *ngIf="actionLabel(n) as lbl"
+        class="action-btn"
+        type="button"
+        (click)="open(n); $event.stopPropagation()"
+      >
+        {{ lbl }}
+      </button>
       <div class="meta">{{ n.createdAt | date:'MMM d, HH:mm' }}</div>
     </div>
 

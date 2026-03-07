@@ -1,126 +1,133 @@
-<ion-content [fullscreen]="true" class="winners">
+<ion-content [fullscreen]="true" class="live-winners">
+  <div class="bg-lights" aria-hidden="true"></div>
+
   <div class="page">
-
-    <!-- TOP BAR -->
     <div class="topbar">
-      <h1 class="title">Winners!</h1>
+      <button class="icon-btn" type="button" (click)="back()" aria-label="Close">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
 
-      <button class="icon-btn" type="button" (click)="openFilters()">
-        <ion-icon name="options-outline"></ion-icon>
+      <div class="top-center">
+        <div class="kicker">TIRAGES AU SORT</div>
+        <h1>En Direct</h1>
+      </div>
+
+      <button class="icon-btn" type="button" (click)="shareLive()" aria-label="Share live draw">
+        <ion-icon name="share-social-outline"></ion-icon>
       </button>
     </div>
 
-    <!-- JUST ANNOUNCED -->
-    <div class="section-head">
-      <ion-icon class="flame" name="flame"></ion-icon>
-      <div class="section-label">JUST ANNOUNCED</div>
-    </div>
-
-    <ng-container *ngIf="featured; else noFeatured">
-      <div class="featured-wrap">
+    <ng-container *ngIf="!loading; else liveSkeleton">
+      <div class="featured" *ngIf="featureTitle as title">
+        <div class="featured-glow" aria-hidden="true"></div>
         <div class="featured-card">
+          <div class="thumb" [style.background-image]="'url(' + featureImage + ')'" role="img" aria-label="Featured prize"></div>
 
-          <!-- sparkles + confetti -->
-          <div class="fx-layer" aria-hidden="true">
-            <span class="sparkle s1"></span>
-            <span class="sparkle s2"></span>
-            <span class="sparkle s3"></span>
-
-            <span class="confetti c1"></span>
-            <span class="confetti c2"></span>
-            <span class="confetti c3"></span>
-            <span class="confetti c4"></span>
-            <span class="confetti c5"></span>
-          </div>
-
-          <!-- header row -->
-          <div class="featured-head">
-            <div class="who">
-              <div class="avatar"
-                [style.background-image]="'url(' + avatarSrc(featured.avatar) + ')'">                
-                <div class="verified">
-                  <ion-icon name="checkmark-circle"></ion-icon>
-                </div>
-              </div>
-
-              <div class="who-txt">
-                <div class="who-k">LUCKY WINNER</div>
-                <div class="who-n">{{ featured.winnerName }}</div>
-              </div>
-            </div>
-
-            <div class="ticket-chip">
-              <ion-icon name="ticket"></ion-icon>
-              <span>#{{ featured.ticketCode }}</span>
-            </div>
-          </div>
-
-          <!-- prize media -->
-          <div class="prize" (click)="watchCelebration()">
-            <div class="prize-bg"
-              [style.background-image]="'url(' + (featured.prizeImageUrl || 'assets/img/placeholder.png') + ')'"></div>
-
-            <div class="prize-grad"></div>
-
-            <div class="prize-tag">
-              {{ featured.prizeTitle }}
-            </div>
-
-            <button class="play-btn" type="button" (click)="watchCelebration(); $event.stopPropagation()">
-              <ion-icon name="play"></ion-icon>
-            </button>
-          </div>
-
-          <!-- footer row -->
-          <div class="featured-foot">
-            <div class="time">
-              <span class="dot"></span>
-              <span>{{ timeAgo(featured.drawnAt) }}</span>
-            </div>
-
-            <button class="celebrate-btn" type="button" (click)="watchCelebration()">
-              Watch Celebration
-            </button>
+          <div class="featured-meta">
+            <span class="badge">GRAND PRIZE</span>
+            <div class="title">{{ title }}</div>
+            <div class="subtitle">Winner: {{ selectedWinnerName }}</div>
           </div>
         </div>
+      </div>
+
+      <div class="scanner-zone">
+        <div class="target" aria-hidden="true">
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </div>
+
+        <div class="scan-row faded">
+          <div class="ghost-avatar"></div>
+          <span>#{{ ticketAtOffset(-2) }}</span>
+        </div>
+
+        <div class="scan-row soft">
+          <div class="ghost-avatar"></div>
+          <span>#{{ ticketAtOffset(-1) }}</span>
+        </div>
+
+        <div class="scan-row active">
+          <div class="avatar-shell">
+            <img [src]="selectedAvatar" alt="participant avatar" />
+          </div>
+
+          <div class="active-meta">
+            <div class="active-ticket">#{{ centeredTicket }}</div>
+            <div class="active-label">{{ analysisLabel }}</div>
+          </div>
+
+          <div class="scan-chip">SCANNING</div>
+        </div>
+
+        <div class="scan-row soft">
+          <div class="ghost-avatar"></div>
+          <span>#{{ ticketAtOffset(1) }}</span>
+        </div>
+
+        <div class="scan-row faded">
+          <div class="ghost-avatar"></div>
+          <span>#{{ ticketAtOffset(2) }}</span>
+        </div>
+      </div>
+
+      <div class="analysis">
+        <div class="analysis-head">
+          <span>ANALYSE DES TICKETS</span>
+          <strong>{{ analysisProgress }}%</strong>
+        </div>
+        <div class="bar">
+          <div class="bar-fill" [style.width.%]="analysisProgress"></div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <button class="stat-card" type="button" (click)="seeResults()">
+          <div class="stat-k">PERSONNES EN DIRECT</div>
+          <div class="stat-v">
+            <span class="live-dot"></span>
+            {{ participantsSeen | number }}
+          </div>
+        </button>
+
+        <div class="stat-card">
+          <div class="stat-k">FIABILITE DU TIRAGE</div>
+          <div class="stat-v gold">{{ trustPercentLabel }}</div>
+        </div>
+      </div>
+
+      <div class="notice">
+        Winner will be automatically notified via verified account details.
+      </div>
+
+      <div class="recent" *ngIf="recent.length">
+        <div class="recent-title">Recent Winners</div>
+
+        <button class="recent-item" type="button" *ngFor="let w of recent; trackBy: trackByRecent" (click)="openWinner(w)">
+          <div class="recent-avatar" [style.background-image]="'url(' + avatarSrc(w.avatar) + ')'">
+          </div>
+
+          <div class="recent-body">
+            <div class="recent-name">{{ w.winnerName }}</div>
+            <div class="recent-prize">{{ w.prizeTitle }}</div>
+          </div>
+
+          <div class="recent-ticket">#{{ w.ticketCode }}</div>
+        </button>
       </div>
     </ng-container>
 
-    <ng-template #noFeatured>
-      <div class="empty">
-        Aucun gagnant annoncé pour le moment.
+    <ng-template #liveSkeleton>
+      <div class="live-skeleton">
+        <ion-skeleton-text animated class="sk sk-featured"></ion-skeleton-text>
+        <ion-skeleton-text animated class="sk sk-scan"></ion-skeleton-text>
+        <ion-skeleton-text animated class="sk sk-progress"></ion-skeleton-text>
+        <div class="sk-grid">
+          <ion-skeleton-text animated class="sk sk-stat"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk sk-stat"></ion-skeleton-text>
+        </div>
+        <ion-skeleton-text animated class="sk sk-row" *ngFor="let _ of [1,2,3]"></ion-skeleton-text>
       </div>
     </ng-template>
-
-    <!-- RECENT WINNERS -->
-    <div class="recent-title">Recent Winners</div>
-
-    <div class="recent-list">
-      <button class="recent-item" type="button" *ngFor="let w of recent; trackBy: trackByRecent"
-        (click)="openWinner(w)">
-        <div class="thumb" [style.background-image]="'url(' + (w.prizeImageUrl || 'assets/img/placeholder.png') + ')'">
-        </div>
-
-        <div class="r-body">
-          <div class="r-top">
-            <div class="r-prize">{{ w.prizeTitle }}</div>
-            <div class="r-when">{{ timeAgo(w.drawnAt) }}</div>
-          </div>
-
-          <div class="r-who">
-            <div class="mini" [style.background-image]="'url(' + avatarSrc(w.avatar) + ')'">
-            </div>
-            <div class="r-name">{{ w.winnerName }}</div>
-          </div>
-        </div>
-
-        <div class="r-code" [class.gold]="w.badgeTone === 'gold'" [class.pink]="w.badgeTone === 'pink'"
-          [class.violet]="w.badgeTone === 'violet'">
-          #{{ w.ticketCode }}
-        </div>
-      </button>
-    </div>
-
-    <div class="bottom-space"></div>
   </div>
 </ion-content>

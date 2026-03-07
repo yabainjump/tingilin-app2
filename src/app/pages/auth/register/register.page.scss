@@ -180,6 +180,13 @@ h1 {
 }
 .cta:disabled { opacity: 0.75; }
 
+.btn-skeleton {
+  width: 140px;
+  height: 18px;
+  border-radius: 999px;
+  opacity: 0.45;
+}
+
 .sep {
   margin: 18px 0 14px;
   display: flex;

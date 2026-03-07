@@ -18,6 +18,7 @@ const PASSWORD_RULE = /^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/;
 export class RegisterPage {
   loading = false;
   showPassword = false;
+  private redirectAfterOnboarding = '/tabs/home';
 
   // mini liste (tu pourras l’étendre)
   countryCodes = [
@@ -56,6 +57,13 @@ export class RegisterPage {
       .toUpperCase();
     if (ref) {
       this.form.patchValue({ referralCode: ref });
+    }
+
+    const redirect = String(
+      this.route.snapshot.queryParamMap.get('redirect') ?? '',
+    ).trim();
+    if (redirect.startsWith('/')) {
+      this.redirectAfterOnboarding = redirect;
     }
   }
 
@@ -112,7 +120,10 @@ export class RegisterPage {
       .subscribe({
         next: async () => {
           await this.showToast('Compte créé. Bienvenue sur Tinguilin');
-          this.router.navigateByUrl('/tabs/home', { replaceUrl: true });
+          this.router.navigate(['/onboarding'], {
+            replaceUrl: true,
+            queryParams: { redirect: this.redirectAfterOnboarding },
+          });
         },
         error: async (err) => {
           await this.showToast(

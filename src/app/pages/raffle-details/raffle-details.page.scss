@@ -355,6 +355,49 @@ ion-content.details {
   letter-spacing: -0.02em;
 }
 
+.free-ticket-card {
+  margin-top: 14px;
+  border-radius: 20px;
+  padding: 12px;
+  background: rgba(166, 13, 242, 0.14);
+  border: 1px solid rgba(166, 13, 242, 0.35);
+}
+
+.free-ticket-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.free-ticket-badge {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.free-ticket-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.free-ticket-btn {
+  width: 100%;
+  height: 44px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #3f0b5a;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+}
+
+.free-ticket-btn:disabled {
+  opacity: 0.55;
+}
+
 .winners-head {
   margin-top: 18px;
   display: flex;

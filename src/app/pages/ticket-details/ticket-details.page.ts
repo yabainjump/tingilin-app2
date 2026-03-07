@@ -11,6 +11,7 @@ import {
   RafflesPublicApiService,
   RaffleDetailsDto,
 } from 'src/app/services/raffles/raffles-public-api.service';
+import { ShareService } from 'src/app/services/share/share.service';
 
 type ViewMode = 'grid' | 'list';
 
@@ -34,6 +35,7 @@ export class TicketDetailsPage {
     private ticketsApi: TicketsApiService,
     private rafflesApi: RafflesPublicApiService,
     private toast: ToastController,
+    private shareService: ShareService,
   ) {}
 
   ionViewWillEnter() {
@@ -112,19 +114,18 @@ export class TicketDetailsPage {
 
   async share() {
     const title = this.raffle?.title || 'Tinguilin';
-    const text = `Je participe à "${title}" avec ${this.ticketsOwned} tickets sur Tinguilin.`;
+    const text = `Je participe à "${title}" avec ${this.ticketsOwned} ticket(s) sur Tinguilin.`;
+    const url = this.shareService.raffleShareUrl(this.raffleId);
+
     try {
-      // Web Share API si dispo
-      if ((navigator as any).share) {
-        await (navigator as any).share({ title: 'Tinguilin', text });
-        return;
+      const mode = await this.shareService.share({ title: 'Tingilin', text, url });
+      if (mode === 'copied') {
+        const t = await this.toast.create({
+          message: 'Lien copié ✅',
+          duration: 1200,
+        });
+        await t.present();
       }
-      await navigator.clipboard.writeText(text);
-      const t = await this.toast.create({
-        message: 'Message copié ✅',
-        duration: 1200,
-      });
-      await t.present();
     } catch {
       const t = await this.toast.create({
         message: 'Partage indisponible',

@@ -7,6 +7,7 @@ import {
   ReferralSummaryDto,
 } from 'src/app/services/referral/referral-api.service';
 import { Router } from '@angular/router';
+import { ShareService } from 'src/app/services/share/share.service';
 
 @Component({
   selector: 'app-referral',
@@ -26,6 +27,7 @@ export class ReferralPage {
     private readonly toast: ToastController,
     private readonly nav: NavController,
     private readonly router: Router,
+    private readonly shareService: ShareService,
   ) {}
 
   ionViewWillEnter() {
@@ -124,7 +126,12 @@ export class ReferralPage {
   }
 
   private shareLink(): string {
-    return this.summary?.referralLink ?? '';
+    const link = String(this.summary?.referralLink ?? '').trim();
+    if (link) return link;
+
+    const code = String(this.summary?.referralCode ?? '').trim();
+    if (!code) return '';
+    return this.shareService.referralShareUrl(code);
   }
 
   async copyCode() {
@@ -147,16 +154,20 @@ export class ReferralPage {
 
     if (!text) return;
 
-    if (channel === 'other' && navigator.share) {
+    if (channel === 'other') {
       try {
-        await navigator.share({
+        const mode = await this.shareService.share({
           title: 'Parrainage Tingilin',
           text: this.shareText(),
           url: link,
         });
+        if (mode === 'copied') {
+          await this.showToast('Lien de parrainage copié');
+        }
         return;
       } catch {
-        // user canceled or share not available
+        await this.showToast('Partage indisponible');
+        return;
       }
     }
 

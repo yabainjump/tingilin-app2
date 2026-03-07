@@ -35,6 +35,12 @@ export class HomeApiService {
   // ✅ ICI on fait EXACTEMENT le mapping comme raffle-details
   private toCard(raw: any): DrawCard {
     const product = raw?.product ?? raw?.productId ?? raw?.productRef ?? {};
+    const mappedPrice = Number(
+      raw?.ticketPrice ?? raw?.ticket_price ?? raw?.price ?? product?.ticketPrice ?? 0,
+    );
+    const mappedCurrency = String(
+      raw?.currency ?? raw?.ticketCurrency ?? product?.currency ?? 'XAF',
+    );
 
     return {
       id: String(raw?._id ?? raw?.id ?? ''),
@@ -47,8 +53,8 @@ export class HomeApiService {
       total: Number(raw?.totalTickets ?? raw?.total ?? 0),
 
       // ✅ LE POINT IMPORTANT : prix + monnaie
-      ticketPrice: Number(raw?.ticketPrice ?? 0),
-      currency: String(raw?.currency ?? 'XAF'),
+      ticketPrice: Number.isFinite(mappedPrice) ? mappedPrice : 0,
+      currency: mappedCurrency || 'XAF',
 
       // ✅ date fin (ton modèle s’appelle endsAt côté front)
       startAt: raw?.startAt ?? undefined,

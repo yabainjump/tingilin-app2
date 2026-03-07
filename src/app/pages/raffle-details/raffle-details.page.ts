@@ -1,11 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavController, ToastController } from '@ionic/angular';
-import { finalize, interval, Subscription } from 'rxjs';
+import { AlertController, NavController, ToastController } from '@ionic/angular';
+import { finalize, firstValueFrom, interval, Subscription } from 'rxjs';
 import {
   RafflesPublicApiService,
   RaffleDetailsDto,
 } from 'src/app/services/raffles/raffles-public-api.service';
+import {
+  WinnerDto,
+  WinnersApiService,
+} from 'src/app/services/winners/winners-api.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { ShareService } from 'src/app/services/share/share.service';
+import { ReferralApiService } from 'src/app/services/referral/referral-api.service';
+import { PaymentsApiService } from 'src/app/core/api/payments-api.service';
+
+type RecentWinnerCard = {
+  name: string;
+  note: string;
+  avatar: string;
+};
 
 @Component({
   selector: 'app-raffle-details',
@@ -28,28 +42,33 @@ export class RaffleDetailsPage implements OnInit {
   private nowMs = Date.now();
   private tickSub?: Subscription;
 
-  winners = [
-    {
-      name: 'Alex M.',
-      note: 'Won iPhone 14 Pro',
-      avatar: 'https://i.pravatar.cc/100?img=12',
-    },
-    {
-      name: 'Sarah K.',
-      note: 'Won Playstation 5',
-      avatar: 'https://i.pravatar.cc/100?img=47',
-    },
-  ];
+  winners: RecentWinnerCard[] = [];
+  freeTicketsBalance = 0;
+  usingFreeTicket = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private api: RafflesPublicApiService,
+    private winnersApi: WinnersApiService,
     private nav: NavController,
     private toast: ToastController,
+    private auth: AuthService,
+    private alertCtrl: AlertController,
+    private shareService: ShareService,
+    private referralApi: ReferralApiService,
+    private paymentsApi: PaymentsApiService,
   ) {}
 
   async goToPayment() {
+    const raffleId = this.currentRaffleId;
+    if (!raffleId) return;
+
+    if (!this.auth.isLoggedIn()) {
+      await this.promptAuthBeforePurchase(raffleId);
+      return;
+    }
+
     if (!this.canParticipate) {
       const t = await this.toast.create({
         message: 'Ce raffle est clôturé. Achat indisponible.',
@@ -60,9 +79,6 @@ export class RaffleDetailsPage implements OnInit {
     }
 
     const r: any = this.raffle; // ✅ bypass typing juste ici
-
-    const raffleId = r?._id || r?.id || r?.raffleId;
-    if (!raffleId) return;
 
     const unit = Number(r?.ticketPrice ?? r?.ticket_price ?? 0);
 
@@ -93,6 +109,9 @@ export class RaffleDetailsPage implements OnInit {
       return;
     }
 
+    this.loadFreeTicketsBalance();
+    this.loadRecentWinners();
+
     this.loading = true;
     this.api
       .getById(id)
@@ -111,6 +130,58 @@ export class RaffleDetailsPage implements OnInit {
           this.nav.back();
         },
       });
+  }
+
+  private loadFreeTicketsBalance() {
+    if (!this.auth.isLoggedIn()) {
+      this.freeTicketsBalance = 0;
+      return;
+    }
+
+    this.referralApi.summary().subscribe({
+      next: (s) =>
+        (this.freeTicketsBalance = Math.max(
+          0,
+          Number(s?.freeTicketsBalance ?? 0),
+        )),
+      error: () => (this.freeTicketsBalance = 0),
+    });
+  }
+
+  private loadRecentWinners() {
+    this.winnersApi.list(8).subscribe({
+      next: (res: any) => {
+        const list: WinnerDto[] = Array.isArray(res) ? res : (res?.data ?? []);
+        this.winners = list.map((w) => this.mapWinnerCard(w));
+      },
+      error: () => {
+        this.winners = [];
+      },
+    });
+  }
+
+  private mapWinnerCard(w: WinnerDto): RecentWinnerCard {
+    const prize = String(w?.prizeTitle ?? '').trim();
+    const note = prize
+      ? `a gagne ${prize}`
+      : w?.ticketCode
+        ? `Ticket #${w.ticketCode}`
+        : 'Gagnant recent';
+
+    return {
+      name: String(w?.winnerName ?? 'Gagnant'),
+      note,
+      avatar: this.avatarSrc(w?.avatar),
+    };
+  }
+
+  private avatarSrc(raw?: string | null): string {
+    const s = String(raw ?? '').trim();
+    if (!s || s === 'null' || s === 'undefined') return 'assets/img/profile.svg';
+    if (s.startsWith('http://') || s.startsWith('https://')) return s;
+    if (s.startsWith('data:') || s.startsWith('assets/')) return s;
+    if (s.startsWith('../assets/')) return s.replace('../', '');
+    return `assets/img/${s}`;
   }
 
   ngOnDestroy(): void {
@@ -211,7 +282,36 @@ export class RaffleDetailsPage implements OnInit {
   }
 
   toggleFav() {}
-  share() {}
+  async share() {
+    const raffleId = this.currentRaffleId;
+    if (!raffleId) return;
+
+    const title = this.raffle?.title || 'Raffle Tingilin';
+    const text = `Regarde ce raffle sur Tingilin: ${title}`;
+    const url = this.shareService.raffleShareUrl(raffleId);
+
+    try {
+      const mode = await this.shareService.share({
+        title: 'Tingilin',
+        text,
+        url,
+      });
+
+      if (mode === 'copied') {
+        const t = await this.toast.create({
+          message: 'Lien copié ✅',
+          duration: 1400,
+        });
+        await t.present();
+      }
+    } catch {
+      const t = await this.toast.create({
+        message: 'Partage indisponible',
+        duration: 1400,
+      });
+      await t.present();
+    }
+  }
 
   get sold(): number {
     return this.raffle?.sold ?? 0;
@@ -250,7 +350,111 @@ export class RaffleDetailsPage implements OnInit {
     return !!this.raffle && !this.loading && !this.isRaffleClosed;
   }
 
+  get canUseFreeTicket(): boolean {
+    return (
+      this.auth.isLoggedIn() &&
+      this.freeTicketsBalance > 0 &&
+      this.canParticipate &&
+      !this.usingFreeTicket
+    );
+  }
+
+  get hasFreeTickets(): boolean {
+    return this.auth.isLoggedIn() && this.freeTicketsBalance > 0;
+  }
+
+  async useFreeTicket() {
+    const raffleId = this.currentRaffleId;
+    if (!raffleId) return;
+
+    if (!this.auth.isLoggedIn()) {
+      await this.promptAuthBeforePurchase(raffleId);
+      return;
+    }
+
+    if (this.freeTicketsBalance <= 0) {
+      const t = await this.toast.create({
+        message: 'Aucun ticket gratuit disponible',
+        duration: 1500,
+      });
+      await t.present();
+      return;
+    }
+
+    if (!this.canParticipate) {
+      const t = await this.toast.create({
+        message: 'Ce raffle est clôturé. Utilisation indisponible.',
+        duration: 1500,
+      });
+      await t.present();
+      return;
+    }
+
+    this.usingFreeTicket = true;
+    try {
+      await firstValueFrom(this.paymentsApi.useFreeTicket(raffleId));
+      this.freeTicketsBalance = Math.max(0, this.freeTicketsBalance - 1);
+
+      const t = await this.toast.create({
+        message: 'Ticket gratuit utilisé ✅',
+        duration: 1600,
+      });
+      await t.present();
+
+      await this.router.navigate(['/tabs/ticket-details', raffleId]);
+    } catch (e: any) {
+      const t = await this.toast.create({
+        message:
+          e?.error?.message || e?.message || 'Impossible d’utiliser le ticket gratuit',
+        duration: 1700,
+      });
+      await t.present();
+      this.loadFreeTicketsBalance();
+    } finally {
+      this.usingFreeTicket = false;
+    }
+  }
+
   participate() {
     // prochaine étape: POST buy tickets
+  }
+
+  private get currentRaffleId(): string | null {
+    const routeId = String(this.route.snapshot.paramMap.get('id') ?? '').trim();
+    if (routeId) return routeId;
+
+    const data: any = this.raffle;
+    const value = data?._id || data?.id || data?.raffleId;
+    const id = String(value ?? '').trim();
+    return id || null;
+  }
+
+  private async promptAuthBeforePurchase(raffleId: string): Promise<void> {
+    const redirect = `/tabs/raffle-details/${encodeURIComponent(raffleId)}`;
+    const alert = await this.alertCtrl.create({
+      header: 'Compte requis',
+      message: 'Crée un compte ou connecte-toi pour acheter un ticket.',
+      buttons: [
+        { text: 'Annuler', role: 'cancel' },
+        {
+          text: 'Se connecter',
+          handler: () => {
+            void this.router.navigate(['/auth/login'], {
+              queryParams: { redirect },
+            });
+          },
+        },
+        {
+          text: 'Créer un compte',
+          handler: () => {
+            void this.router.navigate(['/auth/register'], {
+              queryParams: { redirect },
+            });
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 }

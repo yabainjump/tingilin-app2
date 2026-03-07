@@ -86,18 +86,16 @@
 
     <!-- Actions -->
     <div class="actions">
-      <button class="verify-btn" type="button" (click)="useFreeTicket()"
-        [disabled]="loading || freeTicketsBalance <= 0">
-        Utiliser 1 ticket gratuit ({{ freeTicketsBalance }})
-      </button>
-
       <button class="pay-btn" (click)="confirmPayment()" [disabled]="loading">
-        <span>Confirmer le paiement</span>
-        <ion-icon name="arrow-forward-outline"></ion-icon>
+        <ng-container *ngIf="!loading; else payBusy">
+          <span>Confirmer le paiement</span>
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </ng-container>
       </button>
 
       <button class="verify-btn" *ngIf="transactionId" (click)="verifyPayment()" [disabled]="loading">
-        Vérifier le paiement
+        <span *ngIf="!loading">Vérifier le paiement</span>
+        <ion-skeleton-text *ngIf="loading" animated class="btn-skeleton"></ion-skeleton-text>
       </button>
 
       <div class="secure">
@@ -108,6 +106,10 @@
 
     </div>
   </ng-container>
+
+  <ng-template #payBusy>
+    <ion-skeleton-text animated class="btn-skeleton"></ion-skeleton-text>
+  </ng-template>
 
   <ng-template #pageSkeleton>
     <div class="container">

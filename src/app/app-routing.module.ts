@@ -47,6 +47,14 @@ const routes: Routes = [
   },
 
   {
+    path: 'onboarding',
+    loadChildren: () =>
+      import('./pages/onboarding/onboarding.module').then(
+        (m) => m.OnboardingPageModule,
+      ),
+  },
+
+  {
     path: 'tabs',
     canActivate: [AuthGuard],
     loadChildren: () =>
@@ -60,37 +68,64 @@ const routes: Routes = [
   { path: 'tickets', redirectTo: 'tabs/tickets', pathMatch: 'full' },
   { path: 'winners', redirectTo: 'tabs/winners', pathMatch: 'full' },
   { path: 'referral', redirectTo: 'tabs/referral', pathMatch: 'full' },
-  { path: 'account', redirectTo: 'tabs/account', pathMatch: 'full' },
+  { path: 'account', redirectTo: 'tabs/profile', pathMatch: 'full' },
 
-  { path: '**', redirectTo: 'landing' },
   {
     path: 'admin/create-raffle',
-    loadChildren: () => import('./pages/admin/create-raffle/create-raffle.module').then( m => m.CreateRafflePageModule)
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./pages/admin/create-raffle/create-raffle.module').then(
+        (m) => m.CreateRafflePageModule,
+      ),
   },
   {
     path: 'edit-profile',
-    loadChildren: () => import('./pages/edit-profile/edit-profile.module').then( m => m.EditProfilePageModule)
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./pages/edit-profile/edit-profile.module').then(
+        (m) => m.EditProfilePageModule,
+      ),
   },
   {
     path: 'raffle-details/:id',
-    loadChildren: () => import('./pages/raffle-details/raffle-details.module').then( m => m.RaffleDetailsPageModule)
+    loadChildren: () =>
+      import('./pages/raffle-details/raffle-details.module').then(
+        (m) => m.RaffleDetailsPageModule,
+      ),
   },
   {
     path: 'payment-confirmation',
-    loadChildren: () => import('./pages/payment-confirmation/payment-confirmation.module').then( m => m.PaymentConfirmationPageModule)
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./pages/payment-confirmation/payment-confirmation.module').then(
+        (m) => m.PaymentConfirmationPageModule,
+      ),
   },
   {
     path: 'participations',
-    loadChildren: () => import('./pages/participations/participations.module').then( m => m.ParticipationsPageModule)
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./pages/participations/participations.module').then(
+        (m) => m.ParticipationsPageModule,
+      ),
   },
   {
-    path: 'ticket-details',
-    loadChildren: () => import('./pages/ticket-details/ticket-details.module').then( m => m.TicketDetailsPageModule)
+    path: 'ticket-details/:raffleId',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./pages/ticket-details/ticket-details.module').then(
+        (m) => m.TicketDetailsPageModule,
+      ),
   },
   {
     path: 'notifications',
-    loadChildren: () => import('./pages/notifications/notifications.module').then( m => m.NotificationsPageModule)
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./pages/notifications/notifications.module').then(
+        (m) => m.NotificationsPageModule,
+      ),
   },
+  { path: '**', redirectTo: 'landing' },
 ];
 @NgModule({
   imports: [
