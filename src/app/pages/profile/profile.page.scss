@@ -1,26 +1,28 @@
 :host {
-  /* Couleurs du design */
-  --primary: #2bee79;
-  --bg-dark: #050b07;
-  --surface-dark: #0f1f16;
+  --primary: #8b5cf6;
+  --primary-2: #a855f7;
+  --bg-dark: #0f0720;
+  --bg-dark-2: #190d30;
+  --surface-dark: #1f1438;
+  --success: #2bee79;
+  --danger: #f87171;
 
-  /* Ion */
   --ion-background-color: transparent;
-  font-family: "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI, Roboto,
+    Arial, sans-serif;
 }
 
-/* IonContent transparent + fond premium */
 ion-content.premium-bg {
   --background: transparent;
   background-color: var(--bg-dark);
   background-image:
-    radial-gradient(at 0% 0%, rgba(43, 238, 121, 0.08) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(43, 238, 121, 0.05) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(43, 238, 121, 0.08) 0px, transparent 50%);
+    radial-gradient(at 8% 0%, rgba(139, 92, 246, 0.22) 0px, transparent 48%),
+    radial-gradient(at 96% 10%, rgba(168, 85, 247, 0.16) 0px, transparent 55%),
+    radial-gradient(at 94% 92%, rgba(236, 72, 153, 0.12) 0px, transparent 42%),
+    linear-gradient(180deg, var(--bg-dark-2), var(--bg-dark));
   color: #fff;
 }
 
-/* Page width comme la maquette (max-w-md) */
 .page {
   max-width: 420px;
   margin: 0 auto;
@@ -29,41 +31,37 @@ ion-content.premium-bg {
   overflow: hidden;
 }
 
-/* Halos “premium” en arrière-plan */
 .page::before,
 .page::after {
   content: "";
   position: absolute;
-  inset: auto;
   pointer-events: none;
   z-index: 0;
+  border-radius: 9999px;
 }
 
 .page::before {
-  top: -10%;
-  left: -10%;
+  top: -16%;
+  left: -12%;
   width: 520px;
   height: 520px;
-  background: rgba(43, 238, 121, 0.06);
-  filter: blur(120px);
-  border-radius: 9999px;
+  background: rgba(139, 92, 246, 0.15);
+  filter: blur(130px);
 }
 
 .page::after {
-  bottom: -12%;
-  right: -12%;
+  bottom: -14%;
+  right: -14%;
   width: 420px;
   height: 420px;
-  background: rgba(43, 238, 121, 0.05);
-  filter: blur(110px);
-  border-radius: 9999px;
+  background: rgba(236, 72, 153, 0.12);
+  filter: blur(120px);
 }
 
-/* HEADER */
 .header {
   position: relative;
   z-index: 1;
-  padding: calc(env(safe-area-inset-top) + 40px) 24px 24px;
+  padding: calc(env(safe-area-inset-top) + 24px) 20px 20px;
   text-align: center;
 }
 
@@ -72,24 +70,24 @@ ion-content.premium-bg {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 18px;
-  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 14px;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .icon-btn {
-  width: 46px;
-  height: 46px;
+  width: 44px;
+  height: 44px;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  background: rgba(255, 255, 255, 0.08);
   display: grid;
   place-items: center;
-  transition: background 160ms ease, transform 160ms ease;
+  transition: transform 150ms ease, background 150ms ease;
 }
 
 .icon-btn:active {
   transform: scale(0.97);
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .material-icons-round {
@@ -97,21 +95,24 @@ ion-content.premium-bg {
   line-height: 1;
 }
 
-/* Avatar */
 .avatar-wrap {
-  width: 132px;
-  height: 132px;
-  margin: 0 auto 14px;
+  width: 126px;
+  height: 126px;
+  margin: 0 auto 12px;
   position: relative;
 }
 
 .avatar-ring {
-  width: 132px;
-  height: 132px;
+  width: 126px;
+  height: 126px;
   border-radius: 9999px;
-  padding: 6px;
-  background: linear-gradient(180deg, rgba(43, 238, 121, 0.55), rgba(43, 238, 121, 0));
-  box-shadow: 0 0 40px -12px rgba(43, 238, 121, 0.35);
+  padding: 5px;
+  background: linear-gradient(
+    145deg,
+    rgba(139, 92, 246, 0.95),
+    rgba(168, 85, 247, 0.3)
+  );
+  box-shadow: 0 14px 34px rgba(139, 92, 246, 0.3);
 }
 
 .avatar-inner {
@@ -132,17 +133,17 @@ ion-content.premium-bg {
 
 .avatar-edit {
   position: absolute;
-  right: 10px;
+  right: 8px;
   bottom: 6px;
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 9999px;
-  background: var(--primary);
-  color: var(--bg-dark);
-  border: 4px solid var(--bg-dark);
+  background: linear-gradient(90deg, var(--primary), var(--primary-2));
+  color: #fff;
+  border: 3px solid var(--bg-dark-2);
   display: grid;
   place-items: center;
-  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 10px 18px rgba(139, 92, 246, 0.4);
 }
 
 .avatar-edit .material-icons-round {
@@ -150,26 +151,25 @@ ion-content.premium-bg {
   font-weight: 700;
 }
 
-/* Nom */
 .name {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 800;
   letter-spacing: -0.02em;
-  margin: 0 0 12px;
+  margin: 0 0 10px;
+  color: #fff;
 }
 
-/* Balance pill */
 .balance-pill {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 10px 10px 16px;
+  padding: 10px 10px 10px 14px;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.28);
 }
 
 .balance-meta {
@@ -181,67 +181,68 @@ ion-content.premium-bg {
 
 .balance-label {
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.14em;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .balance-value {
   margin-top: 3px;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 800;
-  letter-spacing: 0.03em;
-  color: var(--primary);
+  letter-spacing: 0.02em;
+  color: #fff;
 }
 
 .balance-add {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 9999px;
-  background: var(--primary);
-  color: var(--bg-dark);
+  background: linear-gradient(90deg, var(--primary), var(--primary-2));
+  color: #fff;
   display: grid;
   place-items: center;
-  box-shadow: 0 0 18px -4px rgba(43, 238, 121, 0.55);
-  transition: transform 160ms ease;
+  box-shadow: 0 0 20px -6px rgba(139, 92, 246, 0.85);
+  transition: transform 150ms ease;
 }
 
 .balance-add:active {
   transform: scale(0.95);
 }
 
-/* BODY */
 .body {
   position: relative;
   z-index: 1;
-  padding: 0 24px 40px;
+  padding: 0 20px 36px;
 }
 
-/* Glass styles */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.24);
 }
 
 .glass-card {
-  background: linear-gradient(145deg, rgba(20, 40, 30, 0.7) 0%, rgba(10, 25, 18, 0.82) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(42, 28, 71, 0.86) 0%,
+    rgba(26, 17, 49, 0.92) 100%
+  );
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(43, 238, 121, 0.15);
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  box-shadow: 0 16px 36px rgba(5, 3, 11, 0.52);
 }
 
-/* Stats card */
 .stats-card {
-  border-radius: 22px;
-  padding: 22px;
+  border-radius: 20px;
+  padding: 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 18px 0 22px;
+  margin: 14px 0 20px;
   position: relative;
   overflow: hidden;
 }
@@ -253,8 +254,8 @@ ion-content.premium-bg {
   right: -18px;
   width: 140px;
   height: 140px;
-  background: rgba(43, 238, 121, 0.06);
-  filter: blur(40px);
+  background: rgba(168, 85, 247, 0.2);
+  filter: blur(46px);
   border-radius: 9999px;
 }
 
@@ -267,51 +268,53 @@ ion-content.premium-bg {
 }
 
 .stat-ico {
-  width: 48px;
-  height: 48px;
-  border-radius: 18px;
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
   display: grid;
   place-items: center;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0));
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: var(--primary);
-  margin-bottom: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #e9d5ff;
+  margin-bottom: 8px;
 }
 
 .stat-ico.alt {
-  background: linear-gradient(145deg, rgba(43, 238, 121, 0.20), rgba(255, 255, 255, 0));
-  border: 1px solid rgba(43, 238, 121, 0.20);
-  box-shadow: 0 0 18px -8px rgba(43, 238, 121, 0.5);
+  background: rgba(168, 85, 247, 0.2);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  color: #fff;
+  box-shadow: 0 0 18px -8px rgba(168, 85, 247, 0.68);
 }
 
 .stat-ico .material-icons-round {
-  font-size: 24px;
+  font-size: 22px;
 }
 
 .stat-val {
-  font-size: 34px;
+  font-size: 30px;
   font-weight: 800;
   letter-spacing: -0.02em;
+  color: #fff;
 }
 
 .stat-lbl {
-  margin-top: 6px;
+  margin-top: 4px;
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
+  font-weight: 800;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.62);
+  text-align: center;
 }
 
 .divider {
   width: 1px;
   align-self: stretch;
-  background: rgba(255, 255, 255, 0.06);
-  margin: 0 14px;
+  background: rgba(255, 255, 255, 0.14);
+  margin: 0 10px;
   z-index: 1;
 }
 
-/* Section head */
 .section-head {
   display: flex;
   align-items: center;
@@ -323,25 +326,26 @@ ion-content.premium-bg {
   margin: 0;
   font-size: 18px;
   font-weight: 800;
+  color: #fff;
 }
 
 .view-all {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--primary);
-  background: rgba(43, 238, 121, 0.10);
-  border: 1px solid rgba(43, 238, 121, 0.12);
-  padding: 8px 12px;
+  color: #fff;
+  background: linear-gradient(90deg, var(--primary), var(--primary-2));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 7px 12px;
   border-radius: 9999px;
+  box-shadow: 0 10px 20px rgba(139, 92, 246, 0.24);
 }
 
-/* History list */
 .history-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .history-item {
@@ -349,20 +353,20 @@ ion-content.premium-bg {
   text-align: left;
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 14px;
-  border-radius: 18px;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 16px;
   cursor: pointer;
 }
 
 .thumb {
-  width: 64px;
-  height: 64px;
+  width: 62px;
+  height: 62px;
   border-radius: 14px;
   overflow: hidden;
   position: relative;
-  flex: 0 0 64px;
-  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.35);
+  flex: 0 0 62px;
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.35);
 }
 
 .thumb img {
@@ -371,19 +375,18 @@ ion-content.premium-bg {
   object-fit: cover;
   display: block;
   transform: scale(1.02);
-  transition: transform 350ms ease;
+  transition: transform 300ms ease;
 }
 
 .thumb-grad {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.38), transparent);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.35), transparent);
 }
 
-/* LOST effect (grayscale + opacity) */
 .history-item.is-lost .thumb img {
   filter: grayscale(1);
-  opacity: 0.65;
+  opacity: 0.62;
 }
 
 .h-body {
@@ -395,28 +398,29 @@ ion-content.premium-bg {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 8px;
+  gap: 8px;
+  margin-bottom: 7px;
 }
 
 .h-title {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1.25;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   padding-right: 6px;
+  color: #fff;
 }
 
 .history-item.is-lost .h-title {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .badge {
   font-size: 10px;
   font-weight: 800;
-  padding: 6px 10px;
+  padding: 5px 10px;
   border-radius: 9999px;
   white-space: nowrap;
   display: inline-flex;
@@ -425,10 +429,10 @@ ion-content.premium-bg {
 }
 
 .badge.won {
-  background: rgba(43, 238, 121, 0.18);
-  border: 1px solid rgba(43, 238, 121, 0.22);
-  color: var(--primary);
-  box-shadow: 0 0 12px -6px rgba(43, 238, 121, 0.6);
+  background: rgba(43, 238, 121, 0.2);
+  border: 1px solid rgba(43, 238, 121, 0.28);
+  color: #8affbe;
+  box-shadow: 0 0 12px -6px rgba(43, 238, 121, 0.55);
 }
 
 .badge.won .material-icons-round {
@@ -436,32 +440,31 @@ ion-content.premium-bg {
 }
 
 .badge.lost {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.56);
 }
 
 .h-meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.64);
 }
 
 .meta {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
 }
 
 .meta .material-icons-round {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.35);
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.45);
 }
 
-/* Logout */
 .logout-wrap {
   display: flex;
   justify-content: center;
@@ -472,23 +475,21 @@ ion-content.premium-bg {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 22px;
+  padding: 13px 20px;
   border-radius: 9999px;
-  background: rgba(239, 68, 68, 0.06);
-  border: 1px solid rgba(239, 68, 68, 0.20);
-  color: rgba(248, 113, 113, 0.95);
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.24);
+  color: #fecaca;
   font-weight: 700;
 }
 
-/* Bottom spacer */
 .bottom-spacer {
-  height: calc(env(safe-area-inset-bottom) + 12px);
+  height: calc(env(safe-area-inset-bottom) + 10px);
 }
 
-/* Skeleton sizes (pour coller au layout) */
 .sk-avatar {
-  width: 132px;
-  height: 132px;
+  width: 126px;
+  height: 126px;
   border-radius: 9999px;
   margin: 0 auto 14px;
 }
@@ -508,15 +509,15 @@ ion-content.premium-bg {
 }
 
 .stats-card.skel .sk-ico {
-  width: 48px;
-  height: 48px;
-  border-radius: 18px;
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
   margin-bottom: 10px;
 }
 
 .stats-card.skel .sk-num {
   width: 60px;
-  height: 26px;
+  height: 24px;
   border-radius: 10px;
   margin-bottom: 8px;
 }
@@ -532,8 +533,8 @@ ion-content.premium-bg {
 }
 
 .sk-thumb {
-  width: 64px;
-  height: 64px;
+  width: 62px;
+  height: 62px;
   border-radius: 14px;
 }
 
@@ -549,13 +550,24 @@ ion-content.premium-bg {
 }
 
 .badge.live {
-  background: rgba(0, 224, 84, 0.18);
-  border: 1px solid rgba(0, 224, 84, 0.28);
-  color: #3cff9c;
+  background: rgba(168, 85, 247, 0.22);
+  border: 1px solid rgba(168, 85, 247, 0.34);
+  color: #f3e8ff;
 }
 
 .badge.ended {
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.11);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.76);
+}
+
+@media (max-width: 360px) {
+  .stat-val {
+    font-size: 24px;
+  }
+
+  .h-meta {
+    font-size: 11px;
+    gap: 8px;
+  }
 }

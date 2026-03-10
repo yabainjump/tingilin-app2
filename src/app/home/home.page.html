@@ -105,6 +105,7 @@
 
             <div class="hero-body">
               <div class="hero-title">{{ d.title }}</div>
+              <div class="category-chip-inline">{{ categoryLabel(d) }}</div>
 
               <div class="hero-sub" *ngIf="d.endAt || d.endsAt">
                 <!-- Fin {{ (d.endsAt || d.endAt) | date:'dd MMM, HH:mm' }} -->
@@ -156,6 +157,7 @@
 
           <div class="big-body">
             <div class="big-title">{{ featured.title }}</div>
+            <div class="category-chip-inline">{{ categoryLabel(featured) }}</div>
 
             <div class="verify">
               <span class="material-symbols-outlined">verified</span>
@@ -199,6 +201,7 @@
 
           <div class="row-body">
             <div class="row-title">{{ r.title }}</div>
+            <div class="category-chip-inline">{{ categoryLabel(r) }}</div>
             <div class="row-sub">Temps restant: {{ countdownText(r) }}</div>
 
             <div class="row-actions">

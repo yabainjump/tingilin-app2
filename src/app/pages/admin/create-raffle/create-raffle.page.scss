@@ -124,6 +124,12 @@
   gap: 10px;
 }
 
+.grid-three {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
 .upload-zone {
   width: 100%;
   border: 2px dashed rgba(120, 147, 218, 0.45);
@@ -286,4 +292,11 @@
   height: 18px;
   border-radius: 999px;
   opacity: 0.45;
+}
+
+@media (max-width: 720px) {
+  .grid-two,
+  .grid-three {
+    grid-template-columns: 1fr;
+  }
 }

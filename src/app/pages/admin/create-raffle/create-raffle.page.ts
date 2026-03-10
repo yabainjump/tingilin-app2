@@ -7,6 +7,7 @@ import {
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { RafflesApiService } from 'src/app/services/raffles/raffles-api.service';
 import { Capacitor } from '@capacitor/core';
+import { RAFFLE_CATEGORY_OPTIONS } from 'src/app/core/constants/raffle-categories';
 
 type CreateRaffleForm = {
   title: string;
@@ -16,6 +17,7 @@ type CreateRaffleForm = {
   realValue: number;
 
   ticketPrice: number;
+  totalTickets: number;
   currency: string;
   endAt: string;
 
@@ -31,6 +33,7 @@ type CreateRaffleForm = {
 export class CreateRafflePage {
   submitting = false;
   previewUrl: string | null = null;
+  readonly categoryOptions = RAFFLE_CATEGORY_OPTIONS;
 
   form: FormGroup;
 
@@ -44,10 +47,14 @@ export class CreateRafflePage {
       title: this.fb.nonNullable.control('', [Validators.required]),
       description: this.fb.nonNullable.control(''),
       imageUrl: this.fb.nonNullable.control('', [Validators.required]),
-      categoryId: this.fb.nonNullable.control(''),
+      categoryId: this.fb.nonNullable.control('GENERAL', [Validators.required]),
       realValue: this.fb.nonNullable.control(0, [Validators.min(0)]),
 
       ticketPrice: this.fb.nonNullable.control(100, [
+        Validators.required,
+        Validators.min(1),
+      ]),
+      totalTickets: this.fb.nonNullable.control(1000, [
         Validators.required,
         Validators.min(1),
       ]),
@@ -160,6 +167,7 @@ export class CreateRafflePage {
         },
         raffle: {
           ticketPrice: Number(v.ticketPrice ?? 0),
+          totalTickets: Number(v.totalTickets ?? 0),
           currency: v.currency || 'XAF',
           endAt: endAtIso,
         },

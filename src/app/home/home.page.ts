@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Subscription, interval } from 'rxjs';
 import { NotificationsStateService } from '../services/notifications/notifications-state.service';
 import { RafflesApiService } from '../services/raffles/raffles-api.service';
+import { raffleCategoryLabel } from '../core/constants/raffle-categories';
 
 type HomeCategory = { id: string; label: string };
 
@@ -261,10 +262,10 @@ export class HomePage implements OnInit {
   }
 
   private isVisibleOnHome(x: any): boolean {
-    // visible si pas de date fin (fallback) OU fin >= maintenant - 2 jours
+    // visible si pas de date fin (fallback) OU fin >= maintenant - 7 jours
     const end = this.getEndMs(x);
     if (!Number.isFinite(end)) return true;
-    const keepMs = 2 * 24 * 60 * 60 * 1000;
+    const keepMs = 7 * 24 * 60 * 60 * 1000;
     return end >= Date.now() - keepMs;
   }
 
@@ -291,5 +292,9 @@ export class HomePage implements OnInit {
       return 'assets/img/placeholder.png';
     }
     return s;
+  }
+
+  categoryLabel(x: any): string {
+    return raffleCategoryLabel(x?.categoryId);
   }
 }

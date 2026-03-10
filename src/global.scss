@@ -70,3 +70,10 @@ ion-content::part(scroll) {
   font-variation-settings: "FILL" 0, "wght" 600, "GRAD" 0, "opsz" 24;
 }
 
+/* Force all toast notifications near the top for consistent UX. */
+ion-toast.toast-bottom,
+ion-toast.toast-middle {
+  top: calc(env(safe-area-inset-top) + 12px) !important;
+  bottom: auto !important;
+  transform: none !important;
+}

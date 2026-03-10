@@ -311,6 +311,12 @@ ion-content.live-winners {
   box-shadow: 0 0 16px rgba(169, 15, 255, 0.45);
 }
 
+.analysis-note {
+  margin-top: 8px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.56);
+}
+
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

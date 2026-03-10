@@ -31,7 +31,7 @@
         </div>
 
         <!-- FirstName + LastName sous la photo -->
-        <h1 class="name" style="color: white;">
+        <h1 class="name">
           {{ (user?.firstName || '') + ' ' + (user?.lastName || '') }}
         </h1>
 
@@ -100,7 +100,7 @@
 
       <!-- HISTORY TITLE -->
       <div class="section-head">
-        <h2 style="color: white;">Historique des Jeux</h2>
+        <h2>Historique des Jeux</h2>
         <button class="view-all" type="button" (click)="goHistory()">
           Tout voir
         </button>

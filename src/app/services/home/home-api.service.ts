@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { DrawCard, UserSummary } from './home.models';
+import { HOME_CATEGORY_OPTIONS } from 'src/app/core/constants/raffle-categories';
 
 type HomeCategory = { id: string; label: string };
 
@@ -19,10 +20,7 @@ export class HomeApiService {
 
   // Categories (mock)
   getCategories(): Observable<HomeCategory[]> {
-    return new Observable((sub) => {
-      sub.next([{ id: 'all', label: 'All' }]);
-      sub.complete();
-    });
+    return of(HOME_CATEGORY_OPTIONS);
   }
 
   // ✅ Nettoyage URL (évite /null 404)
@@ -47,6 +45,7 @@ export class HomeApiService {
       title: String(product?.title ?? raw?.title ?? '—'),
       subtitle: String(product?.description ?? raw?.subtitle ?? ''),
       imageUrl: this.cleanUrl(product?.imageUrl ?? raw?.imageUrl),
+      categoryId: String(product?.categoryId ?? raw?.categoryId ?? '').toUpperCase() || undefined,
 
       // ✅ sold/total corrects (sinon tu vois 0/0)
       sold: Number(raw?.ticketsSold ?? raw?.sold ?? 0),

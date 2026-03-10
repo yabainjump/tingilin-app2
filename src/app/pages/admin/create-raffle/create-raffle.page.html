@@ -74,14 +74,10 @@
           Une image est requise.
         </p>
 
-        <label class="field-label" for="raffle-category">Catégorie (optionnel)</label>
-        <input
-          id="raffle-category"
-          class="field-input"
-          type="text"
-          formControlName="categoryId"
-          placeholder="ex: ELECTRONICS"
-        />
+        <label class="field-label" for="raffle-category">Categorie *</label>
+        <select id="raffle-category" class="field-input" formControlName="categoryId">
+          <option *ngFor="let c of categoryOptions" [value]="c.id">{{ c.label }}</option>
+        </select>
       </div>
     </section>
 
@@ -92,7 +88,7 @@
       </div>
 
       <div class="glass-card">
-        <div class="grid-two">
+        <div class="grid-three">
           <div>
             <label class="field-label" for="raffle-ticket-price">Prix ticket</label>
             <input
@@ -102,6 +98,18 @@
               min="1"
               formControlName="ticketPrice"
               placeholder="100"
+            />
+          </div>
+
+          <div>
+            <label class="field-label" for="raffle-total-tickets">Total tickets</label>
+            <input
+              id="raffle-total-tickets"
+              class="field-input"
+              type="number"
+              min="1"
+              formControlName="totalTickets"
+              placeholder="1000"
             />
           </div>
 

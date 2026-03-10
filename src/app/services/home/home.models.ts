@@ -17,6 +17,7 @@ export interface DrawCard {
   title: string;
   subtitle?: string;
   imageUrl?: string;
+  categoryId?: string;
 
   sold?: number;
   total?: number;

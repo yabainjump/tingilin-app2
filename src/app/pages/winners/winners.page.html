@@ -73,11 +73,14 @@
 
       <div class="analysis">
         <div class="analysis-head">
-          <span>ANALYSE DES TICKETS</span>
+          <span>PROGRESSION DU TIRAGE LIVE</span>
           <strong>{{ analysisProgress }}%</strong>
         </div>
         <div class="bar">
           <div class="bar-fill" [style.width.%]="analysisProgress"></div>
+        </div>
+        <div class="analysis-note">
+          Indicateur visuel en temps reel du tirage.
         </div>
       </div>
 
@@ -91,13 +94,14 @@
         </button>
 
         <div class="stat-card">
-          <div class="stat-k">FIABILITE DU TIRAGE</div>
+          <div class="stat-k">NIVEAU DE CONFIANCE</div>
           <div class="stat-v gold">{{ trustPercentLabel }}</div>
         </div>
       </div>
 
       <div class="notice">
-        Winner will be automatically notified via verified account details.
+        Le gagnant est notifie automatiquement via ses informations de compte
+        verifiees.
       </div>
 
       <div class="recent" *ngIf="recent.length">

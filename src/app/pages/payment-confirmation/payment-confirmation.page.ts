@@ -150,7 +150,7 @@ export class PaymentConfirmationPage {
     const t = await this.toastCtrl.create({
       message,
       duration: 1800,
-      position: 'bottom',
+      position: 'top',
     });
     await t.present();
   }
