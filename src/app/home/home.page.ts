@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { skeletonController } from '../shared/utils/skeleton-timing';
 import { HomeApiService } from '../services/home/home-api.service';
@@ -17,22 +17,25 @@ type HomeCategory = { id: string; label: string };
   styleUrls: ['home.page.scss'],
   standalone: false,
 })
-export class HomePage implements OnInit {
-  raffles$ = this.rafflesService.triggerRefresh;
+export class HomePage implements OnInit, OnDestroy {
+  private readonly autoRefreshMs = 15000;
+  private raffleRefreshSub?: Subscription;
+  private autoRefreshSub?: Subscription;
 
   ionViewWillEnter(): void {
     this.startClock();
+    this.startAutoRefresh();
     this.notifState.refresh();
-    this.rafflesService.triggerRefresh();
+    this.loadAll('refresh');
   }
 
   ionViewWillLeave(): void {
     this.stopClock();
+    this.stopAutoRefresh();
   }
 
   doRefresh(ev: any): void {
     this.loadAll('refresh');
-    this.rafflesService.triggerRefresh();
     setTimeout(() => ev.target.complete(), 300);
   }
 
@@ -64,7 +67,15 @@ export class HomePage implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.subscribeToRaffleRefresh();
     this.loadAll('init');
+  }
+
+  ngOnDestroy(): void {
+    this.stopClock();
+    this.stopAutoRefresh();
+    this.raffleRefreshSub?.unsubscribe();
+    this.raffleRefreshSub = undefined;
   }
 
   loadAll(
@@ -107,14 +118,16 @@ export class HomePage implements OnInit {
       });
   }
 
-  loadDraws(done?: () => void): void {
+  loadDraws(done?: () => void, showSkeleton = true): void {
     const skHero = skeletonController(0, 350);
     const skFeatured = skeletonController(0, 350);
     const skRows = skeletonController(0, 350);
 
-    skHero.scheduleShow((v) => (this.showEndingSoonSkeleton = v));
-    skFeatured.scheduleShow((v) => (this.showFeaturedSkeleton = v));
-    skRows.scheduleShow((v) => (this.showRowsSkeleton = v));
+    if (showSkeleton) {
+      skHero.scheduleShow((v) => (this.showEndingSoonSkeleton = v));
+      skFeatured.scheduleShow((v) => (this.showFeaturedSkeleton = v));
+      skRows.scheduleShow((v) => (this.showRowsSkeleton = v));
+    }
 
     // 1) Ending Soon
     this.api
@@ -227,6 +240,25 @@ export class HomePage implements OnInit {
   private stopClock(): void {
     this.clockSub?.unsubscribe();
     this.clockSub = undefined;
+  }
+
+  private startAutoRefresh(): void {
+    if (this.autoRefreshSub) return;
+    this.autoRefreshSub = interval(this.autoRefreshMs).subscribe(() => {
+      this.loadDraws(undefined, false);
+    });
+  }
+
+  private stopAutoRefresh(): void {
+    this.autoRefreshSub?.unsubscribe();
+    this.autoRefreshSub = undefined;
+  }
+
+  private subscribeToRaffleRefresh(): void {
+    if (this.raffleRefreshSub) return;
+    this.raffleRefreshSub = this.rafflesService.refresh$.subscribe(() => {
+      this.loadDraws(undefined, false);
+    });
   }
 
   remainingMs(d: DrawCard): number {

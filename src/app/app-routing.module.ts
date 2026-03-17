@@ -87,6 +87,12 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'support',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./pages/support/support.module').then((m) => m.SupportPageModule),
+  },
+  {
     path: 'raffle-details/:id',
     loadChildren: () =>
       import('./pages/raffle-details/raffle-details.module').then(

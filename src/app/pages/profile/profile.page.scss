@@ -74,6 +74,12 @@ ion-content.premium-bg {
   color: rgba(255, 255, 255, 0.6);
 }
 
+.right-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .icon-btn {
   width: 44px;
   height: 44px;

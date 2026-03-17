@@ -36,7 +36,11 @@
               }
             ],
             "styles": ["src/global.scss", "src/theme/variables.scss"],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "debug",
+              "socket.io-parser"
+            ]
           },
           "configurations": {
             "production": {

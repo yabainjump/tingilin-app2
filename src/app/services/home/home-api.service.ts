@@ -13,6 +13,32 @@ export class HomeApiService {
 
   constructor(private http: HttpClient) {}
 
+  private normalizeCategoryId(
+    categoryId: string | null | undefined,
+  ): string | null {
+    const normalized = String(categoryId ?? '').trim();
+    if (!normalized) return null;
+    if (normalized.toLowerCase() === 'all') return null;
+    return normalized.toUpperCase();
+  }
+
+  private buildPublicRafflesParams(
+    sort: 'endAt' | 'createdAt',
+    limit: number,
+    categoryId: string,
+  ): HttpParams {
+    let params = new HttpParams()
+      .set('sort', sort)
+      .set('limit', String(limit));
+
+    const normalizedCategoryId = this.normalizeCategoryId(categoryId);
+    if (normalizedCategoryId) {
+      params = params.set('category', normalizedCategoryId);
+    }
+
+    return params;
+  }
+
   // Header user
   getUserSummary(): Observable<UserSummary> {
     return this.http.get<UserSummary>(`${this.baseUrl}/users/me`);
@@ -66,10 +92,7 @@ export class HomeApiService {
 
   // Ending soon
   getEndingSoon(categoryId: string): Observable<DrawCard[]> {
-    const params = new HttpParams()
-      .set('sort', 'endAt')
-      .set('limit', '10')
-      .set('category', categoryId || 'all');
+    const params = this.buildPublicRafflesParams('endAt', 10, categoryId);
 
     // ✅ IMPORTANT : on map ici
     return this.http
@@ -79,10 +102,7 @@ export class HomeApiService {
 
   // Live rows
   getLiveRows(categoryId: string): Observable<DrawCard[]> {
-    const params = new HttpParams()
-      .set('sort', 'createdAt')
-      .set('limit', '30')
-      .set('category', categoryId || 'all');
+    const params = this.buildPublicRafflesParams('createdAt', 30, categoryId);
 
     // ✅ IMPORTANT : on map ici
     return this.http

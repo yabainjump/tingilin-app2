@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 export interface AdminCreateRaffleRequest {
   publishNow?: boolean;
@@ -44,7 +44,8 @@ export interface RaffleDetailsDto {
 @Injectable({ providedIn: 'root' })
 export class RafflesApiService {
   private readonly baseUrl = environment.apiBaseUrl;
-  private refresh$ = new BehaviorSubject<void>(undefined);
+  private readonly refreshSubject = new Subject<void>();
+  readonly refresh$ = this.refreshSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -53,11 +54,11 @@ export class RafflesApiService {
       `${this.baseUrl}/raffles/admin/create-with-product`,
       dto,
     );
-    }
+  }
 
-    triggerRefresh(){
-      this.refresh$.next();
-    }
+  triggerRefresh(): void {
+    this.refreshSubject.next();
+  }
 
   getPublicById(id: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/raffles/public/${id}`);

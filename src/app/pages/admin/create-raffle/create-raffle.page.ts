@@ -176,6 +176,8 @@ export class CreateRafflePage {
         next: async () => {
           this.submitting = false;
 
+          this.api.triggerRefresh();
+
           const t = await this.toast.create({
             message: 'Raffle créée ✅',
             duration: 1200,

@@ -1,0 +1,135 @@
+<ion-content [fullscreen]="true" class="support-page">
+  <div class="support-shell">
+    <div class="support-glow glow-top" aria-hidden="true"></div>
+    <div class="support-glow glow-bottom" aria-hidden="true"></div>
+
+    <header class="support-header">
+      <button class="back-button" type="button" (click)="goBack()" aria-label="Retour">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+
+      <div class="headline">
+        <p class="eyebrow">Centre d'aide</p>
+        <h1>Besoin d'aide ?</h1>
+        <p class="subtitle">
+          Trouve rapidement une reponse ou ouvre un message email sans afficher de numero dans l'app.
+        </p>
+      </div>
+    </header>
+
+    <section class="search-card">
+      <span class="material-symbols-outlined search-icon">search</span>
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="Rechercher un article..."
+        aria-label="Rechercher un article"
+      />
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <p class="section-kicker">Contact</p>
+      </div>
+
+      <div class="contact-grid">
+        <button class="contact-card contact-card--primary" type="button" (click)="contactSupport()">
+          <div class="contact-icon tone-violet">
+            <span class="material-symbols-outlined">mail</span>
+          </div>
+
+          <div class="contact-copy">
+            <strong>Nous ecrire</strong>
+            <span>Ouvre ton application email avec un message pre-rempli</span>
+          </div>
+
+          <span class="material-symbols-outlined chevron">chevron_right</span>
+        </button>
+
+        <button class="contact-card" type="button" (click)="scrollToFaqs()">
+          <div class="contact-icon tone-blue">
+            <span class="material-symbols-outlined">menu_book</span>
+          </div>
+
+          <div class="contact-copy">
+            <strong>Consulter les FAQ</strong>
+            <span>Accede aux reponses les plus utiles sans quitter l'app</span>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head section-head--center">
+        <p class="section-kicker">Categories d'aide</p>
+      </div>
+
+      <div class="category-grid">
+        <button
+          *ngFor="let category of categories; trackBy: trackByCategory"
+          type="button"
+          class="category-card"
+          [class.active]="selectedCategoryId === category.id"
+          (click)="selectCategory(category.id)"
+        >
+          <span class="category-icon" [ngClass]="'tone-' + category.tone">
+            <span class="material-symbols-outlined">{{ category.icon }}</span>
+          </span>
+          <span class="category-label">{{ category.label }}</span>
+        </button>
+      </div>
+    </section>
+
+    <section id="support-faq" class="section faq-section">
+      <div class="section-head">
+        <h2>Questions frequentes</h2>
+        <button
+          *ngIf="searchTerm || selectedCategoryId !== 'all'"
+          type="button"
+          class="see-all"
+          (click)="resetFilters()"
+        >
+          Voir tout
+        </button>
+      </div>
+
+      <div class="faq-list" *ngIf="visibleFaqs.length; else emptyFaqState">
+        <article
+          *ngFor="let faq of visibleFaqs; trackBy: trackByFaq"
+          class="faq-card"
+          [class.open]="isExpanded(faq.id)"
+        >
+          <button class="faq-trigger" type="button" (click)="toggleFaq(faq.id)">
+            <div class="faq-meta">
+              <span class="faq-chip">{{ labelForCategory(faq.category) }}</span>
+              <strong>{{ faq.question }}</strong>
+            </div>
+
+            <span class="material-symbols-outlined arrow">expand_more</span>
+          </button>
+
+          <div class="faq-answer" *ngIf="isExpanded(faq.id)">
+            <p>{{ faq.answer }}</p>
+
+            <button
+              class="inline-support"
+              type="button"
+              (click)="contactSupport(faq.category)"
+            >
+              Contacter le support pour ce sujet
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <ng-template #emptyFaqState>
+        <div class="empty-state">
+          <span class="material-symbols-outlined">support_agent</span>
+          <strong>Aucune reponse pour cette recherche</strong>
+          <p>Essaie un autre mot-cle ou reviens a toutes les categories.</p>
+          <button type="button" (click)="resetFilters()">Reinitialiser</button>
+        </div>
+      </ng-template>
+    </section>
+  </div>
+</ion-content>

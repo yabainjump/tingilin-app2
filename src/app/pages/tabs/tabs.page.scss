@@ -47,6 +47,17 @@ ion-tab-button {
   --background-focused: transparent;
   --background-activated: transparent;
   background: transparent !important;
+  min-width: 0;
+}
+
+ion-tab-button ion-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+}
+
+ion-tab-button .material-symbols-outlined,
+ion-tab-button ion-icon {
+  font-size: 1.22rem;
 }
 
 

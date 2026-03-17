@@ -92,6 +92,10 @@ export class ProfilePage {
     this.nav.navigateForward('/tabs/edit-profile');
   }
 
+  openSupport() {
+    this.nav.navigateForward('/support');
+  }
+
   async logout() {
     this.auth.logout();
     const t = await this.toast.create({
