@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true" class="register">
   <div class="topbar">
     <button class="back" routerLink="/auth/login" aria-label="Retour">
-      <span class="material-symbols-outlined">arrow_back_ios_new</span>
+      <span translate="no" class="notranslate material-symbols-outlined">arrow_back_ios_new</span>
     </button>
 
     <div class="top-title">Rejoignez l'aventure</div>
@@ -75,7 +75,7 @@
             [formControl]="form.controls.password"
           />
           <button type="button" class="eye" (click)="togglePassword()" aria-label="Afficher/Masquer">
-            <span class="material-symbols-outlined">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+            <span translate="no" class="notranslate material-symbols-outlined">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
           </button>
         </div>
 

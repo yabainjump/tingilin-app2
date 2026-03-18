@@ -23,7 +23,7 @@ export class EditProfilePage {
 
   user: ProfileUser | null = null;
 
-  defaultAvatar = 'src/assets/img/profile.svg';
+  defaultAvatar = 'assets/img/profile.svg';
 
   avatarPreview: string | null = null; // preview + payload (base64/url)
   private avatarToSave: string | null = null;

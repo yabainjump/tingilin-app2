@@ -52,7 +52,11 @@ export class RegisterPage {
   ) {}
 
   ngOnInit(): void {
-    const ref = String(this.route.snapshot.queryParamMap.get('ref') ?? '')
+    const ref = String(
+      this.route.snapshot.queryParamMap.get('ref') ??
+        this.route.snapshot.queryParamMap.get('referralCode') ??
+        '',
+    )
       .trim()
       .toUpperCase();
     if (ref) {
@@ -89,24 +93,14 @@ export class RegisterPage {
 
     this.loading = true;
 
-    const payloadFull: any = {
-      lastName: v.lastName?.trim(),
-      firstName: v.firstName?.trim(),
-      username: v.username?.trim(),
-      email: v.email?.trim(),
-      phone: phoneFull,
-      country: v.country?.trim(),
-      city: v.city?.trim(),
-      password: v.password,
-      avatar: '../../../../assets/img/profile.svg',
-    };
-
     const dto = {
-      email: String(payloadFull.email).trim().toLowerCase(),
-      password: String(payloadFull.password),
-      firstName: String(payloadFull.firstName ?? ''),
-      lastName: String(payloadFull.lastName ?? ''),
-      phone: String(payloadFull.phone ?? ''),
+      email: String(v.email ?? '')
+        .trim()
+        .toLowerCase(),
+      password: String(v.password ?? ''),
+      firstName: String(v.firstName ?? '').trim(),
+      lastName: String(v.lastName ?? '').trim(),
+      phone: String(phoneFull),
       referralCode: String(v.referralCode ?? '').trim().toUpperCase() || undefined,
     };
 

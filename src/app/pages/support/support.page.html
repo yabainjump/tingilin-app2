@@ -5,7 +5,7 @@
 
     <header class="support-header">
       <button class="back-button" type="button" (click)="goBack()" aria-label="Retour">
-        <span class="material-symbols-outlined">arrow_back</span>
+        <span translate="no" class="notranslate material-symbols-outlined">arrow_back</span>
       </button>
 
       <div class="headline">
@@ -18,7 +18,7 @@
     </header>
 
     <section class="search-card">
-      <span class="material-symbols-outlined search-icon">search</span>
+      <span translate="no" class="notranslate material-symbols-outlined search-icon">search</span>
       <input
         type="text"
         [(ngModel)]="searchTerm"
@@ -35,7 +35,7 @@
       <div class="contact-grid">
         <button class="contact-card contact-card--primary" type="button" (click)="contactSupport()">
           <div class="contact-icon tone-violet">
-            <span class="material-symbols-outlined">mail</span>
+            <span translate="no" class="notranslate material-symbols-outlined">mail</span>
           </div>
 
           <div class="contact-copy">
@@ -43,12 +43,12 @@
             <span>Ouvre ton application email avec un message pre-rempli</span>
           </div>
 
-          <span class="material-symbols-outlined chevron">chevron_right</span>
+          <span translate="no" class="notranslate material-symbols-outlined chevron">chevron_right</span>
         </button>
 
         <button class="contact-card" type="button" (click)="scrollToFaqs()">
           <div class="contact-icon tone-blue">
-            <span class="material-symbols-outlined">menu_book</span>
+            <span translate="no" class="notranslate material-symbols-outlined">menu_book</span>
           </div>
 
           <div class="contact-copy">
@@ -73,7 +73,7 @@
           (click)="selectCategory(category.id)"
         >
           <span class="category-icon" [ngClass]="'tone-' + category.tone">
-            <span class="material-symbols-outlined">{{ category.icon }}</span>
+            <span translate="no" class="notranslate material-symbols-outlined">{{ category.icon }}</span>
           </span>
           <span class="category-label">{{ category.label }}</span>
         </button>
@@ -105,7 +105,7 @@
               <strong>{{ faq.question }}</strong>
             </div>
 
-            <span class="material-symbols-outlined arrow">expand_more</span>
+            <span translate="no" class="notranslate material-symbols-outlined arrow">expand_more</span>
           </button>
 
           <div class="faq-answer" *ngIf="isExpanded(faq.id)">
@@ -124,7 +124,7 @@
 
       <ng-template #emptyFaqState>
         <div class="empty-state">
-          <span class="material-symbols-outlined">support_agent</span>
+          <span translate="no" class="notranslate material-symbols-outlined">support_agent</span>
           <strong>Aucune reponse pour cette recherche</strong>
           <p>Essaie un autre mot-cle ou reviens a toutes les categories.</p>
           <button type="button" (click)="resetFilters()">Reinitialiser</button>

@@ -2,14 +2,14 @@
   <!-- Back -->
   <div class="topbar">
     <button class="icon-btn" routerLink="/landing" aria-label="Retour">
-      <span class="material-symbols-outlined">arrow_back</span>
+      <span translate="no" class="notranslate material-symbols-outlined">arrow_back</span>
     </button>
   </div>
 
   <div class="wrap">
     <div class="head">
       <div class="logo">
-        <span class="material-symbols-outlined"><img src="../../../../assets/img/Asset_7.png" alt=""></span>
+        <span translate="no" class="notranslate material-symbols-outlined"><img src="../../../../assets/img/Asset_7.png" alt=""></span>
       </div>
 
       <h1>Bon retour !</h1>
@@ -23,8 +23,8 @@
       <div class="field">
         <label>IDENTIFIANT</label>
         <div class="input">
-          <span class="material-symbols-outlined left">MAIL</span>
-          <input type="tel" placeholder="Ex: test@test.com" [formControl]="form.controls.identifier" />
+          <span translate="no" class="notranslate material-symbols-outlined left">MAIL</span>
+          <input type="text" placeholder="Ex: test@test.com" [formControl]="form.controls.identifier" />
         </div>
       </div>
 
@@ -35,11 +35,11 @@
         </div>
 
         <div class="input">
-          <span class="material-symbols-outlined left">lock</span>
+          <span translate="no" class="notranslate material-symbols-outlined left">lock</span>
           <input [type]="showPassword ? 'text' : 'password'" placeholder="••••••••"
             [formControl]="form.controls.password" />
           <button type="button" class="eye" (click)="togglePassword()" aria-label="Afficher/Masquer">
-            <span class="material-symbols-outlined">
+            <span translate="no" class="notranslate material-symbols-outlined">
               {{ showPassword ? 'visibility' : 'visibility_off' }}
             </span>
           </button>

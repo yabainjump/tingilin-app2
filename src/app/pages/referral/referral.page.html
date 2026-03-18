@@ -2,11 +2,11 @@
   <div class="screen">
     <div class="topbar">
       <button class="icon-btn" type="button" (click)="back()">
-        <span class="material-symbols-outlined">arrow_back</span>
+        <span translate="no" class="notranslate material-symbols-outlined">arrow_back</span>
       </button>
       <h1>Parrainage &amp; Fidélité</h1>
       <button class="icon-btn" type="button" (click)="copyLink()">
-        <span class="material-symbols-outlined">help</span>
+        <span translate="no" class="notranslate material-symbols-outlined">help</span>
       </button>
     </div>
 
@@ -34,7 +34,7 @@
         <div class="card-head">
           <div>
             <h3>
-              <span class="material-symbols-outlined">group_add</span>
+              <span translate="no" class="notranslate material-symbols-outlined">group_add</span>
               Objectif Parrainage
             </h3>
             <p>{{ referralProgressLabel }}</p>
@@ -51,7 +51,7 @@
         <div class="card-head">
           <div>
             <h3>
-              <span class="material-symbols-outlined">confirmation_number</span>
+              <span translate="no" class="notranslate material-symbols-outlined">confirmation_number</span>
               Bonus Fidélité
             </h3>
             <p>{{ loyaltyProgressLabel }}</p>
@@ -73,19 +73,19 @@
 
         <div class="share-row">
           <button type="button" (click)="share('whatsapp')">
-            <span class="material-symbols-outlined">chat</span>
+            <span translate="no" class="notranslate material-symbols-outlined">chat</span>
             WhatsApp
           </button>
           <button type="button" (click)="share('facebook')">
-            <span class="material-symbols-outlined">public</span>
+            <span translate="no" class="notranslate material-symbols-outlined">public</span>
             Facebook
           </button>
           <button type="button" (click)="share('sms')">
-            <span class="material-symbols-outlined">sms</span>
+            <span translate="no" class="notranslate material-symbols-outlined">sms</span>
             SMS
           </button>
           <button type="button" (click)="share('other')">
-            <span class="material-symbols-outlined">ios_share</span>
+            <span translate="no" class="notranslate material-symbols-outlined">ios_share</span>
             Autre
           </button>
         </div>
@@ -103,7 +103,7 @@
 
         <div class="history-row" *ngFor="let h of rewardHistory">
           <div class="h-left">
-            <span class="material-symbols-outlined h-ico" [class.ref]="historyTone(h.source) === 'ref'"
+            <span translate="no" class="notranslate material-symbols-outlined h-ico" [class.ref]="historyTone(h.source) === 'ref'"
               [class.loy]="historyTone(h.source) === 'loy'">
               {{ historyIcon(h.source) }}
             </span>
@@ -134,7 +134,7 @@
               {{ r.active ? 'Actif (achat validé)' : 'En attente d’achat' }}
             </div>
           </div>
-          <span class="material-symbols-outlined state-ico">
+          <span translate="no" class="notranslate material-symbols-outlined state-ico">
             {{ r.active ? 'check_circle' : 'schedule' }}
           </span>
         </div>

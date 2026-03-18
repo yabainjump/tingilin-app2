@@ -36,7 +36,7 @@
 
 
           <ion-tab-button class="notif" href="/tabs/notifications">
-            <span class="material-symbols-outlined">notifications</span>
+            <span translate="no" class="notranslate material-symbols-outlined">notifications</span>
             <ion-icon name="notifications-outline"></ion-icon>
             <ion-label>Notifs</ion-label>
             <span class="notif-dot"></span>
@@ -149,7 +149,7 @@
             </div>
 
             <div class="timer" *ngIf="featured.endAt || featured.endsAt">
-              <span class="material-symbols-outlined">timer</span>
+              <span translate="no" class="notranslate material-symbols-outlined">timer</span>
               <!-- <span class="t">Fin {{ (featured.endsAt || featured.endAt) | date:'dd MMM, HH:mm' }}</span> -->
               <span class="t">{{ countdownText(featured) }}</span>
             </div>
@@ -160,7 +160,7 @@
             <div class="category-chip-inline">{{ categoryLabel(featured) }}</div>
 
             <div class="verify">
-              <span class="material-symbols-outlined">verified</span>
+              <span translate="no" class="notranslate material-symbols-outlined">verified</span>
               Verified Draw
             </div>
 
