@@ -18,7 +18,6 @@ describe('ShareService', () => {
   it('should build raffle share URL on frontend route', () => {
     const id = 'raffle id';
     const url = service.raffleShareUrl(id);
-
     const expectedOrigin = String(window.location.origin).replace(/\/+$/, '');
     expect(url).toBe(`${expectedOrigin}/raffle-details/raffle%20id`);
   });
