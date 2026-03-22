@@ -43,8 +43,8 @@ export class ShareService {
     const code = encodeURIComponent(
       String(referralCode ?? '').trim().toUpperCase(),
     );
-    const apiOrigin = this.apiOriginFromBase(environment.apiBaseUrl);
-    return `${apiOrigin}/share/referral/${code}`;
+    const appOrigin = this.appOriginFromRuntimeOrApi(environment.apiBaseUrl);
+    return `${appOrigin}/auth/register?ref=${code}&referralCode=${code}`;
   }
 
   siteShareUrl(path = '/landing'): string {
@@ -70,6 +70,27 @@ export class ShareService {
       return `${u.protocol}//${u.host}`;
     } catch {
       return raw.replace(/\/api\/v1\/?$/i, '').replace(/\/+$/, '');
+    }
+  }
+
+  private appOriginFromRuntimeOrApi(apiBaseUrl: string): string {
+    if (typeof window !== 'undefined' && window.location?.origin) {
+      return String(window.location.origin).replace(/\/+$/, '');
+    }
+
+    const apiOrigin = this.apiOriginFromBase(apiBaseUrl);
+    if (!apiOrigin) return '';
+
+    try {
+      const u = new URL(apiOrigin);
+      const host = String(u.host ?? '');
+      if (host.toLowerCase().startsWith('backend.')) {
+        const frontendHost = host.slice('backend.'.length);
+        if (frontendHost) return `${u.protocol}//${frontendHost}`;
+      }
+      return `${u.protocol}//${u.host}`;
+    } catch {
+      return apiOrigin;
     }
   }
 
