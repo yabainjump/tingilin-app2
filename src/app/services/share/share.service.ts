@@ -35,8 +35,8 @@ export class ShareService {
 
   raffleShareUrl(raffleId: string): string {
     const id = encodeURIComponent(String(raffleId ?? '').trim());
-    const apiOrigin = this.apiOriginFromBase(environment.apiBaseUrl);
-    return `${apiOrigin}/share/raffle/${id}`;
+    const appOrigin = this.appOriginFromRuntimeOrApi(environment.apiBaseUrl);
+    return `${appOrigin}/raffle-details/${id}`;
   }
 
   referralShareUrl(referralCode: string): string {
@@ -49,16 +49,13 @@ export class ShareService {
 
   siteShareUrl(path = '/landing'): string {
     const normalized = this.normalizePath(path);
-    const apiOrigin = this.apiOriginFromBase(environment.apiBaseUrl);
-    if (normalized === '/landing') {
-      return `${apiOrigin}/share/site`;
-    }
-    return `${apiOrigin}/share/site?to=${encodeURIComponent(normalized)}`;
+    const appOrigin = this.appOriginFromRuntimeOrApi(environment.apiBaseUrl);
+    return `${appOrigin}${normalized}`;
   }
 
   liveShareUrl(): string {
-    const apiOrigin = this.apiOriginFromBase(environment.apiBaseUrl);
-    return `${apiOrigin}/share/live`;
+    const appOrigin = this.appOriginFromRuntimeOrApi(environment.apiBaseUrl);
+    return `${appOrigin}/tabs/winners`;
   }
 
   private apiOriginFromBase(baseUrl: string): string {

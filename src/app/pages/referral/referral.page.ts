@@ -20,7 +20,7 @@ export class ReferralPage {
   summary: ReferralSummaryDto | null = null;
 
   heroImage =
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuDOOg0d4HpNXZmAWvwCVeHcpN03z1FYfF5YMX4kTt0oriSjPM-XCUxSUekOMj8sSUxRybLRjP9enk9LyS96OonWN674jR9aZp80CokmEv_S5415x1BTk2JFb3eic6q0s7r5LwZO1mlyo9kD4rlHPdWIVwX4CJTcD6bI4MPiuL92mTSezyBcUWeFExZB-laT6qpFIWNSlrN2E90dbwJkvWg_LSGCrs8Kpyo7JBIst3mmYcldx89e9hi7dbkxrlarzLMUBekMKGE4SwI';
+    'assets/img/referal.jpg';
 
   constructor(
     private readonly api: ReferralApiService,
@@ -126,9 +126,6 @@ export class ReferralPage {
   }
 
   private shareLink(): string {
-    const link = String(this.summary?.referralLink ?? '').trim();
-    if (link) return link;
-
     const code = String(this.summary?.referralCode ?? '').trim();
     if (!code) return '';
     return this.shareService.referralShareUrl(code);

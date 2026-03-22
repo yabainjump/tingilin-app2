@@ -293,17 +293,40 @@ ion-content.referral-page {
 }
 
 .share-row button {
-  border: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
   color: #fff;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   padding: 10px 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6px;
+  min-height: 66px;
+}
+
+.share-row button .share-ico {
+  font-size: 21px;
+  width: 26px;
+  height: 26px;
+}
+
+.share-row button.wa .share-ico {
+  color: #25d366;
+}
+
+.share-row button.fb .share-ico {
+  color: #1877f2;
+}
+
+.share-row button.sms .share-ico {
+  color: #89d5ff;
+}
+
+.share-row button.other .share-ico {
+  color: #e7dbff;
 }
 
 .list-section {

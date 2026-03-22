@@ -72,20 +72,20 @@
         </div>
 
         <div class="share-row">
-          <button type="button" (click)="share('whatsapp')">
-            <span translate="no" class="notranslate material-symbols-outlined">chat</span>
+          <button type="button" class="wa" (click)="share('whatsapp')">
+            <ion-icon class="share-ico" name="logo-whatsapp"></ion-icon>
             WhatsApp
           </button>
-          <button type="button" (click)="share('facebook')">
-            <span translate="no" class="notranslate material-symbols-outlined">public</span>
+          <button type="button" class="fb" (click)="share('facebook')">
+            <ion-icon class="share-ico" name="logo-facebook"></ion-icon>
             Facebook
           </button>
-          <button type="button" (click)="share('sms')">
-            <span translate="no" class="notranslate material-symbols-outlined">sms</span>
+          <button type="button" class="sms" (click)="share('sms')">
+            <ion-icon class="share-ico" name="chatbubble-ellipses-outline"></ion-icon>
             SMS
           </button>
-          <button type="button" (click)="share('other')">
-            <span translate="no" class="notranslate material-symbols-outlined">ios_share</span>
+          <button type="button" class="other" (click)="share('other')">
+            <ion-icon class="share-ico" name="share-social-outline"></ion-icon>
             Autre
           </button>
         </div>
