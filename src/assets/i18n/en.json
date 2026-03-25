@@ -143,7 +143,9 @@
     "SEND_CODE": "Send code",
     "BACK_TO_LOGIN": "Back to login",
     "TOAST_IDENTIFIER_REQUIRED": "Enter an email or phone number.",
-    "TOAST_ERROR": "Error. Please try again."
+    "TOAST_ERROR": "Error. Please try again.",
+    "TOAST_DELIVERY_FAILED": "Email service is currently unavailable. Please try again later.",
+    "TOAST_DEV_CODE": "Test code: {{code}}"
   },
   "FORGOT_PASSWORD_SENT_PAGE": {
     "TITLE": "Reset password",
@@ -161,7 +163,9 @@
     "TOAST_RESET_SUCCESS": "Password reset successfully.",
     "TOAST_INVALID_OR_EXPIRED": "Invalid or expired code.",
     "TOAST_CODE_RESENT": "Code resent.",
-    "TOAST_RESEND_FAILED": "Unable to resend code."
+    "TOAST_RESEND_FAILED": "Unable to resend code.",
+    "TOAST_DELIVERY_FAILED": "Email service is currently unavailable. Please try again later.",
+    "TOAST_DEV_CODE": "Test code: {{code}}"
   },
   "ONBOARDING_PAGE": {
     "TOP_TITLE": "Onboarding",

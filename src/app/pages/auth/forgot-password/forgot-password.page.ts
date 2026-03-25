@@ -52,7 +52,26 @@ export class ForgotPasswordPage implements OnDestroy {
       .forgotPassword(payload as any)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
-        next: () => {
+        next: async (res) => {
+          const delivery = String(res?.delivery ?? '').toUpperCase();
+          if (delivery === 'LOG') {
+            const devCode = String(res?.devResetCode ?? '').trim();
+            if (devCode) {
+              await this.showToast(
+                this.translate.instant('FORGOT_PASSWORD_PAGE.TOAST_DEV_CODE', {
+                  code: devCode,
+                }),
+              );
+            } else {
+              await this.showToast(
+                this.translate.instant(
+                  'FORGOT_PASSWORD_PAGE.TOAST_DELIVERY_FAILED',
+                ),
+              );
+              return;
+            }
+          }
+
           this.router.navigateByUrl('/auth/forgot-password-sent', {
             state: { identifier },
           });

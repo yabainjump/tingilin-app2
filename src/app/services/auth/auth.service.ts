@@ -24,6 +24,16 @@ export interface AuthTokenResponse {
   user?: any;
 }
 
+export interface ForgotPasswordResponse {
+  ok: boolean;
+  message?: string;
+  retryAfterSeconds?: number;
+  expiresInSeconds?: number;
+  delivery?: 'EMAIL' | 'LOG';
+  deliveryReason?: 'EMAIL_SENT' | 'SMTP_CONFIG_MISSING' | 'SMTP_SEND_FAILED';
+  devResetCode?: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly baseUrl = environment.apiBaseUrl;
@@ -75,7 +85,10 @@ export class AuthService {
     phone?: string;
     phoneOrEmail?: string;
   }) {
-    return this.http.post(`${this.baseUrl}/auth/forgot-password`, payload);
+    return this.http.post<ForgotPasswordResponse>(
+      `${this.baseUrl}/auth/forgot-password`,
+      payload,
+    );
   }
 
   resetPassword(payload: {

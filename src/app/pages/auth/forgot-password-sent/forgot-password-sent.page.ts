@@ -119,7 +119,27 @@ export class ForgotPasswordSentPage implements OnDestroy {
       .forgotPassword(payload)
       .pipe(finalize(() => (this.resending = false)))
       .subscribe({
-        next: async () => {
+        next: async (res) => {
+          const delivery = String(res?.delivery ?? '').toUpperCase();
+          if (delivery === 'LOG') {
+            const devCode = String(res?.devResetCode ?? '').trim();
+            if (devCode) {
+              await this.showToast(
+                this.translate.instant(
+                  'FORGOT_PASSWORD_SENT_PAGE.TOAST_DEV_CODE',
+                  { code: devCode },
+                ),
+              );
+            } else {
+              await this.showToast(
+                this.translate.instant(
+                  'FORGOT_PASSWORD_SENT_PAGE.TOAST_DELIVERY_FAILED',
+                ),
+              );
+              return;
+            }
+          }
+
           this.startCountdown();
           await this.showToast(
             this.translate.instant('FORGOT_PASSWORD_SENT_PAGE.TOAST_CODE_RESENT'),

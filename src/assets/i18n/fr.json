@@ -143,7 +143,9 @@
     "SEND_CODE": "Envoyer le code",
     "BACK_TO_LOGIN": "Retour à la connexion",
     "TOAST_IDENTIFIER_REQUIRED": "Entre un email ou un numéro.",
-    "TOAST_ERROR": "Erreur. Réessaie."
+    "TOAST_ERROR": "Erreur. Réessaie.",
+    "TOAST_DELIVERY_FAILED": "Le service email est indisponible pour le moment. Réessaie plus tard.",
+    "TOAST_DEV_CODE": "Code de test : {{code}}"
   },
   "FORGOT_PASSWORD_SENT_PAGE": {
     "TITLE": "Réinitialiser le mot de passe",
@@ -161,7 +163,9 @@
     "TOAST_RESET_SUCCESS": "Mot de passe réinitialisé.",
     "TOAST_INVALID_OR_EXPIRED": "Code invalide ou expiré.",
     "TOAST_CODE_RESENT": "Code renvoyé.",
-    "TOAST_RESEND_FAILED": "Impossible de renvoyer le code."
+    "TOAST_RESEND_FAILED": "Impossible de renvoyer le code.",
+    "TOAST_DELIVERY_FAILED": "Le service email est indisponible pour le moment. Réessaie plus tard.",
+    "TOAST_DEV_CODE": "Code de test : {{code}}"
   },
   "ONBOARDING_PAGE": {
     "TOP_TITLE": "Découverte",
