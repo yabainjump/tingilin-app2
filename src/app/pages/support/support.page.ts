@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, ToastController } from '@ionic/angular';
 import { environment } from 'src/environments/environment';
+import { TranslateService } from '@ngx-translate/core';
 
 type SupportCategoryId =
   | 'all'
@@ -11,7 +12,7 @@ type SupportCategoryId =
 
 type SupportCategory = {
   id: SupportCategoryId;
-  label: string;
+  labelKey: string;
   icon: string;
   tone: 'violet' | 'blue' | 'green' | 'gold';
 };
@@ -19,8 +20,8 @@ type SupportCategory = {
 type FaqItem = {
   id: string;
   category: Exclude<SupportCategoryId, 'all'>;
-  question: string;
-  answer: string;
+  questionKey: string;
+  answerKey: string;
 };
 
 @Component({
@@ -33,55 +34,49 @@ export class SupportPage {
   readonly supportEmail = String(environment.supportEmail ?? '').trim();
 
   readonly categories: SupportCategory[] = [
-    { id: 'all', label: 'Tout', icon: 'dashboard', tone: 'violet' },
-    { id: 'account', label: 'Compte', icon: 'person', tone: 'blue' },
-    { id: 'payments', label: 'Paiements', icon: 'payments', tone: 'green' },
-    { id: 'referral', label: 'Parrainage', icon: 'group', tone: 'violet' },
-    { id: 'winnings', label: 'Gains', icon: 'emoji_events', tone: 'gold' },
+    { id: 'all', labelKey: 'SUPPORT_PAGE.CATEGORY_ALL', icon: 'dashboard', tone: 'violet' },
+    { id: 'account', labelKey: 'SUPPORT_PAGE.CATEGORY_ACCOUNT', icon: 'person', tone: 'blue' },
+    { id: 'payments', labelKey: 'SUPPORT_PAGE.CATEGORY_PAYMENTS', icon: 'payments', tone: 'green' },
+    { id: 'referral', labelKey: 'SUPPORT_PAGE.CATEGORY_REFERRAL', icon: 'group', tone: 'violet' },
+    { id: 'winnings', labelKey: 'SUPPORT_PAGE.CATEGORY_WINNINGS', icon: 'emoji_events', tone: 'gold' },
   ];
 
   readonly faqs: FaqItem[] = [
     {
       id: 'claim-prize',
       category: 'winnings',
-      question: 'Comment puis-je reclamer mon prix ?',
-      answer:
-        'Les gains compatibles sont ajoutes automatiquement a votre portefeuille. Pour un lot physique ou un gain necessitant verification, notre equipe vous recontacte apres validation du tirage.',
+      questionKey: 'SUPPORT_PAGE.FAQ_CLAIM_PRIZE_Q',
+      answerKey: 'SUPPORT_PAGE.FAQ_CLAIM_PRIZE_A',
     },
     {
       id: 'draw-time',
       category: 'winnings',
-      question: 'Quand ont lieu les tirages ?',
-      answer:
-        'Chaque raffle suit sa propre date de cloture. Vous pouvez verifier le compte a rebours sur la fiche du raffle et recevoir une notification quand le tirage demarre.',
+      questionKey: 'SUPPORT_PAGE.FAQ_DRAW_TIME_Q',
+      answerKey: 'SUPPORT_PAGE.FAQ_DRAW_TIME_A',
     },
     {
       id: 'ticket-limit',
       category: 'payments',
-      question: 'Y a-t-il une limite de tickets ?',
-      answer:
-        'Le nombre de tickets disponibles depend de chaque raffle. Quand une limite par utilisateur existe, elle est indiquee directement sur la fiche avant achat.',
+      questionKey: 'SUPPORT_PAGE.FAQ_TICKET_LIMIT_Q',
+      answerKey: 'SUPPORT_PAGE.FAQ_TICKET_LIMIT_A',
     },
     {
       id: 'payment-pending',
       category: 'payments',
-      question: 'Que faire si mon paiement reste en attente ?',
-      answer:
-        'Patientez quelques instants puis ouvrez a nouveau la fiche du raffle. Si le paiement n est toujours pas confirme, utilisez le bouton de contact pour nous ecrire avec la reference de transaction.',
+      questionKey: 'SUPPORT_PAGE.FAQ_PAYMENT_PENDING_Q',
+      answerKey: 'SUPPORT_PAGE.FAQ_PAYMENT_PENDING_A',
     },
     {
       id: 'referral-reward',
       category: 'referral',
-      question: 'Comment fonctionnent les recompenses de parrainage ?',
-      answer:
-        'Les bonus sont credites quand votre filleul remplit les conditions d activation definies par la plateforme. Vous pouvez suivre votre progression dans l espace Parrainage.',
+      questionKey: 'SUPPORT_PAGE.FAQ_REFERRAL_REWARD_Q',
+      answerKey: 'SUPPORT_PAGE.FAQ_REFERRAL_REWARD_A',
     },
     {
       id: 'account-update',
       category: 'account',
-      question: 'Comment modifier mes informations de profil ?',
-      answer:
-        'Ouvrez votre profil puis la page de modification. Vous pouvez y mettre a jour votre avatar et vos informations personnelles autorisees.',
+      questionKey: 'SUPPORT_PAGE.FAQ_ACCOUNT_UPDATE_Q',
+      answerKey: 'SUPPORT_PAGE.FAQ_ACCOUNT_UPDATE_A',
     },
   ];
 
@@ -92,6 +87,7 @@ export class SupportPage {
   constructor(
     private nav: NavController,
     private toastController: ToastController,
+    private translate: TranslateService,
   ) {}
 
   get visibleFaqs(): FaqItem[] {
@@ -104,8 +100,8 @@ export class SupportPage {
 
       const matchesSearch =
         !term ||
-        item.question.toLowerCase().includes(term) ||
-        item.answer.toLowerCase().includes(term);
+        this.faqQuestion(item).toLowerCase().includes(term) ||
+        this.faqAnswer(item).toLowerCase().includes(term);
 
       return matchesCategory && matchesSearch;
     });
@@ -135,8 +131,7 @@ export class SupportPage {
   async contactSupport(categoryId?: SupportCategoryId): Promise<void> {
     if (!this.supportEmail) {
       const toast = await this.toastController.create({
-        message:
-          'Ajoute environment.supportEmail avant de publier la page support.',
+        message: this.translate.instant('SUPPORT_PAGE.TOAST_MISSING_SUPPORT_EMAIL'),
         duration: 1800,
         color: 'warning',
       });
@@ -151,20 +146,24 @@ export class SupportPage {
 
     const subject =
       category && category.id !== 'all'
-        ? `Support Tingilin - ${category.label}`
-        : 'Support Tingilin';
+        ? this.translate.instant('SUPPORT_PAGE.MAIL_SUBJECT_WITH_CATEGORY', {
+            category: this.categoryLabel(category.id),
+          })
+        : this.translate.instant('SUPPORT_PAGE.MAIL_SUBJECT');
 
     const body = [
-      'Bonjour equipe Tingilin,',
+      this.translate.instant('SUPPORT_PAGE.MAIL_BODY_HELLO'),
       '',
-      'J ai besoin d aide concernant :',
-      category && category.id !== 'all' ? category.label : 'Support general',
+      this.translate.instant('SUPPORT_PAGE.MAIL_BODY_NEED_HELP'),
+      category && category.id !== 'all'
+        ? this.categoryLabel(category.id)
+        : this.translate.instant('SUPPORT_PAGE.MAIL_BODY_GENERAL_SUPPORT'),
       '',
-      'Decrivez votre demande :',
+      this.translate.instant('SUPPORT_PAGE.MAIL_BODY_DESCRIBE'),
       '',
       '',
       '--',
-      'Envoye depuis l application Tingilin',
+      this.translate.instant('SUPPORT_PAGE.MAIL_BODY_SENT_FROM_APP'),
     ].join('\n');
 
     window.location.href = `mailto:${encodeURIComponent(
@@ -184,7 +183,22 @@ export class SupportPage {
   }
 
   labelForCategory(categoryId: SupportCategoryId): string {
-    return this.categories.find((item) => item.id === categoryId)?.label ?? '';
+    return this.categoryLabel(categoryId);
+  }
+
+  categoryLabel(categoryId: SupportCategoryId): string {
+    const key =
+      this.categories.find((item) => item.id === categoryId)?.labelKey ??
+      'SUPPORT_PAGE.CATEGORY_ALL';
+    return this.translate.instant(key);
+  }
+
+  faqQuestion(item: FaqItem): string {
+    return this.translate.instant(item.questionKey);
+  }
+
+  faqAnswer(item: FaqItem): string {
+    return this.translate.instant(item.answerKey);
   }
 
   trackByCategory(_: number, item: SupportCategory): string {

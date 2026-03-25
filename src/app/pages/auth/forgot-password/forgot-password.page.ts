@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { finalize } from 'rxjs';
 import { AuthService } from '../../../services/auth/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-forgot-password',
@@ -23,6 +24,7 @@ export class ForgotPasswordPage implements OnDestroy {
     private auth: AuthService,
     private router: Router,
     private toast: ToastController,
+    private translate: TranslateService,
   ) {}
 
   ngOnDestroy(): void {}
@@ -32,7 +34,9 @@ export class ForgotPasswordPage implements OnDestroy {
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      await this.showToast('Entre un email ou un numéro.');
+      await this.showToast(
+        this.translate.instant('FORGOT_PASSWORD_PAGE.TOAST_IDENTIFIER_REQUIRED'),
+      );
       return;
     }
 
@@ -56,7 +60,9 @@ export class ForgotPasswordPage implements OnDestroy {
         error: async (err) => {
           const msg = err?.error?.message;
           await this.showToast(
-            Array.isArray(msg) ? msg.join(', ') : msg || 'Erreur. Réessaie.',
+            Array.isArray(msg)
+              ? msg.join(', ')
+              : msg || this.translate.instant('FORGOT_PASSWORD_PAGE.TOAST_ERROR'),
           );
         },
       });

@@ -2,11 +2,11 @@
   <div class="screen">
     <div class="topbar">
       <button class="icon-btn" type="button" (click)="back()">
-        <span translate="no" class="notranslate material-symbols-outlined">arrow_back</span>
+        <span class="notranslate material-symbols-outlined">arrow_back</span>
       </button>
-      <h1>Parrainage &amp; Fidélité</h1>
+      <h1>{{ 'REFERRAL_PAGE.TITLE' | translate }}</h1>
       <button class="icon-btn" type="button" (click)="copyLink()">
-        <span translate="no" class="notranslate material-symbols-outlined">help</span>
+        <span class="notranslate material-symbols-outlined">help</span>
       </button>
     </div>
 
@@ -15,18 +15,18 @@
         <div class="hero-image" [style.backgroundImage]="'url(' + heroImage + ')'">
           <div class="hero-grad"></div>
         </div>
-        <h2>Gagnez des tickets gratuits&nbsp;!</h2>
+        <h2>{{ 'REFERRAL_PAGE.HERO_TITLE' | translate }}</h2>
         <p>
-          Invitez 10 amis (achat requis) ou jouez 10 raffles pour gagner un
-          <span>ticket gratuit</span> !
+          {{ 'REFERRAL_PAGE.HERO_TEXT_PREFIX' | translate }}
+          <span>{{ 'REFERRAL_PAGE.HERO_TEXT_HIGHLIGHT' | translate }}</span> !
         </p>
       </section>
 
       <section class="reward-balance">
-        <div class="reward-label">Tickets gratuits disponibles</div>
+        <div class="reward-label">{{ 'REFERRAL_PAGE.FREE_TICKETS_AVAILABLE' | translate }}</div>
         <div class="reward-value">{{ summary.freeTicketsBalance }}</div>
         <button type="button" class="reward-btn" (click)="openTickets()">
-          Utiliser maintenant
+          {{ 'REFERRAL_PAGE.USE_NOW' | translate }}
         </button>
       </section>
 
@@ -34,8 +34,8 @@
         <div class="card-head">
           <div>
             <h3>
-              <span translate="no" class="notranslate material-symbols-outlined">group_add</span>
-              Objectif Parrainage
+              <span class="notranslate material-symbols-outlined">group_add</span>
+              {{ 'REFERRAL_PAGE.REFERRAL_GOAL' | translate }}
             </h3>
             <p>{{ referralProgressLabel }}</p>
           </div>
@@ -51,8 +51,8 @@
         <div class="card-head">
           <div>
             <h3>
-              <span translate="no" class="notranslate material-symbols-outlined">confirmation_number</span>
-              Bonus Fidélité
+              <span class="notranslate material-symbols-outlined">confirmation_number</span>
+              {{ 'REFERRAL_PAGE.LOYALTY_BONUS' | translate }}
             </h3>
             <p>{{ loyaltyProgressLabel }}</p>
           </div>
@@ -65,10 +65,10 @@
       </section>
 
       <section class="code-card">
-        <p class="code-label">Votre code unique</p>
+        <p class="code-label">{{ 'REFERRAL_PAGE.UNIQUE_CODE' | translate }}</p>
         <div class="code-row">
           <span class="code">{{ summary.referralCode }}</span>
-          <button type="button" (click)="copyCode()">Copier</button>
+          <button type="button" (click)="copyCode()">{{ 'REFERRAL_PAGE.COPY' | translate }}</button>
         </div>
 
         <div class="share-row">
@@ -86,24 +86,24 @@
           </button>
           <button type="button" class="other" (click)="share('other')">
             <ion-icon class="share-ico" name="share-social-outline"></ion-icon>
-            Autre
+            {{ 'REFERRAL_PAGE.OTHER' | translate }}
           </button>
         </div>
       </section>
 
       <section class="history-section">
         <div class="list-head">
-          <h3>Historique des récompenses</h3>
+          <h3>{{ 'REFERRAL_PAGE.REWARDS_HISTORY' | translate }}</h3>
           <div class="badge">{{ rewardHistory.length }}</div>
         </div>
 
         <div class="empty" *ngIf="!rewardHistory.length">
-          Aucun bonus attribué pour le moment.
+          {{ 'REFERRAL_PAGE.EMPTY_REWARDS' | translate }}
         </div>
 
         <div class="history-row" *ngFor="let h of rewardHistory">
           <div class="h-left">
-            <span translate="no" class="notranslate material-symbols-outlined h-ico" [class.ref]="historyTone(h.source) === 'ref'"
+            <span class="notranslate material-symbols-outlined h-ico" [class.ref]="historyTone(h.source) === 'ref'"
               [class.loy]="historyTone(h.source) === 'loy'">
               {{ historyIcon(h.source) }}
             </span>
@@ -118,12 +118,12 @@
 
       <section class="list-section">
         <div class="list-head">
-          <h3>Mes parrainages</h3>
-          <div class="badge">{{ summary.referral.qualifiedReferrals }} actifs</div>
+          <h3>{{ 'REFERRAL_PAGE.MY_REFERRALS' | translate }}</h3>
+          <div class="badge">{{ summary.referral.qualifiedReferrals }} {{ 'REFERRAL_PAGE.ACTIVE' | translate }}</div>
         </div>
 
         <div class="empty" *ngIf="!summary.referrals?.length">
-          Aucun filleul pour l’instant.
+          {{ 'REFERRAL_PAGE.EMPTY_REFERRALS' | translate }}
         </div>
 
         <div class="user-row" *ngFor="let r of summary.referrals">
@@ -131,10 +131,10 @@
           <div class="user-meta">
             <div class="name">{{ fullName(r) }}</div>
             <div class="status" [class.active]="r.active">
-              {{ r.active ? 'Actif (achat validé)' : 'En attente d’achat' }}
+              {{ r.active ? ('REFERRAL_PAGE.STATUS_ACTIVE' | translate) : ('REFERRAL_PAGE.STATUS_PENDING' | translate) }}
             </div>
           </div>
-          <span translate="no" class="notranslate material-symbols-outlined state-ico">
+          <span class="notranslate material-symbols-outlined state-ico">
             {{ r.active ? 'check_circle' : 'schedule' }}
           </span>
         </div>
@@ -158,3 +158,4 @@
     </ng-template>
   </div>
 </ion-content>
+

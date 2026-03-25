@@ -3,12 +3,15 @@
     <div class="header-row">
       <div class="brand">
         <div class="brand-icon">
-          <span translate="no" class="notranslate material-symbols-outlined"><img src="../../../assets/img/Asset_6.png" alt=""></span>
+          <img src="../../../assets/img/Asset_6.png" alt="Tinguilin">
         </div>
         <div class="brand-name">Tinguilin</div>
       </div>
 
-      <a class="header-link" routerLink="/auth/login">Connexion</a>
+      <div class="header-actions">
+        <app-language-switch [compact]="true"></app-language-switch>
+        <a class="header-link" routerLink="/auth/login">{{ 'LANDING.CONNECTION' | translate }}</a>
+      </div>
     </div>
   </ion-toolbar>
 </ion-header>
@@ -21,10 +24,10 @@
 
     <div class="hero-inner">
       <div class="hero-text">
-        <span class="pill">Nouveau Concept</span>
+        <span class="pill">{{ 'LANDING.NEW_CONCEPT' | translate }}</span>
 
-        <h1 class="hero-title">Votre prochain iPhone<br />pour le prix d'un biscuit</h1>
-        <p class="hero-subtitle">Gagnez gros, dépensez peu.</p>
+        <h1 class="hero-title">{{ 'LANDING.HERO_TITLE' | translate }}</h1>
+        <p class="hero-subtitle">{{ 'LANDING.HERO_SUBTITLE' | translate }}</p>
       </div>
 
       <div class="hero-visual">
@@ -44,41 +47,41 @@
   <!-- HOW IT WORKS -->
   <section class="how">
     <div class="how-head">
-      <h2>Comment ça marche ?</h2>
-      <span class="how-tag">Simple &amp; Rapide</span>
+      <h2>{{ 'LANDING.HOW_TITLE' | translate }}</h2>
+      <span class="how-tag">{{ 'LANDING.HOW_TAG' | translate }}</span>
     </div>
 
     <div class="steps">
       <div class="step-card">
         <div class="step-icon">
-          <span translate="no" class="notranslate material-symbols-outlined filled">shopping_bag</span>
+          <span class="notranslate material-symbols-outlined filled">shopping_bag</span>
         </div>
         <div class="step-text">
-          <div class="step-kicker">ÉTAPE 1</div>
-          <div class="step-title">Choisissez</div>
-          <div class="step-desc">Sélectionnez le produit de vos rêves.</div>
+          <div class="step-kicker">{{ 'LANDING.STEP_1' | translate }}</div>
+          <div class="step-title">{{ 'LANDING.STEP_1_TITLE' | translate }}</div>
+          <div class="step-desc">{{ 'LANDING.STEP_1_DESC' | translate }}</div>
         </div>
       </div>
 
       <div class="step-card">
         <div class="step-icon">
-          <span translate="no" class="notranslate material-symbols-outlined filled">confirmation_number</span>
+          <span class="notranslate material-symbols-outlined filled">confirmation_number</span>
         </div>
         <div class="step-text">
-          <div class="step-kicker">ÉTAPE 2</div>
-          <div class="step-title">Achetez</div>
-          <div class="step-desc">Votre ticket unique, à partir de 100 FCFA seulement.</div>
+          <div class="step-kicker">{{ 'LANDING.STEP_2' | translate }}</div>
+          <div class="step-title">{{ 'LANDING.STEP_2_TITLE' | translate }}</div>
+          <div class="step-desc">{{ 'LANDING.STEP_2_DESC' | translate }}</div>
         </div>
       </div>
 
       <div class="step-card">
         <div class="step-icon">
-          <span translate="no" class="notranslate material-symbols-outlined filled">trophy</span>
+          <span class="notranslate material-symbols-outlined filled">trophy</span>
         </div>
         <div class="step-text">
-          <div class="step-kicker">ÉTAPE 3</div>
-          <div class="step-title">Attendez</div>
-          <div class="step-desc">Tirage au sort automatique.</div>
+          <div class="step-kicker">{{ 'LANDING.STEP_3' | translate }}</div>
+          <div class="step-title">{{ 'LANDING.STEP_3_TITLE' | translate }}</div>
+          <div class="step-desc">{{ 'LANDING.STEP_3_DESC' | translate }}</div>
         </div>
       </div>
     </div>
@@ -91,7 +94,7 @@
         <span class="ping"></span>
         <span class="dot"></span>
       </div>
-      <h2>Produit du jour</h2>
+      <h2>{{ 'LANDING.PRODUCT_OF_DAY' | translate }}</h2>
     </div>
 
     <div class="pod-card">
@@ -110,8 +113,8 @@
       <div class="pod-body">
         <div class="count-row">
           <div class="count-left">
-            <span translate="no" class="notranslate material-symbols-outlined">timer</span>
-            <span>Fin du tirage</span>
+            <span class="notranslate material-symbols-outlined">timer</span>
+            <span>{{ 'LANDING.DRAW_END' | translate }}</span>
           </div>
           <div class="count-right">{{ countdown }}</div>
         </div>
@@ -119,18 +122,18 @@
         <ion-progress-bar class="progress" [value]="progress"></ion-progress-bar>
 
         <div class="meta-row">
-          <div class="meta-muted">{{ sold }} vendus</div>
-          <div class="meta-strong">{{ total }} tickets total</div>
+          <div class="meta-muted">{{ sold }} {{ 'LANDING.SOLD' | translate }}</div>
+          <div class="meta-strong">{{ total }} {{ 'LANDING.TOTAL_TICKETS' | translate }}</div>
         </div>
 
         <button class="cta">
           <div class="cta-left">
-            <div class="cta-kicker">Prix du ticket</div>
+            <div class="cta-kicker">{{ 'LANDING.TICKET_PRICE' | translate }}</div>
             <div class="cta-price">{{ ticketPrice }} FCFA</div>
           </div>
           <div class="cta-right">
-            Participer
-            <span translate="no" class="notranslate material-symbols-outlined">arrow_forward</span>
+            {{ 'LANDING.PARTICIPATE' | translate }}
+            <span class="notranslate material-symbols-outlined">arrow_forward</span>
           </div>
         </button>
       </div>
@@ -142,28 +145,28 @@
     <div class="trust-grid">
       <div class="trust-item">
         <div class="trust-icon green">
-          <span translate="no" class="notranslate material-symbols-outlined">verified_user</span>
+          <span class="notranslate material-symbols-outlined">verified_user</span>
         </div>
-        <div class="trust-label">PAIEMENT SÉCURISÉ</div>
+        <div class="trust-label">{{ 'LANDING.SECURE_PAYMENT' | translate }}</div>
       </div>
 
       <div class="trust-item">
         <div class="trust-icon amber">
-          <span translate="no" class="notranslate material-symbols-outlined">emoji_events</span>
+          <span class="notranslate material-symbols-outlined">emoji_events</span>
         </div>
-        <div class="trust-label">GAGNANTS CERTIFIÉS</div>
+        <div class="trust-label">{{ 'LANDING.CERTIFIED_WINNERS' | translate }}</div>
       </div>
 
       <div class="trust-item">
         <div class="trust-icon purple">
-          <span translate="no" class="notranslate material-symbols-outlined">lock</span>
+          <span class="notranslate material-symbols-outlined">lock</span>
         </div>
-        <div class="trust-label">DONNÉES PRIVÉES</div>
+        <div class="trust-label">{{ 'LANDING.PRIVATE_DATA' | translate }}</div>
       </div>
     </div>
 
     <div class="payments">
-      <div class="payments-title">Paiements 100% Mobile Money</div>
+      <div class="payments-title">{{ 'LANDING.PAYMENT_TITLE' | translate }}</div>
       <div class="payments-logos">
         <div class="logo">Orange</div>
         <div class="logo">MTN</div>
@@ -171,8 +174,56 @@
     </div>
   </section>
 
+  <!-- BOOST -->
+  <section class="boost">
+    <div class="boost-head">
+      <h2>{{ 'LANDING.BOOST_TITLE' | translate }}</h2>
+      <p>{{ 'LANDING.BOOST_SUBTITLE' | translate }}</p>
+    </div>
+
+    <div class="boost-grid">
+      <article class="boost-card blue">
+        <div class="boost-icon">
+          <span class="notranslate material-symbols-outlined filled">bolt</span>
+        </div>
+        <div class="boost-title">{{ 'LANDING.BOOST_CARD_1_TITLE' | translate }}</div>
+        <div class="boost-desc">{{ 'LANDING.BOOST_CARD_1_DESC' | translate }}</div>
+      </article>
+
+      <article class="boost-card amber">
+        <div class="boost-icon">
+          <span class="notranslate material-symbols-outlined filled">workspace_premium</span>
+        </div>
+        <div class="boost-title">{{ 'LANDING.BOOST_CARD_2_TITLE' | translate }}</div>
+        <div class="boost-desc">{{ 'LANDING.BOOST_CARD_2_DESC' | translate }}</div>
+      </article>
+
+      <article class="boost-card purple">
+        <div class="boost-icon">
+          <span class="notranslate material-symbols-outlined filled">insights</span>
+        </div>
+        <div class="boost-title">{{ 'LANDING.BOOST_CARD_3_TITLE' | translate }}</div>
+        <div class="boost-desc">{{ 'LANDING.BOOST_CARD_3_DESC' | translate }}</div>
+      </article>
+    </div>
+
+    <div class="proof-card">
+      <div class="proof-left">
+        <div class="proof-kicker">{{ 'LANDING.COMMUNITY_KICKER' | translate }}</div>
+        <div class="proof-stat">{{ 'LANDING.COMMUNITY_STAT' | translate }}</div>
+        <div class="proof-mini">{{ 'LANDING.COMMUNITY_SUB' | translate }}</div>
+      </div>
+
+      <a class="proof-cta" routerLink="/auth/register">
+        {{ 'LANDING.START_NOW' | translate }}
+        <span class="notranslate material-symbols-outlined">arrow_forward</span>
+      </a>
+    </div>
+  </section>
+
   <!-- espace pour ne pas être caché par le footer -->
   <div class="spacer"></div>
 </ion-content>
+
 
 

@@ -6,14 +6,14 @@
         type="button"
         [class.hidden]="currentIndex === 0"
         (click)="back()"
-        aria-label="Retour"
+        [attr.aria-label]="'COMMON.BACK' | translate"
       >
         <ion-icon name="arrow-back"></ion-icon>
       </button>
 
-      <h1 class="title">Onboarding</h1>
+      <h1 class="title">{{ 'ONBOARDING_PAGE.TOP_TITLE' | translate }}</h1>
 
-      <button class="skip-btn" type="button" (click)="skip()">Passer</button>
+      <button class="skip-btn" type="button" (click)="skip()">{{ 'ONBOARDING_PAGE.SKIP' | translate }}</button>
     </header>
 
     <div class="card-wrap">
@@ -24,8 +24,8 @@
     </div>
 
     <section class="content">
-      <h2>{{ currentSlide.title }}</h2>
-      <p>{{ currentSlide.description }}</p>
+      <h2>{{ currentSlideTitle }}</h2>
+      <p>{{ currentSlideDescription }}</p>
     </section>
 
     <div class="dots">
@@ -34,13 +34,13 @@
         type="button"
         class="dot"
         [class.active]="i === currentIndex"
-        [attr.aria-label]="'Étape ' + (i + 1)"
+        [attr.aria-label]="('ONBOARDING_PAGE.STEP' | translate) + ' ' + (i + 1)"
       ></button>
     </div>
 
     <footer class="footer">
       <button class="next-btn" type="button" (click)="next()">
-        <span>{{ isLast ? 'Commencer' : 'Suivant' }}</span>
+        <span>{{ isLast ? ('ONBOARDING_PAGE.START' | translate) : ('ONBOARDING_PAGE.NEXT' | translate) }}</span>
         <ion-icon name="arrow-forward"></ion-icon>
       </button>
 
@@ -50,9 +50,8 @@
         type="button"
         (click)="skip()"
       >
-        Passer l’introduction
+        {{ 'ONBOARDING_PAGE.SKIP_INTRO' | translate }}
       </button>
     </footer>
   </div>
 </ion-content>
-

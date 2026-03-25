@@ -8,6 +8,7 @@ import { Subscription, interval } from 'rxjs';
 import { NotificationsStateService } from '../services/notifications/notifications-state.service';
 import { RafflesApiService } from '../services/raffles/raffles-api.service';
 import { raffleCategoryLabel } from '../core/constants/raffle-categories';
+import { TranslateService } from '@ngx-translate/core';
 
 type HomeCategory = { id: string; label: string };
 
@@ -64,6 +65,7 @@ export class HomePage implements OnInit, OnDestroy {
     private router: Router,
     public notifState: NotificationsStateService,
     private rafflesService: RafflesApiService,
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -270,7 +272,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   countdownText(d: DrawCard): string {
     const ms = this.remainingMs(d);
-    if (!ms) return 'Terminé';
+    if (!ms) return this.translate.instant('HOME_PAGE.ENDED');
 
     const totalSec = Math.floor(ms / 1000);
     const hh = Math.floor(totalSec / 3600);
@@ -328,5 +330,10 @@ export class HomePage implements OnInit, OnDestroy {
 
   categoryLabel(x: any): string {
     return raffleCategoryLabel(x?.categoryId);
+  }
+
+  categoryDisplayLabel(category: HomeCategory): string {
+    if (String(category.id).toLowerCase() !== 'all') return category.label;
+    return this.translate.instant('HOME_PAGE.CATEGORY_ALL');
   }
 }

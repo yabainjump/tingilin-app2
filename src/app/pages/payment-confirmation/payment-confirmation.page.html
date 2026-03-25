@@ -4,7 +4,7 @@
       <ion-back-button defaultHref="" (click)="back()"></ion-back-button>
     </ion-buttons>
 
-    <ion-title>Confirmation</ion-title>
+    <ion-title>{{ 'PAYMENT_CONFIRMATION_PAGE.TITLE' | translate }}</ion-title>
 
     <ion-buttons slot="end">
       <ion-button fill="clear" disabled="true"></ion-button>
@@ -30,8 +30,8 @@
 
         <div class="totals">
           <div>
-            <div class="label">TOTAL</div>
-            <div class="sub">{{ quantity }} ticket{{ quantity > 1 ? 's' : '' }}</div>
+            <div class="label">{{ 'PAYMENT_CONFIRMATION_PAGE.TOTAL' | translate }}</div>
+            <div class="sub">{{ quantity }} {{ quantity > 1 ? ('PAYMENT_CONFIRMATION_PAGE.TICKETS' | translate) : ('PAYMENT_CONFIRMATION_PAGE.TICKET' | translate) }}</div>
           </div>
           <div class="amount">{{ amount }} FCFA</div>
         </div>
@@ -40,7 +40,7 @@
 
     <!-- Payment method -->
     <div class="section">
-      <div class="section-title">Méthode de paiement</div>
+      <div class="section-title">{{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_METHOD' | translate }}</div>
 
       <div class="methods">
         <button class="method-card orange" [class.selected]="paymentMethod === 'ORANGE'"
@@ -62,13 +62,13 @@
       </div>
 
       <div class="hint">
-        Le choix final du moyen de paiement se fait sur la page de paiement ouverte (paymentLink).
+        {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_HINT' | translate }}
       </div>
     </div>
 
     <!-- Phone -->
     <div class="section">
-      <div class="section-title">Numéro de téléphone</div>
+      <div class="section-title">{{ 'PAYMENT_CONFIRMATION_PAGE.PHONE_NUMBER' | translate }}</div>
 
       <div class="phone-wrap">
         <div class="phone-left">
@@ -76,7 +76,7 @@
           <span class="code">+237</span>
         </div>
 
-        <ion-input class="phone-input" type="tel" inputmode="numeric" placeholder="6 90 00 00 00"
+        <ion-input class="phone-input" type="tel" inputmode="numeric" [placeholder]="'PAYMENT_CONFIRMATION_PAGE.PHONE_PLACEHOLDER' | translate"
           [(ngModel)]="userPhone">
         </ion-input>
 
@@ -88,19 +88,19 @@
     <div class="actions">
       <button class="pay-btn" (click)="confirmPayment()" [disabled]="loading">
         <ng-container *ngIf="!loading; else payBusy">
-          <span>Confirmer le paiement</span>
+          <span>{{ 'PAYMENT_CONFIRMATION_PAGE.CONFIRM_PAYMENT' | translate }}</span>
           <ion-icon name="arrow-forward-outline"></ion-icon>
         </ng-container>
       </button>
 
       <button class="verify-btn" *ngIf="transactionId" (click)="verifyPayment()" [disabled]="loading">
-        <span *ngIf="!loading">Vérifier le paiement</span>
+        <span *ngIf="!loading">{{ 'PAYMENT_CONFIRMATION_PAGE.VERIFY_PAYMENT' | translate }}</span>
         <ion-skeleton-text *ngIf="loading" animated class="btn-skeleton"></ion-skeleton-text>
       </button>
 
       <div class="secure">
         <ion-icon name="lock-closed-outline"></ion-icon>
-        <span>Paiement 100% sécurisé</span>
+        <span>{{ 'PAYMENT_CONFIRMATION_PAGE.SECURE_PAYMENT' | translate }}</span>
       </div>
     </div>
 

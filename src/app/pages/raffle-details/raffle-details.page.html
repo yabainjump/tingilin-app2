@@ -23,7 +23,7 @@
           [style.background-image]="'url(' + (raffle.imageUrl) + ')'">
           <div class="hero-grad"></div>
 
-          <div class="hero-badge">OFFICIAL PARTNER</div>
+          <div class="hero-badge">{{ 'RAFFLE_DETAILS_PAGE.OFFICIAL_PARTNER' | translate }}</div>
         </div>
       </ng-container>
 
@@ -48,15 +48,15 @@
           </div>
 
           <div class="value">
-            <div class="value-label">Be The NEXT</div>
-            <div class="value-amt">WINNER</div>
+            <div class="value-label">{{ 'RAFFLE_DETAILS_PAGE.BE_THE_NEXT' | translate }}</div>
+            <div class="value-amt">{{ 'RAFFLE_DETAILS_PAGE.WINNER' | translate }}</div>
           </div>
         </div>
 
         <!-- PROGRESS -->
         <div class="progress-card">
           <div class="progress-top">
-            <span>Temps restant</span>
+            <span>{{ 'RAFFLE_DETAILS_PAGE.TIME_LEFT' | translate }}</span>
             <span class="progress-n">{{ remainingLabel }}</span>
           </div>
 
@@ -68,9 +68,9 @@
           <div class="progress-bottom">
             <div class="fast">
               <ion-icon name="flame"></ion-icon>
-              <span>Compte à rebours en cours</span>
+              <span>{{ 'RAFFLE_DETAILS_PAGE.COUNTDOWN_RUNNING' | translate }}</span>
             </div>
-            <div class="muted">{{ raffle.status || 'LIVE' }}</div>
+            <div class="muted">{{ raffle.status || ('RAFFLE_DETAILS_PAGE.LIVE' | translate) }}</div>
           </div>
         </div>
 
@@ -78,28 +78,28 @@
         <div class="grid">
           <div class="g-card">
             <div class="g-ico"><ion-icon name="cash-outline"></ion-icon></div>
-            <div class="g-lbl">PRICE</div>
+            <div class="g-lbl">{{ 'RAFFLE_DETAILS_PAGE.PRICE' | translate }}</div>
             <div class="g-val">{{ ticketPrice }} {{ currency }}</div>
           </div>
 
           <div class="g-card">
             <div class="g-ico"><ion-icon name="calendar-outline"></ion-icon></div>
-            <div class="g-lbl">DRAW</div>
+            <div class="g-lbl">{{ 'RAFFLE_DETAILS_PAGE.DRAW' | translate }}</div>
             <div class="g-val">{{ (raffle.endsAt || raffle.endAt) ? ((raffle.endsAt || raffle.endAt) | date:'MMM d') : '—' }}</div>
           </div>
 
           <div class="g-card">
             <div class="g-ico"><ion-icon name="checkmark-circle-outline"></ion-icon></div>
-            <div class="g-lbl">STATE</div>
-            <div class="g-val">{{ raffle.status || 'LIVE' }}</div>
+            <div class="g-lbl">{{ 'RAFFLE_DETAILS_PAGE.STATE' | translate }}</div>
+            <div class="g-val">{{ raffle.status || ('RAFFLE_DETAILS_PAGE.LIVE' | translate) }}</div>
           </div>
         </div>
 
         <!-- STEPPER -->
         <div class="stepper">
           <div class="stepper-title">
-            <span>Select Tickets</span>
-            <span class="pill">Max {{ maxQty }}</span>
+            <span>{{ 'RAFFLE_DETAILS_PAGE.SELECT_TICKETS' | translate }}</span>
+            <span class="pill">{{ 'RAFFLE_DETAILS_PAGE.MAX' | translate }} {{ maxQty }}</span>
           </div>
 
           <div class="stepper-card">
@@ -116,7 +116,7 @@
             </div>
 
             <div class="stepper-right">
-              <div class="muted">Total Price</div>
+              <div class="muted">{{ 'RAFFLE_DETAILS_PAGE.TOTAL_PRICE' | translate }}</div>
               <div class="total-amt">{{ totalPrice }} {{ currency }}</div>
             </div>
           </div>
@@ -124,13 +124,13 @@
 
         <div class="free-ticket-card" *ngIf="hasFreeTickets">
           <div class="free-ticket-top">
-            <span class="free-ticket-badge">TICKET GRATUIT</span>
+            <span class="free-ticket-badge">{{ 'RAFFLE_DETAILS_PAGE.FREE_TICKET' | translate }}</span>
             <span class="free-ticket-count">
-              {{ freeTicketsBalance }} disponible{{ freeTicketsBalance > 1 ? 's' : '' }}
+              {{ freeTicketsBalance }} {{ freeTicketsBalance > 1 ? ('RAFFLE_DETAILS_PAGE.AVAILABLE_PLURAL' | translate) : ('RAFFLE_DETAILS_PAGE.AVAILABLE' | translate) }}
             </span>
           </div>
           <button class="free-ticket-btn" type="button" (click)="useFreeTicket()" [disabled]="!canUseFreeTicket">
-            {{ usingFreeTicket ? 'Traitement...' : 'Utiliser 1 ticket gratuit' }}
+            {{ usingFreeTicket ? ('RAFFLE_DETAILS_PAGE.PROCESSING' | translate) : ('RAFFLE_DETAILS_PAGE.USE_FREE_TICKET' | translate) }}
           </button>
         </div>
 
@@ -138,9 +138,9 @@
         <div class="winners-head">
           <div class="winners-title">
             <ion-icon name="trophy" class="trophy"></ion-icon>
-            <span>Précédents  Gagnants</span>
+            <span>{{ 'RAFFLE_DETAILS_PAGE.PREVIOUS_WINNERS' | translate }}</span>
           </div>
-          <button class="see-all" type="button">SEE ALL</button>
+          <button class="see-all" type="button">{{ 'COMMON.VIEW_ALL' | translate }}</button>
         </div>
 
         <div class="winners">
@@ -172,12 +172,12 @@
 <ion-footer class="footer" translucent="true">
   <div class="footer-inner">
     <div class="total">
-      <div class="total-lbl">TOTAL</div>
+      <div class="total-lbl">{{ 'RAFFLE_DETAILS_PAGE.TOTAL' | translate }}</div>
       <div class="total-val">{{ totalPrice }} <span>{{ currency }}</span></div>
     </div>
 
     <button class="cta" type="button" (click)="goToPayment()" [disabled]="!canParticipate">
-      <span>{{ isRaffleClosed ? 'Raffle Closed' : 'Participate Now' }}</span>
+      <span>{{ isRaffleClosed ? ('RAFFLE_DETAILS_PAGE.RAFFLE_CLOSED' | translate) : ('RAFFLE_DETAILS_PAGE.PARTICIPATE_NOW' | translate) }}</span>
       <span class="cta-dot">
         <ion-icon name="arrow-forward"></ion-icon>
       </span>

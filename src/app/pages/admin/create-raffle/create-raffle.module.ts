@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { CreateRafflePageRoutingModule } from './create-raffle-routing.module';
 
 import { CreateRafflePage } from './create-raffle.page';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { CreateRafflePage } from './create-raffle.page';
     FormsModule,
     IonicModule,
     ReactiveFormsModule,
-    CreateRafflePageRoutingModule
+    CreateRafflePageRoutingModule,
+    TranslateModule
   ],
   declarations: [CreateRafflePage]
 })

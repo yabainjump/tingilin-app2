@@ -7,6 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { RegisterPageRoutingModule } from './register-routing.module';
 
 import { RegisterPage } from './register.page';
+import { TranslateModule } from '@ngx-translate/core';
+import { LanguageSwitchModule } from 'src/app/shared/language-switch/language-switch.module';
 
 @NgModule({
   imports: [
@@ -14,7 +16,9 @@ import { RegisterPage } from './register.page';
     FormsModule,
     IonicModule,
     RegisterPageRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslateModule,
+    LanguageSwitchModule
   ],
   declarations: [RegisterPage]
 })

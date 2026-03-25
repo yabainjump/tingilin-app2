@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { finalize } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../services/auth/auth.service';
 
 const PASSWORD_RULE = /^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/;
@@ -49,6 +50,7 @@ export class RegisterPage {
     private route: ActivatedRoute,
     private router: Router,
     private toast: ToastController,
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -81,7 +83,7 @@ export class RegisterPage {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       await this.showToast(
-        'Vérifie les champs. Mot de passe: 8+ caractères, 1 majuscule, 1 caractère spécial.',
+        this.translate.instant('REGISTER_PAGE.TOAST_INVALID_FORM'),
       );
       return;
     }
@@ -113,7 +115,7 @@ export class RegisterPage {
       )
       .subscribe({
         next: async () => {
-          await this.showToast('Compte créé. Bienvenue sur Tinguilin');
+          await this.showToast(this.translate.instant('REGISTER_PAGE.TOAST_CREATED'));
           this.router.navigate(['/onboarding'], {
             replaceUrl: true,
             queryParams: { redirect: this.redirectAfterOnboarding },
@@ -121,7 +123,7 @@ export class RegisterPage {
         },
         error: async (err) => {
           await this.showToast(
-            this.readError(err) || 'Impossible de créer le compte.',
+            this.readError(err) || this.translate.instant('REGISTER_PAGE.TOAST_CREATE_FAILED'),
           );
         },
       });

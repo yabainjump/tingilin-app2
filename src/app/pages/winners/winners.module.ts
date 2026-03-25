@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { WinnersPageRoutingModule } from './winners-routing.module';
 
 import { WinnersPage } from './winners.page';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    WinnersPageRoutingModule
+    WinnersPageRoutingModule,
+    TranslateModule
   ],
   declarations: [WinnersPage]
 })

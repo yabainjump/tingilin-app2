@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 import {
   TicketsApiService,
@@ -36,6 +37,7 @@ export class TicketDetailsPage {
     private rafflesApi: RafflesPublicApiService,
     private toast: ToastController,
     private shareService: ShareService,
+    private translate: TranslateService,
   ) {}
 
   ionViewWillEnter() {
@@ -82,7 +84,7 @@ export class TicketDetailsPage {
 
     if (!raffleId) {
       const t = await this.toast.create({
-        message: "Impossible d'afficher le raffle (id manquant)",
+        message: this.translate.instant('TICKET_DETAILS_PAGE.TOAST_MISSING_ID'),
         duration: 1500,
       });
       await t.present();
@@ -103,7 +105,9 @@ export class TicketDetailsPage {
         .sort((a, b) => (a.serial || '').localeCompare(b.serial || ''));
     } catch (e: any) {
       const t = await this.toast.create({
-        message: e?.error?.message || 'Impossible de charger les tickets',
+        message:
+          e?.error?.message ||
+          this.translate.instant('TICKET_DETAILS_PAGE.TOAST_LOAD_FAILED'),
         duration: 1600,
       });
       await t.present();
@@ -114,21 +118,24 @@ export class TicketDetailsPage {
 
   async share() {
     const title = this.raffle?.title || 'Tinguilin';
-    const text = `Je participe à "${title}" avec ${this.ticketsOwned} ticket(s) sur Tinguilin.`;
+    const text = this.translate.instant('TICKET_DETAILS_PAGE.SHARE_TEXT', {
+      title,
+      count: this.ticketsOwned,
+    });
     const url = this.shareService.raffleShareUrl(this.raffleId);
 
     try {
       const mode = await this.shareService.share({ title: 'Tingilin', text, url });
       if (mode === 'copied') {
         const t = await this.toast.create({
-          message: 'Lien copié ✅',
+          message: this.translate.instant('TICKET_DETAILS_PAGE.TOAST_LINK_COPIED'),
           duration: 1200,
         });
         await t.present();
       }
     } catch {
       const t = await this.toast.create({
-        message: 'Partage indisponible',
+        message: this.translate.instant('TICKET_DETAILS_PAGE.TOAST_SHARE_UNAVAILABLE'),
         duration: 1200,
       });
       await t.present();
@@ -139,7 +146,7 @@ export class TicketDetailsPage {
     try {
       await navigator.clipboard.writeText(serial);
       const t = await this.toast.create({
-        message: 'Ticket copié ✅',
+        message: this.translate.instant('TICKET_DETAILS_PAGE.TOAST_TICKET_COPIED'),
         duration: 900,
       });
       await t.present();

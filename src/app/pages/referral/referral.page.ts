@@ -8,6 +8,7 @@ import {
 } from 'src/app/services/referral/referral-api.service';
 import { Router } from '@angular/router';
 import { ShareService } from 'src/app/services/share/share.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-referral',
@@ -28,6 +29,7 @@ export class ReferralPage {
     private readonly nav: NavController,
     private readonly router: Router,
     private readonly shareService: ShareService,
+    private readonly translate: TranslateService,
   ) {}
 
   ionViewWillEnter() {
@@ -45,7 +47,7 @@ export class ReferralPage {
         },
         error: async () => {
           this.summary = null;
-          await this.showToast('Impossible de charger les données de parrainage');
+          await this.showToast(this.translate.instant('REFERRAL_PAGE.TOAST_LOAD_FAILED'));
         },
       });
   }
@@ -75,13 +77,19 @@ export class ReferralPage {
   get referralProgressLabel(): string {
     const cur = Number(this.summary?.referral?.progress ?? 0);
     const max = Number(this.summary?.referral?.target ?? 10);
-    return `${cur}/${max} amis actifs`;
+    return this.translate.instant('REFERRAL_PAGE.REFERRAL_PROGRESS', {
+      current: cur,
+      target: max,
+    });
   }
 
   get loyaltyProgressLabel(): string {
     const cur = Number(this.summary?.loyalty?.progress ?? 0);
     const max = Number(this.summary?.loyalty?.target ?? 10);
-    return `${cur}/${max} raffles joués`;
+    return this.translate.instant('REFERRAL_PAGE.LOYALTY_PROGRESS', {
+      current: cur,
+      target: max,
+    });
   }
 
   get rewardHistory() {
@@ -89,7 +97,7 @@ export class ReferralPage {
   }
 
   fullName(u: ReferralPersonDto): string {
-    return `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim() || 'Utilisateur';
+    return `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim() || this.translate.instant('REFERRAL_PAGE.USER_FALLBACK');
   }
 
   avatar(u: ReferralPersonDto): string {
@@ -112,7 +120,8 @@ export class ReferralPage {
     if (!iso) return '-';
     const d = new Date(iso);
     if (Number.isNaN(d.getTime())) return '-';
-    return new Intl.DateTimeFormat('fr-FR', {
+    const locale = this.translate.currentLang === 'en' ? 'en-US' : 'fr-FR';
+    return new Intl.DateTimeFormat(locale, {
       day: '2-digit',
       month: 'short',
       hour: '2-digit',
@@ -122,7 +131,7 @@ export class ReferralPage {
 
   private shareText(): string {
     const code = this.summary?.referralCode ?? '';
-    return `Rejoins Tingilin avec mon code ${code}. Inscris-toi et tente ta chance !`;
+    return this.translate.instant('REFERRAL_PAGE.SHARE_TEXT', { code });
   }
 
   private shareLink(): string {
@@ -135,14 +144,14 @@ export class ReferralPage {
     const code = this.summary?.referralCode ?? '';
     if (!code) return;
     await this.copyToClipboard(code);
-    await this.showToast('Code parrainage copié');
+    await this.showToast(this.translate.instant('REFERRAL_PAGE.TOAST_CODE_COPIED'));
   }
 
   async copyLink() {
     const link = this.shareLink();
     if (!link) return;
     await this.copyToClipboard(link);
-    await this.showToast('Lien de parrainage copié');
+    await this.showToast(this.translate.instant('REFERRAL_PAGE.TOAST_LINK_COPIED'));
   }
 
   async share(channel: 'whatsapp' | 'facebook' | 'sms' | 'other') {
@@ -154,16 +163,16 @@ export class ReferralPage {
     if (channel === 'other') {
       try {
         const mode = await this.shareService.share({
-          title: 'Parrainage Tingilin',
+          title: this.translate.instant('REFERRAL_PAGE.SHARE_TITLE'),
           text: this.shareText(),
           url: link,
         });
         if (mode === 'copied') {
-          await this.showToast('Lien de parrainage copié');
+          await this.showToast(this.translate.instant('REFERRAL_PAGE.TOAST_LINK_COPIED'));
         }
         return;
       } catch {
-        await this.showToast('Partage indisponible');
+        await this.showToast(this.translate.instant('REFERRAL_PAGE.TOAST_SHARE_UNAVAILABLE'));
         return;
       }
     }

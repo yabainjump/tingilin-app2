@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { firstValueFrom, from } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 import {
   TicketsApiService,
@@ -44,6 +45,7 @@ export class ParticipationsPage {
     private rafflesApi: RafflesPublicApiService,
     private router: Router,
     private toast: ToastController,
+    private translate: TranslateService,
   ) {}
 
   ionViewWillEnter() {
@@ -118,7 +120,8 @@ export class ParticipationsPage {
     } catch (e: any) {
       const t = await this.toast.create({
         message:
-          e?.error?.message || 'Impossible de charger tes participations',
+          e?.error?.message ||
+          this.translate.instant('PARTICIPATIONS_PAGE.TOAST_LOAD_FAILED'),
         duration: 1600,
       });
       await t.present();
@@ -132,10 +135,11 @@ export class ParticipationsPage {
   }
 
   private maskSerial(serial: string) {
-    if (!serial) return 'Ticket —';
+    if (!serial) return this.translate.instant('PARTICIPATIONS_PAGE.TICKET_FALLBACK');
     // ex: TGL-63F708-444ABDEB -> TGL-63F7...BDEB
     const clean = String(serial);
-    if (clean.length <= 10) return `Ticket #${clean}`;
-    return `Ticket #${clean.slice(0, 8)}...${clean.slice(-4)}`;
+    const label = this.translate.instant('PARTICIPATIONS_PAGE.TICKET');
+    if (clean.length <= 10) return `${label} #${clean}`;
+    return `${label} #${clean.slice(0, 8)}...${clean.slice(-4)}`;
   }
 }

@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { finalize } from 'rxjs';
 import { AuthService } from '../../../services/auth/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
@@ -27,6 +28,7 @@ export class LoginPage {
     private router: Router,
     private route: ActivatedRoute,
     private toast: ToastController,
+    private translate: TranslateService,
   ) {}
 
   togglePassword(): void {
@@ -38,7 +40,7 @@ export class LoginPage {
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      await this.showToast('Veuillez remplir les champs.');
+      await this.showToast(this.translate.instant('LOGIN_PAGE.TOAST_FILL_FIELDS'));
       return;
     }
 
@@ -62,7 +64,7 @@ export class LoginPage {
         },
         error: async (err) => {
           await this.showToast(
-            this.readError(err) || 'Identifiants incorrects.',
+            this.readError(err) || this.translate.instant('LOGIN_PAGE.TOAST_INVALID_CREDENTIALS'),
           );
         },
       });

@@ -7,13 +7,17 @@ import { IonicModule } from '@ionic/angular';
 import { LandingPageRoutingModule } from './landing-routing.module';
 
 import { LandingPage } from './landing.page';
+import { TranslateModule } from '@ngx-translate/core';
+import { LanguageSwitchModule } from 'src/app/shared/language-switch/language-switch.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    LandingPageRoutingModule
+    LandingPageRoutingModule,
+    TranslateModule,
+    LanguageSwitchModule
   ],
   declarations: [LandingPage]
 })

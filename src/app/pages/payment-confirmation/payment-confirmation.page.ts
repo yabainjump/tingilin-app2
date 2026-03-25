@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentsApiService } from 'src/app/core/api/payments-api.service';
 import { ToastController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-payment-confirmation',
@@ -38,6 +39,7 @@ export class PaymentConfirmationPage {
     private router: Router,
     private paymentsApi: PaymentsApiService,
     private toastCtrl: ToastController,
+    private translate: TranslateService,
   ) {}
 
   ionViewWillEnter() {
@@ -56,7 +58,7 @@ export class PaymentConfirmationPage {
     this.amount = this.quantity * this.ticketUnitPrice;
 
     if (!this.raffleId) {
-      this.presentToast('raffleId manquant');
+      this.presentToast(this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_MISSING_RAFFLE_ID'));
     }
     this.pageLoading = false;
   }
@@ -69,7 +71,7 @@ export class PaymentConfirmationPage {
     // validation simple
     const cleanedPhone = (this.userPhone || '').replace(/\s+/g, '');
     if (!cleanedPhone || cleanedPhone.length < 8) {
-      return this.presentToast('Entre un numéro valide');
+      return this.presentToast(this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_INVALID_PHONE'));
     }
 
     this.loading = true;
@@ -97,13 +99,13 @@ export class PaymentConfirmationPage {
       this.paymentWithTaxes = res?.paymentWithTaxes;
 
       if (!this.paymentLink) {
-        throw new Error('paymentLink manquant');
+        throw new Error(this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_MISSING_PAYMENT_LINK'));
       }
 
       await this.presentToast(
         this.paymentWithTaxes
-          ? `Montant TTC: ${this.paymentWithTaxes} XAF`
-          : 'Lien de paiement généré',
+          ? this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_AMOUNT_TTC', { amount: this.paymentWithTaxes })
+          : this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_LINK_GENERATED'),
       );
 
       // Ouvre le lien (web)
@@ -112,7 +114,7 @@ export class PaymentConfirmationPage {
       // Option UX : tu laisses un bouton "Vérifier le paiement" visible
     } catch (e: any) {
       await this.presentToast(
-        e?.error?.message || e?.message || 'Erreur paiement',
+        e?.error?.message || e?.message || this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_PAYMENT_ERROR'),
       );
     } finally {
       this.loading = false;
@@ -130,16 +132,20 @@ export class PaymentConfirmationPage {
         .toPromise();
 
       if (res?.status === 'SUCCESS') {
-        await this.presentToast('Paiement confirmé ✅');
+        await this.presentToast(this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_PAYMENT_CONFIRMED'));
         // exemple : redirige vers mes tickets
         this.router.navigateByUrl('/tabs/participations');
         return;
       }
 
-      await this.presentToast(`Statut: ${res?.status || 'PENDING'}`);
+      await this.presentToast(
+        this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_STATUS', {
+          status: res?.status || 'PENDING',
+        }),
+      );
     } catch (e: any) {
       await this.presentToast(
-        e?.error?.message || e?.message || 'Erreur verify',
+        e?.error?.message || e?.message || this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_VERIFY_ERROR'),
       );
     } finally {
       this.loading = false;

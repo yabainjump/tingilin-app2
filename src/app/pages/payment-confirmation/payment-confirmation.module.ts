@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { PaymentConfirmationPageRoutingModule } from './payment-confirmation-routing.module';
 
 import { PaymentConfirmationPage } from './payment-confirmation.page';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    PaymentConfirmationPageRoutingModule
+    PaymentConfirmationPageRoutingModule,
+    TranslateModule
   ],
   declarations: [PaymentConfirmationPage]
 })

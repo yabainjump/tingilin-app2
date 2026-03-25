@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/home"></ion-back-button>
     </ion-buttons>
-    <ion-title>Créer un Raffle</ion-title>
+    <ion-title>{{ 'CREATE_RAFFLE_PAGE.TITLE' | translate }}</ion-title>
     <ion-buttons slot="end">
       <ion-button fill="clear" class="help-btn" (click)="showHelp()">
         <ion-icon slot="icon-only" name="help"></ion-icon>
@@ -17,39 +17,39 @@
     <section class="section">
       <div class="section-head">
         <ion-icon name="cube-outline"></ion-icon>
-        <h2>Détails du Produit</h2>
+        <h2>{{ 'CREATE_RAFFLE_PAGE.PRODUCT_DETAILS' | translate }}</h2>
       </div>
 
       <div class="glass-card">
-        <label class="field-label" for="raffle-title">Nom du produit</label>
+        <label class="field-label" for="raffle-title">{{ 'CREATE_RAFFLE_PAGE.PRODUCT_NAME' | translate }}</label>
         <input
           id="raffle-title"
           class="field-input"
           type="text"
           formControlName="title"
-          placeholder="ex: Produit Premium"
+          [placeholder]="'CREATE_RAFFLE_PAGE.PRODUCT_NAME_PLACEHOLDER' | translate"
         />
         <p class="field-error" *ngIf="titleControl.invalid && titleControl.touched">
-          Le nom du produit est requis.
+          {{ 'CREATE_RAFFLE_PAGE.PRODUCT_NAME_REQUIRED' | translate }}
         </p>
 
-        <label class="field-label" for="raffle-real-value">Prix réel de l'article</label>
+        <label class="field-label" for="raffle-real-value">{{ 'CREATE_RAFFLE_PAGE.REAL_PRICE' | translate }}</label>
         <input
           id="raffle-real-value"
           class="field-input"
           type="number"
           min="0"
           formControlName="realValue"
-          placeholder="ex: 50000"
+          [placeholder]="'CREATE_RAFFLE_PAGE.REAL_PRICE_PLACEHOLDER' | translate"
         />
 
-        <label class="field-label" for="raffle-description">Description</label>
+        <label class="field-label" for="raffle-description">{{ 'CREATE_RAFFLE_PAGE.DESCRIPTION' | translate }}</label>
         <textarea
           id="raffle-description"
           class="field-textarea"
           rows="3"
           formControlName="description"
-          placeholder="Décrivez le lot à gagner..."
+          [placeholder]="'CREATE_RAFFLE_PAGE.DESCRIPTION_PLACEHOLDER' | translate"
         ></textarea>
 
         <button
@@ -62,19 +62,19 @@
             <ion-icon name="camera-outline"></ion-icon>
           </div>
           <p class="upload-title">
-            {{ previewUrl || imageControl.value ? 'Modifier la photo' : 'Importer une photo' }}
+            {{ previewUrl || imageControl.value ? ('CREATE_RAFFLE_PAGE.CHANGE_PHOTO' | translate) : ('CREATE_RAFFLE_PAGE.UPLOAD_PHOTO' | translate) }}
           </p>
-          <p class="upload-sub">JPG, PNG jusqu'à 5MB</p>
+          <p class="upload-sub">{{ 'CREATE_RAFFLE_PAGE.UPLOAD_HINT' | translate }}</p>
         </button>
 
         <div class="preview" *ngIf="previewUrl || imageControl.value">
-          <img [src]="previewUrl || imageControl.value" alt="Aperçu produit" />
+          <img [src]="previewUrl || imageControl.value" [attr.alt]="'CREATE_RAFFLE_PAGE.PREVIEW_ALT' | translate" />
         </div>
         <p class="field-error" *ngIf="imageControl.invalid && imageControl.touched">
-          Une image est requise.
+          {{ 'CREATE_RAFFLE_PAGE.IMAGE_REQUIRED' | translate }}
         </p>
 
-        <label class="field-label" for="raffle-category">Categorie *</label>
+        <label class="field-label" for="raffle-category">{{ 'CREATE_RAFFLE_PAGE.CATEGORY' | translate }}</label>
         <select id="raffle-category" class="field-input" formControlName="categoryId">
           <option *ngFor="let c of categoryOptions" [value]="c.id">{{ c.label }}</option>
         </select>
@@ -84,37 +84,37 @@
     <section class="section">
       <div class="section-head">
         <ion-icon name="settings-outline"></ion-icon>
-        <h2>Paramètres de la Raffle</h2>
+        <h2>{{ 'CREATE_RAFFLE_PAGE.RAFFLE_SETTINGS' | translate }}</h2>
       </div>
 
       <div class="glass-card">
         <div class="grid-three">
           <div>
-            <label class="field-label" for="raffle-ticket-price">Prix ticket</label>
+            <label class="field-label" for="raffle-ticket-price">{{ 'CREATE_RAFFLE_PAGE.TICKET_PRICE' | translate }}</label>
             <input
               id="raffle-ticket-price"
               class="field-input"
               type="number"
               min="1"
               formControlName="ticketPrice"
-              placeholder="100"
+              [placeholder]="'CREATE_RAFFLE_PAGE.TICKET_PRICE_PLACEHOLDER' | translate"
             />
           </div>
 
           <div>
-            <label class="field-label" for="raffle-total-tickets">Total tickets</label>
+            <label class="field-label" for="raffle-total-tickets">{{ 'CREATE_RAFFLE_PAGE.TOTAL_TICKETS' | translate }}</label>
             <input
               id="raffle-total-tickets"
               class="field-input"
               type="number"
               min="1"
               formControlName="totalTickets"
-              placeholder="1000"
+              [placeholder]="'CREATE_RAFFLE_PAGE.TOTAL_TICKETS_PLACEHOLDER' | translate"
             />
           </div>
 
           <div>
-            <label class="field-label" for="raffle-currency">Devise</label>
+            <label class="field-label" for="raffle-currency">{{ 'CREATE_RAFFLE_PAGE.CURRENCY' | translate }}</label>
             <select id="raffle-currency" class="field-input" formControlName="currency">
               <option value="XAF">XAF (FCFA)</option>
               <option value="EUR">EUR (€)</option>
@@ -123,7 +123,7 @@
           </div>
         </div>
 
-        <label class="field-label" for="raffle-end-at">Date et heure du tirage</label>
+        <label class="field-label" for="raffle-end-at">{{ 'CREATE_RAFFLE_PAGE.DRAW_DATE_TIME' | translate }}</label>
         <input
           id="raffle-end-at"
           class="field-input"
@@ -133,24 +133,24 @@
 
         <div class="projection-card">
           <div class="projection-top">
-            <span>Seuil couverture prix produit</span>
-            <strong>{{ coverageTicketTarget }} ticket{{ coverageTicketTarget > 1 ? 's' : '' }}</strong>
+            <span>{{ 'CREATE_RAFFLE_PAGE.COVERAGE_THRESHOLD' | translate }}</span>
+            <strong>{{ coverageTicketTarget }} {{ coverageTicketTarget > 1 ? ('CREATE_RAFFLE_PAGE.TICKETS' | translate) : ('CREATE_RAFFLE_PAGE.TICKET' | translate) }}</strong>
           </div>
           <div class="projection-sub">
-            Prix réel: {{ safeRealValue }} {{ form.controls['currency'].value || 'XAF' }}
+            {{ 'CREATE_RAFFLE_PAGE.REAL_PRICE_LABEL' | translate }}: {{ safeRealValue }} {{ form.controls['currency'].value || 'XAF' }}
           </div>
           <div class="projection-sub">
-            Couverture estimée: {{ projectedCoverageAmount }} {{ form.controls['currency'].value || 'XAF' }}
+            {{ 'CREATE_RAFFLE_PAGE.ESTIMATED_COVERAGE' | translate }}: {{ projectedCoverageAmount }} {{ form.controls['currency'].value || 'XAF' }}
           </div>
           <div class="projection-note">
-            Cette base servira à la future règle de report de tirage si l'objectif prix n'est pas atteint.
+            {{ 'CREATE_RAFFLE_PAGE.PROJECTION_NOTE' | translate }}
           </div>
         </div>
 
         <div class="publish-row">
           <div class="publish-text">
-            <p>Publier maintenant (LIVE)</p>
-            <span>Sinon la raffle reste en brouillon.</span>
+            <p>{{ 'CREATE_RAFFLE_PAGE.PUBLISH_NOW' | translate }}</p>
+            <span>{{ 'CREATE_RAFFLE_PAGE.PUBLISH_HINT' | translate }}</span>
           </div>
           <ion-toggle formControlName="publishNow"></ion-toggle>
         </div>
@@ -169,7 +169,7 @@
       [disabled]="submitting || form.invalid"
       (click)="submit()"
     >
-      <span *ngIf="!submitting">CRÉER LA RAFFLE</span>
+      <span *ngIf="!submitting">{{ 'CREATE_RAFFLE_PAGE.SUBMIT' | translate }}</span>
       <ion-skeleton-text *ngIf="submitting" animated class="btn-skeleton"></ion-skeleton-text>
       <ion-icon name="sparkles-outline"></ion-icon>
     </button>

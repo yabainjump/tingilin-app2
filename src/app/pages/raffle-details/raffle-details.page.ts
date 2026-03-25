@@ -14,6 +14,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { ShareService } from 'src/app/services/share/share.service';
 import { ReferralApiService } from 'src/app/services/referral/referral-api.service';
 import { PaymentsApiService } from 'src/app/core/api/payments-api.service';
+import { TranslateService } from '@ngx-translate/core';
 
 type RecentWinnerCard = {
   name: string;
@@ -58,6 +59,7 @@ export class RaffleDetailsPage implements OnInit {
     private shareService: ShareService,
     private referralApi: ReferralApiService,
     private paymentsApi: PaymentsApiService,
+    private translate: TranslateService,
   ) {}
 
   async goToPayment() {
@@ -71,7 +73,7 @@ export class RaffleDetailsPage implements OnInit {
 
     if (!this.canParticipate) {
       const t = await this.toast.create({
-        message: 'Ce raffle est clôturé. Achat indisponible.',
+        message: this.translate.instant('RAFFLE_DETAILS_PAGE.TOAST_RAFFLE_CLOSED_PURCHASE'),
         duration: 1500,
       });
       await t.present();
@@ -123,7 +125,7 @@ export class RaffleDetailsPage implements OnInit {
         },
         error: async () => {
           const t = await this.toast.create({
-            message: 'Raffle introuvable',
+            message: this.translate.instant('RAFFLE_DETAILS_PAGE.TOAST_NOT_FOUND'),
             duration: 1500,
           });
           await t.present();
@@ -163,13 +165,13 @@ export class RaffleDetailsPage implements OnInit {
   private mapWinnerCard(w: WinnerDto): RecentWinnerCard {
     const prize = String(w?.prizeTitle ?? '').trim();
     const note = prize
-      ? `a gagne ${prize}`
+      ? this.translate.instant('RAFFLE_DETAILS_PAGE.WINNER_NOTE_WITH_PRIZE', { prize })
       : w?.ticketCode
-        ? `Ticket #${w.ticketCode}`
-        : 'Gagnant recent';
+        ? this.translate.instant('RAFFLE_DETAILS_PAGE.WINNER_NOTE_WITH_TICKET', { ticket: w.ticketCode })
+        : this.translate.instant('RAFFLE_DETAILS_PAGE.RECENT_WINNER');
 
     return {
-      name: String(w?.winnerName ?? 'Gagnant'),
+      name: String(w?.winnerName ?? this.translate.instant('RAFFLE_DETAILS_PAGE.WINNER')),
       note,
       avatar: this.avatarSrc(w?.avatar),
     };
@@ -286,8 +288,8 @@ export class RaffleDetailsPage implements OnInit {
     const raffleId = this.currentRaffleId;
     if (!raffleId) return;
 
-    const title = this.raffle?.title || 'Raffle Tingilin';
-    const text = `Regarde ce raffle sur Tingilin: ${title}`;
+    const title = this.raffle?.title || this.translate.instant('RAFFLE_DETAILS_PAGE.SHARE_FALLBACK_TITLE');
+    const text = this.translate.instant('RAFFLE_DETAILS_PAGE.SHARE_TEXT', { title });
     const url = this.shareService.raffleShareUrl(raffleId);
 
     try {
@@ -299,14 +301,14 @@ export class RaffleDetailsPage implements OnInit {
 
       if (mode === 'copied') {
         const t = await this.toast.create({
-          message: 'Lien copié ✅',
+          message: this.translate.instant('RAFFLE_DETAILS_PAGE.TOAST_LINK_COPIED'),
           duration: 1400,
         });
         await t.present();
       }
     } catch {
       const t = await this.toast.create({
-        message: 'Partage indisponible',
+        message: this.translate.instant('RAFFLE_DETAILS_PAGE.TOAST_SHARE_UNAVAILABLE'),
         duration: 1400,
       });
       await t.present();
@@ -374,7 +376,7 @@ export class RaffleDetailsPage implements OnInit {
 
     if (this.freeTicketsBalance <= 0) {
       const t = await this.toast.create({
-        message: 'Aucun ticket gratuit disponible',
+        message: this.translate.instant('RAFFLE_DETAILS_PAGE.TOAST_NO_FREE_TICKET'),
         duration: 1500,
       });
       await t.present();
@@ -383,7 +385,7 @@ export class RaffleDetailsPage implements OnInit {
 
     if (!this.canParticipate) {
       const t = await this.toast.create({
-        message: 'Ce raffle est clôturé. Utilisation indisponible.',
+        message: this.translate.instant('RAFFLE_DETAILS_PAGE.TOAST_RAFFLE_CLOSED_USE'),
         duration: 1500,
       });
       await t.present();
@@ -396,7 +398,7 @@ export class RaffleDetailsPage implements OnInit {
       this.freeTicketsBalance = Math.max(0, this.freeTicketsBalance - 1);
 
       const t = await this.toast.create({
-        message: 'Ticket gratuit utilisé ✅',
+        message: this.translate.instant('RAFFLE_DETAILS_PAGE.TOAST_FREE_TICKET_USED'),
         duration: 1600,
       });
       await t.present();
@@ -405,7 +407,9 @@ export class RaffleDetailsPage implements OnInit {
     } catch (e: any) {
       const t = await this.toast.create({
         message:
-          e?.error?.message || e?.message || 'Impossible d’utiliser le ticket gratuit',
+          e?.error?.message ||
+          e?.message ||
+          this.translate.instant('RAFFLE_DETAILS_PAGE.TOAST_FREE_TICKET_FAILED'),
         duration: 1700,
       });
       await t.present();
@@ -432,12 +436,12 @@ export class RaffleDetailsPage implements OnInit {
   private async promptAuthBeforePurchase(raffleId: string): Promise<void> {
     const redirect = `/tabs/raffle-details/${encodeURIComponent(raffleId)}`;
     const alert = await this.alertCtrl.create({
-      header: 'Compte requis',
-      message: 'Crée un compte ou connecte-toi pour acheter un ticket.',
+      header: this.translate.instant('RAFFLE_DETAILS_PAGE.AUTH_REQUIRED_HEADER'),
+      message: this.translate.instant('RAFFLE_DETAILS_PAGE.AUTH_REQUIRED_MESSAGE'),
       buttons: [
-        { text: 'Annuler', role: 'cancel' },
+        { text: this.translate.instant('RAFFLE_DETAILS_PAGE.CANCEL'), role: 'cancel' },
         {
-          text: 'Se connecter',
+          text: this.translate.instant('RAFFLE_DETAILS_PAGE.LOGIN'),
           handler: () => {
             void this.router.navigate(['/auth/login'], {
               queryParams: { redirect },
@@ -445,7 +449,7 @@ export class RaffleDetailsPage implements OnInit {
           },
         },
         {
-          text: 'Créer un compte',
+          text: this.translate.instant('RAFFLE_DETAILS_PAGE.CREATE_ACCOUNT'),
           handler: () => {
             void this.router.navigate(['/auth/register'], {
               queryParams: { redirect },

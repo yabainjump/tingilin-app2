@@ -51,7 +51,9 @@
   text-align: center;
 }
 
-.top-spacer { width: 40px; }
+.topbar app-language-switch {
+  display: block;
+}
 
 .wrap {
   position: relative;
@@ -77,6 +79,24 @@ h1 {
   font-size: 13px;
 }
 .primary { color: var(--p); font-weight: 900; }
+
+.language-choice {
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(76, 59, 84, 1);
+  background: rgba(35, 27, 39, 0.85);
+}
+
+.language-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(226, 232, 240, 0.85);
+}
 
 .form { display: flex; flex-direction: column; gap: 12px; }
 

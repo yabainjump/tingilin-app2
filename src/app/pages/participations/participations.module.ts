@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { ParticipationsPageRoutingModule } from './participations-routing.module';
 
 import { ParticipationsPage } from './participations.page';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ParticipationsPageRoutingModule
+    ParticipationsPageRoutingModule,
+    TranslateModule
   ],
   declarations: [ParticipationsPage]
 })

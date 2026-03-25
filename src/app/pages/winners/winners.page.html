@@ -3,16 +3,16 @@
 
   <div class="page">
     <div class="topbar">
-      <button class="icon-btn" type="button" (click)="back()" aria-label="Close">
+      <button class="icon-btn" type="button" (click)="back()" [attr.aria-label]="'WINNERS_PAGE.CLOSE' | translate">
         <ion-icon name="close-outline"></ion-icon>
       </button>
 
       <div class="top-center">
-        <div class="kicker">TIRAGES AU SORT</div>
-        <h1>En Direct</h1>
+        <div class="kicker">{{ 'WINNERS_PAGE.DRAWS' | translate }}</div>
+        <h1>{{ 'WINNERS_PAGE.LIVE' | translate }}</h1>
       </div>
 
-      <button class="icon-btn" type="button" (click)="shareLive()" aria-label="Share live draw">
+      <button class="icon-btn" type="button" (click)="shareLive()" [attr.aria-label]="'WINNERS_PAGE.SHARE_LIVE' | translate">
         <ion-icon name="share-social-outline"></ion-icon>
       </button>
     </div>
@@ -24,9 +24,9 @@
           <div class="thumb" [style.background-image]="'url(' + featureImage + ')'" role="img" aria-label="Featured prize"></div>
 
           <div class="featured-meta">
-            <span class="badge">GRAND PRIZE</span>
+            <span class="badge">{{ 'WINNERS_PAGE.GRAND_PRIZE' | translate }}</span>
             <div class="title">{{ title }}</div>
-            <div class="subtitle">Winner: {{ selectedWinnerName }}</div>
+            <div class="subtitle">{{ 'WINNERS_PAGE.WINNER' | translate }}: {{ selectedWinnerName }}</div>
           </div>
         </div>
       </div>
@@ -57,7 +57,7 @@
             <div class="active-label">{{ analysisLabel }}</div>
           </div>
 
-          <div class="scan-chip">SCANNING</div>
+          <div class="scan-chip">{{ 'WINNERS_PAGE.SCANNING' | translate }}</div>
         </div>
 
         <div class="scan-row soft">
@@ -73,20 +73,20 @@
 
       <div class="analysis">
         <div class="analysis-head">
-          <span>PROGRESSION DU TIRAGE LIVE</span>
+          <span>{{ 'WINNERS_PAGE.LIVE_PROGRESS' | translate }}</span>
           <strong>{{ analysisProgress }}%</strong>
         </div>
         <div class="bar">
           <div class="bar-fill" [style.width.%]="analysisProgress"></div>
         </div>
         <div class="analysis-note">
-          Indicateur visuel en temps reel du tirage.
+          {{ 'WINNERS_PAGE.LIVE_VISUAL_INDICATOR' | translate }}
         </div>
       </div>
 
       <div class="stats-grid">
         <button class="stat-card" type="button" (click)="seeResults()">
-          <div class="stat-k">PERSONNES EN DIRECT</div>
+          <div class="stat-k">{{ 'WINNERS_PAGE.LIVE_PEOPLE' | translate }}</div>
           <div class="stat-v">
             <span class="live-dot"></span>
             {{ participantsSeen | number }}
@@ -94,18 +94,17 @@
         </button>
 
         <div class="stat-card">
-          <div class="stat-k">NIVEAU DE CONFIANCE</div>
+          <div class="stat-k">{{ 'WINNERS_PAGE.TRUST_LEVEL' | translate }}</div>
           <div class="stat-v gold">{{ trustPercentLabel }}</div>
         </div>
       </div>
 
       <div class="notice">
-        Le gagnant est notifie automatiquement via ses informations de compte
-        verifiees.
+        {{ 'WINNERS_PAGE.NOTICE' | translate }}
       </div>
 
       <div class="recent" *ngIf="recent.length">
-        <div class="recent-title">Recent Winners</div>
+        <div class="recent-title">{{ 'WINNERS_PAGE.RECENT_WINNERS' | translate }}</div>
 
         <button class="recent-item" type="button" *ngFor="let w of recent; trackBy: trackByRecent" (click)="openWinner(w)">
           <div class="recent-avatar" [style.background-image]="'url(' + avatarSrc(w.avatar) + ')'">

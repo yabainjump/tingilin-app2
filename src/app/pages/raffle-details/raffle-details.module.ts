@@ -8,13 +8,15 @@ import { RaffleDetailsPageRoutingModule } from './raffle-details-routing.module'
 
 
 import { RaffleDetailsPage } from './raffle-details.page';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    RaffleDetailsPageRoutingModule
+    RaffleDetailsPageRoutingModule,
+    TranslateModule
   ],
   declarations: [RaffleDetailsPage]
 })

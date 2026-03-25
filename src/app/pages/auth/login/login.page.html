@@ -1,45 +1,45 @@
 <ion-content [fullscreen]="true" class="login">
   <!-- Back -->
   <div class="topbar">
-    <button class="icon-btn" routerLink="/landing" aria-label="Retour">
-      <span translate="no" class="notranslate material-symbols-outlined">arrow_back</span>
+    <button class="icon-btn" routerLink="/landing" [attr.aria-label]="'COMMON.BACK' | translate">
+      <span class="notranslate material-symbols-outlined">arrow_back</span>
     </button>
   </div>
 
   <div class="wrap">
     <div class="head">
       <div class="logo">
-        <span translate="no" class="notranslate material-symbols-outlined"><img src="../../../../assets/img/Asset_7.png" alt=""></span>
+        <span class="notranslate material-symbols-outlined"><img src="../../../../assets/img/Asset_7.png" alt=""></span>
       </div>
 
-      <h1>Bon retour !</h1>
+      <h1>{{ 'LOGIN_PAGE.TITLE' | translate }}</h1>
       <p>
-        Accédez à vos tirages et gagnez gros dès
+        {{ 'LOGIN_PAGE.SUBTITLE' | translate }}
         <span class="gold">100 FCFA</span>.
       </p>
     </div>
 
     <div class="card">
       <div class="field">
-        <label>IDENTIFIANT</label>
+        <label>{{ 'LOGIN_PAGE.IDENTIFIER' | translate }}</label>
         <div class="input">
-          <span translate="no" class="notranslate material-symbols-outlined left">MAIL</span>
-          <input type="text" placeholder="Ex: test@test.com" [formControl]="form.controls.identifier" />
+          <span class="notranslate material-symbols-outlined left">MAIL</span>
+          <input type="text" [placeholder]="'LOGIN_PAGE.IDENTIFIER_PLACEHOLDER' | translate" [formControl]="form.controls.identifier" />
         </div>
       </div>
 
       <div class="field">
         <div class="row">
-          <label>MOT DE PASSE</label>
-          <a class="link" routerLink="/auth/forgot-password">OUBLIÉ ?</a>
+          <label>{{ 'LOGIN_PAGE.PASSWORD_LABEL' | translate }}</label>
+          <a class="link" routerLink="/auth/forgot-password">{{ 'LOGIN_PAGE.FORGOT' | translate }}</a>
         </div>
 
         <div class="input">
-          <span translate="no" class="notranslate material-symbols-outlined left">lock</span>
+          <span class="notranslate material-symbols-outlined left">lock</span>
           <input [type]="showPassword ? 'text' : 'password'" placeholder="••••••••"
             [formControl]="form.controls.password" />
-          <button type="button" class="eye" (click)="togglePassword()" aria-label="Afficher/Masquer">
-            <span translate="no" class="notranslate material-symbols-outlined">
+          <button type="button" class="eye" (click)="togglePassword()" [attr.aria-label]="'LOGIN_PAGE.TOGGLE_PASSWORD' | translate">
+            <span class="notranslate material-symbols-outlined">
               {{ showPassword ? 'visibility' : 'visibility_off' }}
             </span>
           </button>
@@ -47,7 +47,7 @@
       </div>
 
       <button class="cta" (click)="submit()" [disabled]="loading">
-        <span *ngIf="!loading">Se connecter</span>
+        <span *ngIf="!loading">{{ 'LOGIN_PAGE.SUBMIT' | translate }}</span>
         <ion-skeleton-text *ngIf="loading" animated class="btn-skeleton"></ion-skeleton-text>
       </button>
     </div>
@@ -55,7 +55,7 @@
     <div class="social">
       <div class="sep">
         <div class="line"></div>
-        <div class="txt">OU CONTINUER AVEC</div>
+        <div class="txt">{{ 'LOGIN_PAGE.OR_CONTINUE' | translate }}</div>
         <div class="line"></div>
       </div>
 
@@ -66,8 +66,9 @@
     </div>
 
     <div class="foot">
-      <span>Nouveau ici ?</span>
-      <a routerLink="/auth/register">Créer un compte</a>
+      <span>{{ 'LOGIN_PAGE.NEW_HERE' | translate }}</span>
+      <a routerLink="/auth/register">{{ 'LOGIN_PAGE.CREATE_ACCOUNT' | translate }}</a>
     </div>
   </div>
 </ion-content>
+

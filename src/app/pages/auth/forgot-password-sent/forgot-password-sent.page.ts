@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../../services/auth/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-forgot-password-sent',
@@ -29,6 +30,7 @@ export class ForgotPasswordSentPage implements OnDestroy {
     private readonly auth: AuthService,
     private readonly router: Router,
     private readonly toast: ToastController,
+    private readonly translate: TranslateService,
   ) {
     const nav = this.router.getCurrentNavigation();
     this.identifier =
@@ -53,14 +55,18 @@ export class ForgotPasswordSentPage implements OnDestroy {
     if (this.loading) return;
 
     if (!this.identifier) {
-      await this.showToast('Identifiant manquant. Recommence la procédure.');
+      await this.showToast(
+        this.translate.instant('FORGOT_PASSWORD_SENT_PAGE.TOAST_MISSING_IDENTIFIER'),
+      );
       this.backToForgot();
       return;
     }
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      await this.showToast('Vérifie le code et le nouveau mot de passe.');
+      await this.showToast(
+        this.translate.instant('FORGOT_PASSWORD_SENT_PAGE.TOAST_INVALID_FORM'),
+      );
       return;
     }
 
@@ -69,7 +75,9 @@ export class ForgotPasswordSentPage implements OnDestroy {
     const confirmPassword = String(this.form.value.confirmPassword ?? '');
 
     if (newPassword !== confirmPassword) {
-      await this.showToast('Les mots de passe ne correspondent pas.');
+      await this.showToast(
+        this.translate.instant('FORGOT_PASSWORD_SENT_PAGE.TOAST_PASSWORD_MISMATCH'),
+      );
       return;
     }
 
@@ -83,13 +91,17 @@ export class ForgotPasswordSentPage implements OnDestroy {
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
         next: async () => {
-          await this.showToast('Mot de passe réinitialisé.');
+          await this.showToast(
+            this.translate.instant('FORGOT_PASSWORD_SENT_PAGE.TOAST_RESET_SUCCESS'),
+          );
           this.router.navigateByUrl('/auth/login');
         },
         error: async (err) => {
           const msg = err?.error?.message;
           await this.showToast(
-            Array.isArray(msg) ? msg.join(', ') : msg || 'Code invalide ou expiré.',
+            Array.isArray(msg)
+              ? msg.join(', ')
+              : msg || this.translate.instant('FORGOT_PASSWORD_SENT_PAGE.TOAST_INVALID_OR_EXPIRED'),
           );
         },
       });
@@ -109,12 +121,16 @@ export class ForgotPasswordSentPage implements OnDestroy {
       .subscribe({
         next: async () => {
           this.startCountdown();
-          await this.showToast('Code renvoyé.');
+          await this.showToast(
+            this.translate.instant('FORGOT_PASSWORD_SENT_PAGE.TOAST_CODE_RESENT'),
+          );
         },
         error: async (err) => {
           const msg = err?.error?.message;
           await this.showToast(
-            Array.isArray(msg) ? msg.join(', ') : msg || 'Impossible de renvoyer le code.',
+            Array.isArray(msg)
+              ? msg.join(', ')
+              : msg || this.translate.instant('FORGOT_PASSWORD_SENT_PAGE.TOAST_RESEND_FAILED'),
           );
         },
       });

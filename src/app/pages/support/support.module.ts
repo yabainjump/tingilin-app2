@@ -4,9 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { SupportPageRoutingModule } from './support-routing.module';
 import { SupportPage } from './support.page';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, IonicModule, SupportPageRoutingModule],
+  imports: [CommonModule, FormsModule, IonicModule, SupportPageRoutingModule, TranslateModule],
   declarations: [SupportPage],
 })
 export class SupportPageModule {}

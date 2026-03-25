@@ -4,23 +4,23 @@
 
   <ion-tab-bar slot="bottom" class="lotto-tabbar">
     <ion-tab-button tab="home">
-      <span translate="no" class="notranslate material-symbols-outlined">home</span>
-      <ion-label>Accueil</ion-label>
+      <span class="notranslate material-symbols-outlined">home</span>
+      <ion-label>{{ 'TABS.HOME' | translate }}</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="participations" href="/tabs/participations">
       <ion-icon name="ticket-outline"></ion-icon>
-      <ion-label>Loterie</ion-label>
+      <ion-label>{{ 'TABS.LOTTERY' | translate }}</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="referral" href="/tabs/referral">
-      <span translate="no" class="notranslate material-symbols-outlined">redeem</span>
-      <ion-label>Parrainage</ion-label>
+      <span class="notranslate material-symbols-outlined">redeem</span>
+      <ion-label>{{ 'TABS.REFERRAL' | translate }}</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="profile">
-      <span translate="no" class="notranslate material-symbols-outlined">person</span>
-      <ion-label>Profil</ion-label>
+      <span class="notranslate material-symbols-outlined">person</span>
+      <ion-label>{{ 'TABS.PROFILE' | translate }}</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
 
@@ -33,3 +33,4 @@
 
 
 </ion-tabs>
+

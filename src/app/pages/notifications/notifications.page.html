@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/home"></ion-back-button>
     </ion-buttons>
-    <ion-title>Notifications</ion-title>
+    <ion-title>{{ 'NOTIFICATIONS_PAGE.TITLE' | translate }}</ion-title>
 
     <ion-buttons slot="end">
       <ion-button fill="clear" (click)="markAllRead()">
@@ -22,7 +22,7 @@
 
     <div class="empty" *ngIf="!loading && items.length === 0">
       <ion-icon name="notifications-outline"></ion-icon>
-      <div>Aucune notification</div>
+      <div>{{ 'NOTIFICATIONS_PAGE.EMPTY' | translate }}</div>
     </div>
 
     <div class="card" *ngFor="let n of items" (click)="open(n)">

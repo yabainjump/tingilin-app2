@@ -8,6 +8,7 @@ import { IonicModule } from '@ionic/angular';
 import { ForgotPasswordSentPageRoutingModule } from './forgot-password-sent-routing.module';
 
 import { ForgotPasswordSentPage } from './forgot-password-sent.page';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { ForgotPasswordSentPage } from './forgot-password-sent.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    ForgotPasswordSentPageRoutingModule
+    ForgotPasswordSentPageRoutingModule,
+    TranslateModule
   ],
   declarations: [ForgotPasswordSentPage]
 })

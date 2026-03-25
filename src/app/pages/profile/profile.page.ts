@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController, ToastController } from '@ionic/angular';
 import { finalize, forkJoin, of, catchError } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import {
   HistoryResult,
@@ -31,6 +32,7 @@ export class ProfilePage {
     private auth: AuthService,
     private nav: NavController,
     private toast: ToastController,
+    private translate: TranslateService,
     private router: Router,
   ) {}
 
@@ -81,7 +83,8 @@ export class ProfilePage {
   get balanceLabel(): string {
     const b = this.stats?.balance ?? 0;
     const c = this.stats?.currency ?? 'XAF';
-    return `${b.toLocaleString('fr-FR')} ${c}`;
+    const locale = this.translate.currentLang === 'en' ? 'en-US' : 'fr-FR';
+    return `${b.toLocaleString(locale)} ${c}`;
   }
 
   back() {
@@ -99,7 +102,7 @@ export class ProfilePage {
   async logout() {
     this.auth.logout();
     const t = await this.toast.create({
-      message: 'Déconnecté ✅',
+      message: this.translate.instant('PROFILE_PAGE.TOAST_LOGOUT'),
       duration: 900,
     });
     await t.present();
@@ -126,7 +129,7 @@ export class ProfilePage {
     const raffleId = this.getHistoryRaffleId(h);
     if (!raffleId) {
       const t = await this.toast.create({
-        message: "Impossible d'ouvrir ce raffle (id manquant)",
+        message: this.translate.instant('PROFILE_PAGE.TOAST_RAFFLE_MISSING'),
         duration: 1500,
       });
       await t.present();
@@ -140,7 +143,7 @@ export class ProfilePage {
 
     if (!ok) {
       const t = await this.toast.create({
-        message: 'Navigation impossible vers le raffle',
+        message: this.translate.instant('PROFILE_PAGE.TOAST_NAVIGATION_FAILED'),
         duration: 1500,
       });
       await t.present();
@@ -195,10 +198,10 @@ export class ProfilePage {
 
   raffleBadgeLabel(h: ProfileHistoryItem): string {
     const tone = this.historyBadgeTone(h);
-    if (tone === 'live') return 'LIVE';
-    if (tone === 'won') return 'Gagné';
-    if (tone === 'lost') return 'Perdu';
-    return 'Terminé';
+    if (tone === 'live') return this.translate.instant('PROFILE_PAGE.LIVE');
+    if (tone === 'won') return this.translate.instant('PROFILE_PAGE.WON');
+    if (tone === 'lost') return this.translate.instant('PROFILE_PAGE.LOST');
+    return this.translate.instant('PROFILE_PAGE.ENDED');
   }
 
   getHistoryRaffleId(h: ProfileHistoryItem): string {

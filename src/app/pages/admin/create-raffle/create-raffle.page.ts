@@ -8,6 +8,7 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { RafflesApiService } from 'src/app/services/raffles/raffles-api.service';
 import { Capacitor } from '@capacitor/core';
 import { RAFFLE_CATEGORY_OPTIONS } from 'src/app/core/constants/raffle-categories';
+import { TranslateService } from '@ngx-translate/core';
 
 type CreateRaffleForm = {
   title: string;
@@ -42,6 +43,7 @@ export class CreateRafflePage {
     private api: RafflesApiService,
     private toast: ToastController,
     private nav: NavController,
+    private translate: TranslateService,
   ) {
     this.form = this.fb.group({
       title: this.fb.nonNullable.control('', [Validators.required]),
@@ -96,8 +98,7 @@ export class CreateRafflePage {
 
   async showHelp(): Promise<void> {
     const t = await this.toast.create({
-      message:
-        'Renseigne le prix réel du produit pour suivre le seuil à atteindre avant tirage.',
+      message: this.translate.instant('CREATE_RAFFLE_PAGE.TOAST_HELP'),
       duration: 2400,
       position: 'top',
     });
@@ -125,7 +126,7 @@ export class CreateRafflePage {
     } catch (err) {
       console.error('Camera error:', err);
       const t = await this.toast.create({
-        message: 'Impossible d’ouvrir la caméra/galerie sur ce support',
+        message: this.translate.instant('CREATE_RAFFLE_PAGE.TOAST_CAMERA_FAILED'),
         duration: 2200,
       });
       await t.present();
@@ -138,7 +139,7 @@ export class CreateRafflePage {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       const t = await this.toast.create({
-        message: 'Formulaire incomplet',
+        message: this.translate.instant('CREATE_RAFFLE_PAGE.TOAST_INCOMPLETE_FORM'),
         duration: 1500,
       });
       await t.present();
@@ -179,7 +180,7 @@ export class CreateRafflePage {
           this.api.triggerRefresh();
 
           const t = await this.toast.create({
-            message: 'Raffle créée ✅',
+            message: this.translate.instant('CREATE_RAFFLE_PAGE.TOAST_CREATED'),
             duration: 1200,
           });
           await t.present();
@@ -193,7 +194,7 @@ export class CreateRafflePage {
           const message =
             (err as any)?.error?.message ??
             (err as any)?.message ??
-            'Erreur création';
+            this.translate.instant('CREATE_RAFFLE_PAGE.TOAST_CREATE_ERROR');
 
           const t = await this.toast.create({
             message,

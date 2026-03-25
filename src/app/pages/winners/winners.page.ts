@@ -11,6 +11,7 @@ import {
   LiveDrawState,
   WinnersLiveSocketService,
 } from 'src/app/services/winners/winners-live-socket.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-winners',
@@ -26,7 +27,7 @@ export class WinnersPage implements OnInit {
   scanTickets: string[] = [];
   activeScanIndex = 0;
   analysisProgress = 0;
-  analysisLabel = 'SCANNING...';
+  analysisLabel = '';
   isScanning = true;
   liveViewers = 0;
   trustPercent = 99.9;
@@ -42,6 +43,7 @@ export class WinnersPage implements OnInit {
     private nav: NavController,
     private shareService: ShareService,
     private liveSocket: WinnersLiveSocketService,
+    private translate: TranslateService,
   ) {}
 
   ngOnInit() {}
@@ -89,7 +91,7 @@ export class WinnersPage implements OnInit {
         },
         error: async () => {
           const t = await this.toast.create({
-            message: 'Impossible de charger les gagnants',
+            message: this.translate.instant('WINNERS_PAGE.TOAST_LOAD_FAILED'),
             duration: 1400,
           });
           await t.present();
@@ -120,7 +122,7 @@ export class WinnersPage implements OnInit {
     this.stopScanAnimation();
 
     this.isScanning = true;
-    this.analysisLabel = 'SCANNING...';
+    this.analysisLabel = this.translate.instant('WINNERS_PAGE.SCANNING');
     this.analysisProgress = 18;
 
     this.scanSub = interval(340).subscribe(() => {
@@ -132,7 +134,7 @@ export class WinnersPage implements OnInit {
       const next = this.analysisProgress + Math.floor(Math.random() * 4 + 1);
       if (next >= 82) {
         this.analysisProgress = 82;
-        this.analysisLabel = 'VERIFYING...';
+        this.analysisLabel = this.translate.instant('WINNERS_PAGE.VERIFYING');
         this.isScanning = false;
         this.progressSub?.unsubscribe();
         return;
@@ -172,7 +174,7 @@ export class WinnersPage implements OnInit {
   }
 
   get featureTitle(): string {
-    return this.featured?.prizeTitle || 'Produit Premium';
+    return this.featured?.prizeTitle || this.translate.instant('WINNERS_PAGE.PREMIUM_PRODUCT');
   }
 
   get featureImage(): string {
@@ -184,7 +186,7 @@ export class WinnersPage implements OnInit {
   }
 
   get selectedWinnerName(): string {
-    return this.featured?.winnerName || 'Candidat';
+    return this.featured?.winnerName || this.translate.instant('WINNERS_PAGE.CANDIDATE');
   }
 
   trackByRecent(index: number, item: WinnerDto) {
@@ -222,14 +224,14 @@ export class WinnersPage implements OnInit {
     const url = this.shareService.liveShareUrl();
 
     const mode = await this.shareService.share({
-      title: 'Tingilin - Tirage en direct',
-      text: "Suis les tirages Tingilin en direct.",
+      title: this.translate.instant('WINNERS_PAGE.SHARE_TITLE'),
+      text: this.translate.instant('WINNERS_PAGE.SHARE_TEXT'),
       url,
     });
 
     if (mode === 'copied') {
       const t = await this.toast.create({
-        message: 'Lien copié ✅',
+        message: this.translate.instant('WINNERS_PAGE.TOAST_LINK_COPIED'),
         duration: 1300,
       });
       await t.present();
@@ -238,7 +240,7 @@ export class WinnersPage implements OnInit {
 
   async seeResults() {
     const t = await this.toast.create({
-      message: 'Résultats complets bientôt disponibles.',
+      message: this.translate.instant('WINNERS_PAGE.TOAST_RESULTS_SOON'),
       duration: 1200,
     });
     await t.present();
@@ -270,7 +272,9 @@ export class WinnersPage implements OnInit {
       : this.analysisProgress;
 
     this.analysisLabel =
-      state?.analysisLabel === 'VERIFYING...' ? 'VERIFYING...' : 'SCANNING...';
+      state?.analysisLabel === 'VERIFYING...'
+        ? this.translate.instant('WINNERS_PAGE.VERIFYING')
+        : this.translate.instant('WINNERS_PAGE.SCANNING');
 
     const scanTickets = Array.isArray(state?.scan?.tickets)
       ? state.scan.tickets
@@ -296,7 +300,10 @@ export class WinnersPage implements OnInit {
 
   async openWinner(w: WinnerDto) {
     const t = await this.toast.create({
-      message: `Gagnant: ${w.winnerName} — #${w.ticketCode}`,
+      message: this.translate.instant('WINNERS_PAGE.TOAST_WINNER', {
+        winner: w.winnerName,
+        ticket: w.ticketCode,
+      }),
       duration: 1400,
     });
     await t.present();

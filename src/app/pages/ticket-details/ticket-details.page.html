@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/participations"></ion-back-button>
     </ion-buttons>
-    <ion-title>Ticket Details</ion-title>
+    <ion-title>{{ 'TICKET_DETAILS_PAGE.TITLE' | translate }}</ion-title>
 
     <ion-buttons slot="end">
       <ion-button fill="clear" (click)="share()">
@@ -21,7 +21,7 @@
       <div class="hero-img"
         [style.backgroundImage]="'url(' + ((raffle?.imageUrl || 'https://via.placeholder.com/900x600')) + ')'">
         <div class="hero-grad"></div>
-        <div class="status" [class.active]="isActive">{{ isActive ? 'Active Raffle' : 'Completed' }}</div>
+        <div class="status" [class.active]="isActive">{{ isActive ? ('TICKET_DETAILS_PAGE.ACTIVE_RAFFLE' | translate) : ('TICKET_DETAILS_PAGE.COMPLETED' | translate) }}</div>
         <div class="hero-text">
           <div class="h1">{{ raffle?.title || '—' }}</div>
           <div class="h2">{{ raffle?.subtitle || raffle?.description || '' }}</div>
@@ -30,11 +30,11 @@
 
       <div class="info-grid">
         <div class="cell">
-          <div class="lbl">RAFFLE ID</div>
+          <div class="lbl">{{ 'TICKET_DETAILS_PAGE.RAFFLE_ID' | translate }}</div>
           <div class="val mono">#{{ raffleId.slice(-8).toUpperCase() }}</div>
         </div>
         <div class="cell">
-          <div class="lbl">DRAW DATE</div>
+          <div class="lbl">{{ 'TICKET_DETAILS_PAGE.DRAW_DATE' | translate }}</div>
           <div class="val">{{ drawDateLabel }}</div>
         </div>
       </div>
@@ -42,23 +42,23 @@
 
     <div class="stats">
       <div class="stat">
-        <div class="lbl">Total Spent</div>
+        <div class="lbl">{{ 'TICKET_DETAILS_PAGE.TOTAL_SPENT' | translate }}</div>
         <div class="big primary">{{ totalSpent }} {{ raffle?.currency || 'XAF' }}</div>
       </div>
       <div class="sep"></div>
       <div class="stat right">
-        <div class="lbl">Tickets Owned</div>
+        <div class="lbl">{{ 'TICKET_DETAILS_PAGE.TICKETS_OWNED' | translate }}</div>
         <div class="big">{{ ticketsOwned }}</div>
       </div>
     </div>
 
     <button class="share-btn" type="button" (click)="share()">
       <ion-icon name="share-outline"></ion-icon>
-      Partager pour accélérer
+      {{ 'TICKET_DETAILS_PAGE.SHARE_ACTION' | translate }}
     </button>
 
     <div class="tickets-head">
-      <div class="th-title">Your Tickets</div>
+      <div class="th-title">{{ 'TICKET_DETAILS_PAGE.YOUR_TICKETS' | translate }}</div>
       <div class="view">
         <button type="button" class="vbtn" [class.on]="viewMode==='grid'" (click)="viewMode='grid'">
           <ion-icon name="grid-outline"></ion-icon>
@@ -70,14 +70,14 @@
     </div>
 
     <div *ngIf="ticketsOwned === 0" class="empty">
-      Aucun ticket trouvé pour cette tombola.
+      {{ 'TICKET_DETAILS_PAGE.EMPTY' | translate }}
     </div>
 
     <div class="grid" *ngIf="viewMode==='grid'">
       <button class="ticket" type="button" *ngFor="let t of tickets" (click)="copy(t.serial)">
         <div class="ico"><ion-icon name="ticket-outline"></ion-icon></div>
         <div class="tt">
-          <div class="small">Ticket</div>
+          <div class="small">{{ 'TICKET_DETAILS_PAGE.TICKET' | translate }}</div>
           <div class="serial">#{{ t.serial.slice(-6).toUpperCase() }}</div>
         </div>
       </button>
@@ -88,7 +88,7 @@
         <ion-icon name="ticket-outline"></ion-icon>
         <div class="rtext">
           <div class="serial-full">{{ t.serial }}</div>
-          <div class="small">Tap pour copier</div>
+          <div class="small">{{ 'TICKET_DETAILS_PAGE.TAP_TO_COPY' | translate }}</div>
         </div>
       </div>
     </div>

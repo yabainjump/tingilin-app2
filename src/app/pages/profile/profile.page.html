@@ -43,7 +43,7 @@
 
         <div class="balance-pill">
           <div class="balance-meta">
-            <div class="balance-label">SOLDE ACTUEL</div>
+            <div class="balance-label">{{ 'PROFILE_PAGE.BALANCE_CURRENT' | translate }}</div>
             <div class="balance-value">{{ balanceLabel }}</div>
           </div>
 
@@ -73,7 +73,7 @@
               <span class="material-icons-round">confirmation_number</span>
             </div>
             <div class="stat-val">{{ stats?.ticketsBought ?? 0 }}</div>
-            <div class="stat-lbl">TICKETS ACHETÉS</div>
+            <div class="stat-lbl">{{ 'PROFILE_PAGE.TICKETS_BOUGHT' | translate }}</div>
           </div>
 
           <div class="divider"></div>
@@ -83,7 +83,7 @@
               <span class="material-icons-round">inventory_2</span>
             </div>
             <div class="stat-val">{{ stats?.productsWon ?? 0 }}</div>
-            <div class="stat-lbl">PRODUITS GAGNÉS</div>
+            <div class="stat-lbl">{{ 'PROFILE_PAGE.PRODUCTS_WON' | translate }}</div>
           </div>
         </div>
       </ng-container>
@@ -106,9 +106,9 @@
 
       <!-- HISTORY TITLE -->
       <div class="section-head">
-        <h2>Historique des Jeux</h2>
+        <h2>{{ 'PROFILE_PAGE.HISTORY_TITLE' | translate }}</h2>
         <button class="view-all" type="button" (click)="goHistory()">
-          Tout voir
+          {{ 'PROFILE_PAGE.SEE_ALL' | translate }}
         </button>
       </div>
 
@@ -165,7 +165,7 @@
       <div class="logout-wrap">
         <button class="logout" type="button" (click)="logout()">
           <span class="material-icons-round">logout</span>
-          Déconnexion
+          {{ 'PROFILE_PAGE.LOGOUT' | translate }}
         </button>
       </div>
 

@@ -6,6 +6,7 @@ import {
   ProfileApiService,
   ProfileUser,
 } from 'src/app/services/profile/profile-api.service';
+import { TranslateService } from '@ngx-translate/core';
 
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
@@ -41,6 +42,7 @@ export class EditProfilePage {
     private nav: NavController,
     private toast: ToastController,
     private platform: Platform,
+    private translate: TranslateService,
   ) {}
 
   ionViewWillEnter() {
@@ -83,7 +85,7 @@ export class EditProfilePage {
         }
       } catch (e) {
         const t = await this.toast.create({
-          message: 'Impossible d’ouvrir la caméra',
+          message: this.translate.instant('EDIT_PROFILE_PAGE.TOAST_CAMERA_OPEN_FAILED'),
           duration: 1500,
         });
         await t.present();
@@ -136,7 +138,7 @@ export class EditProfilePage {
         next: async (updated) => {
           this.user = updated;
           const t = await this.toast.create({
-            message: 'Profil mis à jour ✅',
+            message: this.translate.instant('EDIT_PROFILE_PAGE.TOAST_UPDATED'),
             duration: 1200,
           });
           await t.present();
@@ -144,7 +146,9 @@ export class EditProfilePage {
         },
         error: async (err) => {
           const t = await this.toast.create({
-            message: err?.error?.message ?? 'Erreur mise à jour',
+            message:
+              err?.error?.message ??
+              this.translate.instant('EDIT_PROFILE_PAGE.TOAST_UPDATE_FAILED'),
             duration: 2000,
           });
           await t.present();

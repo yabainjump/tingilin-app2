@@ -1,0 +1,18 @@
+<div class="lang-switch" [class.compact]="compact">
+  <button
+    type="button"
+    class="lang-btn"
+    [class.active]="language.is('fr')"
+    (click)="setLanguage('fr')"
+    aria-label="Français">
+    FR
+  </button>
+  <button
+    type="button"
+    class="lang-btn"
+    [class.active]="language.is('en')"
+    (click)="setLanguage('en')"
+    aria-label="English">
+    EN
+  </button>
+</div>

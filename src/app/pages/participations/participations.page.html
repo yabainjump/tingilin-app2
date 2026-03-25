@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/home"></ion-back-button>
     </ion-buttons>
-    <ion-title>Mes Participations</ion-title>
+    <ion-title>{{ 'PARTICIPATIONS_PAGE.TITLE' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -12,12 +12,12 @@
 
     <!-- Toggle En cours / Terminés (inspiré de ta maquette) :contentReference[oaicite:3]{index=3} -->
     <div class="toggle">
-      <ion-segment [(ngModel)]="filter" mode="md" class="seg">
+        <ion-segment [(ngModel)]="filter" mode="md" class="seg">
         <ion-segment-button value="ongoing">
-          <ion-label>En cours</ion-label>
+          <ion-label>{{ 'PARTICIPATIONS_PAGE.ONGOING' | translate }}</ion-label>
         </ion-segment-button>
         <ion-segment-button value="completed">
-          <ion-label>Terminés</ion-label>
+          <ion-label>{{ 'PARTICIPATIONS_PAGE.COMPLETED' | translate }}</ion-label>
         </ion-segment-button>
       </ion-segment>
     </div>
@@ -30,7 +30,7 @@
 
       <div class="empty" *ngIf="filtered.length === 0">
         <ion-icon name="ticket-outline"></ion-icon>
-        <div>Aucune participation pour l’instant</div>
+        <div>{{ 'PARTICIPATIONS_PAGE.EMPTY' | translate }}</div>
       </div>
 
       <div class="card" *ngFor="let it of filtered">
@@ -43,26 +43,26 @@
 
           <div class="info">
             <div class="row">
-              <div class="title">{{ it.raffle?.title || 'Tombola' }}</div>
+              <div class="title">{{ it.raffle?.title || ('PARTICIPATIONS_PAGE.RAFFLE_FALLBACK' | translate) }}</div>
 
               <!-- Badge result: prêt (WIN/LOSE/NONE) -->
-              <div class="badge vip" *ngIf="!it.isCompleted">LIVE</div>
-              <div class="badge win" *ngIf="it.isCompleted && it.result === 'WIN'">Gagné</div>
-              <div class="badge lose" *ngIf="it.isCompleted && it.result === 'LOSE'">Perdu</div>
+              <div class="badge vip" *ngIf="!it.isCompleted">{{ 'PARTICIPATIONS_PAGE.LIVE' | translate }}</div>
+              <div class="badge win" *ngIf="it.isCompleted && it.result === 'WIN'">{{ 'PARTICIPATIONS_PAGE.WON' | translate }}</div>
+              <div class="badge lose" *ngIf="it.isCompleted && it.result === 'LOSE'">{{ 'PARTICIPATIONS_PAGE.LOST' | translate }}</div>
             </div>
 
             <div class="ref">{{ it.maskedTicketRef }}</div>
 
             <div class="tickets">
               <ion-icon name="ticket"></ion-icon>
-              <span>{{ it.ticketsCount }} Tickets</span>
+              <span>{{ it.ticketsCount }} {{ 'PARTICIPATIONS_PAGE.TICKETS' | translate }}</span>
             </div>
           </div>
         </div>
 
         <div class="prog">
           <div class="prog-row">
-            <span class="muted">Progression du tirage</span>
+            <span class="muted">{{ 'PARTICIPATIONS_PAGE.DRAW_PROGRESS' | translate }}</span>
             <span class="pct">{{ it.progressPct | number:'1.0-0' }}%</span>
           </div>
           <div class="bar">
@@ -72,7 +72,7 @@
 
         <div class="actions">
           <button class="btn" type="button" (click)="openDetails(it)">
-            Détails <ion-icon name="chevron-forward"></ion-icon>
+            {{ 'PARTICIPATIONS_PAGE.DETAILS' | translate }} <ion-icon name="chevron-forward"></ion-icon>
           </button>
         </div>
       </div>

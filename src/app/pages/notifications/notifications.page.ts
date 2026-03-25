@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import {
   NotificationsApiService,
   NotificationDto,
@@ -23,6 +24,7 @@ export class NotificationsPage {
     private state: NotificationsStateService,
     private router: Router,
     private toast: ToastController,
+    private translate: TranslateService,
   ) {}
 
   ionViewWillEnter() {
@@ -37,7 +39,9 @@ export class NotificationsPage {
       await this.state.refresh();
     } catch (e: any) {
       const t = await this.toast.create({
-        message: e?.error?.message || 'Impossible de charger les notifications',
+        message:
+          e?.error?.message ||
+          this.translate.instant('NOTIFICATIONS_PAGE.TOAST_LOAD_FAILED'),
         duration: 1400,
       });
       await t.present();
@@ -81,11 +85,11 @@ export class NotificationsPage {
 
   actionLabel(n: NotificationDto): string | null {
     const t = String(n?.type ?? '').toUpperCase();
-    if (t === 'PAYMENT_FAILED') return 'Reessayer';
-    if (t === 'ENDING_SOON') return 'Participer';
-    if (t === 'DRAW_STARTED') return 'Voir en direct';
-    if (t === 'DRAW_RESULT') return 'Voir resultat';
-    if (t === 'FREE_TICKET_AVAILABLE') return 'Utiliser';
+    if (t === 'PAYMENT_FAILED') return this.translate.instant('NOTIFICATIONS_PAGE.ACTION_RETRY');
+    if (t === 'ENDING_SOON') return this.translate.instant('NOTIFICATIONS_PAGE.ACTION_PARTICIPATE');
+    if (t === 'DRAW_STARTED') return this.translate.instant('NOTIFICATIONS_PAGE.ACTION_VIEW_LIVE');
+    if (t === 'DRAW_RESULT') return this.translate.instant('NOTIFICATIONS_PAGE.ACTION_VIEW_RESULT');
+    if (t === 'FREE_TICKET_AVAILABLE') return this.translate.instant('NOTIFICATIONS_PAGE.ACTION_USE');
     return null;
   }
 }
