@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, catchError } from 'rxjs';
+import { Observable, of, catchError, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../auth/auth.service';
+import { toAbsoluteMediaUrl } from 'src/app/shared/utils/media-url';
 
 export interface ProfileUser {
   id?: string;
@@ -45,9 +46,26 @@ export class ProfileApiService {
     private auth: AuthService,
   ) {}
 
+  private normalizeUser(raw: ProfileUser): ProfileUser {
+    const avatar = toAbsoluteMediaUrl(raw?.avatar, this.baseUrl);
+    return {
+      ...raw,
+      avatar: avatar ?? raw?.avatar,
+    };
+  }
+
+  private normalizeHistoryItem(raw: ProfileHistoryItem): ProfileHistoryItem {
+    const imageUrl = toAbsoluteMediaUrl(raw?.imageUrl, this.baseUrl);
+    return {
+      ...raw,
+      imageUrl: imageUrl ?? raw?.imageUrl,
+    };
+  }
+
   me(): Observable<ProfileUser | null> {
     return this.http
       .get<ProfileUser>(`${this.baseUrl}/users/me`)
+      .pipe(map((raw) => this.normalizeUser(raw)))
       .pipe(catchError(() => of(null)));
   }
 
@@ -86,6 +104,9 @@ export class ProfileApiService {
       .get<
         ProfileHistoryItem[]
       >(`${this.baseUrl}/users/me/history?limit=${limit}`)
+      .pipe(
+        map((rows) => (rows ?? []).map((row) => this.normalizeHistoryItem(row))),
+      )
       .pipe(catchError(() => of(mock.slice(0, limit))));
   }
 }

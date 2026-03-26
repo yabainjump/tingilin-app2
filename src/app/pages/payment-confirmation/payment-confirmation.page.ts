@@ -3,6 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentsApiService } from 'src/app/core/api/payments-api.service';
 import { ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { environment } from 'src/environments/environment';
+import { toAbsoluteMediaUrl } from 'src/app/shared/utils/media-url';
 
 @Component({
   selector: 'app-payment-confirmation',
@@ -24,7 +28,9 @@ export class PaymentConfirmationPage {
   // Form
   paymentMethod: 'ORANGE' | 'MTN' = 'ORANGE';
   userPhone = '';
-  userCountry = 'Cameroon';
+  userCountry = 'CM';
+  payerEmail = '';
+  payerName = '';
 
   // Résultats paiement
   transactionId?: string;
@@ -40,9 +46,10 @@ export class PaymentConfirmationPage {
     private paymentsApi: PaymentsApiService,
     private toastCtrl: ToastController,
     private translate: TranslateService,
+    private auth: AuthService,
   ) {}
 
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     this.pageLoading = true;
 
     // ✅ récupère les paramètres depuis navigation (à adapter selon ton flow)
@@ -51,7 +58,7 @@ export class PaymentConfirmationPage {
 
     this.raffleId = qp.get('raffleId') || '';
     this.title = qp.get('title') || this.title;
-    this.imageUrl = qp.get('imageUrl') || undefined;
+    this.imageUrl = toAbsoluteMediaUrl(qp.get('imageUrl'), environment.apiBaseUrl);
 
     this.quantity = Number(qp.get('qty') || 1);
     this.ticketUnitPrice = Number(qp.get('unit') || 100);
@@ -60,6 +67,8 @@ export class PaymentConfirmationPage {
     if (!this.raffleId) {
       this.presentToast(this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_MISSING_RAFFLE_ID'));
     }
+
+    await this.prefillPayerProfile();
     this.pageLoading = false;
   }
   back() {
@@ -74,13 +83,15 @@ export class PaymentConfirmationPage {
       return this.presentToast(this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_INVALID_PHONE'));
     }
 
+    if (!this.payerEmail) {
+      return this.presentToast('Adresse e-mail introuvable. Reconnecte-toi puis réessaie.');
+    }
+
     this.loading = true;
 
     try {
-      // ⚠️ ces champs doivent venir de ton user connecté (email / name)
-      // -> remplace par ton AuthService / user profile
-      const userEmail = 'email@example.com';
-      const senderName = 'Kevin';
+      const userEmail = this.payerEmail;
+      const senderName = this.payerName || 'Tingilin User';
 
       const res = await this.paymentsApi
         .createIntent({
@@ -118,6 +129,29 @@ export class PaymentConfirmationPage {
       );
     } finally {
       this.loading = false;
+    }
+  }
+
+  private async prefillPayerProfile() {
+    try {
+      const me = await firstValueFrom(this.auth.me<any>());
+      const email = String(me?.email ?? '').trim();
+      const firstName = String(me?.firstName ?? '').trim();
+      const lastName = String(me?.lastName ?? '').trim();
+      const fullName = `${firstName} ${lastName}`.trim();
+      const username = String(me?.username ?? '').trim();
+      const phone = String(me?.phone ?? '')
+        .replace(/\s|-/g, '')
+        .trim();
+
+      this.payerEmail = email;
+      this.payerName = fullName || username || 'Tingilin User';
+
+      if (!this.userPhone && phone) {
+        this.userPhone = phone;
+      }
+    } catch {
+      // user profile fetch can fail when token expires; keep manual phone entry.
     }
   }
 

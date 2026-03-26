@@ -15,6 +15,8 @@ import { ShareService } from 'src/app/services/share/share.service';
 import { ReferralApiService } from 'src/app/services/referral/referral-api.service';
 import { PaymentsApiService } from 'src/app/core/api/payments-api.service';
 import { TranslateService } from '@ngx-translate/core';
+import { environment } from 'src/environments/environment';
+import { toAbsoluteMediaUrl } from 'src/app/shared/utils/media-url';
 
 type RecentWinnerCard = {
   name: string;
@@ -91,13 +93,14 @@ export class RaffleDetailsPage implements OnInit {
     const title =
       r?.product?.title || r?.productTitle || r?.title || r?.name || 'Tombola';
 
-    const imageUrl =
+    const imageUrlRaw =
       r?.product?.imageUrl ||
       r?.product?.image ||
       r?.productImage ||
       r?.imageUrl ||
       r?.image ||
       '';
+    const imageUrl = toAbsoluteMediaUrl(imageUrlRaw, environment.apiBaseUrl) || '';
 
     this.router.navigate(['/tabs/payment-confirmation'], {
       queryParams: { raffleId, title, imageUrl, qty, unit, amount },

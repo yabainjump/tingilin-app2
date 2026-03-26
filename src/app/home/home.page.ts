@@ -9,6 +9,8 @@ import { NotificationsStateService } from '../services/notifications/notificatio
 import { RafflesApiService } from '../services/raffles/raffles-api.service';
 import { raffleCategoryLabel } from '../core/constants/raffle-categories';
 import { TranslateService } from '@ngx-translate/core';
+import { toAbsoluteMediaUrl } from '../shared/utils/media-url';
+import { environment } from 'src/environments/environment';
 
 type HomeCategory = { id: string; label: string };
 
@@ -321,11 +323,11 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   safeImg(u?: string | null): string {
-    const s = String(u ?? '').trim();
-    if (!s || s === 'null' || s === 'undefined') {
+    const absolute = toAbsoluteMediaUrl(u, environment.apiBaseUrl);
+    if (!absolute) {
       return 'assets/img/placeholder.png';
     }
-    return s;
+    return absolute;
   }
 
   categoryLabel(x: any): string {

@@ -4,6 +4,7 @@ import { Observable, map, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { DrawCard, UserSummary } from './home.models';
 import { HOME_CATEGORY_OPTIONS } from 'src/app/core/constants/raffle-categories';
+import { toAbsoluteMediaUrl } from 'src/app/shared/utils/media-url';
 
 type HomeCategory = { id: string; label: string };
 
@@ -41,7 +42,24 @@ export class HomeApiService {
 
   // Header user
   getUserSummary(): Observable<UserSummary> {
-    return this.http.get<UserSummary>(`${this.baseUrl}/users/me`);
+    return this.http.get<UserSummary>(`${this.baseUrl}/users/me`).pipe(
+      map((raw: any) => {
+        const avatarUrl = toAbsoluteMediaUrl(
+          raw?.avatarUrl ?? raw?.avatar,
+          this.baseUrl,
+        );
+        const avatar = toAbsoluteMediaUrl(
+          raw?.avatar ?? raw?.avatarUrl,
+          this.baseUrl,
+        );
+
+        return {
+          ...raw,
+          avatarUrl: avatarUrl ?? raw?.avatarUrl,
+          avatar: avatar ?? raw?.avatar,
+        } as UserSummary;
+      }),
+    );
   }
 
   // Categories (mock)
@@ -51,9 +69,7 @@ export class HomeApiService {
 
   // ✅ Nettoyage URL (évite /null 404)
   private cleanUrl(u: any): string | undefined {
-    const s = String(u ?? '').trim();
-    if (!s || s === 'null' || s === 'undefined') return undefined;
-    return s;
+    return toAbsoluteMediaUrl(u, this.baseUrl);
   }
 
   // ✅ ICI on fait EXACTEMENT le mapping comme raffle-details
@@ -70,7 +86,9 @@ export class HomeApiService {
       id: String(raw?._id ?? raw?.id ?? ''),
       title: String(product?.title ?? raw?.title ?? '—'),
       subtitle: String(product?.description ?? raw?.subtitle ?? ''),
-      imageUrl: this.cleanUrl(product?.imageUrl ?? raw?.imageUrl),
+      imageUrl: this.cleanUrl(
+        product?.imageUrl ?? product?.image ?? raw?.imageUrl ?? raw?.image,
+      ),
       categoryId: String(product?.categoryId ?? raw?.categoryId ?? '').toUpperCase() || undefined,
 
       // ✅ sold/total corrects (sinon tu vois 0/0)
