@@ -118,7 +118,9 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    const access = this.getAccessToken();
+    if (access && !this.isJwtExpired(access)) return true;
+    return !!this.getRefreshToken();
   }
 
   private setToken(token: string): void {
@@ -187,5 +189,28 @@ export class AuthService {
       return null;
     }
     return value;
+  }
+
+  private isJwtExpired(token: string): boolean {
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) return true;
+
+      const payload = JSON.parse(this.base64UrlDecode(parts[1] ?? ''));
+      const exp = Number(payload?.exp ?? 0);
+      if (!Number.isFinite(exp) || exp <= 0) return true;
+
+      const nowSec = Math.floor(Date.now() / 1000);
+      return exp <= nowSec;
+    } catch {
+      return true;
+    }
+  }
+
+  private base64UrlDecode(input: string): string {
+    const padded = input.replace(/-/g, '+').replace(/_/g, '/');
+    const mod = padded.length % 4;
+    const normalized = mod === 0 ? padded : padded + '='.repeat(4 - mod);
+    return atob(normalized);
   }
 }

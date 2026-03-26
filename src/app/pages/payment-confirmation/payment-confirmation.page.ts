@@ -133,8 +133,26 @@ export class PaymentConfirmationPage {
 
       // Option UX : tu laisses un bouton "Vérifier le paiement" visible
     } catch (e: any) {
+      const status = Number(e?.status ?? e?.error?.statusCode ?? 0);
+      const message = String(e?.error?.message ?? e?.message ?? '').trim();
+
+      if (
+        status === 401 ||
+        /no refresh token|unauthorized|jwt/i.test(message)
+      ) {
+        this.auth.logout();
+        await this.presentToast('Session expirée. Connecte-toi puis réessaie.');
+        await this.router.navigate(['/auth/login'], {
+          queryParams: {
+            redirect: `/tabs/payment-confirmation?raffleId=${encodeURIComponent(this.raffleId)}`,
+          },
+        });
+        return;
+      }
+
       await this.presentToast(
-        e?.error?.message || e?.message || this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_PAYMENT_ERROR'),
+        message ||
+          this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_PAYMENT_ERROR'),
       );
     } finally {
       this.loading = false;
