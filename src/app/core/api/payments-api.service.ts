@@ -12,6 +12,7 @@ export interface CreateIntentPayload {
   userPhone: string;
   userCountry: string;
   senderName: string;
+  idempotencyKey?: string;
 }
 
 export interface CreateIntentResponse {

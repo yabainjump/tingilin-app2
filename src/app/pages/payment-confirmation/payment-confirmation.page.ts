@@ -36,6 +36,7 @@ export class PaymentConfirmationPage {
   transactionId?: string;
   paymentLink?: string;
   paymentWithTaxes?: number;
+  private intentKey = '';
 
   loading = false;
   pageLoading = true;
@@ -65,6 +66,7 @@ export class PaymentConfirmationPage {
     this.quantity = Number(qp.get('qty') || 1);
     this.ticketUnitPrice = Number(qp.get('unit') || 100);
     this.amount = this.quantity * this.ticketUnitPrice;
+    this.intentKey = this.buildIntentKey();
 
     if (!this.raffleId) {
       this.presentToast(this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_MISSING_RAFFLE_ID'));
@@ -111,6 +113,7 @@ export class PaymentConfirmationPage {
           userPhone: cleanedPhone,
           userCountry: this.userCountry,
           senderName,
+          idempotencyKey: this.intentKey,
         })
         .toPromise();
 
@@ -147,6 +150,14 @@ export class PaymentConfirmationPage {
             redirect: `/tabs/payment-confirmation?raffleId=${encodeURIComponent(this.raffleId)}`,
           },
         });
+        return;
+      }
+
+      if (status === 409) {
+        await this.presentToast(
+          message ||
+            'Une tentative de paiement identique existe deja. Patiente quelques secondes puis reessaie.',
+        );
         return;
       }
 
@@ -235,5 +246,14 @@ export class PaymentConfirmationPage {
 
   ionViewWillLeave() {
     document.removeEventListener('visibilitychange', this.visibilityHandler);
+  }
+
+  private buildIntentKey(): string {
+    const safeRaffle = String(this.raffleId || 'raffle').replace(/[^a-zA-Z0-9_-]/g, '');
+    const randomPart =
+      typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+        ? crypto.randomUUID().replace(/-/g, '').slice(0, 16)
+        : `${Date.now()}${Math.floor(Math.random() * 9999)}`;
+    return `digikuntz-${safeRaffle}-${this.amount}-${randomPart}`.slice(0, 80);
   }
 }
