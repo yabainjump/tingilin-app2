@@ -28,7 +28,11 @@ export class AuthInterceptor implements HttpInterceptor {
       req.url.includes('/auth/reset-password') ||
       req.url.includes('/auth/refresh');
 
-    const token = this.auth.getAccessToken() || this.auth.getToken();
+    const token = this.auth.getAccessToken();
+
+    if (!isAuthEndpoint && !token && this.auth.getRefreshToken()) {
+      return this.handle401(req, next);
+    }
 
     const authReq =
       !isAuthEndpoint && token

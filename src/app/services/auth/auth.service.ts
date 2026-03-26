@@ -153,7 +153,17 @@ export class AuthService {
   }
 
   getAccessToken(): string | null {
-    return this.readValidToken(this.accessKey) || this.getToken();
+    const token = this.readValidToken(this.accessKey) || this.getToken();
+    if (!token) return null;
+
+    if (this.isJwtExpired(token)) {
+      localStorage.removeItem(this.accessKey);
+      localStorage.removeItem(this.tokenKey);
+      localStorage.removeItem(this.legacyTokenKey);
+      return null;
+    }
+
+    return token;
   }
 
   getRefreshToken(): string | null {

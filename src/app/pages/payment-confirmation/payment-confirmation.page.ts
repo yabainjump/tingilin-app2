@@ -79,6 +79,7 @@ export class PaymentConfirmationPage {
     history.back();
   }
   async confirmPayment() {
+    if (this.loading) return;
     if (!this.raffleId) return;
     if (!this.auth.isLoggedIn()) {
       await this.presentToast('Session expirée. Connecte-toi puis réessaie.');
