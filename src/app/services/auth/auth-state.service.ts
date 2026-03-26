@@ -36,7 +36,10 @@ export class AuthStateService {
     this.auth
       .me<MeDto>()
       .pipe(
-        catchError(() => {
+        catchError((err) => {
+          if (Number((err as any)?.status ?? 0) === 401) {
+            this.auth.logout();
+          }
           this.meSubject.next(null);
           return of(null);
         }),

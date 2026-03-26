@@ -51,6 +51,8 @@ export class PaymentConfirmationPage {
 
   async ionViewWillEnter() {
     this.pageLoading = true;
+    this.payerEmail = '';
+    this.payerName = '';
 
     // ✅ récupère les paramètres depuis navigation (à adapter selon ton flow)
     // Exemple: /payment-confirmation?raffleId=...&title=...&qty=...&unit=...
@@ -76,6 +78,13 @@ export class PaymentConfirmationPage {
   }
   async confirmPayment() {
     if (!this.raffleId) return;
+    if (!this.auth.isLoggedIn()) {
+      await this.presentToast('Session expirée. Connecte-toi puis réessaie.');
+      await this.router.navigate(['/auth/login'], {
+        queryParams: { redirect: `/tabs/payment-confirmation?raffleId=${encodeURIComponent(this.raffleId)}` },
+      });
+      return;
+    }
 
     // validation simple
     const cleanedPhone = (this.userPhone || '').replace(/\s+/g, '');

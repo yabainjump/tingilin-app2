@@ -11,6 +11,7 @@ import { raffleCategoryLabel } from '../core/constants/raffle-categories';
 import { TranslateService } from '@ngx-translate/core';
 import { toAbsoluteMediaUrl } from '../shared/utils/media-url';
 import { environment } from 'src/environments/environment';
+import { AuthService } from '../services/auth/auth.service';
 
 type HomeCategory = { id: string; label: string };
 
@@ -68,6 +69,7 @@ export class HomePage implements OnInit, OnDestroy {
     public notifState: NotificationsStateService,
     private rafflesService: RafflesApiService,
     private translate: TranslateService,
+    private auth: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -92,6 +94,12 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   loadHeader(): void {
+    if (!this.auth.isLoggedIn()) {
+      this.user = null;
+      this.loadingHeader = false;
+      return;
+    }
+
     const sk = skeletonController(0, 350);
     sk.scheduleShow((v) => (this.loadingHeader = v));
 
