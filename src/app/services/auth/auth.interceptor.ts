@@ -26,6 +26,7 @@ export class AuthInterceptor implements HttpInterceptor {
       req.url.includes('/auth/register') ||
       req.url.includes('/auth/forgot-password') ||
       req.url.includes('/auth/reset-password') ||
+      req.url.includes('/auth/logout') ||
       req.url.includes('/auth/refresh');
 
     const token = this.auth.getAccessToken();

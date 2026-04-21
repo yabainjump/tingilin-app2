@@ -47,4 +47,54 @@ describe('HomeApiService', () => {
 
     req.flush([]);
   });
+
+  it('should request the combined home feed without category for the All filter', () => {
+    service.getHomeFeed('all').subscribe();
+
+    const req = httpMock.expectOne(
+      `${environment.apiBaseUrl}/raffles/home-feed`,
+    );
+
+    expect(req.request.params.has('category')).toBeFalse();
+    req.flush({ endingSoon: [], liveRows: [] });
+  });
+
+  it('should reuse the cached home feed while the ttl is still valid', () => {
+    service.getHomeFeed('general').subscribe();
+    service.getHomeFeed('general').subscribe();
+
+    const requests = httpMock.match(
+      (request) =>
+        request.url === `${environment.apiBaseUrl}/raffles/home-feed` &&
+        request.params.get('category') === 'GENERAL',
+    );
+
+    expect(requests.length).toBe(1);
+    requests[0].flush({ endingSoon: [], liveRows: [] });
+  });
+
+  it('should fall back to legacy endpoints when home-feed is rejected', () => {
+    service.getHomeFeed('all').subscribe((feed) => {
+      expect(feed.endingSoon).toEqual([]);
+      expect(feed.liveRows).toEqual([]);
+    });
+
+    const combinedReq = httpMock.expectOne(
+      `${environment.apiBaseUrl}/raffles/home-feed`,
+    );
+    combinedReq.flush(
+      { message: 'legacy backend' },
+      { status: 400, statusText: 'Bad Request' },
+    );
+
+    const endingSoonReq = httpMock.expectOne(
+      `${environment.apiBaseUrl}/raffles/public?sort=endAt&limit=10`,
+    );
+    const liveRowsReq = httpMock.expectOne(
+      `${environment.apiBaseUrl}/raffles/public?sort=createdAt&limit=30`,
+    );
+
+    endingSoonReq.flush([]);
+    liveRowsReq.flush([]);
+  });
 });

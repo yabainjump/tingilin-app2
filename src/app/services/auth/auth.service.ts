@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { AuthTokenStorageService } from './auth-token-storage.service';
 
 export type LoginPayload = {
   email?: string;
@@ -46,7 +47,10 @@ export class AuthService {
   private readonly legacyTokenKey = 'tingilin_token';
   private readonly maxTokenLength = 3500;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private tokenStorage: AuthTokenStorageService,
+  ) {}
 
   login(email: string, password: string) {
     return this.http
@@ -106,8 +110,21 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem(this.legacyTokenKey);
+    const token = this.getAccessToken();
+    if (token) {
+      this.http
+        .post(
+          `${this.baseUrl}/auth/logout`,
+          {},
+          {
+            headers: new HttpHeaders({
+              Authorization: `Bearer ${token}`,
+            }),
+          },
+        )
+        .subscribe({ error: () => undefined });
+    }
+
     this.clearTokens();
   }
 
@@ -126,8 +143,8 @@ export class AuthService {
   private setToken(token: string): void {
     const valid = this.normalizeToken(token);
     if (!valid) return;
-    localStorage.setItem(this.tokenKey, valid);
-    localStorage.removeItem(this.legacyTokenKey);
+    this.tokenStorage.set(this.tokenKey, valid);
+    this.tokenStorage.remove(this.legacyTokenKey);
   }
 
   private authHeaders(): HttpHeaders {
@@ -138,17 +155,17 @@ export class AuthService {
   setTokens(access: string, refresh?: string) {
     const validAccess = this.normalizeToken(access);
     if (validAccess) {
-      localStorage.setItem(this.accessKey, validAccess);
-      localStorage.removeItem(this.legacyTokenKey);
+      this.tokenStorage.set(this.accessKey, validAccess);
+      this.tokenStorage.remove(this.legacyTokenKey);
     } else {
-      localStorage.removeItem(this.accessKey);
+      this.tokenStorage.remove(this.accessKey);
     }
 
     const validRefresh = this.normalizeToken(refresh ?? null);
     if (validRefresh) {
-      localStorage.setItem(this.refreshKey, validRefresh);
+      this.tokenStorage.set(this.refreshKey, validRefresh);
     } else if (refresh !== undefined) {
-      localStorage.removeItem(this.refreshKey);
+      this.tokenStorage.remove(this.refreshKey);
     }
   }
 
@@ -157,9 +174,9 @@ export class AuthService {
     if (!token) return null;
 
     if (this.isJwtExpired(token)) {
-      localStorage.removeItem(this.accessKey);
-      localStorage.removeItem(this.tokenKey);
-      localStorage.removeItem(this.legacyTokenKey);
+      this.tokenStorage.remove(this.accessKey);
+      this.tokenStorage.remove(this.tokenKey);
+      this.tokenStorage.remove(this.legacyTokenKey);
       return null;
     }
 
@@ -171,8 +188,10 @@ export class AuthService {
   }
 
   clearTokens() {
-    localStorage.removeItem(this.accessKey);
-    localStorage.removeItem(this.refreshKey);
+    this.tokenStorage.remove(this.accessKey);
+    this.tokenStorage.remove(this.refreshKey);
+    this.tokenStorage.remove(this.tokenKey);
+    this.tokenStorage.remove(this.legacyTokenKey);
   }
 
   refresh(refresh_token: string) {
@@ -183,10 +202,10 @@ export class AuthService {
   }
 
   private readValidToken(key: string): string | null {
-    const raw = localStorage.getItem(key);
+    const raw = this.tokenStorage.get(key);
     const token = this.normalizeToken(raw);
     if (!token && raw !== null) {
-      localStorage.removeItem(key);
+      this.tokenStorage.remove(key);
     }
     return token;
   }

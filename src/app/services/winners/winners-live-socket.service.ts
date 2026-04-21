@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
+import { Capacitor } from '@capacitor/core';
 import { environment } from 'src/environments/environment';
 import { WinnerDto } from './winners-api.service';
 
@@ -32,8 +33,12 @@ export class WinnersLiveSocketService {
     }
 
     const origin = this.apiOriginFromBase(environment.apiBaseUrl);
+    const transports =
+      Capacitor.getPlatform() === 'web'
+        ? ['websocket', 'polling']
+        : ['websocket'];
     this.socket = io(`${origin}/live-draws`, {
-      transports: ['websocket', 'polling'],
+      transports,
       withCredentials: true,
       reconnection: true,
     });
@@ -62,4 +67,3 @@ export class WinnersLiveSocketService {
     }
   }
 }
-

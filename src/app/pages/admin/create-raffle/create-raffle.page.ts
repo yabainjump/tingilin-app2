@@ -9,6 +9,8 @@ import { RafflesApiService } from 'src/app/services/raffles/raffles-api.service'
 import { Capacitor } from '@capacitor/core';
 import { RAFFLE_CATEGORY_OPTIONS } from 'src/app/core/constants/raffle-categories';
 import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
+import { blobFromUrl, fileFromBlob } from 'src/app/shared/utils/blob-file';
 
 type CreateRaffleForm = {
   title: string;
@@ -34,6 +36,7 @@ type CreateRaffleForm = {
 export class CreateRafflePage {
   submitting = false;
   previewUrl: string | null = null;
+  private selectedImageFile: File | null = null;
   readonly categoryOptions = RAFFLE_CATEGORY_OPTIONS;
 
   form: FormGroup;
@@ -114,14 +117,16 @@ export class CreateRafflePage {
 
       const photo = await Camera.getPhoto({
         source: CameraSource.Prompt, // web => galerie via PWA elements, mobile => prompt natif
-        resultType: CameraResultType.DataUrl,
+        resultType: CameraResultType.Uri,
         quality: 80,
       });
 
-      if (!photo?.dataUrl) return;
+      if (!photo?.webPath) return;
 
-      this.previewUrl = photo.dataUrl;
-      this.form.patchValue({ imageUrl: photo.dataUrl });
+      const blob = await blobFromUrl(photo.webPath);
+      this.selectedImageFile = fileFromBlob(blob, `raffle-${Date.now()}.jpg`);
+      this.previewUrl = photo.webPath;
+      this.form.patchValue({ imageUrl: photo.webPath });
       this.form.markAsDirty();
     } catch (err) {
       console.error('Camera error:', err);
@@ -149,6 +154,15 @@ export class CreateRafflePage {
     this.submitting = true;
 
     const v = this.form.getRawValue() as CreateRaffleForm;
+    if (!this.selectedImageFile) {
+      this.submitting = false;
+      const t = await this.toast.create({
+        message: this.translate.instant('CREATE_RAFFLE_PAGE.TOAST_INCOMPLETE_FORM'),
+        duration: 1500,
+      });
+      await t.present();
+      return;
+    }
 
     // Normalisation date -> ISO (évite les surprises backend)
     const endAtDate = new Date(v.endAt);
@@ -156,52 +170,53 @@ export class CreateRafflePage {
       ? String(v.endAt)
       : endAtDate.toISOString();
 
-    this.api
-      .adminCreateWithProduct({
-        publishNow: !!v.publishNow,
-        product: {
-          title: v.title.trim(),
-          description: (v.description ?? '').trim(),
-          imageUrl: v.imageUrl,
-          categoryId: v.categoryId ? v.categoryId : undefined,
-          realValue: Number(v.realValue ?? 0),
-        },
-        raffle: {
-          ticketPrice: Number(v.ticketPrice ?? 0),
-          totalTickets: Number(v.totalTickets ?? 0),
-          currency: v.currency || 'XAF',
-          endAt: endAtIso,
-        },
-      })
-      .subscribe({
-        next: async () => {
-          this.submitting = false;
+    try {
+      const upload = await firstValueFrom(
+        this.api.uploadAdminProductImage(this.selectedImageFile),
+      );
 
-          this.api.triggerRefresh();
+      await firstValueFrom(
+        this.api.adminCreateWithProduct({
+          publishNow: !!v.publishNow,
+          product: {
+            title: v.title.trim(),
+            description: (v.description ?? '').trim(),
+            imageUrl: upload.imageUrl,
+            categoryId: v.categoryId ? v.categoryId : undefined,
+            realValue: Number(v.realValue ?? 0),
+          },
+          raffle: {
+            ticketPrice: Number(v.ticketPrice ?? 0),
+            totalTickets: Number(v.totalTickets ?? 0),
+            currency: v.currency || 'XAF',
+            endAt: endAtIso,
+          },
+        }),
+      );
 
-          const t = await this.toast.create({
-            message: this.translate.instant('CREATE_RAFFLE_PAGE.TOAST_CREATED'),
-            duration: 1200,
-          });
-          await t.present();
+      this.submitting = false;
+      this.api.triggerRefresh();
 
-          // Retour home
-          this.nav.navigateBack('/tabs/home');
-        },
-        error: async (err: unknown) => {
-          this.submitting = false;
-
-          const message =
-            (err as any)?.error?.message ??
-            (err as any)?.message ??
-            this.translate.instant('CREATE_RAFFLE_PAGE.TOAST_CREATE_ERROR');
-
-          const t = await this.toast.create({
-            message,
-            duration: 2200,
-          });
-          await t.present();
-        },
+      const t = await this.toast.create({
+        message: this.translate.instant('CREATE_RAFFLE_PAGE.TOAST_CREATED'),
+        duration: 1200,
       });
+      await t.present();
+
+      this.nav.navigateBack('/tabs/home');
+    } catch (err: unknown) {
+      this.submitting = false;
+
+      const message =
+        (err as any)?.error?.message ??
+        (err as any)?.message ??
+        this.translate.instant('CREATE_RAFFLE_PAGE.TOAST_CREATE_ERROR');
+
+      const t = await this.toast.create({
+        message,
+        duration: 2200,
+      });
+      await t.present();
+    }
   }
 }

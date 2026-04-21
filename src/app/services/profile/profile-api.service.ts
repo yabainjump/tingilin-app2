@@ -78,6 +78,12 @@ export class ProfileApiService {
     return this.http.patch<ProfileUser>(`${this.baseUrl}/users/me`, dto);
   }
 
+  uploadAvatar(file: Blob | File): Observable<ProfileUser> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.patch<ProfileUser>(`${this.baseUrl}/users/me/avatar`, formData);
+  }
+
   stats(): Observable<ProfileStats> {
     const fallback: ProfileStats = {
       balance: 2500,

@@ -9,6 +9,8 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { firstValueFrom } from 'rxjs';
+import { blobFromUrl, fileFromBlob } from 'src/app/shared/utils/blob-file';
 
 @Component({
   selector: 'app-edit-profile',
@@ -26,8 +28,8 @@ export class EditProfilePage {
 
   defaultAvatar = 'assets/img/profile.svg';
 
-  avatarPreview: string | null = null; // preview + payload (base64/url)
-  private avatarToSave: string | null = null;
+  avatarPreview: string | null = null;
+  private avatarFileToSave: File | null = null;
 
   form = this.fb.group({
     firstName: ['', [Validators.required]],
@@ -75,13 +77,17 @@ export class EditProfilePage {
       try {
         const photo = await Camera.getPhoto({
           source: CameraSource.Prompt,
-          resultType: CameraResultType.DataUrl,
+          resultType: CameraResultType.Uri,
           quality: 80,
         });
 
-        if (photo?.dataUrl) {
-          this.avatarPreview = photo.dataUrl;
-          this.avatarToSave = photo.dataUrl; // pour l’instant on stocke en string (à améliorer plus tard)
+        if (photo?.webPath) {
+          const blob = await blobFromUrl(photo.webPath);
+          this.avatarPreview = photo.webPath;
+          this.avatarFileToSave = fileFromBlob(
+            blob,
+            `avatar-${Date.now()}.jpg`,
+          );
         }
       } catch (e) {
         const t = await this.toast.create({
@@ -102,13 +108,8 @@ export class EditProfilePage {
     const file = input.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = String(reader.result || '');
-      this.avatarPreview = dataUrl;
-      this.avatarToSave = dataUrl;
-    };
-    reader.readAsDataURL(file);
+    this.avatarPreview = URL.createObjectURL(file);
+    this.avatarFileToSave = file;
 
     // reset (pour permettre re-sélection du même fichier)
     input.value = '';
@@ -128,31 +129,32 @@ export class EditProfilePage {
       firstName: String(this.form.value.firstName || ''),
       lastName: String(this.form.value.lastName || ''),
       phone: String(this.form.value.phone || ''),
-      ...(this.avatarToSave ? { avatar: this.avatarToSave } : {}),
     };
 
-    this.api
-      .updateMe(dto)
-      .pipe(finalize(() => (this.submitting = false)))
-      .subscribe({
-        next: async (updated) => {
-          this.user = updated;
-          const t = await this.toast.create({
-            message: this.translate.instant('EDIT_PROFILE_PAGE.TOAST_UPDATED'),
-            duration: 1200,
-          });
-          await t.present();
-          this.nav.back();
-        },
-        error: async (err) => {
-          const t = await this.toast.create({
-            message:
-              err?.error?.message ??
-              this.translate.instant('EDIT_PROFILE_PAGE.TOAST_UPDATE_FAILED'),
-            duration: 2000,
-          });
-          await t.present();
-        },
+    try {
+      if (this.avatarFileToSave) {
+        await firstValueFrom(this.api.uploadAvatar(this.avatarFileToSave));
+      }
+
+      const updated = await firstValueFrom(this.api.updateMe(dto));
+      this.user = updated;
+      this.submitting = false;
+
+      const t = await this.toast.create({
+        message: this.translate.instant('EDIT_PROFILE_PAGE.TOAST_UPDATED'),
+        duration: 1200,
       });
+      await t.present();
+      this.nav.back();
+    } catch (err: any) {
+      this.submitting = false;
+      const t = await this.toast.create({
+        message:
+          err?.error?.message ??
+          this.translate.instant('EDIT_PROFILE_PAGE.TOAST_UPDATE_FAILED'),
+        duration: 2000,
+      });
+      await t.present();
+    }
   }
 }

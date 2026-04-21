@@ -99,7 +99,7 @@
             </div>
 
             <div class="hero-img"
-              [style.backgroundImage]="'url(' + (safeImg(d.imageUrl )|| 'https://via.placeholder.com/600x400') + ')'">
+              [style.backgroundImage]="'url(' + (safeImg(d.imageUrl )) + ')'">
               <div class="hero-grad"></div>
             </div>
 
@@ -141,7 +141,7 @@
       <ng-container *ngIf="!showFeaturedSkeleton && featured; else featuredSkeleton">
         <div class="big-card" (click)="openRaffle(featured)">
           <div class="big-img"
-            [style.backgroundImage]="'url(' + (featured.imageUrl || 'https://via.placeholder.com/800x450') + ')'">
+            [style.backgroundImage]="'url(' + safeImg(featured.imageUrl) + ')'">
             <div class="big-grad"></div>
 
             <div class="tag" [ngClass]="featured.badgeType || 'hot'">
@@ -197,7 +197,7 @@
       <ng-container *ngIf="!showRowsSkeleton && liveRows?.length; else rowsSkeleton">
         <div class="row-card" *ngFor="let r of liveRows; trackBy: trackById" (click)="openRaffle(r)">
           <div class="row-img"
-            [style.backgroundImage]="'url(' + (r.imageUrl || 'https://via.placeholder.com/300x300') + ')'"></div>
+            [style.backgroundImage]="'url(' + safeImg(r.imageUrl) + ')'"></div>
 
           <div class="row-body">
             <div class="row-title">{{ r.title }}</div>

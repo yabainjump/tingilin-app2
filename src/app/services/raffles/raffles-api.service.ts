@@ -8,7 +8,7 @@ export interface AdminCreateRaffleRequest {
   product: {
     title: string;
     description?: string;
-    imageUrl: string; // dataUrl ou URL
+    imageUrl: string;
     categoryId?: string;
     realValue?: number;
   };
@@ -53,6 +53,17 @@ export class RafflesApiService {
     return this.http.post(
       `${this.baseUrl}/raffles/admin/create-with-product`,
       dto,
+    );
+  }
+
+  uploadAdminProductImage(
+    file: Blob | File,
+  ): Observable<{ ok: boolean; imageUrl: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ ok: boolean; imageUrl: string }>(
+      `${this.baseUrl}/admin/products/upload-image`,
+      formData,
     );
   }
 

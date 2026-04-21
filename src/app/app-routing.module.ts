@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { AuthGuard } from './guard/auth-guard';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { NoPreloading, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   { path: '', redirectTo: 'landing', pathMatch: 'full' },
@@ -135,7 +135,7 @@ const routes: Routes = [
 ];
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
+    RouterModule.forRoot(routes, { preloadingStrategy: NoPreloading }),
   ],
   exports: [RouterModule],
 })

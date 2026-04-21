@@ -22,20 +22,17 @@ export class OnboardingPage implements OnInit {
     {
       titleKey: 'ONBOARDING_PAGE.SLIDE_1_TITLE',
       descriptionKey: 'ONBOARDING_PAGE.SLIDE_1_DESC',
-      imageUrl:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuB5XKfqycroT-1SA7aaYtaiE8nPPOjt2bIo98RcNaIGSX0te6Lc0xguluXUmxli_zEHG1QCi3dzFTql3D9DMj-5fVR8UAZaZiX3eWebx0zNLw8U7ZATxU2B8YPmLSr2Iap1r_1-C10-9YRowqD0icQVt--GAEu-woOP890BrJBimqB3uqdciXkWY9l6qcbZqUWH49G5JyFZf-9GgqkFJb9T9PS3c1OSgdLxPhvp-2VZvoU0dy0wX-xsn08L-W5MKwDyUTAvGrflKw8',
+      imageUrl: 'assets/img/slide1.png',
     },
     {
       titleKey: 'ONBOARDING_PAGE.SLIDE_2_TITLE',
       descriptionKey: 'ONBOARDING_PAGE.SLIDE_2_DESC',
-      imageUrl:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuCHcHEMzme2NW4BEDin74YoVCF7hcwZA_QpJeCYifR5alblS-umNqZPqR3SArjwz-yvJEOuJBj3HPDOUTQb4EeNz-YOvUHNvVaE4WB032YV0GuiPzmMUiCQPm6zFRpagKXFq9qj8ACkpfUyoCCjmwIJ5qU5QunvZqvEX-JnElFUZu6eEHCzK7_626hcI7RNEQdWw7IvMnuSqtG7vaEYRw2b4CPJ0fUPtqEWA2b5deM8-sTk9HnCiXrYuTjUkG-CgRUyNmmEUHufJ74',
+      imageUrl: 'assets/img/slide2.png',
     },
     {
       titleKey: 'ONBOARDING_PAGE.SLIDE_3_TITLE',
       descriptionKey: 'ONBOARDING_PAGE.SLIDE_3_DESC',
-      imageUrl:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuArhabyjT3I-EY-DA57CdMsKEGj9WlXDQUxvuEVEy11jDWWoOiju2i4MEGaOlxjbFLaKLtqRRlU7ukN9KufOBQGmppm8VlEFjyhxPwL4fKoghYAn_wPoECN2vts4KJfT_l4lBjSTVhpB6Gm7q4q_xT6jOY4RaXNsVwHANyS969PEszJWLHARc-dsuJMPUO4sbpJC-3nR04qd0udZr971Jf0tj8iaaW3oM9JlXBATlFZ_BkNZEBwzGy9v-5DWo-SvSm294mQAqI_k8k',
+      imageUrl: 'assets/img/slide3.png',
     },
   ];
 

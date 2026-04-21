@@ -14,6 +14,7 @@ import { environment } from 'src/environments/environment';
 import { AuthService } from '../services/auth/auth.service';
 
 type HomeCategory = { id: string; label: string };
+type DrawLoadReason = 'init' | 'refresh' | 'category' | 'background';
 
 @Component({
   selector: 'app-home',
@@ -22,7 +23,8 @@ type HomeCategory = { id: string; label: string };
   standalone: false,
 })
 export class HomePage implements OnInit, OnDestroy {
-  private readonly autoRefreshMs = 15000;
+  private readonly autoRefreshMs = 90000;
+  private hasEnteredView = false;
   private raffleRefreshSub?: Subscription;
   private autoRefreshSub?: Subscription;
 
@@ -30,7 +32,8 @@ export class HomePage implements OnInit, OnDestroy {
     this.startClock();
     this.startAutoRefresh();
     this.notifState.refresh();
-    this.loadAll('refresh');
+    this.loadAll(this.hasEnteredView ? 'refresh' : 'init');
+    this.hasEnteredView = true;
   }
 
   ionViewWillLeave(): void {
@@ -74,7 +77,6 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscribeToRaffleRefresh();
-    this.loadAll('init');
   }
 
   ngOnDestroy(): void {
@@ -90,7 +92,7 @@ export class HomePage implements OnInit, OnDestroy {
   ): void {
     this.loadHeader();
     this.loadCategories();
-    this.loadDraws(() => refresher?.complete());
+    this.loadDraws(reason, () => refresher?.complete());
   }
 
   loadHeader(): void {
@@ -130,7 +132,11 @@ export class HomePage implements OnInit, OnDestroy {
       });
   }
 
-  loadDraws(done?: () => void, showSkeleton = true): void {
+  loadDraws(
+    reason: DrawLoadReason,
+    done?: () => void,
+    showSkeleton = true,
+  ): void {
     const skHero = skeletonController(0, 350);
     const skFeatured = skeletonController(0, 350);
     const skRows = skeletonController(0, 350);
@@ -141,48 +147,33 @@ export class HomePage implements OnInit, OnDestroy {
       skRows.scheduleShow((v) => (this.showRowsSkeleton = v));
     }
 
-    // 1) Ending Soon
     this.api
-      .getEndingSoon(this.selectedCategoryId)
-      .pipe(
-        finalize(
-          () => void skHero.hide((v) => (this.showEndingSoonSkeleton = v)),
-        ),
-      )
-      .subscribe({
-        next: (rows: any[]) => {
-          const all = (rows ?? []).filter((x) => this.isVisibleOnHome(x));
-
-          this.endingSoon = all.filter((x) => this.isPurchasable(x));
-
-          this.heroCards = this.endingSoon;
-        },
-        error: () => {
-          this.endingSoon = [];
-          this.heroCards = [];
-        },
-      });
-
-    // 2) Live rows (featured + list)
-    this.api
-      .getLiveRows(this.selectedCategoryId)
+      .getHomeFeed(this.selectedCategoryId, {
+        forceRefresh: reason !== 'init',
+      })
       .pipe(
         finalize(() => {
+          void skHero.hide((v) => (this.showEndingSoonSkeleton = v));
           void skRows.hide((v) => (this.showRowsSkeleton = v));
           void skFeatured.hide((v) => (this.showFeaturedSkeleton = v));
           done?.();
         }),
       )
       .subscribe({
-        next: (rows: any[]) => {
-          const all = (rows ?? []).filter((x) => this.isVisibleOnHome(x));
+        next: (feed) => {
+          const endingSoonRows = (feed?.endingSoon ?? []).filter((x) =>
+            this.isVisibleOnHome(x),
+          );
+          this.endingSoon = endingSoonRows.filter((x) => this.isPurchasable(x));
+          this.heroCards = this.endingSoon;
 
+          const all = (feed?.liveRows ?? []).filter((x) => this.isVisibleOnHome(x));
           const featured = all.find((x) => this.isPurchasable(x)) ?? null;
           this.featured = featured;
 
-          const fid = featured?._id || featured?.id || featured?.raffleId;
+          const fid = featured?.id;
           this.liveRows = fid
-            ? all.filter((x) => (x?._id || x?.id || x?.raffleId) !== fid)
+            ? all.filter((x) => x?.id !== fid)
             : all;
         },
         error: () => {
@@ -257,7 +248,8 @@ export class HomePage implements OnInit, OnDestroy {
   private startAutoRefresh(): void {
     if (this.autoRefreshSub) return;
     this.autoRefreshSub = interval(this.autoRefreshMs).subscribe(() => {
-      this.loadDraws(undefined, false);
+      if (!this.canAutoRefresh()) return;
+      this.loadDraws('background', undefined, false);
     });
   }
 
@@ -269,8 +261,29 @@ export class HomePage implements OnInit, OnDestroy {
   private subscribeToRaffleRefresh(): void {
     if (this.raffleRefreshSub) return;
     this.raffleRefreshSub = this.rafflesService.refresh$.subscribe(() => {
-      this.loadDraws(undefined, false);
+      if (!this.canAutoRefresh()) return;
+      this.loadDraws('background', undefined, false);
     });
+  }
+
+  private canAutoRefresh(): boolean {
+    if (!this.router.url.includes('/tabs/home')) {
+      return false;
+    }
+
+    if (typeof document !== 'undefined' && document.hidden) {
+      return false;
+    }
+
+    if (
+      typeof navigator !== 'undefined' &&
+      'onLine' in navigator &&
+      navigator.onLine === false
+    ) {
+      return false;
+    }
+
+    return true;
   }
 
   remainingMs(d: DrawCard): number {

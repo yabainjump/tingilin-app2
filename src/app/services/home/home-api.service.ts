@@ -1,16 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, map, of } from 'rxjs';
+import {
+  Observable,
+  catchError,
+  forkJoin,
+  map,
+  of,
+  shareReplay,
+} from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { DrawCard, UserSummary } from './home.models';
 import { HOME_CATEGORY_OPTIONS } from 'src/app/core/constants/raffle-categories';
 import { toAbsoluteMediaUrl } from 'src/app/shared/utils/media-url';
 
 type HomeCategory = { id: string; label: string };
+type HomeFeed = { endingSoon: DrawCard[]; liveRows: DrawCard[] };
+type HomeFeedResponse = { endingSoon?: any[]; liveRows?: any[] };
+type CachedHomeFeed = {
+  expiresAt: number;
+  value$: Observable<HomeFeed>;
+};
 
 @Injectable({ providedIn: 'root' })
 export class HomeApiService {
   private readonly baseUrl = environment.apiBaseUrl;
+  private readonly homeFeedCache = new Map<string, CachedHomeFeed>();
+  private readonly homeFeedTtlMs = 45_000;
 
   constructor(private http: HttpClient) {}
 
@@ -40,6 +55,19 @@ export class HomeApiService {
     return params;
   }
 
+  private buildHomeFeedParams(categoryId: string): HttpParams {
+    let params = new HttpParams();
+    const normalizedCategoryId = this.normalizeCategoryId(categoryId);
+    if (normalizedCategoryId) {
+      params = params.set('category', normalizedCategoryId);
+    }
+    return params;
+  }
+
+  private homeFeedCacheKey(categoryId: string): string {
+    return this.normalizeCategoryId(categoryId) ?? 'ALL';
+  }
+
   // Header user
   getUserSummary(): Observable<UserSummary> {
     return this.http.get<UserSummary>(`${this.baseUrl}/users/me`).pipe(
@@ -65,6 +93,38 @@ export class HomeApiService {
   // Categories (mock)
   getCategories(): Observable<HomeCategory[]> {
     return of(HOME_CATEGORY_OPTIONS);
+  }
+
+  getHomeFeed(
+    categoryId: string,
+    options?: { forceRefresh?: boolean },
+  ): Observable<HomeFeed> {
+    const cacheKey = this.homeFeedCacheKey(categoryId);
+    const now = Date.now();
+    const cached = this.homeFeedCache.get(cacheKey);
+
+    if (!options?.forceRefresh && cached && cached.expiresAt > now) {
+      return cached.value$;
+    }
+
+    const params = this.buildHomeFeedParams(categoryId);
+    const request$ = this.http
+      .get<HomeFeedResponse>(`${this.baseUrl}/raffles/home-feed`, { params })
+      .pipe(
+        map((res) => ({
+          endingSoon: (res?.endingSoon ?? []).map((row) => this.toCard(row)),
+          liveRows: (res?.liveRows ?? []).map((row) => this.toCard(row)),
+        })),
+        catchError(() => this.loadLegacyHomeFeed(categoryId)),
+        shareReplay({ bufferSize: 1, refCount: false }),
+      );
+
+    this.homeFeedCache.set(cacheKey, {
+      expiresAt: now + this.homeFeedTtlMs,
+      value$: request$,
+    });
+
+    return request$;
   }
 
   // ✅ Nettoyage URL (évite /null 404)
@@ -126,5 +186,12 @@ export class HomeApiService {
     return this.http
       .get<any[]>(`${this.baseUrl}/raffles/public`, { params })
       .pipe(map((rows) => (rows ?? []).map((r) => this.toCard(r))));
+  }
+
+  private loadLegacyHomeFeed(categoryId: string): Observable<HomeFeed> {
+    return forkJoin({
+      endingSoon: this.getEndingSoon(categoryId),
+      liveRows: this.getLiveRows(categoryId),
+    });
   }
 }
