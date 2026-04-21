@@ -1,0 +1,68 @@
+.connectivity-banner {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 1200;
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  column-gap: 12px;
+  align-items: center;
+  padding: 12px 14px 12px 12px;
+  border-radius: 20px;
+  color: #fff;
+  background: rgba(27, 31, 59, 0.95);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
+  backdrop-filter: blur(14px);
+  pointer-events: none;
+}
+
+.connectivity-banner.offline {
+  background: rgba(174, 51, 39, 0.95);
+}
+
+.connectivity-banner.pending {
+  background: rgba(18, 109, 74, 0.95);
+}
+
+.connectivity-banner .title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  display: block;
+}
+
+.connectivity-banner .body {
+  font-size: 12px;
+  opacity: 0.92;
+  display: block;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+.banner-copy {
+  min-width: 0;
+}
+
+.status-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  border-top-color: #fff;
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.08);
+}
+
+.status-icon.syncing {
+  animation: connectivity-spin 1s linear infinite;
+}
+
+@keyframes connectivity-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

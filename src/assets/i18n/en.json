@@ -14,7 +14,20 @@
     "LANGUAGE": "Language",
     "FR": "French",
     "EN": "English",
-    "OPTIONAL": "optional"
+    "OPTIONAL": "optional",
+    "RETRY": "Retry"
+  },
+  "OFFLINE": {
+    "STATUS": "You are offline",
+    "USING_SAVED_DATA": "The app is showing the most recently saved data.",
+    "SYNCING_TITLE": "Pending sync",
+    "SYNCING_BODY": "{{count}} action(s) will be sent as soon as the network returns.",
+    "HOME_CACHE_HINT": "Weak connection detected: the home screen can fall back to the last raffles already viewed.",
+    "RAFFLE_CACHE_HINT": "Offline mode: if this raffle was already opened, its latest details stay available.",
+    "EMPTY_TITLE": "Connection unavailable",
+    "HOME_EMPTY_COPY": "No home data has been saved on this device yet. Try again when the network comes back.",
+    "RAFFLE_EMPTY_COPY": "This raffle has not been saved locally yet. Try again when the connection returns.",
+    "NOTIFICATIONS_QUEUED": "Offline: notification reads are queued and will sync automatically."
   },
   "LANDING": {
     "CONNECTION": "Login",

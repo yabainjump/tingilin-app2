@@ -17,6 +17,7 @@ import { PaymentsApiService } from 'src/app/core/api/payments-api.service';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
 import { toAbsoluteMediaUrl } from 'src/app/shared/utils/media-url';
+import { NetworkStatusService } from 'src/app/services/offline/network-status.service';
 
 type RecentWinnerCard = {
   name: string;
@@ -48,6 +49,7 @@ export class RaffleDetailsPage implements OnInit {
   winners: RecentWinnerCard[] = [];
   freeTicketsBalance = 0;
   usingFreeTicket = false;
+  readonly isOffline$ = this.networkStatus.offline$;
 
   constructor(
     private route: ActivatedRoute,
@@ -62,6 +64,7 @@ export class RaffleDetailsPage implements OnInit {
     private referralApi: ReferralApiService,
     private paymentsApi: PaymentsApiService,
     private translate: TranslateService,
+    private networkStatus: NetworkStatusService,
   ) {}
 
   async goToPayment() {
@@ -463,5 +466,9 @@ export class RaffleDetailsPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  retryLoad(): void {
+    this.ionViewWillEnter();
   }
 }

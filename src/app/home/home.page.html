@@ -70,6 +70,13 @@
 
     <!-- CONTENT -->
     <div class="content">
+      <div class="offline-empty" *ngIf="(isOffline$ | async) && !showEndingSoonSkeleton && !heroCards.length && !featured && !liveRows.length">
+        <div class="offline-empty-title">{{ 'OFFLINE.EMPTY_TITLE' | translate }}</div>
+        <div class="offline-empty-copy">{{ 'OFFLINE.HOME_EMPTY_COPY' | translate }}</div>
+        <button type="button" class="offline-retry" (click)="retryLoad()">
+          {{ 'COMMON.RETRY' | translate }}
+        </button>
+      </div>
 
       <!-- Ending Soon -->
       <div class="section-head">

@@ -655,3 +655,33 @@
     border-radius: 14px;
   }
 }
+.offline-empty {
+  margin: 0 0 20px;
+  padding: 20px 18px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #fff6ed 0%, #ffffff 100%);
+  border: 1px solid rgba(214, 67, 43, 0.14);
+  box-shadow: 0 18px 40px rgba(214, 67, 43, 0.08);
+}
+
+.offline-empty-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #25213b;
+}
+
+.offline-empty-copy {
+  margin-top: 8px;
+  color: #6b667c;
+  line-height: 1.45;
+}
+
+.offline-retry {
+  margin-top: 14px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: #25213b;
+  color: #fff;
+  font-weight: 700;
+}

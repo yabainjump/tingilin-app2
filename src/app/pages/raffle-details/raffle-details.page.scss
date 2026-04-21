@@ -532,3 +532,32 @@ ion-content.details {
 .cta-dot ion-icon {
   font-size: 18px;
 }
+.offline-empty {
+  margin-bottom: 18px;
+  padding: 20px 18px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #fff6ed 0%, #ffffff 100%);
+  border: 1px solid rgba(214, 67, 43, 0.14);
+}
+
+.offline-empty-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #231f39;
+}
+
+.offline-empty-copy {
+  margin-top: 8px;
+  color: #6b667c;
+  line-height: 1.45;
+}
+
+.offline-retry {
+  margin-top: 14px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: #231f39;
+  color: #fff;
+  font-weight: 700;
+}

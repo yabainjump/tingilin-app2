@@ -8,6 +8,7 @@ import {
   NotificationDto,
 } from 'src/app/services/notifications/notifications-api.service';
 import { NotificationsStateService } from 'src/app/services/notifications/notifications-state.service';
+import { NetworkStatusService } from 'src/app/services/offline/network-status.service';
 
 @Component({
   selector: 'app-notifications',
@@ -18,10 +19,12 @@ import { NotificationsStateService } from 'src/app/services/notifications/notifi
 export class NotificationsPage {
   loading = true;
   items: NotificationDto[] = [];
+  readonly isOffline$ = this.networkStatus.offline$;
 
   constructor(
     private api: NotificationsApiService,
     private state: NotificationsStateService,
+    private networkStatus: NetworkStatusService,
     private router: Router,
     private toast: ToastController,
     private translate: TranslateService,
@@ -53,7 +56,11 @@ export class NotificationsPage {
 
   async markAllRead() {
     await firstValueFrom(this.api.markAllRead());
-    await this.state.refresh();
+    if (this.networkStatus.isOffline()) {
+      this.state.markAllReadLocal();
+    } else {
+      await this.state.refresh();
+    }
     this.items = this.items.map((n) => ({
       ...n,
       readAt: n.readAt || new Date().toISOString(),
@@ -64,7 +71,11 @@ export class NotificationsPage {
     if (!n.readAt) {
       await firstValueFrom(this.api.markRead(n._id));
       n.readAt = new Date().toISOString();
-      await this.state.refresh();
+      if (this.networkStatus.isOffline()) {
+        this.state.markOneReadLocal();
+      } else {
+        await this.state.refresh();
+      }
     }
 
     const deepLink = n?.data?.deepLink;

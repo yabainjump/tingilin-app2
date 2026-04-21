@@ -3,5 +3,20 @@
     <ion-progress-bar type="indeterminate"></ion-progress-bar>
   </ng-container>
 
+  <div class="connectivity-banner" *ngIf="bannerState$ | async as banner"
+    [class.offline]="banner.offline" [class.pending]="!banner.offline && banner.pending > 0">
+    <span class="status-icon" [class.syncing]="banner.syncing"></span>
+    <div class="banner-copy">
+      <ng-container *ngIf="banner.offline && !banner.syncing; else queueReady">
+        <span class="title">{{ 'OFFLINE.STATUS' | translate }}</span>
+        <span class="body">{{ 'OFFLINE.USING_SAVED_DATA' | translate }}</span>
+      </ng-container>
+      <ng-template #queueReady>
+        <span class="title">{{ 'OFFLINE.SYNCING_TITLE' | translate }}</span>
+        <span class="body">{{ 'OFFLINE.SYNCING_BODY' | translate:{ count: banner.pending } }}</span>
+      </ng-template>
+    </div>
+  </div>
+
   <ion-router-outlet></ion-router-outlet>
 </ion-app>

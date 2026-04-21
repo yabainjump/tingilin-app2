@@ -12,6 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { toAbsoluteMediaUrl } from '../shared/utils/media-url';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../services/auth/auth.service';
+import { NetworkStatusService } from '../services/offline/network-status.service';
 
 type HomeCategory = { id: string; label: string };
 type DrawLoadReason = 'init' | 'refresh' | 'category' | 'background';
@@ -27,6 +28,7 @@ export class HomePage implements OnInit, OnDestroy {
   private hasEnteredView = false;
   private raffleRefreshSub?: Subscription;
   private autoRefreshSub?: Subscription;
+  readonly isOffline$ = this.networkStatus.offline$;
 
   ionViewWillEnter(): void {
     this.startClock();
@@ -73,6 +75,7 @@ export class HomePage implements OnInit, OnDestroy {
     private rafflesService: RafflesApiService,
     private translate: TranslateService,
     private auth: AuthService,
+    private networkStatus: NetworkStatusService,
   ) {}
 
   ngOnInit(): void {
@@ -228,6 +231,10 @@ export class HomePage implements OnInit, OnDestroy {
 
   openLiveDraws(): void {
     this.router.navigate(['/tabs/winners']);
+  }
+
+  retryLoad(): void {
+    this.loadAll('refresh');
   }
 
   private clockSub?: Subscription;

@@ -14,7 +14,20 @@
     "LANGUAGE": "Langue",
     "FR": "Français",
     "EN": "English",
-    "OPTIONAL": "optionnel"
+    "OPTIONAL": "optionnel",
+    "RETRY": "Réessayer"
+  },
+  "OFFLINE": {
+    "STATUS": "Vous êtes hors ligne",
+    "USING_SAVED_DATA": "L'application affiche les dernières données enregistrées.",
+    "SYNCING_TITLE": "Synchronisation en attente",
+    "SYNCING_BODY": "{{count}} action(s) seront envoyées dès le retour du réseau.",
+    "HOME_CACHE_HINT": "Connexion faible détectée : l'accueil peut afficher les dernières raffles déjà consultées.",
+    "RAFFLE_CACHE_HINT": "Mode hors ligne : si cette raffle a déjà été ouverte, ses dernières informations restent disponibles.",
+    "EMPTY_TITLE": "Connexion indisponible",
+    "HOME_EMPTY_COPY": "Aucune donnée d'accueil n'est encore enregistrée sur cet appareil. Réessaie dès que le réseau revient.",
+    "RAFFLE_EMPTY_COPY": "Cette raffle n'a pas encore été enregistrée localement. Réessaie lorsque la connexion revient.",
+    "NOTIFICATIONS_QUEUED": "Hors ligne : les lectures de notifications sont mémorisées et seront synchronisées automatiquement."
   },
   "LANDING": {
     "CONNECTION": "Connexion",

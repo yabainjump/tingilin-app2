@@ -30,4 +30,12 @@ export class NotificationsStateService {
   setLocal(count: number) {
     this._unread.next(Math.max(0, Number(count || 0)));
   }
+
+  markOneReadLocal() {
+    this._unread.next(Math.max(0, this._unread.value - 1));
+  }
+
+  markAllReadLocal() {
+    this._unread.next(0);
+  }
 }

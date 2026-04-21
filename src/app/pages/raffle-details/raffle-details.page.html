@@ -36,6 +36,14 @@
 
     <!-- BODY -->
     <div class="body">
+      <div class="offline-empty" *ngIf="(isOffline$ | async) && !loading && !raffle">
+        <div class="offline-empty-title">{{ 'OFFLINE.EMPTY_TITLE' | translate }}</div>
+        <div class="offline-empty-copy">{{ 'OFFLINE.RAFFLE_EMPTY_COPY' | translate }}</div>
+        <button class="offline-retry" type="button" (click)="retryLoad()">
+          {{ 'COMMON.RETRY' | translate }}
+        </button>
+      </div>
+
       <ng-container *ngIf="!loading && raffle; else bodySkel">
 
         <!-- TITLE -->

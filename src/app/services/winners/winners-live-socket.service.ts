@@ -38,9 +38,13 @@ export class WinnersLiveSocketService {
         ? ['websocket', 'polling']
         : ['websocket'];
     this.socket = io(`${origin}/live-draws`, {
+      path: '/socket.io',
       transports,
       withCredentials: true,
       reconnection: true,
+      reconnectionDelay: 2_000,
+      reconnectionDelayMax: 10_000,
+      timeout: 15_000,
     });
 
     this.socket.on('live_draw:update', (payload: LiveDrawState) => {

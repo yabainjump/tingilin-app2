@@ -4,14 +4,20 @@ import {
   Observable,
   catchError,
   forkJoin,
+  from,
   map,
+  mergeMap,
   of,
   shareReplay,
+  tap,
+  throwError,
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { DrawCard, UserSummary } from './home.models';
 import { HOME_CATEGORY_OPTIONS } from 'src/app/core/constants/raffle-categories';
 import { toAbsoluteMediaUrl } from 'src/app/shared/utils/media-url';
+import { AppStorageService } from 'src/app/shared/storage/app-storage.service';
+import { NetworkStatusService } from '../offline/network-status.service';
 
 type HomeCategory = { id: string; label: string };
 type HomeFeed = { endingSoon: DrawCard[]; liveRows: DrawCard[] };
@@ -20,14 +26,23 @@ type CachedHomeFeed = {
   expiresAt: number;
   value$: Observable<HomeFeed>;
 };
+type StoredHomeFeed = {
+  savedAt: string;
+  value: HomeFeed;
+};
 
 @Injectable({ providedIn: 'root' })
 export class HomeApiService {
   private readonly baseUrl = environment.apiBaseUrl;
   private readonly homeFeedCache = new Map<string, CachedHomeFeed>();
   private readonly homeFeedTtlMs = 45_000;
+  private readonly storagePrefix = 'offline:home-feed:';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private storage: AppStorageService,
+    private networkStatus: NetworkStatusService,
+  ) {}
 
   private normalizeCategoryId(
     categoryId: string | null | undefined,
@@ -115,16 +130,35 @@ export class HomeApiService {
           endingSoon: (res?.endingSoon ?? []).map((row) => this.toCard(row)),
           liveRows: (res?.liveRows ?? []).map((row) => this.toCard(row)),
         })),
-        catchError(() => this.loadLegacyHomeFeed(categoryId)),
+        tap((feed) => void this.persistHomeFeed(cacheKey, feed)),
+        catchError(() =>
+          this.loadLegacyHomeFeed(categoryId).pipe(
+            tap((feed) => void this.persistHomeFeed(cacheKey, feed)),
+            catchError((error) =>
+              this.loadStoredHomeFeed(cacheKey).pipe(
+                mergeMap((cached) =>
+                  cached ? of(cached.value) : throwError(() => error),
+                ),
+              ),
+            ),
+          ),
+        ),
         shareReplay({ bufferSize: 1, refCount: false }),
       );
 
+    const value$ = this.networkStatus.isOffline()
+      ? this.loadStoredHomeFeed(cacheKey).pipe(
+          mergeMap((cached) => (cached ? of(cached.value) : request$)),
+          shareReplay({ bufferSize: 1, refCount: false }),
+        )
+      : request$;
+
     this.homeFeedCache.set(cacheKey, {
       expiresAt: now + this.homeFeedTtlMs,
-      value$: request$,
+      value$: value$,
     });
 
-    return request$;
+    return value$;
   }
 
   // ✅ Nettoyage URL (évite /null 404)
@@ -193,5 +227,22 @@ export class HomeApiService {
       endingSoon: this.getEndingSoon(categoryId),
       liveRows: this.getLiveRows(categoryId),
     });
+  }
+
+  private async persistHomeFeed(
+    cacheKey: string,
+    feed: HomeFeed,
+  ): Promise<void> {
+    const payload: StoredHomeFeed = {
+      savedAt: new Date().toISOString(),
+      value: feed,
+    };
+    await this.storage.setJson(`${this.storagePrefix}${cacheKey}`, payload);
+  }
+
+  private loadStoredHomeFeed(cacheKey: string): Observable<StoredHomeFeed | null> {
+    return from(
+      this.storage.getJson<StoredHomeFeed>(`${this.storagePrefix}${cacheKey}`),
+    );
   }
 }
