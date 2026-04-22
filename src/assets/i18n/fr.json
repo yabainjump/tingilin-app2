@@ -259,6 +259,8 @@
     "MY_REFERRALS": "Mes parrainages",
     "ACTIVE": "actifs",
     "EMPTY_REFERRALS": "Aucun filleul pour l’instant.",
+    "LOAD_MORE": "Voir 10 de plus",
+    "LOADING_MORE": "Chargement...",
     "STATUS_ACTIVE": "Actif (achat validé)",
     "STATUS_PENDING": "En attente d’achat",
     "REFERRAL_PROGRESS": "{{current}}/{{target}} amis actifs",
@@ -267,6 +269,7 @@
     "SHARE_TITLE": "Parrainage Tingilin",
     "SHARE_TEXT": "Rejoins Tingilin avec mon code {{code}}. Inscris-toi et tente ta chance !",
     "TOAST_LOAD_FAILED": "Impossible de charger les données de parrainage",
+    "TOAST_LOAD_MORE_FAILED": "Impossible de charger plus de filleuls",
     "TOAST_CODE_COPIED": "Code parrainage copié",
     "TOAST_LINK_COPIED": "Lien de parrainage copié",
     "TOAST_SHARE_UNAVAILABLE": "Partage indisponible"

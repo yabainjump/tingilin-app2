@@ -28,7 +28,7 @@ export class PaymentConfirmationPage {
   // Form
   paymentMethod: 'ORANGE' | 'MTN' = 'ORANGE';
   userPhone = '';
-  userCountry = 'CM';
+  userCountry = 'Cameroon';
   payerEmail = '';
   payerName = '';
 
@@ -109,7 +109,7 @@ export class PaymentConfirmationPage {
         .createIntent({
           raffleId: this.raffleId,
           amount: this.amount,
-          provider: 'DIGIKUNTZ',
+          provider: environment.paymentProvider,
           userEmail,
           userPhone: cleanedPhone,
           userCountry: this.userCountry,
@@ -121,6 +121,24 @@ export class PaymentConfirmationPage {
       this.transactionId = res?.transactionId;
       this.paymentLink = res?.paymentLink;
       this.paymentWithTaxes = res?.paymentWithTaxes;
+
+      if (res?.provider === 'MOCK' && this.transactionId) {
+        const mockProviderRef = [
+          'MOCK',
+          this.paymentMethod,
+          Date.now().toString(),
+        ].join('-');
+
+        const mockResult = await this.paymentsApi
+          .mockConfirm(this.transactionId, mockProviderRef)
+          .toPromise();
+
+        if (mockResult?.status === 'SUCCESS') {
+          await this.presentToast('Paiement test confirme localement.');
+          await this.router.navigateByUrl('/tabs/participations');
+          return;
+        }
+      }
 
       if (!this.paymentLink) {
         throw new Error(this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_MISSING_PAYMENT_LINK'));
@@ -138,7 +156,16 @@ export class PaymentConfirmationPage {
       // Option UX : tu laisses un bouton "Vérifier le paiement" visible
     } catch (e: any) {
       const status = Number(e?.status ?? e?.error?.statusCode ?? 0);
-      const message = String(e?.error?.message ?? e?.message ?? '').trim();
+      const rawErrorMessage = e?.error?.message;
+      const message = Array.isArray(rawErrorMessage)
+        ? rawErrorMessage.filter(Boolean).join(', ').trim()
+        : String(rawErrorMessage ?? e?.message ?? '').trim();
+
+      console.error('Payment intent failed', {
+        status,
+        message,
+        error: e?.error,
+      });
 
       if (
         status === 401 ||
@@ -255,6 +282,6 @@ export class PaymentConfirmationPage {
       typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
         ? crypto.randomUUID().replace(/-/g, '').slice(0, 16)
         : `${Date.now()}${Math.floor(Math.random() * 9999)}`;
-    return `digikuntz-${safeRaffle}-${this.amount}-${randomPart}`.slice(0, 80);
+    return `payment-${safeRaffle}-${this.amount}-${randomPart}`.slice(0, 80);
   }
 }

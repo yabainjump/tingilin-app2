@@ -34,6 +34,13 @@ export interface VerifyResponse {
   remoteStatus?: string;
 }
 
+export interface MockConfirmResponse {
+  ok: boolean;
+  transactionId: string;
+  status: 'SUCCESS' | 'PENDING' | 'FAILED' | string;
+  idempotent?: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class PaymentsApiService {
   private base = `${environment.apiBaseUrl}`;
@@ -51,6 +58,13 @@ export class PaymentsApiService {
     return this.http.post<VerifyResponse>(
       `${this.base}/payments/digikuntz/verify`,
       { transactionId },
+    );
+  }
+
+  mockConfirm(transactionId: string, providerRef: string) {
+    return this.http.post<MockConfirmResponse>(
+      `${this.base}/payments/mock/confirm`,
+      { transactionId, providerRef },
     );
   }
 

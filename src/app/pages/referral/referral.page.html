@@ -122,11 +122,11 @@
           <div class="badge">{{ summary.referral.qualifiedReferrals }} {{ 'REFERRAL_PAGE.ACTIVE' | translate }}</div>
         </div>
 
-        <div class="empty" *ngIf="!summary.referrals?.length">
+        <div class="empty" *ngIf="!referrals.length">
           {{ 'REFERRAL_PAGE.EMPTY_REFERRALS' | translate }}
         </div>
 
-        <div class="user-row" *ngFor="let r of summary.referrals">
+        <div class="user-row" *ngFor="let r of referrals; trackBy: trackByReferral">
           <div class="avatar" [style.backgroundImage]="'url(' + avatar(r) + ')'"></div>
           <div class="user-meta">
             <div class="name">{{ fullName(r) }}</div>
@@ -137,6 +137,21 @@
           <span class="notranslate material-symbols-outlined state-ico">
             {{ r.active ? 'check_circle' : 'schedule' }}
           </span>
+        </div>
+
+        <div class="list-actions" *ngIf="hasMoreReferrals">
+          <button
+            type="button"
+            class="load-more-btn"
+            [disabled]="loadingMoreReferrals"
+            (click)="loadMoreReferrals()"
+          >
+            {{
+              loadingMoreReferrals
+                ? ('REFERRAL_PAGE.LOADING_MORE' | translate)
+                : ('REFERRAL_PAGE.LOAD_MORE' | translate)
+            }}
+          </button>
         </div>
       </section>
     </ng-container>

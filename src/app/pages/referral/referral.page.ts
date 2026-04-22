@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { NavController, ToastController } from '@ionic/angular';
+import { forkJoin } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import {
   ReferralApiService,
+  ReferralListDto,
   ReferralPersonDto,
   ReferralSummaryDto,
 } from 'src/app/services/referral/referral-api.service';
@@ -18,7 +20,13 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class ReferralPage {
   loading = true;
+  loadingMoreReferrals = false;
   summary: ReferralSummaryDto | null = null;
+  referrals: ReferralPersonDto[] = [];
+  referralsPage = 1;
+  referralsTotal = 0;
+  referralsTotalPages = 1;
+  readonly referralsPageSize = 10;
 
   heroImage =
     'assets/img/referal.jpg';
@@ -38,18 +46,31 @@ export class ReferralPage {
 
   load() {
     this.loading = true;
-    this.api
-      .summary()
+    this.referrals = [];
+    this.referralsPage = 1;
+    this.referralsTotal = 0;
+    this.referralsTotalPages = 1;
+
+    forkJoin({
+      summary: this.api.summary(),
+      referrals: this.api.referrals(1, this.referralsPageSize),
+    })
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
-        next: (res) => {
-          this.summary = res;
+        next: ({ summary, referrals }) => {
+          this.summary = summary;
+          this.applyReferralPage(referrals);
         },
         error: async () => {
           this.summary = null;
+          this.referrals = [];
           await this.showToast(this.translate.instant('REFERRAL_PAGE.TOAST_LOAD_FAILED'));
         },
       });
+  }
+
+  get hasMoreReferrals(): boolean {
+    return this.referralsPage < this.referralsTotalPages;
   }
 
   back() {
@@ -96,6 +117,10 @@ export class ReferralPage {
     return this.summary?.rewardHistory ?? [];
   }
 
+  trackByReferral(_index: number, referral: ReferralPersonDto): string {
+    return referral.userId;
+  }
+
   fullName(u: ReferralPersonDto): string {
     return `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim() || this.translate.instant('REFERRAL_PAGE.USER_FALLBACK');
   }
@@ -127,6 +152,29 @@ export class ReferralPage {
       hour: '2-digit',
       minute: '2-digit',
     }).format(d);
+  }
+
+  loadMoreReferrals() {
+    if (this.loading || this.loadingMoreReferrals || !this.hasMoreReferrals) {
+      return;
+    }
+
+    const nextPage = this.referralsPage + 1;
+    this.loadingMoreReferrals = true;
+
+    this.api
+      .referrals(nextPage, this.referralsPageSize)
+      .pipe(finalize(() => (this.loadingMoreReferrals = false)))
+      .subscribe({
+        next: (response) => {
+          this.applyReferralPage(response, true);
+        },
+        error: async () => {
+          await this.showToast(
+            this.translate.instant('REFERRAL_PAGE.TOAST_LOAD_MORE_FAILED'),
+          );
+        },
+      });
   }
 
   private shareText(): string {
@@ -217,5 +265,19 @@ export class ReferralPage {
       position: 'top',
     });
     await t.present();
+  }
+
+  private applyReferralPage(
+    response: ReferralListDto,
+    append = false,
+  ) {
+    const incoming = Array.isArray(response?.data) ? response.data : [];
+    this.referrals = append ? [...this.referrals, ...incoming] : incoming;
+    this.referralsPage = Math.max(1, Number(response?.page ?? 1) || 1);
+    this.referralsTotal = Math.max(0, Number(response?.total ?? 0) || 0);
+    this.referralsTotalPages = Math.max(
+      1,
+      Number(response?.totalPages ?? 1) || 1,
+    );
   }
 }

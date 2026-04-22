@@ -412,6 +412,26 @@ ion-content.referral-page {
   color: #c4bbd0;
 }
 
+.list-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.load-more-btn {
+  border: 1px solid rgba(166, 13, 242, 0.45);
+  border-radius: 999px;
+  background: rgba(166, 13, 242, 0.14);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 10px 18px;
+}
+
+.load-more-btn[disabled] {
+  opacity: 0.7;
+}
+
 .history-row {
   margin-bottom: 8px;
   border-radius: 14px;

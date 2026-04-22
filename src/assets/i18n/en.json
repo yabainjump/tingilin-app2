@@ -259,6 +259,8 @@
     "MY_REFERRALS": "My referrals",
     "ACTIVE": "active",
     "EMPTY_REFERRALS": "No referrals yet.",
+    "LOAD_MORE": "Load 10 more",
+    "LOADING_MORE": "Loading...",
     "STATUS_ACTIVE": "Active (purchase validated)",
     "STATUS_PENDING": "Waiting for purchase",
     "REFERRAL_PROGRESS": "{{current}}/{{target}} active friends",
@@ -267,6 +269,7 @@
     "SHARE_TITLE": "Tingilin referral",
     "SHARE_TEXT": "Join Tingilin with my code {{code}}. Sign up and try your luck!",
     "TOAST_LOAD_FAILED": "Unable to load referral data",
+    "TOAST_LOAD_MORE_FAILED": "Unable to load more referrals",
     "TOAST_CODE_COPIED": "Referral code copied",
     "TOAST_LINK_COPIED": "Referral link copied",
     "TOAST_SHARE_UNAVAILABLE": "Sharing unavailable"
