@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { AdminGuard } from './guard/admin-guard';
 import { AuthGuard } from './guard/auth-guard';
 import { NoPreloading, RouterModule, Routes } from '@angular/router';
 
@@ -72,7 +73,7 @@ const routes: Routes = [
 
   {
     path: 'admin/create-raffle',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, AdminGuard],
     loadChildren: () =>
       import('./pages/admin/create-raffle/create-raffle.module').then(
         (m) => m.CreateRafflePageModule,

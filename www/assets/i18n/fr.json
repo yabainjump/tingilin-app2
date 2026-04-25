@@ -151,18 +151,20 @@
   "FORGOT_PASSWORD_PAGE": {
     "TOP_TITLE": "Réinitialisation",
     "TITLE": "Mot de passe oublié ?",
-    "SUBTITLE": "Entrez votre adresse email ou numéro de téléphone pour recevoir un code de réinitialisation.",
+    "SUBTITLE": "Entrez votre adresse email ou votre numéro pour identifier votre compte. Le code sera envoyé à l’adresse email liée à ce compte.",
     "IDENTIFIER_PLACEHOLDER": "Email ou Numéro",
     "SEND_CODE": "Envoyer le code",
     "BACK_TO_LOGIN": "Retour à la connexion",
     "TOAST_IDENTIFIER_REQUIRED": "Entre un email ou un numéro.",
     "TOAST_ERROR": "Erreur. Réessaie.",
     "TOAST_DELIVERY_FAILED": "Le service email est indisponible pour le moment. Réessaie plus tard.",
+    "TOAST_CHECK_EMAIL_HINT": "Si un compte correspond, vérifie l’email lié à ce compte ainsi que les spams.",
+    "TOAST_CODE_ALREADY_SENT": "Un code récent existe déjà. Réessaie dans {{seconds}} s si besoin.",
     "TOAST_DEV_CODE": "Code de test : {{code}}"
   },
   "FORGOT_PASSWORD_SENT_PAGE": {
     "TITLE": "Réinitialiser le mot de passe",
-    "SUBTITLE": "Entrez le code reçu par email et définissez votre nouveau mot de passe.",
+    "SUBTITLE": "Entrez le code reçu à l’adresse email liée à ce compte, puis définissez votre nouveau mot de passe.",
     "CODE_PLACEHOLDER": "Code de vérification",
     "NEW_PASSWORD_PLACEHOLDER": "Nouveau mot de passe",
     "CONFIRM_PASSWORD_PLACEHOLDER": "Confirmer le mot de passe",
@@ -176,6 +178,8 @@
     "TOAST_RESET_SUCCESS": "Mot de passe réinitialisé.",
     "TOAST_INVALID_OR_EXPIRED": "Code invalide ou expiré.",
     "TOAST_CODE_RESENT": "Code renvoyé.",
+    "TOAST_RESEND_HINT": "Si le compte existe, un nouveau code sera envoyé à l’adresse email liée à ce compte.",
+    "TOAST_CODE_ALREADY_SENT": "Un code récent existe déjà. Réessaie dans {{seconds}} s si besoin.",
     "TOAST_RESEND_FAILED": "Impossible de renvoyer le code.",
     "TOAST_DELIVERY_FAILED": "Le service email est indisponible pour le moment. Réessaie plus tard.",
     "TOAST_DEV_CODE": "Code de test : {{code}}"

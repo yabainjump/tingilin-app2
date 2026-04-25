@@ -31,7 +31,12 @@ export interface ForgotPasswordResponse {
   retryAfterSeconds?: number;
   expiresInSeconds?: number;
   delivery?: 'EMAIL' | 'LOG';
-  deliveryReason?: 'EMAIL_SENT' | 'SMTP_CONFIG_MISSING' | 'SMTP_SEND_FAILED';
+  deliveryReason?:
+    | 'EMAIL_SENT'
+    | 'EMAIL_TARGET_MISSING'
+    | 'SMTP_CONFIG_MISSING'
+    | 'SMTP_SEND_FAILED'
+    | 'USER_NOT_FOUND';
   devResetCode?: string;
 }
 

@@ -53,27 +53,31 @@ export class ForgotPasswordPage implements OnDestroy {
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
         next: async (res) => {
-          const delivery = String(res?.delivery ?? '').toUpperCase();
-          if (delivery === 'LOG') {
-            const devCode = String(res?.devResetCode ?? '').trim();
-            if (devCode) {
-              await this.showToast(
-                this.translate.instant('FORGOT_PASSWORD_PAGE.TOAST_DEV_CODE', {
-                  code: devCode,
-                }),
-              );
-            } else {
-              await this.showToast(
-                this.translate.instant(
-                  'FORGOT_PASSWORD_PAGE.TOAST_DELIVERY_FAILED',
-                ),
-              );
-              return;
-            }
+          const cooldownSeconds = Math.max(
+            0,
+            Number(res?.retryAfterSeconds ?? 0) || 0,
+          );
+          const devCode = String(res?.devResetCode ?? '').trim();
+
+          if (devCode) {
+            await this.showToast(
+              this.translate.instant('FORGOT_PASSWORD_PAGE.TOAST_DEV_CODE', {
+                code: devCode,
+              }),
+            );
+          } else {
+            await this.showToast(
+              this.translate.instant(
+                cooldownSeconds > 0
+                  ? 'FORGOT_PASSWORD_PAGE.TOAST_CODE_ALREADY_SENT'
+                  : 'FORGOT_PASSWORD_PAGE.TOAST_CHECK_EMAIL_HINT',
+                cooldownSeconds > 0 ? { seconds: cooldownSeconds } : {},
+              ),
+            );
           }
 
           this.router.navigateByUrl('/auth/forgot-password-sent', {
-            state: { identifier },
+            state: { identifier, cooldownSeconds },
           });
         },
         error: async (err) => {

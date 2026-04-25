@@ -18,6 +18,7 @@ export class ForgotPasswordSentPage implements OnDestroy {
   resending = false;
   private timerId: any;
   identifier = '';
+  private initialCooldownSeconds = 59;
 
   form = this.fb.group({
     code: ['', [Validators.required, Validators.minLength(4)]],
@@ -33,14 +34,17 @@ export class ForgotPasswordSentPage implements OnDestroy {
     private readonly translate: TranslateService,
   ) {
     const nav = this.router.getCurrentNavigation();
+    const state = (nav?.extras?.state as any) ?? history.state ?? {};
     this.identifier =
-      String(
-        (nav?.extras?.state as any)?.identifier ?? history.state?.identifier,
-      ).trim() || '';
+      String(state?.identifier).trim() || '';
+    this.initialCooldownSeconds = Math.max(
+      1,
+      Number(state?.cooldownSeconds ?? 59) || 59,
+    );
   }
 
   ionViewDidEnter(): void {
-    this.startCountdown();
+    this.startCountdown(this.initialCooldownSeconds);
   }
 
   ionViewWillLeave(): void {
@@ -120,30 +124,34 @@ export class ForgotPasswordSentPage implements OnDestroy {
       .pipe(finalize(() => (this.resending = false)))
       .subscribe({
         next: async (res) => {
-          const delivery = String(res?.delivery ?? '').toUpperCase();
-          if (delivery === 'LOG') {
-            const devCode = String(res?.devResetCode ?? '').trim();
-            if (devCode) {
-              await this.showToast(
-                this.translate.instant(
-                  'FORGOT_PASSWORD_SENT_PAGE.TOAST_DEV_CODE',
-                  { code: devCode },
-                ),
-              );
-            } else {
-              await this.showToast(
-                this.translate.instant(
-                  'FORGOT_PASSWORD_SENT_PAGE.TOAST_DELIVERY_FAILED',
-                ),
-              );
-              return;
-            }
+          const cooldownSeconds = Math.max(
+            1,
+            Number(res?.retryAfterSeconds ?? 59) || 59,
+          );
+          const devCode = String(res?.devResetCode ?? '').trim();
+
+          if (devCode) {
+            await this.showToast(
+              this.translate.instant(
+                'FORGOT_PASSWORD_SENT_PAGE.TOAST_DEV_CODE',
+                { code: devCode },
+              ),
+            );
+          } else {
+            await this.showToast(
+              this.translate.instant(
+                Number(res?.retryAfterSeconds ?? 0) > 0
+                  ? 'FORGOT_PASSWORD_SENT_PAGE.TOAST_CODE_ALREADY_SENT'
+                  : 'FORGOT_PASSWORD_SENT_PAGE.TOAST_RESEND_HINT',
+                Number(res?.retryAfterSeconds ?? 0) > 0
+                  ? { seconds: cooldownSeconds }
+                  : {},
+              ),
+            );
           }
 
-          this.startCountdown();
-          await this.showToast(
-            this.translate.instant('FORGOT_PASSWORD_SENT_PAGE.TOAST_CODE_RESENT'),
-          );
+          this.initialCooldownSeconds = cooldownSeconds;
+          this.startCountdown(cooldownSeconds);
         },
         error: async (err) => {
           const msg = err?.error?.message;
@@ -164,9 +172,9 @@ export class ForgotPasswordSentPage implements OnDestroy {
     this.router.navigateByUrl('/auth/forgot-password');
   }
 
-  startCountdown(): void {
+  startCountdown(seconds = 59): void {
     this.stopCountdown();
-    this.secondsLeft = 59;
+    this.secondsLeft = Math.max(1, Number(seconds) || 59);
     this.timerId = setInterval(() => {
       this.secondsLeft = Math.max(0, this.secondsLeft - 1);
       if (this.secondsLeft === 0) this.stopCountdown();

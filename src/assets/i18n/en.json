@@ -151,18 +151,20 @@
   "FORGOT_PASSWORD_PAGE": {
     "TOP_TITLE": "Reset",
     "TITLE": "Forgot password?",
-    "SUBTITLE": "Enter your email address or phone number to receive a reset code.",
+    "SUBTITLE": "Enter your email address or phone number to identify your account. The code will be sent to the email address linked to it.",
     "IDENTIFIER_PLACEHOLDER": "Email or phone",
     "SEND_CODE": "Send code",
     "BACK_TO_LOGIN": "Back to login",
     "TOAST_IDENTIFIER_REQUIRED": "Enter an email or phone number.",
     "TOAST_ERROR": "Error. Please try again.",
     "TOAST_DELIVERY_FAILED": "Email service is currently unavailable. Please try again later.",
+    "TOAST_CHECK_EMAIL_HINT": "If an account matches, check the email linked to it, including your spam folder.",
+    "TOAST_CODE_ALREADY_SENT": "A recent code already exists. Try again in {{seconds}} s if needed.",
     "TOAST_DEV_CODE": "Test code: {{code}}"
   },
   "FORGOT_PASSWORD_SENT_PAGE": {
     "TITLE": "Reset password",
-    "SUBTITLE": "Enter the code received by email and set your new password.",
+    "SUBTITLE": "Enter the code sent to the email address linked to this account, then set your new password.",
     "CODE_PLACEHOLDER": "Verification code",
     "NEW_PASSWORD_PLACEHOLDER": "New password",
     "CONFIRM_PASSWORD_PLACEHOLDER": "Confirm password",
@@ -176,6 +178,8 @@
     "TOAST_RESET_SUCCESS": "Password reset successfully.",
     "TOAST_INVALID_OR_EXPIRED": "Invalid or expired code.",
     "TOAST_CODE_RESENT": "Code resent.",
+    "TOAST_RESEND_HINT": "If the account exists, a new code will be sent to the email address linked to it.",
+    "TOAST_CODE_ALREADY_SENT": "A recent code already exists. Try again in {{seconds}} s if needed.",
     "TOAST_RESEND_FAILED": "Unable to resend code.",
     "TOAST_DELIVERY_FAILED": "Email service is currently unavailable. Please try again later.",
     "TOAST_DEV_CODE": "Test code: {{code}}"

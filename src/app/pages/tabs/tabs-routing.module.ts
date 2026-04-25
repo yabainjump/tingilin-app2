@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { AdminGuard } from 'src/app/guard/admin-guard';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
 
@@ -80,6 +81,7 @@ const routes: Routes = [
 
       {
         path: 'admin/create-raffle',
+        canActivate: [AdminGuard],
         loadChildren: () =>
           import('../admin/create-raffle/create-raffle.module').then(
             (m) => m.CreateRafflePageModule,
