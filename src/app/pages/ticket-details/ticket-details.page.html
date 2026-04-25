@@ -14,15 +14,33 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="bg">
-  <div class="wrap" *ngIf="!loading; else skel">
+  <div class="screen" *ngIf="!loading; else skel">
+    <section class="hero-shell">
+      <div class="hero-copy">
+        <div class="eyebrow">{{ 'TICKET_DETAILS_PAGE.TITLE' | translate }}</div>
+        <h1>{{ raffle?.title || '—' }}</h1>
+        <p>{{ 'TICKET_DETAILS_PAGE.SUBTITLE' | translate }}</p>
+      </div>
 
-  
-    <div class="hero-card">
-      <div class="hero-img"
-        [style.backgroundImage]="'url(' + (raffle?.imageUrl || 'assets/img/placeholder.png') + ')'">
+      <button class="top-share-btn" type="button" (click)="share()">
+        <ion-icon name="share-social-outline"></ion-icon>
+      </button>
+    </section>
+
+    <section class="hero-card">
+      <div
+        class="hero-img"
+        [style.backgroundImage]="'url(' + (raffle?.imageUrl || 'assets/img/placeholder.png') + ')'"
+      >
         <div class="hero-grad"></div>
-        <div class="status" [class.active]="isActive">{{ isActive ? ('TICKET_DETAILS_PAGE.ACTIVE_RAFFLE' | translate) : ('TICKET_DETAILS_PAGE.COMPLETED' | translate) }}</div>
+        <div class="status" [class.active]="isActive">
+          {{ isActive ? ('TICKET_DETAILS_PAGE.ACTIVE_RAFFLE' | translate) : ('TICKET_DETAILS_PAGE.COMPLETED' | translate) }}
+        </div>
         <div class="hero-text">
+          <div class="chip-row">
+            <span class="meta-chip">{{ raffleShortId }}</span>
+            <span class="meta-chip" *ngIf="drawDateLabel !== '—'">{{ drawDateLabel }}</span>
+          </div>
           <div class="h1">{{ raffle?.title || '—' }}</div>
           <div class="h2">{{ raffle?.subtitle || raffle?.description || '' }}</div>
         </div>
@@ -31,73 +49,93 @@
       <div class="info-grid">
         <div class="cell">
           <div class="lbl">{{ 'TICKET_DETAILS_PAGE.RAFFLE_ID' | translate }}</div>
-          <div class="val mono">#{{ raffleId.slice(-8).toUpperCase() }}</div>
+          <div class="val mono">{{ raffleShortId }}</div>
         </div>
         <div class="cell">
           <div class="lbl">{{ 'TICKET_DETAILS_PAGE.DRAW_DATE' | translate }}</div>
           <div class="val">{{ drawDateLabel }}</div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="stats">
-      <div class="stat">
+    <section class="stats">
+      <div class="stat-card">
         <div class="lbl">{{ 'TICKET_DETAILS_PAGE.TOTAL_SPENT' | translate }}</div>
         <div class="big primary">{{ totalSpent }} {{ raffle?.currency || 'XAF' }}</div>
       </div>
-      <div class="sep"></div>
-      <div class="stat right">
+      <div class="stat-card right">
         <div class="lbl">{{ 'TICKET_DETAILS_PAGE.TICKETS_OWNED' | translate }}</div>
         <div class="big">{{ ticketsOwned }}</div>
       </div>
-    </div>
+    </section>
 
     <button class="share-btn" type="button" (click)="share()">
       <ion-icon name="share-outline"></ion-icon>
       {{ 'TICKET_DETAILS_PAGE.SHARE_ACTION' | translate }}
     </button>
 
-    <div class="tickets-head">
-      <div class="th-title">{{ 'TICKET_DETAILS_PAGE.YOUR_TICKETS' | translate }}</div>
-      <div class="view">
-        <button type="button" class="vbtn" [class.on]="viewMode==='grid'" (click)="viewMode='grid'">
-          <ion-icon name="grid-outline"></ion-icon>
-        </button>
-        <button type="button" class="vbtn" [class.on]="viewMode==='list'" (click)="viewMode='list'">
-          <ion-icon name="list-outline"></ion-icon>
-        </button>
-      </div>
-    </div>
-
-    <div *ngIf="ticketsOwned === 0" class="empty">
-      {{ 'TICKET_DETAILS_PAGE.EMPTY' | translate }}
-    </div>
-
-    <div class="grid" *ngIf="viewMode==='grid'">
-      <button class="ticket" type="button" *ngFor="let t of tickets" (click)="copy(t.serial)">
-        <div class="ico"><ion-icon name="ticket-outline"></ion-icon></div>
-        <div class="tt">
-          <div class="small">{{ 'TICKET_DETAILS_PAGE.TICKET' | translate }}</div>
-          <div class="serial">#{{ t.serial.slice(-6).toUpperCase() }}</div>
+    <section class="tickets-panel">
+      <div class="tickets-head">
+        <div>
+          <div class="section-kicker">{{ 'TICKET_DETAILS_PAGE.YOUR_TICKETS' | translate }}</div>
+          <div class="th-title">{{ ticketsOwned }}</div>
         </div>
-      </button>
-    </div>
 
-    <div class="list" *ngIf="viewMode==='list'">
-      <div class="row" *ngFor="let t of tickets" (click)="copy(t.serial)">
-        <ion-icon name="ticket-outline"></ion-icon>
-        <div class="rtext">
-          <div class="serial-full">{{ t.serial }}</div>
-          <div class="small">{{ 'TICKET_DETAILS_PAGE.TAP_TO_COPY' | translate }}</div>
+        <div class="view">
+          <button type="button" class="vbtn" [class.on]="viewMode==='grid'" (click)="viewMode='grid'">
+            <ion-icon name="grid-outline"></ion-icon>
+          </button>
+          <button type="button" class="vbtn" [class.on]="viewMode==='list'" (click)="viewMode='list'">
+            <ion-icon name="list-outline"></ion-icon>
+          </button>
         </div>
       </div>
-    </div>
 
+      <p class="panel-note">{{ 'TICKET_DETAILS_PAGE.COPY_HINT' | translate }}</p>
+
+      <div *ngIf="ticketsOwned === 0" class="empty">
+        <div class="empty-icon">
+          <ion-icon name="ticket-outline"></ion-icon>
+        </div>
+        <div class="empty-copy">{{ 'TICKET_DETAILS_PAGE.EMPTY' | translate }}</div>
+      </div>
+
+      <div class="grid" *ngIf="viewMode==='grid' && ticketsOwned > 0">
+        <button
+          class="ticket"
+          type="button"
+          *ngFor="let t of tickets; trackBy: trackBySerial"
+          (click)="copy(t.serial)"
+        >
+          <div class="ico"><ion-icon name="ticket-outline"></ion-icon></div>
+          <div class="tt">
+            <div class="small">{{ 'TICKET_DETAILS_PAGE.TICKET' | translate }}</div>
+            <div class="serial">#{{ t.serial.slice(-6).toUpperCase() }}</div>
+          </div>
+        </button>
+      </div>
+
+      <div class="list" *ngIf="viewMode==='list' && ticketsOwned > 0">
+        <button
+          class="row"
+          type="button"
+          *ngFor="let t of tickets; trackBy: trackBySerial"
+          (click)="copy(t.serial)"
+        >
+          <ion-icon name="ticket-outline"></ion-icon>
+          <div class="rtext">
+            <div class="serial-full">{{ t.serial }}</div>
+            <div class="small">{{ 'TICKET_DETAILS_PAGE.TAP_TO_COPY' | translate }}</div>
+          </div>
+        </button>
+      </div>
+    </section>
   </div>
 
   <ng-template #skel>
-    <div class="wrap">
-      <div class="skel-block"></div>
+    <div class="screen">
+      <div class="skel-block hero"></div>
+      <div class="skel-block stats"></div>
       <div class="skel-block small"></div>
       <div class="skel-block small"></div>
     </div>

@@ -43,15 +43,6 @@ export class TicketDetailsPage {
   ionViewWillEnter() {
     this.raffleId = this.route.snapshot.paramMap.get('raffleId') || '';
     this.load();
-    console.log(
-      '[ticket-details] paramMap=',
-      this.route.snapshot.paramMap.keys,
-    );
-    console.log(
-      '[ticket-details] raffleId=',
-      this.route.snapshot.paramMap.get('raffleId'),
-      this.route.snapshot.paramMap.get('id'),
-    );
   }
 
   get ticketsOwned(): number {
@@ -74,13 +65,15 @@ export class TicketDetailsPage {
     return !['CLOSED', 'DRAWN', 'FINISHED', 'ENDED'].includes(st);
   }
 
+  get raffleShortId(): string {
+    return this.raffleId ? `#${this.raffleId.slice(-8).toUpperCase()}` : '—';
+  }
+
   async load() {
     const raffleId =
       this.route.snapshot.paramMap.get('raffleId') ||
       this.route.snapshot.paramMap.get('id') ||
       '';
-
-    console.log('[ticket-details] raffleId=', raffleId);
 
     if (!raffleId) {
       const t = await this.toast.create({
@@ -151,5 +144,9 @@ export class TicketDetailsPage {
       });
       await t.present();
     } catch {}
+  }
+
+  trackBySerial(_: number, ticket: TicketDto): string {
+    return ticket.serial;
   }
 }

@@ -18,12 +18,16 @@ import { NetworkStatusService } from 'src/app/services/offline/network-status.se
 })
 export class NotificationsPage {
   loading = true;
+  refreshing = false;
+  markingAll = false;
   items: NotificationDto[] = [];
+  readonly skeletonItems = [1, 2, 3, 4];
   readonly isOffline$ = this.networkStatus.offline$;
+  private knownUnreadCount = 0;
 
   constructor(
     private api: NotificationsApiService,
-    private state: NotificationsStateService,
+    public state: NotificationsStateService,
     private networkStatus: NetworkStatusService,
     private router: Router,
     private toast: ToastController,
@@ -31,15 +35,21 @@ export class NotificationsPage {
   ) {}
 
   ionViewWillEnter() {
-    this.load();
+    void this.load(undefined, this.items.length > 0);
   }
 
-  async load(ev?: any) {
-    this.loading = true;
+  async load(ev?: any, preserveContent = false) {
+    if (!preserveContent || this.items.length === 0) {
+      this.loading = true;
+    } else {
+      this.refreshing = true;
+    }
+
     try {
       const res = await firstValueFrom(this.api.me(1, 30, false));
       this.items = res.data || [];
-      await this.state.refresh();
+      this.knownUnreadCount = Math.max(0, Number(res.unreadCount ?? 0));
+      this.state.setLocal(this.knownUnreadCount);
     } catch (e: any) {
       const t = await this.toast.create({
         message:
@@ -50,32 +60,55 @@ export class NotificationsPage {
       await t.present();
     } finally {
       this.loading = false;
+      this.refreshing = false;
       ev?.target?.complete?.();
     }
   }
 
   async markAllRead() {
-    await firstValueFrom(this.api.markAllRead());
-    if (this.networkStatus.isOffline()) {
-      this.state.markAllReadLocal();
-    } else {
-      await this.state.refresh();
-    }
+    if (this.markingAll) return;
+
+    const previousItems = this.items.map((n) => ({ ...n }));
+    const previousUnreadCount = this.knownUnreadCount;
+    const hadUnread = previousItems.some((n) => !n.readAt);
+    if (!hadUnread) return;
+
+    this.markingAll = true;
+    const readAt = new Date().toISOString();
     this.items = this.items.map((n) => ({
       ...n,
-      readAt: n.readAt || new Date().toISOString(),
+      readAt: n.readAt || readAt,
     }));
+    this.knownUnreadCount = 0;
+    this.state.markAllReadLocal();
+
+    try {
+      await firstValueFrom(this.api.markAllRead());
+    } catch (e: any) {
+      this.items = previousItems;
+      this.knownUnreadCount = previousUnreadCount;
+      this.state.setLocal(previousUnreadCount);
+      const t = await this.toast.create({
+        message:
+          e?.error?.message ||
+          this.translate.instant('NOTIFICATIONS_PAGE.TOAST_LOAD_FAILED'),
+        duration: 1600,
+        position: 'top',
+      });
+      await t.present();
+    } finally {
+      this.markingAll = false;
+    }
   }
 
   async open(n: NotificationDto) {
     if (!n.readAt) {
-      await firstValueFrom(this.api.markRead(n._id));
+      const previousReadAt = n.readAt;
+      const previousUnreadCount = this.knownUnreadCount;
       n.readAt = new Date().toISOString();
-      if (this.networkStatus.isOffline()) {
-        this.state.markOneReadLocal();
-      } else {
-        await this.state.refresh();
-      }
+      this.knownUnreadCount = Math.max(0, this.knownUnreadCount - 1);
+      this.state.markOneReadLocal();
+      void this.persistReadState(n, previousReadAt, previousUnreadCount);
     }
 
     const deepLink = n?.data?.deepLink;
@@ -94,13 +127,88 @@ export class NotificationsPage {
     return !n.readAt;
   }
 
+  get hasUnreadItems(): boolean {
+    return this.items.some((item) => !item.readAt);
+  }
+
+  trackById(_index: number, item: NotificationDto) {
+    return item._id;
+  }
+
+  iconName(n: NotificationDto): string {
+    const type = String(n?.type ?? '').toUpperCase();
+    if (type === 'PAYMENT_SUCCESS') return 'card-outline';
+    if (type === 'PAYMENT_FAILED') return 'alert-circle-outline';
+    if (type === 'ENDING_SOON') return 'time-outline';
+    if (type === 'DRAW_STARTED') return 'play-circle-outline';
+    if (type === 'DRAW_RESULT' || type === 'WINNER_ANNOUNCED') {
+      return 'trophy-outline';
+    }
+    if (type === 'FREE_TICKET_AVAILABLE' || type === 'FREE_TICKET_USED') {
+      return 'ticket-outline';
+    }
+    return 'notifications-outline';
+  }
+
+  toneClass(n: NotificationDto): string {
+    const type = String(n?.type ?? '').toUpperCase();
+    if (type === 'PAYMENT_SUCCESS') return 'tone-payment';
+    if (type === 'PAYMENT_FAILED') return 'tone-alert';
+    if (type === 'ENDING_SOON') return 'tone-warning';
+    if (type === 'DRAW_STARTED' || type === 'DRAW_RESULT' || type === 'WINNER_ANNOUNCED') {
+      return 'tone-draw';
+    }
+    if (type === 'FREE_TICKET_AVAILABLE' || type === 'FREE_TICKET_USED') {
+      return 'tone-bonus';
+    }
+    return 'tone-default';
+  }
+
+  typeLabel(n: NotificationDto): string {
+    const type = String(n?.type ?? '').toUpperCase();
+    if (type.startsWith('PAYMENT')) {
+      return this.translate.instant('NOTIFICATIONS_PAGE.TYPE_PAYMENT');
+    }
+    if (type.startsWith('DRAW') || type === 'WINNER_ANNOUNCED') {
+      return this.translate.instant('NOTIFICATIONS_PAGE.TYPE_DRAW');
+    }
+    if (type.startsWith('FREE_TICKET')) {
+      return this.translate.instant('NOTIFICATIONS_PAGE.TYPE_BONUS');
+    }
+    if (type === 'ENDING_SOON') {
+      return this.translate.instant('NOTIFICATIONS_PAGE.TYPE_URGENT');
+    }
+    return this.translate.instant('NOTIFICATIONS_PAGE.TYPE_DEFAULT');
+  }
+
   actionLabel(n: NotificationDto): string | null {
     const t = String(n?.type ?? '').toUpperCase();
-    if (t === 'PAYMENT_FAILED') return this.translate.instant('NOTIFICATIONS_PAGE.ACTION_RETRY');
-    if (t === 'ENDING_SOON') return this.translate.instant('NOTIFICATIONS_PAGE.ACTION_PARTICIPATE');
-    if (t === 'DRAW_STARTED') return this.translate.instant('NOTIFICATIONS_PAGE.ACTION_VIEW_LIVE');
-    if (t === 'DRAW_RESULT') return this.translate.instant('NOTIFICATIONS_PAGE.ACTION_VIEW_RESULT');
-    if (t === 'FREE_TICKET_AVAILABLE') return this.translate.instant('NOTIFICATIONS_PAGE.ACTION_USE');
+    if (t === 'PAYMENT_FAILED')
+      return this.translate.instant('NOTIFICATIONS_PAGE.ACTION_RETRY');
+    if (t === 'ENDING_SOON')
+      return this.translate.instant('NOTIFICATIONS_PAGE.ACTION_PARTICIPATE');
+    if (t === 'DRAW_STARTED')
+      return this.translate.instant('NOTIFICATIONS_PAGE.ACTION_VIEW_LIVE');
+    if (t === 'DRAW_RESULT')
+      return this.translate.instant('NOTIFICATIONS_PAGE.ACTION_VIEW_RESULT');
+    if (t === 'FREE_TICKET_AVAILABLE')
+      return this.translate.instant('NOTIFICATIONS_PAGE.ACTION_USE');
     return null;
+  }
+
+  private async persistReadState(
+    notification: NotificationDto,
+    previousReadAt: string | null,
+    previousUnreadCount: number,
+  ) {
+    try {
+      await firstValueFrom(this.api.markRead(notification._id));
+    } catch {
+      notification.readAt = previousReadAt;
+      if (!previousReadAt) {
+        this.knownUnreadCount = previousUnreadCount;
+        this.state.setLocal(previousUnreadCount);
+      }
+    }
   }
 }

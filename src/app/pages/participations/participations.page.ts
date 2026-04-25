@@ -57,6 +57,18 @@ export class ParticipationsPage {
     return this.items.filter((i) => i.isCompleted === completed);
   }
 
+  get ongoingCount(): number {
+    return this.items.filter((item) => !item.isCompleted).length;
+  }
+
+  get completedCount(): number {
+    return this.items.filter((item) => item.isCompleted).length;
+  }
+
+  get totalTicketsCount(): number {
+    return this.items.reduce((sum, item) => sum + item.ticketsCount, 0);
+  }
+
   async load() {
     this.loading = true;
     try {
@@ -86,8 +98,9 @@ export class ParticipationsPage {
         });
       }
 
-      // fetch raffle details for each group
-      for (const g of groups) {
+      // Fetch raffle details in parallel to keep the dashboard snappy.
+      await Promise.all(
+        groups.map(async (g) => {
         try {
           const r = await firstValueFrom(this.rafflesApi.getById(g.raffleId));
           g.raffle = r;
@@ -107,7 +120,8 @@ export class ParticipationsPage {
         } catch {
           // raffle may be missing: keep minimal
         }
-      }
+        }),
+      );
 
       // sort by most recent ticket
       groups.sort((a, b) =>
@@ -141,5 +155,9 @@ export class ParticipationsPage {
     const label = this.translate.instant('PARTICIPATIONS_PAGE.TICKET');
     if (clean.length <= 10) return `${label} #${clean}`;
     return `${label} #${clean.slice(0, 8)}...${clean.slice(-4)}`;
+  }
+
+  trackByItem(_: number, item: ParticipationItem): string {
+    return item.raffleId;
   }
 }

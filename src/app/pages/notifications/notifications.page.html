@@ -3,45 +3,102 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/home"></ion-back-button>
     </ion-buttons>
+
     <ion-title>{{ 'NOTIFICATIONS_PAGE.TITLE' | translate }}</ion-title>
 
     <ion-buttons slot="end">
-      <ion-button fill="clear" (click)="markAllRead()">
-        <ion-icon name="checkmark-done-outline"></ion-icon>
+      <ion-button
+        class="read-all-btn"
+        fill="clear"
+        [disabled]="markingAll || !hasUnreadItems"
+        (click)="markAllRead()"
+      >
+        <ion-icon name="checkmark-done-outline" slot="start"></ion-icon>
+        {{ 'NOTIFICATIONS_PAGE.MARK_ALL_READ' | translate }}
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="bg">
+  <ion-refresher slot="fixed" (ionRefresh)="load($event, true)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <div class="wrap">
-    <ion-refresher slot="fixed" (ionRefresh)="load($event)">
-      <ion-refresher-content></ion-refresher-content>
-    </ion-refresher>
+    <section class="hero-panel">
+      <div class="hero-copy">
+        <div class="eyebrow">{{ 'NOTIFICATIONS_PAGE.TITLE' | translate }}</div>
+        <h1>{{ 'NOTIFICATIONS_PAGE.TITLE' | translate }}</h1>
+        <p>{{ 'NOTIFICATIONS_PAGE.SUBTITLE' | translate }}</p>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-chip unread-chip">
+          <span class="label">{{ 'NOTIFICATIONS_PAGE.UNREAD' | translate }}</span>
+          <span class="value">{{ (state.unreadCount$ | async) ?? 0 }}</span>
+        </div>
+
+        <div class="stat-chip" *ngIf="refreshing">
+          <span class="label">{{ 'NOTIFICATIONS_PAGE.SYNC' | translate }}</span>
+          <span class="value">...</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="offline-note" *ngIf="isOffline$ | async">
+      {{ 'OFFLINE.NOTIFICATIONS_QUEUED' | translate }}
+    </div>
+
+    <div class="skel-list" *ngIf="loading">
+      <div class="skel-card" *ngFor="let _ of skeletonItems"></div>
+    </div>
 
     <div class="empty" *ngIf="!loading && items.length === 0">
-      <ion-icon name="notifications-outline"></ion-icon>
-      <div>{{ 'NOTIFICATIONS_PAGE.EMPTY' | translate }}</div>
+      <div class="empty-icon">
+        <ion-icon name="notifications-outline"></ion-icon>
+      </div>
+      <div class="empty-title">{{ 'NOTIFICATIONS_PAGE.EMPTY' | translate }}</div>
     </div>
 
-    <div class="card" *ngFor="let n of items" (click)="open(n)">
-      <div class="dot" *ngIf="isUnread(n)"></div>
-      <div class="title">{{ n.title }}</div>
-      <div class="body">{{ n.body }}</div>
-      <button
-        *ngIf="actionLabel(n) as lbl"
-        class="action-btn"
-        type="button"
-        (click)="open(n); $event.stopPropagation()"
+    <div class="list" *ngIf="!loading && items.length > 0">
+      <article
+        class="notification-card"
+        *ngFor="let n of items; trackBy: trackById"
+        [class.unread]="isUnread(n)"
+        [ngClass]="toneClass(n)"
+        (click)="open(n)"
       >
-        {{ lbl }}
-      </button>
-      <div class="meta">{{ n.createdAt | date:'MMM d, HH:mm' }}</div>
-    </div>
+        <div class="icon-shell">
+          <ion-icon [name]="iconName(n)"></ion-icon>
+        </div>
 
-    <div class="skel" *ngIf="loading">
-      <div class="skel-card" *ngFor="let _ of [1,2,3,4]"></div>
-    </div>
+        <div class="content">
+          <div class="row">
+            <div class="type-chip">{{ typeLabel(n) }}</div>
+            <div class="date">{{ n.createdAt | date:'dd MMM, HH:mm' }}</div>
+          </div>
 
+          <div class="title-row">
+            <h2>{{ n.title }}</h2>
+            <span class="unread-pill" *ngIf="isUnread(n)">
+              {{ 'NOTIFICATIONS_PAGE.NEW' | translate }}
+            </span>
+          </div>
+
+          <p class="body">{{ n.body }}</p>
+
+          <div class="footer" *ngIf="actionLabel(n) as lbl">
+            <button
+              class="action-btn"
+              type="button"
+              (click)="open(n); $event.stopPropagation()"
+            >
+              {{ lbl }}
+            </button>
+          </div>
+        </div>
+      </article>
+    </div>
   </div>
 </ion-content>

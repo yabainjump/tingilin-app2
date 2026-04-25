@@ -16,6 +16,18 @@ export interface NotificationDto {
   createdAt: string;
 }
 
+export interface NotificationsListResponse {
+  data: NotificationDto[];
+  unreadCount: number;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNextPage: boolean;
+  };
+}
+
 @Injectable({ providedIn: 'root' })
 export class NotificationsApiService {
   private base = `${environment.apiBaseUrl}`;
@@ -28,7 +40,7 @@ export class NotificationsApiService {
 
   me(page = 1, limit = 20, unreadOnly = false) {
     const u = unreadOnly ? '1' : '0';
-    return this.http.get<{ data: NotificationDto[] }>(
+    return this.http.get<NotificationsListResponse>(
       `${this.base}/notifications/me?page=${page}&limit=${limit}&unreadOnly=${u}`,
     );
   }
