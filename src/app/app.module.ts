@@ -8,7 +8,11 @@ import { LoadingInterceptor } from './core/loading/loading.interceptor';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { AuthInterceptor } from './services/auth/auth.interceptor';
 import { AuthTokenStorageService } from './services/auth/auth-token-storage.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -33,7 +37,6 @@ export function initializeOfflineQueue(queue: OfflineActionQueueService) {
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    HttpClientModule,
     LanguageSwitchModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
@@ -63,6 +66,7 @@ export function initializeOfflineQueue(queue: OfflineActionQueueService) {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    provideHttpClient(withInterceptorsFromDi()),
   ],
   bootstrap: [AppComponent],
 })

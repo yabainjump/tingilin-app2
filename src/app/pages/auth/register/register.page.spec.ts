@@ -1,5 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -27,6 +28,7 @@ describe('RegisterPage', () => {
       declarations: [RegisterPage],
       imports: [
         IonicModule.forRoot(),
+        TranslateModule.forRoot(),
         RouterTestingModule,
         FormsModule,
         ReactiveFormsModule,

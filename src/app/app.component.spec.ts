@@ -1,6 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
 import { IonicModule } from '@ionic/angular';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
@@ -11,6 +12,7 @@ describe('AppComponent', () => {
       declarations: [AppComponent],
       imports: [
         IonicModule.forRoot(),
+        TranslateModule.forRoot(),
         RouterTestingModule,
         HttpClientTestingModule,
       ],

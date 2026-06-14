@@ -17,13 +17,13 @@ import { toAbsoluteMediaUrl } from 'src/app/shared/utils/media-url';
 export class PaymentConfirmationPage {
   // Data affichée
   raffleId!: string;
-  title = 'iPhone 15 Pro Max';
+  title = '';
   imageUrl?: string;
   fallbackImage = 'assets/placeholder-product.png';
 
   quantity = 1;
-  ticketUnitPrice = 100;
-  amount = 100;
+  ticketUnitPrice = 0;
+  amount = 0;
 
   // Form
   paymentMethod: 'ORANGE' | 'MTN' = 'ORANGE';
@@ -64,7 +64,7 @@ export class PaymentConfirmationPage {
     this.imageUrl = toAbsoluteMediaUrl(qp.get('imageUrl'), environment.apiBaseUrl);
 
     this.quantity = Number(qp.get('qty') || 1);
-    this.ticketUnitPrice = Number(qp.get('unit') || 100);
+    this.ticketUnitPrice = Number(qp.get('unit') || 0);
     this.amount = this.quantity * this.ticketUnitPrice;
     this.intentKey = this.buildIntentKey();
 
@@ -105,8 +105,8 @@ export class PaymentConfirmationPage {
       const userEmail = this.payerEmail;
       const senderName = this.payerName || 'Tingilin User';
 
-      const res = await this.paymentsApi
-        .createIntent({
+      const res = await firstValueFrom(
+        this.paymentsApi.createIntent({
           raffleId: this.raffleId,
           amount: this.amount,
           provider: environment.paymentProvider,
@@ -115,8 +115,8 @@ export class PaymentConfirmationPage {
           userCountry: this.userCountry,
           senderName,
           idempotencyKey: this.intentKey,
-        })
-        .toPromise();
+        }),
+      );
 
       this.transactionId = res?.transactionId;
       this.paymentLink = res?.paymentLink;
@@ -129,9 +129,9 @@ export class PaymentConfirmationPage {
           Date.now().toString(),
         ].join('-');
 
-        const mockResult = await this.paymentsApi
-          .mockConfirm(this.transactionId, mockProviderRef)
-          .toPromise();
+        const mockResult = await firstValueFrom(
+          this.paymentsApi.mockConfirm(this.transactionId, mockProviderRef),
+        );
 
         if (mockResult?.status === 'SUCCESS') {
           await this.presentToast('Paiement test confirme localement.');
@@ -151,7 +151,7 @@ export class PaymentConfirmationPage {
       );
 
       // Ouvre le lien (web)
-      window.open(this.paymentLink, '_blank');
+      window.open(this.paymentLink, '_blank', 'noopener,noreferrer');
 
       // Option UX : tu laisses un bouton "Vérifier le paiement" visible
     } catch (e: any) {
@@ -227,9 +227,9 @@ export class PaymentConfirmationPage {
     this.loading = true;
 
     try {
-      const res = await this.paymentsApi
-        .verifyDigikuntz(this.transactionId)
-        .toPromise();
+      const res = await firstValueFrom(
+        this.paymentsApi.verifyDigikuntz(this.transactionId),
+      );
 
       if (res?.status === 'SUCCESS') {
         await this.presentToast(this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_PAYMENT_CONFIRMED'));

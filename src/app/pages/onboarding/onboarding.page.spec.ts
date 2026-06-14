@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
 import { convertToParamMap, ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { OnboardingPage } from './onboarding.page';
@@ -14,7 +15,7 @@ describe('OnboardingPage', () => {
 
     await TestBed.configureTestingModule({
       declarations: [OnboardingPage],
-      imports: [IonicModule.forRoot()],
+      imports: [IonicModule.forRoot(), TranslateModule.forRoot()],
       providers: [
         { provide: Router, useValue: router },
         {

@@ -6,14 +6,15 @@ import {
   HttpEvent,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
-import { catchError, filter, switchMap, take } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, switchMap, finalize, shareReplay, map, tap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  private isRefreshing = false;
-  private refreshSubject = new BehaviorSubject<string | null>(null);
+  // Refresh en cours partage entre toutes les requetes concurrentes:
+  // succes ET echec sont propages a tous les abonnes (pas de requete bloquee).
+  private refresh$: Observable<string> | null = null;
 
   constructor(private auth: AuthService) {}
 
@@ -62,44 +63,38 @@ export class AuthInterceptor implements HttpInterceptor {
       return throwError(() => new Error('No refresh token'));
     }
 
-    // si refresh déjà en cours → on attend le nouveau token
-    if (this.isRefreshing) {
-      return this.refreshSubject.pipe(
-        filter((t) => !!t),
-        take(1),
-        switchMap((newToken) => {
-          const retryReq = req.clone({
-            setHeaders: { Authorization: `Bearer ${newToken}` },
-          });
-          return next.handle(retryReq);
-        }),
-      );
-    }
-
-    this.isRefreshing = true;
-    this.refreshSubject.next(null);
-
-    return this.auth.refresh(refreshToken).pipe(
-      switchMap((res) => {
-        this.isRefreshing = false;
-
-        // ✅ on stocke les nouveaux tokens
-        this.auth.setTokens(res.access_token, res.refresh_token);
-
-        // ✅ on réveille les requêtes en attente
-        this.refreshSubject.next(res.access_token);
-
-        // ✅ on rejoue la requête initiale
+    return this.getRefresh(refreshToken).pipe(
+      switchMap((newToken) => {
         const retryReq = req.clone({
-          setHeaders: { Authorization: `Bearer ${res.access_token}` },
+          setHeaders: { Authorization: `Bearer ${newToken}` },
         });
         return next.handle(retryReq);
       }),
-      catchError((e) => {
-        this.isRefreshing = false;
-        this.auth.logout();
-        return throwError(() => e);
-      }),
     );
+  }
+
+  /**
+   * Renvoie le refresh en cours (partage), ou en demarre un nouveau.
+   * En cas de succes: stocke les tokens et emet le nouvel access token.
+   * En cas d'echec: deconnecte et propage l'erreur a TOUTES les requetes
+   * en attente (au lieu de les laisser bloquees indefiniment).
+   */
+  private getRefresh(refreshToken: string): Observable<string> {
+    if (!this.refresh$) {
+      this.refresh$ = this.auth.refresh(refreshToken).pipe(
+        tap((res) => this.auth.setTokens(res.access_token, res.refresh_token)),
+        map((res) => res.access_token),
+        catchError((e) => {
+          this.auth.logout();
+          return throwError(() => e);
+        }),
+        finalize(() => {
+          this.refresh$ = null;
+        }),
+        shareReplay(1),
+      );
+    }
+
+    return this.refresh$;
   }
 }

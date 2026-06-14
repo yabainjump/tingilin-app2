@@ -235,7 +235,7 @@ export class ReferralPage {
     }
 
     if (url) {
-      window.open(url, '_blank');
+      window.open(url, '_blank', 'noopener,noreferrer');
       return;
     }
 

@@ -1,6 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { convertToParamMap, ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -17,6 +18,7 @@ describe('ParticipationsPage', () => {
       declarations: [ParticipationsPage],
       imports: [
         IonicModule.forRoot(),
+        TranslateModule.forRoot(),
         RouterTestingModule,
         HttpClientTestingModule,
         FormsModule,

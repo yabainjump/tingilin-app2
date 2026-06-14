@@ -1,5 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { AlertController, IonicModule, NavController, ToastController } from '@ionic/angular';
 import { of } from 'rxjs';
@@ -52,7 +53,7 @@ describe('RaffleDetailsPage', () => {
 
     await TestBed.configureTestingModule({
       declarations: [RaffleDetailsPage],
-      imports: [IonicModule.forRoot()],
+      imports: [IonicModule.forRoot(), TranslateModule.forRoot()],
       providers: [
         { provide: Router, useValue: router },
         { provide: AuthService, useValue: auth },
