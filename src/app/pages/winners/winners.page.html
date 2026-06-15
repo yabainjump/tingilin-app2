@@ -29,6 +29,59 @@
             <div class="subtitle">{{ 'WINNERS_PAGE.WINNER' | translate }}: {{ selectedWinnerName }}</div>
           </div>
         </div>
+
+        <!-- Tirage verifiable (commit-reveal) -->
+        <div class="fairness" *ngIf="featured?.raffleId">
+          <button class="proof-btn" type="button" (click)="toggleProof()" [disabled]="proofLoading">
+            <ion-icon [name]="proofOpen ? 'shield-checkmark' : 'shield-checkmark-outline'"></ion-icon>
+            <span>{{ (proofOpen ? 'WINNERS_PAGE.PROOF_HIDE' : 'WINNERS_PAGE.PROOF_SHOW') | translate }}</span>
+            <ion-spinner *ngIf="proofLoading" name="dots"></ion-spinner>
+          </button>
+
+          <div class="proof-panel" *ngIf="proofOpen && proof">
+            <div class="proof-line" *ngIf="proof.verified !== undefined">
+              <span class="k">{{ 'WINNERS_PAGE.PROOF_STATUS' | translate }}</span>
+              <span class="v" [class.ok]="proof.verified" [class.ko]="!proof.verified">
+                {{ (proof.verified ? 'WINNERS_PAGE.PROOF_VERIFIED' : 'WINNERS_PAGE.PROOF_UNVERIFIED') | translate }}
+              </span>
+            </div>
+
+            <div class="proof-line">
+              <span class="k">{{ 'WINNERS_PAGE.PROOF_ALGO' | translate }}</span>
+              <span class="v">{{ proof.algorithm }}</span>
+            </div>
+
+            <button class="proof-line copyable" type="button" (click)="copyProofValue(proof.commitment)">
+              <span class="k">{{ 'WINNERS_PAGE.PROOF_COMMITMENT' | translate }}</span>
+              <span class="v mono">{{ short(proof.commitment) }}</span>
+            </button>
+
+            <ng-container *ngIf="proof.revealed as rev">
+              <button class="proof-line copyable" type="button" (click)="copyProofValue(rev.serverSeed)">
+                <span class="k">{{ 'WINNERS_PAGE.PROOF_SEED' | translate }}</span>
+                <span class="v mono">{{ short(rev.serverSeed) }}</span>
+              </button>
+              <button class="proof-line copyable" type="button" (click)="copyProofValue(rev.ticketsetHash)">
+                <span class="k">{{ 'WINNERS_PAGE.PROOF_TICKETSET' | translate }}</span>
+                <span class="v mono">{{ short(rev.ticketsetHash) }}</span>
+              </button>
+              <div class="proof-line">
+                <span class="k">{{ 'WINNERS_PAGE.PROOF_INDEX' | translate }}</span>
+                <span class="v">{{ rev.winningIndex }} / {{ rev.ticketCount }}</span>
+              </div>
+              <button class="proof-line copyable" type="button" (click)="copyProofValue(rev.winningTicketSerial)">
+                <span class="k">{{ 'WINNERS_PAGE.PROOF_TICKET' | translate }}</span>
+                <span class="v mono">{{ rev.winningTicketSerial }}</span>
+              </button>
+            </ng-container>
+
+            <div class="proof-pending" *ngIf="!proof.revealed">
+              {{ 'WINNERS_PAGE.PROOF_PENDING' | translate }}
+            </div>
+
+            <div class="proof-formula">{{ proof.formula }}</div>
+          </div>
+        </div>
       </div>
 
       <div class="scanner-zone">
@@ -94,8 +147,8 @@
         </button>
 
         <div class="stat-card">
-          <div class="stat-k">{{ 'WINNERS_PAGE.TRUST_LEVEL' | translate }}</div>
-          <div class="stat-v gold">{{ trustPercentLabel }}</div>
+          <div class="stat-k">{{ 'WINNERS_PAGE.DRAW_FAIRNESS' | translate }}</div>
+          <div class="stat-v gold">{{ verifiableLabel }}</div>
         </div>
       </div>
 

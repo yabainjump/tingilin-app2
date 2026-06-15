@@ -7,7 +7,7 @@ import { WinnerDto } from './winners-api.service';
 
 export type LiveDrawState = {
   viewersLive: number;
-  trustPercent: number;
+  provablyFair: boolean;
   analysisProgress: number;
   analysisLabel: 'SCANNING...' | 'VERIFYING...';
   scan: {

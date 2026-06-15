@@ -15,6 +15,31 @@ export type WinnerDto = {
   badgeTone?: 'pink' | 'gold' | 'violet';
 };
 
+export type FairnessRevealed = {
+  serverSeed: string | null;
+  ticketCount: number;
+  ticketsetHash: string;
+  winningIndex: number;
+  digest: string;
+  committedBeforeDraw: boolean;
+  revealedAt: string | null;
+  drawnAt: string | null;
+  winningTicketSerial: string | null;
+  winnerUserId: string | null;
+  orderedSerials: string[];
+};
+
+export type FairnessDto = {
+  raffleId: string;
+  status: string;
+  algorithm: string;
+  formula: string;
+  commitment: string | null;
+  revealed: FairnessRevealed | null;
+  verified?: boolean;
+  verificationIssues?: string[];
+};
+
 @Injectable({ providedIn: 'root' })
 export class WinnersApiService {
   private readonly baseUrl = environment.apiBaseUrl;
@@ -38,5 +63,12 @@ export class WinnersApiService {
           })),
         ),
       );
+  }
+
+  // Preuve verifiable du tirage (commit-reveal).
+  fairness(raffleId: string): Observable<FairnessDto> {
+    return this.http.get<FairnessDto>(
+      `${this.baseUrl}/raffles/${encodeURIComponent(raffleId)}/fairness`,
+    );
   }
 }

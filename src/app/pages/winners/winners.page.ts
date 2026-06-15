@@ -3,6 +3,7 @@ import { NavController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { Subscription, finalize, interval } from 'rxjs';
 import {
+  FairnessDto,
   WinnersApiService,
   WinnerDto,
 } from 'src/app/services/winners/winners-api.service';
@@ -30,8 +31,14 @@ export class WinnersPage implements OnInit {
   analysisLabel = '';
   isScanning = true;
   liveViewers = 0;
-  trustPercent = 99.9;
+  // Tirage verifiable (commit-reveal) cote backend. Plus de faux pourcentage.
+  provablyFair = true;
   hasRealtime = false;
+
+  // Preuve verifiable du tirage (panneau depliable).
+  proof: FairnessDto | null = null;
+  proofOpen = false;
+  proofLoading = false;
 
   private scanSub?: Subscription;
   private progressSub?: Subscription;
@@ -169,8 +176,12 @@ export class WinnersPage implements OnInit {
     return base + delta;
   }
 
-  get trustPercentLabel(): string {
-    return `${Math.max(0, Math.min(100, this.trustPercent)).toFixed(1)}%`;
+  get verifiableLabel(): string {
+    return this.translate.instant(
+      this.provablyFair
+        ? 'WINNERS_PAGE.VERIFIABLE_YES'
+        : 'WINNERS_PAGE.VERIFIABLE_NO',
+    );
   }
 
   get featureTitle(): string {
@@ -246,6 +257,67 @@ export class WinnersPage implements OnInit {
     await t.present();
   }
 
+  toggleProof() {
+    if (this.proofOpen) {
+      this.proofOpen = false;
+      return;
+    }
+
+    const raffleId = this.featured?.raffleId;
+    if (!raffleId) {
+      return;
+    }
+
+    // Deja charge pour ce tirage: simple re-ouverture.
+    if (this.proof && this.proof.raffleId === raffleId) {
+      this.proofOpen = true;
+      return;
+    }
+
+    this.proofLoading = true;
+    this.api
+      .fairness(raffleId)
+      .pipe(finalize(() => (this.proofLoading = false)))
+      .subscribe({
+        next: (res) => {
+          this.proof = res;
+          this.proofOpen = true;
+        },
+        error: async () => {
+          const t = await this.toast.create({
+            message: this.translate.instant('WINNERS_PAGE.PROOF_ERROR'),
+            duration: 1600,
+          });
+          await t.present();
+        },
+      });
+  }
+
+  async copyProofValue(value?: string | null) {
+    const v = String(value ?? '').trim();
+    if (!v || !navigator?.clipboard?.writeText) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(v);
+      const t = await this.toast.create({
+        message: this.translate.instant('WINNERS_PAGE.PROOF_COPIED'),
+        duration: 1200,
+      });
+      await t.present();
+    } catch {
+      // copie best-effort
+    }
+  }
+
+  short(value?: string | null, head = 10, tail = 6): string {
+    const v = String(value ?? '').trim();
+    if (v.length <= head + tail + 1) {
+      return v;
+    }
+    return `${v.slice(0, head)}…${v.slice(-tail)}`;
+  }
+
   private connectRealtime() {
     this.liveSocket.connect();
     this.liveSub?.unsubscribe();
@@ -263,9 +335,7 @@ export class WinnersPage implements OnInit {
       ? Math.max(0, Number(state.viewersLive))
       : this.liveViewers;
 
-    this.trustPercent = Number.isFinite(state?.trustPercent)
-      ? Number(state.trustPercent)
-      : this.trustPercent;
+    this.provablyFair = state?.provablyFair !== false;
 
     this.analysisProgress = Number.isFinite(state?.analysisProgress)
       ? Math.max(0, Math.min(100, Number(state.analysisProgress)))
