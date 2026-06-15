@@ -15,8 +15,25 @@ set -euo pipefail
 
 BRANCH="${BRANCH:-new_dev}"
 REPO_DIR="${REPO_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
-DOCROOT="${DOCROOT:-$HOME/public_html}"          # domaine principal = public_html
+# Docroot DEDIE du site (PAS le public_html partage qui contient tous les sites).
+DOCROOT="${DOCROOT:-$HOME/public_html/tinguilin.yaba-in.com}"
 BUILD_DIR="www"                                   # outputPath de angular.json
+
+# --- Garde-fous anti-catastrophe (rsync --delete) ------------------------------
+case "$DOCROOT" in
+  "" ) echo "ERREUR: DOCROOT non defini."; exit 1 ;;
+  "$HOME/public_html" | "$HOME/public_html/" )
+    echo "ERREUR: DOCROOT ne doit JAMAIS etre le public_html partage (il contient tous tes sites)."
+    echo "Utilise le dossier dedie du site, ex: DOCROOT=\$HOME/public_html/tinguilin.yaba-in.com"
+    exit 1 ;;
+esac
+# Le repo ne doit PAS etre a l'interieur du docroot (sinon rsync --delete recursif).
+case "$REPO_DIR/" in
+  "$DOCROOT"/* )
+    echo "ERREUR: le repo ($REPO_DIR) est DANS le docroot ($DOCROOT)."
+    echo "Clone le repo hors docroot, ex: ~/repos/tinguilin-app"
+    exit 1 ;;
+esac
 
 if [ -z "${NODE_BIN:-}" ]; then
   if   [ -d /opt/cpanel/ea-nodejs22/bin ]; then NODE_BIN="/opt/cpanel/ea-nodejs22/bin"
