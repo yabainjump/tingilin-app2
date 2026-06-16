@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthTokenStorageService } from './auth-token-storage.service';
 
@@ -52,6 +52,12 @@ export class AuthService {
   private readonly legacyTokenKey = 'tingilin_token';
   private readonly maxTokenLength = 3500;
 
+  // Emis a chaque changement de session (login / logout). Les services qui
+  // gardent des donnees par-utilisateur (notifications, file offline, caches)
+  // s'y abonnent pour se vider et eviter toute fuite entre comptes.
+  private readonly sessionReset = new Subject<void>();
+  readonly sessionReset$ = this.sessionReset.asObservable();
+
   constructor(
     private http: HttpClient,
     private tokenStorage: AuthTokenStorageService,
@@ -63,7 +69,12 @@ export class AuthService {
         access_token: string;
         refresh_token: string;
       }>(`${this.baseUrl}/auth/login`, { email, password })
-      .pipe(tap((res) => this.setTokens(res.access_token, res.refresh_token)));
+      .pipe(
+        tap((res) => {
+          this.setTokens(res.access_token, res.refresh_token);
+          this.sessionReset.next(); // nouveau compte -> on vide les caches du precedent
+        }),
+      );
   }
 
   register(dto: {
@@ -79,7 +90,12 @@ export class AuthService {
         access_token: string;
         refresh_token: string;
       }>(`${this.baseUrl}/auth/register`, dto)
-      .pipe(tap((res) => this.setTokens(res.access_token, res.refresh_token)));
+      .pipe(
+        tap((res) => {
+          this.setTokens(res.access_token, res.refresh_token);
+          this.sessionReset.next();
+        }),
+      );
   }
 
   me<T = any>(): Observable<T> {
@@ -131,6 +147,7 @@ export class AuthService {
     }
 
     this.clearTokens();
+    this.sessionReset.next(); // vide tous les caches par-utilisateur
   }
 
   getToken(): string | null {

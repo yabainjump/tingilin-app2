@@ -11,7 +11,11 @@ export class NotificationsStateService {
   constructor(
     private api: NotificationsApiService,
     private auth: AuthService,
-  ) {}
+  ) {
+    // Changement de compte: on remet le compteur a zero pour eviter d'afficher
+    // les non-lus du compte precedent.
+    this.auth.sessionReset$.subscribe(() => this._unread.next(0));
+  }
 
   async refresh() {
     if (!this.auth.isLoggedIn()) {

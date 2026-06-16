@@ -4,6 +4,7 @@ import { BehaviorSubject, firstValueFrom, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AppStorageService } from 'src/app/shared/storage/app-storage.service';
 import { NetworkStatusService } from './network-status.service';
+import { AuthService } from '../auth/auth.service';
 
 type OfflineActionType =
   | 'notifications.mark-read'
@@ -32,12 +33,27 @@ export class OfflineActionQueueService {
     private readonly storage: AppStorageService,
     private readonly http: HttpClient,
     private readonly networkStatus: NetworkStatusService,
+    private readonly auth: AuthService,
   ) {
     this.networkStatus.online$.subscribe((online) => {
       if (online) {
         void this.flush();
       }
     });
+
+    // Changement de compte: on purge les actions en attente du compte precedent
+    // (sinon elles pourraient s'executer sous le nouveau compte).
+    this.auth.sessionReset$.subscribe(() => void this.clearForSession());
+  }
+
+  /** Vide la file (memoire + stockage) lors d'un changement de session. */
+  async clearForSession(): Promise<void> {
+    this.queueSubject.next([]);
+    try {
+      await this.storage.remove(this.storageKey);
+    } catch {
+      // best-effort
+    }
   }
 
   async init(): Promise<void> {
