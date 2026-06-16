@@ -24,6 +24,9 @@ export class NotificationsPage {
   readonly skeletonItems = [1, 2, 3, 4];
   readonly isOffline$ = this.networkStatus.offline$;
   private knownUnreadCount = 0;
+  // Notifs lues localement (anti-course: un rechargement qui devance le PATCH
+  // mark-read ne doit pas les reafficher "non-lues").
+  private locallyReadIds = new Set<string>();
 
   constructor(
     private api: NotificationsApiService,
@@ -48,7 +51,19 @@ export class NotificationsPage {
     try {
       const res = await firstValueFrom(this.api.me(1, 30, false));
       this.items = res.data || [];
-      this.knownUnreadCount = Math.max(0, Number(res.unreadCount ?? 0));
+
+      // Reconciliation anti-course: garde "lues" les notifs lues localement
+      // meme si le backend renvoie encore readAt=null (PATCH pas encore committe).
+      let unread = Math.max(0, Number(res.unreadCount ?? 0));
+      if (this.locallyReadIds.size) {
+        for (const item of this.items) {
+          if (!item.readAt && this.locallyReadIds.has(item._id)) {
+            item.readAt = new Date().toISOString();
+            unread = Math.max(0, unread - 1);
+          }
+        }
+      }
+      this.knownUnreadCount = unread;
       this.state.setLocal(this.knownUnreadCount);
     } catch (e: any) {
       const t = await this.toast.create({
@@ -105,10 +120,19 @@ export class NotificationsPage {
     if (!n.readAt) {
       const previousReadAt = n.readAt;
       const previousUnreadCount = this.knownUnreadCount;
-      n.readAt = new Date().toISOString();
+      n.readAt = new Date().toISOString(); // maj optimiste (UI instantanee)
+      this.locallyReadIds.add(n._id);
       this.knownUnreadCount = Math.max(0, this.knownUnreadCount - 1);
       this.state.markOneReadLocal();
-      void this.persistReadState(n, previousReadAt, previousUnreadCount);
+      // On ATTEND la persistance avant de naviguer: sinon un retour rapide sur
+      // la page recharge la liste (GET) et peut gagner la course contre le PATCH
+      // mark-read encore en vol -> la notif reapparait "non-lue".
+      // Borne a 1.2s pour ne jamais bloquer la navigation sur reseau lent
+      // (le mark-read continue en arriere-plan / via la file offline).
+      await Promise.race([
+        this.persistReadState(n, previousReadAt, previousUnreadCount),
+        new Promise<void>((resolve) => setTimeout(resolve, 1200)),
+      ]);
     }
 
     const deepLink = n?.data?.deepLink;
