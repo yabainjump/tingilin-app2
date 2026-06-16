@@ -33,29 +33,34 @@ export class ShareService {
     return 'copied';
   }
 
+  // IMPORTANT: on partage les URLs du backend /share/* qui rendent une page
+  // avec les balises Open Graph (image + description) PUIS redirigent vers
+  // l'app. Partager directement la route SPA (/raffle-details/:id) ne donne
+  // aucun apercu (pas de meta cote client) sur WhatsApp/Facebook/etc.
   raffleShareUrl(raffleId: string): string {
     const id = encodeURIComponent(String(raffleId ?? '').trim());
-    const appOrigin = this.appOriginFromRuntimeOrApi(environment.apiBaseUrl);
-    return `${appOrigin}/raffle-details/${id}`;
+    return `${this.shareOrigin()}/share/raffle/${id}`;
   }
 
   referralShareUrl(referralCode: string): string {
     const code = encodeURIComponent(
       String(referralCode ?? '').trim().toUpperCase(),
     );
-    const appOrigin = this.appOriginFromRuntimeOrApi(environment.apiBaseUrl);
-    return `${appOrigin}/auth/register?ref=${code}&referralCode=${code}`;
+    return `${this.shareOrigin()}/share/referral/${code}`;
   }
 
   siteShareUrl(path = '/landing'): string {
     const normalized = this.normalizePath(path);
-    const appOrigin = this.appOriginFromRuntimeOrApi(environment.apiBaseUrl);
-    return `${appOrigin}${normalized}`;
+    return `${this.shareOrigin()}/share/site?to=${encodeURIComponent(normalized)}`;
   }
 
   liveShareUrl(): string {
-    const appOrigin = this.appOriginFromRuntimeOrApi(environment.apiBaseUrl);
-    return `${appOrigin}/tabs/winners`;
+    return `${this.shareOrigin()}/share/live`;
+  }
+
+  /** Origine du backend (sert les pages /share/* avec les meta Open Graph). */
+  private shareOrigin(): string {
+    return this.apiOriginFromBase(environment.apiBaseUrl);
   }
 
   private apiOriginFromBase(baseUrl: string): string {
@@ -67,27 +72,6 @@ export class ShareService {
       return `${u.protocol}//${u.host}`;
     } catch {
       return raw.replace(/\/api\/v1\/?$/i, '').replace(/\/+$/, '');
-    }
-  }
-
-  private appOriginFromRuntimeOrApi(apiBaseUrl: string): string {
-    if (typeof window !== 'undefined' && window.location?.origin) {
-      return String(window.location.origin).replace(/\/+$/, '');
-    }
-
-    const apiOrigin = this.apiOriginFromBase(apiBaseUrl);
-    if (!apiOrigin) return '';
-
-    try {
-      const u = new URL(apiOrigin);
-      const host = String(u.host ?? '');
-      if (host.toLowerCase().startsWith('backend.')) {
-        const frontendHost = host.slice('backend.'.length);
-        if (frontendHost) return `${u.protocol}//${frontendHost}`;
-      }
-      return `${u.protocol}//${u.host}`;
-    } catch {
-      return apiOrigin;
     }
   }
 
