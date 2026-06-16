@@ -3,6 +3,7 @@
   --bg: #1c1022;
   --card: rgba(255, 255, 255, 0.06);
   --card2: rgba(255, 255, 255, 0.08);
+  --gold: #ffd84d; // or: valeur / prix
 }
 
 ion-content.details {
@@ -496,13 +497,15 @@ ion-content.details {
   color: rgba(255, 255, 255, 0.45);
 }
 .total-val {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 900;
+  color: var(--gold);
+  text-shadow: 0 0 18px rgba(245, 158, 11, 0.28);
 }
 .total-val span {
   font-size: 12px;
   font-weight: 800;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 216, 77, 0.7);
 }
 
 .cta {

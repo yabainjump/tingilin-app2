@@ -85,3 +85,119 @@ ion-toast.toast-middle {
   bottom: auto !important;
   transform: none !important;
 }
+
+/* ===========================================================================
+ * Tinguilin — Couche UI moderne (baseline, faible specificite: les pages
+ * peuvent toujours surcharger). Violet marque + or, coins arrondis, ombres
+ * douces, feedback tactile, focus accessibles.
+ * ======================================================================== */
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(124, 58, 237, 0.2);
+}
+
+/* Titres un peu plus affirmes */
+h1, h2, h3 {
+  letter-spacing: -0.01em;
+  font-weight: 700;
+}
+
+/* Boutons: arrondis, pas de MAJUSCULES forcees, feedback au press --------- */
+ion-button {
+  --border-radius: var(--app-radius-sm);
+  --box-shadow: none;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  transition: transform 0.12s ease;
+
+  &::part(native) {
+    transition: filter 0.15s ease;
+  }
+}
+ion-button.button-solid {
+  --box-shadow: var(--app-shadow-brand);
+}
+ion-button.button-solid.ion-color-warning,
+ion-button.button-solid.ion-color-success,
+ion-button.button-solid.ion-color-medium {
+  --box-shadow: var(--app-shadow-sm);
+}
+/* Press: leger enfoncement (sans decaler la mise en page) */
+ion-button:active {
+  transform: scale(0.98);
+}
+
+/* Cartes: coins plus doux + ombre legere -------------------------------- */
+ion-card {
+  border-radius: var(--app-radius-lg);
+  box-shadow: var(--app-shadow-sm);
+  border: 1px solid var(--app-border);
+}
+
+/* Champs: arrondis + anneau de focus accessible ------------------------- */
+ion-item {
+  --border-radius: var(--app-radius-sm);
+}
+ion-input,
+ion-textarea,
+ion-searchbar {
+  --border-radius: var(--app-radius-sm);
+}
+ion-input.has-focus,
+ion-textarea.has-focus {
+  --highlight-color-focused: var(--ion-color-primary);
+}
+
+/* Puces / badges un peu plus ronds */
+ion-chip,
+ion-badge {
+  border-radius: var(--app-radius-pill);
+  font-weight: 600;
+}
+
+/* Barre d'onglets: indicateur actif clair, safe-area respectee ----------- */
+ion-tab-bar {
+  --background: var(--app-surface);
+  border-top: 1px solid var(--app-border);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+ion-tab-button {
+  --color: var(--app-muted);
+  --color-selected: var(--ion-color-primary);
+}
+
+/* En-tete plus epure */
+ion-toolbar {
+  --border-width: 0 0 1px 0;
+  --border-color: var(--app-border);
+}
+ion-title {
+  font-weight: 700;
+}
+
+/* Focus visible clavier (accessibilite) --------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--ion-color-primary);
+  outline-offset: 2px;
+}
+
+/* Respect de la preference "reduire les animations" --------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
