@@ -25,6 +25,8 @@ export class OfflineActionQueueService {
   private readonly baseUrl = environment.apiBaseUrl;
   private isInitialized = false;
   private isFlushing = false;
+  // Incremente a chaque changement de session: invalide tout flush en cours.
+  private sessionEpoch = 0;
 
   readonly queue$ = this.queueSubject.asObservable();
   readonly pendingCount$ = this.queue$.pipe(map((items) => items.length));
@@ -48,6 +50,7 @@ export class OfflineActionQueueService {
 
   /** Vide la file (memoire + stockage) lors d'un changement de session. */
   async clearForSession(): Promise<void> {
+    this.sessionEpoch++; // invalide tout flush() en cours (anti-course)
     this.queueSubject.next([]);
     try {
       await this.storage.remove(this.storageKey);
@@ -97,11 +100,16 @@ export class OfflineActionQueueService {
     }
 
     this.isFlushing = true;
+    const epoch = this.sessionEpoch;
     try {
       let queue = [...this.queueSubject.value];
       while (queue.length > 0) {
         const current = queue[0];
         const success = await this.process(current);
+
+        // Changement de compte pendant le traitement: on abandonne SANS
+        // re-persister (la purge clearForSession fait foi).
+        if (this.sessionEpoch !== epoch) return;
         if (!success) break;
 
         queue = this.queueSubject.value.filter((item) => item.id !== current.id);

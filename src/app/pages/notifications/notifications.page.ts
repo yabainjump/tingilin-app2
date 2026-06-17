@@ -52,16 +52,22 @@ export class NotificationsPage {
       const res = await firstValueFrom(this.api.me(1, 30, false));
       this.items = res.data || [];
 
-      // Reconciliation anti-course: garde "lues" les notifs lues localement
-      // meme si le backend renvoie encore readAt=null (PATCH pas encore committe).
+      // Reconciliation anti-course + bornage du Set: garde "lues" les notifs
+      // lues localement meme si le backend renvoie encore readAt=null (PATCH pas
+      // encore committe), et on RECONSTRUIT locallyReadIds avec uniquement les
+      // ids encore "en attente" (presents ET non confirmes lus). Purge auto des
+      // confirmes, des absents et des ids d'un autre compte -> Set toujours borne.
       let unread = Math.max(0, Number(res.unreadCount ?? 0));
       if (this.locallyReadIds.size) {
+        const pending = new Set<string>();
         for (const item of this.items) {
-          if (!item.readAt && this.locallyReadIds.has(item._id)) {
-            item.readAt = new Date().toISOString();
-            unread = Math.max(0, unread - 1);
-          }
+          if (!this.locallyReadIds.has(item._id)) continue;
+          if (item.readAt) continue; // backend confirme lu -> plus besoin
+          item.readAt = new Date().toISOString();
+          unread = Math.max(0, unread - 1);
+          pending.add(item._id); // toujours en attente de confirmation backend
         }
+        this.locallyReadIds = pending;
       }
       this.knownUnreadCount = unread;
       this.state.setLocal(this.knownUnreadCount);
@@ -129,10 +135,18 @@ export class NotificationsPage {
       // mark-read encore en vol -> la notif reapparait "non-lue".
       // Borne a 1.2s pour ne jamais bloquer la navigation sur reseau lent
       // (le mark-read continue en arriere-plan / via la file offline).
-      await Promise.race([
-        this.persistReadState(n, previousReadAt, previousUnreadCount),
-        new Promise<void>((resolve) => setTimeout(resolve, 1200)),
-      ]);
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      const timeout = new Promise<void>((resolve) => {
+        timer = setTimeout(resolve, 1200);
+      });
+      try {
+        await Promise.race([
+          this.persistReadState(n, previousReadAt, previousUnreadCount),
+          timeout,
+        ]);
+      } finally {
+        if (timer) clearTimeout(timer); // evite un timer/closure qui traine
+      }
     }
 
     const deepLink = n?.data?.deepLink;
@@ -228,6 +242,10 @@ export class NotificationsPage {
     try {
       await firstValueFrom(this.api.markRead(notification._id));
     } catch {
+      // Echec du mark-read: on annule l'optimisme ET on retire l'id de la
+      // reconciliation, sinon un rechargement le re-marquerait "lu" a tort
+      // alors que le backend le considere toujours non-lu.
+      this.locallyReadIds.delete(notification._id);
       notification.readAt = previousReadAt;
       if (!previousReadAt) {
         this.knownUnreadCount = previousUnreadCount;
