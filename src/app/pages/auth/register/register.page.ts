@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
@@ -16,7 +16,7 @@ const PASSWORD_RULE = /^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/;
   styleUrls: ['./register.page.scss'],
   standalone: false,
 })
-export class RegisterPage {
+export class RegisterPage implements OnInit {
   loading = false;
   showPassword = false;
   private redirectAfterOnboarding = '/tabs/home';

@@ -47,16 +47,7 @@ export class ProfilePage {
 
     forkJoin({
       me: this.api.me().pipe(catchError(() => of(null))),
-      stats: this.api.stats().pipe(
-        catchError(() =>
-          of({
-            balance: 0,
-            currency: 'XAF',
-            ticketsBought: 0,
-            productsWon: 0,
-          }),
-        ),
-      ),
+      stats: this.api.stats().pipe(catchError(() => of(null))),
       history: this.api.history(5).pipe(catchError(() => of([]))),
     })
       .pipe(
@@ -81,7 +72,8 @@ export class ProfilePage {
   }
 
   get balanceLabel(): string {
-    const b = this.stats?.balance ?? 0;
+    if (!this.stats) return '—';
+    const b = this.stats.balance;
     const c = this.stats?.currency ?? 'XAF';
     const locale = this.translate.currentLang === 'en' ? 'en-US' : 'fr-FR';
     return `${b.toLocaleString(locale)} ${c}`;

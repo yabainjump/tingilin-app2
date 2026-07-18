@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, NavController, ToastController } from '@ionic/angular';
 import { finalize, firstValueFrom, interval, Subscription } from 'rxjs';
@@ -31,7 +31,7 @@ type RecentWinnerCard = {
   styleUrls: ['./raffle-details.page.scss'],
   standalone: false,
 })
-export class RaffleDetailsPage implements OnInit {
+export class RaffleDetailsPage implements OnInit, OnDestroy {
   loading = true;
   quantity: number = 1;
 

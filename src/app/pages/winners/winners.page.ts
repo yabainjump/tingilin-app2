@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { Subscription, finalize, interval } from 'rxjs';
@@ -20,7 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./winners.page.scss'],
   standalone: false,
 })
-export class WinnersPage implements OnInit {
+export class WinnersPage implements OnInit, OnDestroy {
   loading = true;
 
   featured: WinnerDto | null = null;

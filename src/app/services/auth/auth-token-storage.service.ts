@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { Capacitor } from '@capacitor/core';
+import { SecureStoragePlugin } from 'capacitor-secure-storage-plugin';
 
 @Injectable({ providedIn: 'root' })
 export class AuthTokenStorageService {
@@ -9,6 +10,7 @@ export class AuthTokenStorageService {
     'tingilin_access_token',
     'tingilin_refresh_token',
     'tingilin_token',
+    'tingilin_session',
   ];
   private readonly cache = new Map<string, string>();
   private initialized = false;
@@ -21,12 +23,21 @@ export class AuthTokenStorageService {
 
     await Promise.all(
       this.managedKeys.map(async (key) => {
-        const { value } = await Preferences.get({ key });
-        if (value != null) {
-          this.cache.set(key, value);
-        } else {
-          this.cache.delete(key);
+        try {
+          const { value } = await SecureStoragePlugin.get({ key });
+          if (value != null) this.cache.set(key, value);
+          return;
+        } catch {
+          // Migration unique depuis l'ancien stockage Preferences non chiffre.
+          const { value } = await Preferences.get({ key });
+          if (value != null) {
+            this.cache.set(key, value);
+            await SecureStoragePlugin.set({ key, value });
+            await Preferences.remove({ key });
+            return;
+          }
         }
+        this.cache.delete(key);
       }),
     );
 
@@ -48,7 +59,7 @@ export class AuthTokenStorageService {
     }
 
     this.cache.set(key, value);
-    void Preferences.set({ key, value });
+    void SecureStoragePlugin.set({ key, value });
   }
 
   remove(key: string): void {
@@ -58,6 +69,9 @@ export class AuthTokenStorageService {
     }
 
     this.cache.delete(key);
-    void Preferences.remove({ key });
+    void Promise.all([
+      SecureStoragePlugin.remove({ key }).catch(() => ({ value: false })),
+      Preferences.remove({ key }),
+    ]);
   }
 }

@@ -32,7 +32,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     const token = this.auth.getAccessToken();
 
-    if (!isAuthEndpoint && !token && this.auth.getRefreshToken()) {
+    if (!isAuthEndpoint && !token && this.auth.hasRefreshSession()) {
       return this.handle401(req, next);
     }
 
@@ -56,14 +56,12 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private handle401(req: HttpRequest<any>, next: HttpHandler) {
-    const refreshToken = this.auth.getRefreshToken();
-
-    if (!refreshToken) {
+    if (!this.auth.hasRefreshSession()) {
       this.auth.logout();
       return throwError(() => new Error('No refresh token'));
     }
 
-    return this.getRefresh(refreshToken).pipe(
+    return this.getRefresh(this.auth.getRefreshToken()).pipe(
       switchMap((newToken) => {
         const retryReq = req.clone({
           setHeaders: { Authorization: `Bearer ${newToken}` },
@@ -79,7 +77,7 @@ export class AuthInterceptor implements HttpInterceptor {
    * En cas d'echec: deconnecte et propage l'erreur a TOUTES les requetes
    * en attente (au lieu de les laisser bloquees indefiniment).
    */
-  private getRefresh(refreshToken: string): Observable<string> {
+  private getRefresh(refreshToken: string | null): Observable<string> {
     if (!this.refresh$) {
       this.refresh$ = this.auth.refresh(refreshToken).pipe(
         tap((res) => this.auth.setTokens(res.access_token, res.refresh_token)),

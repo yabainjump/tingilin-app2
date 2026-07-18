@@ -84,19 +84,12 @@ export class ProfileApiService {
     return this.http.patch<ProfileUser>(`${this.baseUrl}/users/me/avatar`, formData);
   }
 
-  stats(): Observable<ProfileStats> {
-    const fallback: ProfileStats = {
-      balance: 2500,
-      currency: 'XAF',
-      ticketsBought: 124,
-      productsWon: 12,
-    };
-
-    if (!this.auth.isLoggedIn()) return of(fallback);
+  stats(): Observable<ProfileStats | null> {
+    if (!this.auth.isLoggedIn()) return of(null);
 
     return this.http
       .get<ProfileStats>(`${this.baseUrl}/users/me/stats`)
-      .pipe(catchError(() => of(fallback)));
+      .pipe(catchError(() => of(null)));
   }
 
   history(limit = 7): Observable<ProfileHistoryItem[]> {

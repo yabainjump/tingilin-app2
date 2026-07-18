@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subject, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthTokenStorageService } from './auth-token-storage.service';
+import { Capacitor } from '@capacitor/core';
 
 export type LoginPayload = {
   email?: string;
@@ -22,6 +23,7 @@ export type RegisterPayload = {
 
 export interface AuthTokenResponse {
   access_token: string;
+  refresh_token?: string;
   user?: any;
 }
 
@@ -46,6 +48,7 @@ export class AuthService {
 
   private readonly accessKey = 'tingilin_access_token';
   private readonly refreshKey = 'tingilin_refresh_token';
+  private readonly sessionKey = 'tingilin_session';
 
   private readonly tokenKey = 'tingilin_access_token';
 
@@ -65,10 +68,7 @@ export class AuthService {
 
   login(email: string, password: string) {
     return this.http
-      .post<{
-        access_token: string;
-        refresh_token: string;
-      }>(`${this.baseUrl}/auth/login`, { email, password })
+      .post<AuthTokenResponse>(`${this.baseUrl}/auth/login`, { email, password }, this.authRequestOptions())
       .pipe(
         tap((res) => {
           this.setTokens(res.access_token, res.refresh_token);
@@ -86,10 +86,7 @@ export class AuthService {
     referralCode?: string;
   }) {
     return this.http
-      .post<{
-        access_token: string;
-        refresh_token: string;
-      }>(`${this.baseUrl}/auth/register`, dto)
+      .post<AuthTokenResponse>(`${this.baseUrl}/auth/register`, dto, this.authRequestOptions())
       .pipe(
         tap((res) => {
           this.setTokens(res.access_token, res.refresh_token);
@@ -132,19 +129,19 @@ export class AuthService {
 
   logout(): void {
     const token = this.getAccessToken();
-    if (token) {
-      this.http
-        .post(
-          `${this.baseUrl}/auth/logout`,
-          {},
-          {
-            headers: new HttpHeaders({
-              Authorization: `Bearer ${token}`,
-            }),
-          },
-        )
-        .subscribe({ error: () => undefined });
-    }
+    const refreshToken = this.getRefreshToken();
+    this.http
+      .post(
+        `${this.baseUrl}/auth/logout`,
+        refreshToken ? { refresh_token: refreshToken } : {},
+        {
+          headers: new HttpHeaders(
+            token ? { Authorization: `Bearer ${token}` } : {},
+          ),
+          withCredentials: true,
+        },
+      )
+      .subscribe({ error: () => undefined });
 
     this.clearTokens();
     this.sessionReset.next(); // vide tous les caches par-utilisateur
@@ -159,7 +156,7 @@ export class AuthService {
   isLoggedIn(): boolean {
     const access = this.getAccessToken();
     if (access && !this.isJwtExpired(access)) return true;
-    return !!this.getRefreshToken();
+    return this.hasRefreshSession();
   }
 
   private setToken(token: string): void {
@@ -183,10 +180,11 @@ export class AuthService {
       this.tokenStorage.remove(this.accessKey);
     }
 
+    this.tokenStorage.set(this.sessionKey, '1');
     const validRefresh = this.normalizeToken(refresh ?? null);
     if (validRefresh) {
       this.tokenStorage.set(this.refreshKey, validRefresh);
-    } else if (refresh !== undefined) {
+    } else if (refresh !== undefined || Capacitor.getPlatform() === 'web') {
       this.tokenStorage.remove(this.refreshKey);
     }
   }
@@ -214,13 +212,29 @@ export class AuthService {
     this.tokenStorage.remove(this.refreshKey);
     this.tokenStorage.remove(this.tokenKey);
     this.tokenStorage.remove(this.legacyTokenKey);
+    this.tokenStorage.remove(this.sessionKey);
   }
 
-  refresh(refresh_token: string) {
-    return this.http.post<{ access_token: string; refresh_token: string }>(
+  refresh(refresh_token?: string | null) {
+    return this.http.post<AuthTokenResponse>(
       `${this.baseUrl}/auth/refresh`,
-      { refresh_token },
+      refresh_token ? { refresh_token } : {},
+      this.authRequestOptions(),
     );
+  }
+
+  hasRefreshSession(): boolean {
+    return this.tokenStorage.get(this.sessionKey) === '1' || !!this.getRefreshToken();
+  }
+
+  private authRequestOptions() {
+    const native = Capacitor.getPlatform() !== 'web';
+    return {
+      withCredentials: true,
+      headers: native
+        ? new HttpHeaders({ 'X-Client-Platform': 'native' })
+        : undefined,
+    };
   }
 
   private readValidToken(key: string): string | null {
