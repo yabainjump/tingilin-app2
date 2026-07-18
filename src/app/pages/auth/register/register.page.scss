@@ -1,9 +1,13 @@
-:host { --p: #a60df2; }
+:host { --p: #9d5cff; }
 
 .register {
-  --background: #1c1022;
+  --background: transparent;
   color: #fff;
   position: relative;
+  background:
+    radial-gradient(520px 420px at 8% -6%, rgba(157, 92, 255, 0.28), transparent 64%),
+    radial-gradient(440px 380px at 100% 72%, rgba(209, 105, 255, 0.12), transparent 68%),
+    linear-gradient(180deg, #160b21 0%, #0b0712 62%);
 }
 
 .register::before,
@@ -13,7 +17,7 @@
   width: 260px;
   height: 260px;
   border-radius: 999px;
-  background: rgba(166, 13, 242, 0.12);
+  background: rgba(157, 92, 255, 0.14);
   filter: blur(45px);
   pointer-events: none;
   z-index: 0;
@@ -28,18 +32,19 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 14px 8px;
-  backdrop-filter: blur(12px);
-  background: rgba(28, 16, 34, 0.75);
+  padding: calc(env(safe-area-inset-top) + 10px) 16px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(22px) saturate(140%);
+  background: rgba(11, 7, 18, 0.78);
 }
 
 .back {
   width: 40px;
   height: 40px;
-  border-radius: 999px;
-  border: 0;
-  background: transparent;
-  color: var(--p);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.055);
+  color: #fff;
   display: grid;
   place-items: center;
 }
@@ -58,15 +63,15 @@
 .wrap {
   position: relative;
   z-index: 1;
-  max-width: 420px;
+  max-width: 470px;
   margin: 0 auto;
-  padding: 18px 14px 26px;
+  padding: 22px 18px calc(env(safe-area-inset-bottom) + 30px);
   color: #fff;
 }
 
 h1 {
   text-align: center;
-  font-size: 32px;
+  font-size: clamp(2rem, 8vw, 2.45rem);
   font-weight: 900;
   letter-spacing: -0.02em;
   margin: 18px 0 6px;
@@ -87,9 +92,10 @@ h1 {
   justify-content: space-between;
   gap: 10px;
   padding: 10px 12px;
-  border-radius: 14px;
-  border: 1px solid rgba(76, 59, 84, 1);
-  background: rgba(35, 27, 39, 0.85);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.055);
+  backdrop-filter: blur(18px);
 }
 
 .language-label {
@@ -98,7 +104,17 @@ h1 {
   color: rgba(226, 232, 240, 0.85);
 }
 
-.form { display: flex; flex-direction: column; gap: 12px; }
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 28px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.035));
+  box-shadow: 0 26px 64px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(22px) saturate(135%);
+}
 
 .grid-2 {
   display: grid;
@@ -116,18 +132,18 @@ h1 {
 
 .field input {
   width: 100%;
-  height: 48px;
-  border-radius: 18px;
+  height: 52px;
+  border-radius: 17px;
   padding: 0 16px;
-  border: 1px solid rgba(76, 59, 84, 1);
-  background: rgba(35, 27, 39, 1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(7, 4, 12, 0.32);
   color: #fff;
   outline: none;
 }
 
 .field input:focus {
-  border-color: rgba(166, 13, 242, 0.65);
-  box-shadow: 0 0 0 2px rgba(166, 13, 242, 0.15);
+  border-color: rgba(157, 92, 255, 0.72);
+  box-shadow: 0 0 0 4px rgba(157, 92, 255, 0.12);
 }
 
 .phone-row {
@@ -160,7 +176,7 @@ h1 {
   transform: translateY(-50%);
   border: 0;
   background: transparent;
-  color: rgba(28, 70, 126, 0.6);
+  color: #9387a0;
 }
 
 .terms {
@@ -187,11 +203,11 @@ h1 {
   height: 56px;
   border: 0;
   border-radius: 18px;
-  background: var(--p);
+  background: var(--app-gradient-brand);
   color: #fff;
   font-size: 18px;
   font-weight: 900;
-  box-shadow: 0 12px 28px rgba(166, 13, 242, 0.25);
+  box-shadow: var(--app-shadow-brand);
   margin-top: 4px;
   display: flex;
   align-items: center;
@@ -222,7 +238,7 @@ h1 {
   gap: 12px;
 }
 .social-btn {
-  height: 48px;
+  height: 52px;
   border-radius: 18px;
   border: 1px solid rgba(51, 65, 85, 0.25);
   background: rgba(35, 27, 39, 1);
@@ -252,11 +268,17 @@ h1 {
   height: 48px;
   padding: 0 12px;
   border-radius: 18px;
-  border: 1px solid rgba(76, 59, 84, 1);
-  background: rgba(35, 27, 39, 1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(7, 4, 12, 0.32);
   color: #fff;
   font-weight: 800;
   outline: none;
+}
+
+@media (max-width: 370px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
 }
 
 .hint {

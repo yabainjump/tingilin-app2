@@ -24,6 +24,17 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+@import "@fontsource/plus-jakarta-sans/400.css";
+@import "@fontsource/plus-jakarta-sans/500.css";
+@import "@fontsource/plus-jakarta-sans/600.css";
+@import "@fontsource/plus-jakarta-sans/700.css";
+@import "@fontsource/plus-jakarta-sans/800.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
@@ -35,17 +46,18 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 html,
 body,
 ion-app {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 ion-content {
   --overflow: auto !important;
+  --background: var(--app-bg);
 }
 
 ion-content::part(scroll) {
@@ -96,6 +108,19 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  background: var(--app-bg);
+  color: var(--app-ink);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
 }
 
 ::selection {
@@ -103,9 +128,12 @@ body {
 }
 
 /* Titres un peu plus affirmes */
-h1, h2, h3 {
-  letter-spacing: -0.01em;
-  font-weight: 700;
+h1,
+h2,
+h3 {
+  letter-spacing: -0.035em;
+  font-weight: 800;
+  text-wrap: balance;
 }
 
 /* Boutons: arrondis, pas de MAJUSCULES forcees, feedback au press --------- */
@@ -114,10 +142,13 @@ ion-button {
   --box-shadow: none;
   --padding-top: 16px;
   --padding-bottom: 16px;
-  font-weight: 600;
+  font-weight: 750;
   text-transform: none;
   letter-spacing: 0;
-  transition: transform 0.12s ease;
+  min-height: 48px;
+  transition:
+    transform 0.18s var(--app-ease-out),
+    filter 0.18s ease;
 
   &::part(native) {
     transition: filter 0.15s ease;
@@ -133,7 +164,7 @@ ion-button.button-solid.ion-color-medium {
 }
 /* Press: leger enfoncement (sans decaler la mise en page) */
 ion-button:active {
-  transform: scale(0.98);
+  transform: scale(0.975);
 }
 
 /* Cartes: coins plus doux + ombre legere -------------------------------- */
@@ -141,11 +172,15 @@ ion-card {
   border-radius: var(--app-radius-lg);
   box-shadow: var(--app-shadow-sm);
   border: 1px solid var(--app-border);
+  background: var(--app-surface-glass);
+  backdrop-filter: blur(18px) saturate(130%);
 }
 
 /* Champs: arrondis + anneau de focus accessible ------------------------- */
 ion-item {
   --border-radius: var(--app-radius-sm);
+  --background: var(--app-surface-glass);
+  --color: var(--app-ink);
 }
 ion-input,
 ion-textarea,
@@ -166,7 +201,7 @@ ion-badge {
 
 /* Barre d'onglets: indicateur actif clair, safe-area respectee ----------- */
 ion-tab-bar {
-  --background: var(--app-surface);
+  --background: rgba(18, 11, 27, 0.88);
   border-top: 1px solid var(--app-border);
   padding-bottom: env(safe-area-inset-bottom);
 }
@@ -179,9 +214,125 @@ ion-tab-button {
 ion-toolbar {
   --border-width: 0 0 1px 0;
   --border-color: var(--app-border);
+  --color: var(--app-ink);
+  backdrop-filter: blur(20px) saturate(140%);
 }
 ion-title {
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+ion-back-button,
+ion-menu-button {
+  --color: var(--app-ink);
+}
+
+ion-segment {
+  --background: rgba(255, 255, 255, 0.055);
+  padding: 4px;
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+}
+
+ion-segment-button {
+  --border-radius: calc(var(--app-radius) - 5px);
+  --indicator-color: var(--app-surface-2);
+  --color: var(--app-muted);
+  --color-checked: var(--app-ink);
+  min-height: 42px;
   font-weight: 700;
+  text-transform: none;
+}
+
+ion-searchbar {
+  --background: rgba(255, 255, 255, 0.065);
+  --color: var(--app-ink);
+  --placeholder-color: var(--app-muted);
+  --icon-color: var(--app-muted);
+  --box-shadow: inset 0 0 0 1px var(--app-border);
+}
+
+ion-skeleton-text {
+  --background: rgba(255, 255, 255, 0.075);
+  --background-rgb: 255, 255, 255;
+  border-radius: 12px;
+}
+
+ion-refresher-content {
+  --color: var(--ion-color-primary);
+}
+
+ion-toast {
+  --background: rgba(24, 16, 34, 0.96);
+  --color: var(--app-ink);
+  --border-radius: 18px;
+  --box-shadow: var(--app-shadow);
+}
+
+ion-alert .alert-wrapper,
+ion-action-sheet .action-sheet-group,
+ion-loading .loading-wrapper {
+  background: rgba(24, 16, 34, 0.96) !important;
+  color: var(--app-ink) !important;
+  border: 1px solid var(--app-border);
+  border-radius: 24px !important;
+  box-shadow: var(--app-shadow);
+  backdrop-filter: blur(24px) saturate(140%);
+}
+
+/* Primitives reutilisables pour les ecrans applicatifs. */
+.app-shell {
+  width: min(100%, 720px);
+  min-height: 100%;
+  margin-inline: auto;
+  padding-inline: clamp(16px, 4vw, 24px);
+}
+
+.ui-surface {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.09),
+    rgba(255, 255, 255, 0.045)
+  );
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-lg);
+  box-shadow: var(--app-shadow-sm);
+  backdrop-filter: blur(20px) saturate(135%);
+}
+
+.ui-eyebrow {
+  color: var(--ion-color-secondary);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ui-icon-button {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--app-border);
+  border-radius: 16px;
+  color: var(--app-ink);
+  background: rgba(255, 255, 255, 0.065);
+  backdrop-filter: blur(18px);
+  transition:
+    transform 0.18s var(--app-ease-out),
+    border-color 0.18s ease,
+    background 0.18s ease;
+}
+
+.ui-icon-button:active {
+  transform: scale(0.94);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ui-icon-button:hover {
+    background: rgba(157, 92, 255, 0.14);
+    border-color: var(--app-border-strong);
+  }
 }
 
 /* Focus visible clavier (accessibilite) --------------------------------- */

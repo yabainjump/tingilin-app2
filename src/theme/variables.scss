@@ -6,28 +6,28 @@
 // =============================================================================
 :root {
   /* ---- Primary : violet marque (accessible, texte blanc AA) ---------------- */
-  --ion-color-primary: #7c3aed;
-  --ion-color-primary-rgb: 124, 58, 237;
+  --ion-color-primary: #9d5cff;
+  --ion-color-primary-rgb: 157, 92, 255;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #6d28d9;
-  --ion-color-primary-tint: #8b5cf6;
+  --ion-color-primary-shade: #8a51e0;
+  --ion-color-primary-tint: #a76cff;
 
   /* ---- Secondary : violet clair (surfaces, puces, etats secondaires) ------- */
-  --ion-color-secondary: #a855f7;
-  --ion-color-secondary-rgb: 168, 85, 247;
+  --ion-color-secondary: #d169ff;
+  --ion-color-secondary-rgb: 209, 105, 255;
   --ion-color-secondary-contrast: #ffffff;
   --ion-color-secondary-contrast-rgb: 255, 255, 255;
-  --ion-color-secondary-shade: #934bd9;
-  --ion-color-secondary-tint: #b266f8;
+  --ion-color-secondary-shade: #b85ce0;
+  --ion-color-secondary-tint: #d678ff;
 
   /* ---- Tertiary : rose CTA (variete ponctuelle) --------------------------- */
-  --ion-color-tertiary: #ec4899;
-  --ion-color-tertiary-rgb: 236, 72, 153;
+  --ion-color-tertiary: #ff5da2;
+  --ion-color-tertiary-rgb: 255, 93, 162;
   --ion-color-tertiary-contrast: #ffffff;
   --ion-color-tertiary-contrast-rgb: 255, 255, 255;
-  --ion-color-tertiary-shade: #cf3f87;
-  --ion-color-tertiary-tint: #ee5aa3;
+  --ion-color-tertiary-shade: #e0528f;
+  --ion-color-tertiary-tint: #ff6dab;
 
   /* ---- Success : vert -------------------------------------------------------*/
   --ion-color-success: #16a34a;
@@ -38,12 +38,12 @@
   --ion-color-success-tint: #2eac5c;
 
   /* ---- Warning : OR / ambre (recompense, "acheter un ticket") -------------- */
-  --ion-color-warning: #f59e0b;
-  --ion-color-warning-rgb: 245, 158, 11;
+  --ion-color-warning: #ffc857;
+  --ion-color-warning-rgb: 255, 200, 87;
   --ion-color-warning-contrast: #1c1330;
   --ion-color-warning-contrast-rgb: 28, 19, 48;
-  --ion-color-warning-shade: #d88b0a;
-  --ion-color-warning-tint: #f6a824;
+  --ion-color-warning-shade: #e0b04d;
+  --ion-color-warning-tint: #ffce68;
 
   /* ---- Danger : rouge -------------------------------------------------------*/
   --ion-color-danger: #ef4444;
@@ -54,76 +54,87 @@
   --ion-color-danger-tint: #f15858;
 
   /* ---- Neutres -------------------------------------------------------------*/
-  --ion-color-light: #f4f2fb;
-  --ion-color-light-rgb: 244, 242, 251;
+  --ion-color-light: #f8f5ff;
+  --ion-color-light-rgb: 248, 245, 255;
   --ion-color-light-contrast: #1c1330;
   --ion-color-light-contrast-rgb: 28, 19, 48;
   --ion-color-light-shade: #d7d5dd;
   --ion-color-light-tint: #f5f3fb;
 
-  --ion-color-medium: #6b6580;
-  --ion-color-medium-rgb: 107, 101, 128;
+  --ion-color-medium: #aaa0b8;
+  --ion-color-medium-rgb: 170, 160, 184;
   --ion-color-medium-contrast: #ffffff;
   --ion-color-medium-contrast-rgb: 255, 255, 255;
   --ion-color-medium-shade: #5e5971;
   --ion-color-medium-tint: #7a748d;
 
-  --ion-color-dark: #1c1330;
-  --ion-color-dark-rgb: 28, 19, 48;
+  --ion-color-dark: #0b0712;
+  --ion-color-dark-rgb: 11, 7, 18;
   --ion-color-dark-contrast: #ffffff;
   --ion-color-dark-contrast-rgb: 255, 255, 255;
-  --ion-color-dark-shade: #19112a;
-  --ion-color-dark-tint: #332a45;
+  --ion-color-dark-shade: #0a0610;
+  --ion-color-dark-tint: #231f2a;
 
   /* ---- Accent custom : conserve pour compat (mappe sur l'ambre/or) -------- */
-  --ion-color-accent: #f59e0b;
-  --ion-color-accent-rgb: 245, 158, 11;
+  --ion-color-accent: #ffc857;
+  --ion-color-accent-rgb: 255, 200, 87;
   --ion-color-accent-contrast: #1c1330;
   --ion-color-accent-contrast-rgb: 28, 19, 48;
-  --ion-color-accent-shade: #d88b0a;
-  --ion-color-accent-tint: #f6a824;
+  --ion-color-accent-shade: #e0b04d;
+  --ion-color-accent-tint: #ffce68;
 
   /* ---- Couleur "gold" pour les mises en avant (prix, gains) --------------- */
-  --ion-color-gold: #ffd84d;
-  --ion-color-gold-rgb: 255, 216, 77;
+  --ion-color-gold: #ffc857;
+  --ion-color-gold-rgb: 255, 200, 87;
   --ion-color-gold-contrast: #1c1330;
   --ion-color-gold-contrast-rgb: 28, 19, 48;
-  --ion-color-gold-shade: #e0be43;
-  --ion-color-gold-tint: #ffdc5e;
+  --ion-color-gold-shade: #e0b04d;
+  --ion-color-gold-tint: #ffce68;
 
   /* ---- Fond, texte, surfaces ---------------------------------------------- */
-  --ion-background-color: #f6f5fb;
-  --ion-background-color-rgb: 246, 245, 251;
-  --ion-text-color: #1c1330;
-  --ion-text-color-rgb: 28, 19, 48;
+  --ion-background-color: #0b0712;
+  --ion-background-color-rgb: 11, 7, 18;
+  --ion-text-color: #f8f5ff;
+  --ion-text-color-rgb: 248, 245, 255;
 
-  --ion-toolbar-background: #ffffff;
-  --ion-item-background: #ffffff;
-  --ion-card-background: #ffffff;
+  --ion-toolbar-background: rgba(11, 7, 18, 0.82);
+  --ion-item-background: transparent;
+  --ion-card-background: #171020;
 
   /* ---- Tokens applicatifs (utilises par global.scss et les pages) --------- */
-  --app-bg: #f6f5fb;
-  --app-surface: #ffffff;
-  --app-surface-2: #f2f0fa;
-  --app-ink: #1c1330;
-  --app-muted: #6b6580;
-  --app-border: #ece9f4;
-  --app-brand-vivid: #a60df2; // violet vif (degrades, glow)
-  --app-gradient-brand: linear-gradient(135deg, #7c3aed 0%, #a60df2 100%);
-  --app-gradient-gold: linear-gradient(135deg, #f59e0b 0%, #ffd84d 100%);
+  --app-bg: #0b0712;
+  --app-bg-soft: #130a1c;
+  --app-surface: #171020;
+  --app-surface-2: #21162f;
+  --app-surface-glass: rgba(255, 255, 255, 0.065);
+  --app-surface-glass-strong: rgba(255, 255, 255, 0.095);
+  --app-ink: #f8f5ff;
+  --app-muted: #aaa0b8;
+  --app-muted-soft: #7f748d;
+  --app-border: rgba(255, 255, 255, 0.1);
+  --app-border-strong: rgba(157, 92, 255, 0.38);
+  --app-brand-vivid: #b13dff;
+  --app-gradient-brand: linear-gradient(135deg, #8b5cf6 0%, #b13dff 54%, #d169ff 100%);
+  --app-gradient-gold: linear-gradient(135deg, #f0a928 0%, #ffc857 100%);
+  --app-gradient-page:
+    radial-gradient(720px 420px at 8% -8%, rgba(157, 92, 255, 0.22), transparent 60%),
+    radial-gradient(620px 440px at 100% 10%, rgba(209, 105, 255, 0.1), transparent 62%),
+    linear-gradient(180deg, #130a1c 0%, #0b0712 66%);
 
   /* ---- Rayons & ombres modernes ------------------------------------------- */
-  --app-radius-sm: 12px;
-  --app-radius: 16px;
-  --app-radius-lg: 22px;
+  --app-radius-sm: 14px;
+  --app-radius: 18px;
+  --app-radius-lg: 26px;
+  --app-radius-xl: 32px;
   --app-radius-pill: 999px;
-  --app-shadow-sm: 0 2px 8px rgba(28, 19, 48, 0.06);
-  --app-shadow: 0 10px 28px rgba(28, 19, 48, 0.10);
-  --app-shadow-brand: 0 12px 28px rgba(124, 58, 237, 0.28);
+  --app-shadow-sm: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --app-shadow: 0 20px 54px rgba(0, 0, 0, 0.3);
+  --app-shadow-brand: 0 18px 42px rgba(157, 92, 255, 0.3);
+  --app-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
   /** Typographie **/
   --ion-font-family:
-    system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 /* Enregistre la couleur "accent" dans Ionic (compat existant) */

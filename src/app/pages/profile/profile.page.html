@@ -4,16 +4,16 @@
     <!-- HEADER -->
     <div class="header">
       <div class="top-actions">
-        <button class="icon-btn" type="button" (click)="back()">
+        <button class="icon-btn" type="button" (click)="back()" [attr.aria-label]="'COMMON.BACK' | translate">
           <span class="material-icons-round">arrow_back</span>
         </button>
 
         <div class="right-actions">
-          <button class="icon-btn" type="button" (click)="openSupport()">
+          <button class="icon-btn" type="button" (click)="openSupport()" [attr.aria-label]="'SUPPORT_PAGE.TITLE' | translate">
             <span class="material-icons-round">support_agent</span>
           </button>
 
-          <button class="icon-btn" type="button" (click)="settings()">
+          <button class="icon-btn" type="button" (click)="settings()" [attr.aria-label]="'EDIT_PROFILE_PAGE.TITLE' | translate">
             <span class="material-icons-round">settings</span>
           </button>
         </div>
@@ -26,12 +26,12 @@
             <div class="avatar-inner">
               <img class="avatar"
                 [src]="user?.avatar || 'assets/img/profile.svg'"
-                alt="avatar" />
+                [attr.alt]="(user?.firstName || '') + ' ' + (user?.lastName || '')" />
             </div>
           </div>
 
           <!-- edit avatar -->
-          <button class="avatar-edit" type="button" (click)="editAvatar()">
+          <button class="avatar-edit" type="button" (click)="editAvatar()" [attr.aria-label]="'EDIT_PROFILE_PAGE.CHANGE_PHOTO' | translate">
             <span class="material-icons-round">edit</span>
           </button>
         </div>
@@ -47,7 +47,7 @@
             <div class="balance-value">{{ balanceLabel }}</div>
           </div>
 
-          <button class="balance-add" type="button" (click)="topUp()">
+          <button class="balance-add" type="button" (click)="topUp()" [attr.aria-label]="'PROFILE_PAGE.ADD_BALANCE' | translate">
             <span class="material-icons-round">add</span>
           </button>
         </div>
@@ -114,7 +114,7 @@
 
       <!-- HISTORY LIST -->
       <ng-container *ngIf="!loadingHistory; else historySkeleton">
-        <div class="history-list">
+        <div class="history-list" *ngIf="history.length; else emptyHistory">
           <button class="glass-panel history-item" [class.is-lost]="isHistoryLost(h)" type="button"
             *ngFor="let h of history" (click)="openHistoryItem(h)">
             <div class="thumb">
@@ -147,6 +147,15 @@
             </div>
           </button>
         </div>
+
+        <ng-template #emptyHistory>
+          <app-empty-state
+            icon="time-outline"
+            [compact]="true"
+            [title]="'PROFILE_PAGE.EMPTY_HISTORY_TITLE' | translate"
+            [description]="'PROFILE_PAGE.EMPTY_HISTORY_DESC' | translate"
+          ></app-empty-state>
+        </ng-template>
       </ng-container>
 
       <ng-template #historySkeleton>

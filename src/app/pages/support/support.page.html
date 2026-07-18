@@ -70,6 +70,7 @@
           type="button"
           class="category-card"
           [class.active]="selectedCategoryId === category.id"
+          [attr.aria-pressed]="selectedCategoryId === category.id"
           (click)="selectCategory(category.id)"
         >
           <span class="category-icon" [ngClass]="'tone-' + category.tone">
@@ -99,7 +100,13 @@
           class="faq-card"
           [class.open]="isExpanded(faq.id)"
         >
-          <button class="faq-trigger" type="button" (click)="toggleFaq(faq.id)">
+          <button
+            class="faq-trigger"
+            type="button"
+            (click)="toggleFaq(faq.id)"
+            [attr.aria-expanded]="isExpanded(faq.id)"
+            [attr.aria-controls]="'faq-answer-' + faq.id"
+          >
             <div class="faq-meta">
               <span class="faq-chip">{{ labelForCategory(faq.category) }}</span>
               <strong>{{ faqQuestion(faq) }}</strong>
@@ -108,7 +115,7 @@
             <span class="notranslate material-symbols-outlined arrow">expand_more</span>
           </button>
 
-          <div class="faq-answer" *ngIf="isExpanded(faq.id)">
+          <div class="faq-answer" *ngIf="isExpanded(faq.id)" [id]="'faq-answer-' + faq.id">
             <p>{{ faqAnswer(faq) }}</p>
 
             <button
@@ -123,12 +130,14 @@
       </div>
 
       <ng-template #emptyFaqState>
-        <div class="empty-state">
-          <span class="notranslate material-symbols-outlined">support_agent</span>
-          <strong>{{ 'SUPPORT_PAGE.EMPTY_TITLE' | translate }}</strong>
-          <p>{{ 'SUPPORT_PAGE.EMPTY_DESC' | translate }}</p>
-          <button type="button" (click)="resetFilters()">{{ 'SUPPORT_PAGE.RESET' | translate }}</button>
-        </div>
+        <app-empty-state
+          icon="help-buoy-outline"
+          [compact]="true"
+          [title]="'SUPPORT_PAGE.EMPTY_TITLE' | translate"
+          [description]="'SUPPORT_PAGE.EMPTY_DESC' | translate"
+          [actionLabel]="'SUPPORT_PAGE.RESET' | translate"
+          (action)="resetFilters()"
+        ></app-empty-state>
       </ng-template>
     </section>
   </div>

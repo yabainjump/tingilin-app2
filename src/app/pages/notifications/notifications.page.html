@@ -54,12 +54,11 @@
       <div class="skel-card" *ngFor="let _ of skeletonItems"></div>
     </div>
 
-    <div class="empty" *ngIf="!loading && items.length === 0">
-      <div class="empty-icon">
-        <ion-icon name="notifications-outline"></ion-icon>
-      </div>
-      <div class="empty-title">{{ 'NOTIFICATIONS_PAGE.EMPTY' | translate }}</div>
-    </div>
+    <app-empty-state
+      *ngIf="!loading && items.length === 0"
+      icon="notifications-outline"
+      [title]="'NOTIFICATIONS_PAGE.EMPTY' | translate"
+    ></app-empty-state>
 
     <div class="list" *ngIf="!loading && items.length > 0">
       <article

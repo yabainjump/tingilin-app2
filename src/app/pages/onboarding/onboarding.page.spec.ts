@@ -48,6 +48,15 @@ describe('OnboardingPage', () => {
     expect(component.currentIndex).toBe(0);
   });
 
+  it('should navigate directly to a valid slide and ignore invalid indexes', () => {
+    component.goToSlide(2);
+    expect(component.currentIndex).toBe(2);
+
+    component.goToSlide(-1);
+    component.goToSlide(component.slides.length);
+    expect(component.currentIndex).toBe(2);
+  });
+
   it('should finish and redirect on last slide', () => {
     component.currentIndex = component.slides.length - 1;
     component.next();

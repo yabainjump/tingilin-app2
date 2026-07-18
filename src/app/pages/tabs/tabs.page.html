@@ -26,7 +26,7 @@
 
 
   <ion-fab *ngIf="isAdmin" class="center-fab" vertical="bottom" horizontal="center">
-    <ion-fab-button (click)="goCreateRaffle()">
+    <ion-fab-button (click)="goCreateRaffle()" [attr.aria-label]="'CREATE_RAFFLE_PAGE.TITLE' | translate">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

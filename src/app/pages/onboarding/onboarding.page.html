@@ -19,6 +19,8 @@
     <div class="card-wrap">
       <div
         class="hero"
+        role="img"
+        [attr.aria-label]="currentSlideTitle"
         [style.background-image]="'url(' + currentSlide.imageUrl + ')'"
       ></div>
     </div>
@@ -34,7 +36,9 @@
         type="button"
         class="dot"
         [class.active]="i === currentIndex"
+        [attr.aria-current]="i === currentIndex ? 'step' : null"
         [attr.aria-label]="('ONBOARDING_PAGE.STEP' | translate) + ' ' + (i + 1)"
+        (click)="goToSlide(i)"
       ></button>
     </div>
 

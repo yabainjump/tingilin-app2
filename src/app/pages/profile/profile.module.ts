@@ -8,6 +8,7 @@ import { ProfileRoutingModule } from './profile-routing.module';
 
 import { ProfilePage } from './profile.page';
 import { TranslateModule } from '@ngx-translate/core';
+import { EmptyStateComponent } from '../../shared/ui/empty-state/empty-state.component';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { TranslateModule } from '@ngx-translate/core';
     FormsModule,
     IonicModule,
     ProfileRoutingModule,
-    TranslateModule
+    TranslateModule,
+    EmptyStateComponent
   ],
   declarations: [ProfilePage]
 })

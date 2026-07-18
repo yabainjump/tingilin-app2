@@ -8,6 +8,7 @@ import { NotificationsPageRoutingModule } from './notifications-routing.module';
 
 import { NotificationsPage } from './notifications.page';
 import { TranslateModule } from '@ngx-translate/core';
+import { EmptyStateComponent } from '../../shared/ui/empty-state/empty-state.component';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { TranslateModule } from '@ngx-translate/core';
     FormsModule,
     IonicModule,
     NotificationsPageRoutingModule,
-    TranslateModule
+    TranslateModule,
+    EmptyStateComponent
   ],
   declarations: [NotificationsPage]
 })

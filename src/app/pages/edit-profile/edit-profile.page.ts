@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NavController, ToastController, Platform } from '@ionic/angular';
 import { finalize } from 'rxjs/operators';
@@ -18,7 +18,7 @@ import { blobFromUrl, fileFromBlob } from 'src/app/shared/utils/blob-file';
   styleUrls: ['./edit-profile.page.scss'],
   standalone: false,
 })
-export class EditProfilePage {
+export class EditProfilePage implements OnDestroy {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   loading = true;
@@ -108,6 +108,7 @@ export class EditProfilePage {
     const file = input.files?.[0];
     if (!file) return;
 
+    this.revokeAvatarPreview();
     this.avatarPreview = URL.createObjectURL(file);
     this.avatarFileToSave = file;
 
@@ -116,12 +117,15 @@ export class EditProfilePage {
   }
 
   goChangePassword() {
-    // tu pourras router vers une page dédiée plus tard
-    // this.nav.navigateForward('/tabs/profile/change-password');
+    this.nav.navigateForward('/auth/forgot-password');
   }
 
   async save() {
-    if (this.form.invalid || this.submitting) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    if (this.submitting) return;
 
     this.submitting = true;
 
@@ -155,6 +159,16 @@ export class EditProfilePage {
         duration: 2000,
       });
       await t.present();
+    }
+  }
+
+  ngOnDestroy() {
+    this.revokeAvatarPreview();
+  }
+
+  private revokeAvatarPreview() {
+    if (this.avatarPreview?.startsWith('blob:')) {
+      URL.revokeObjectURL(this.avatarPreview);
     }
   }
 }

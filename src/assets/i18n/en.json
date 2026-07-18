@@ -15,7 +15,8 @@
     "FR": "French",
     "EN": "English",
     "OPTIONAL": "optional",
-    "RETRY": "Retry"
+    "RETRY": "Retry",
+    "REQUIRED_FIELD": "This field is required."
   },
   "OFFLINE": {
     "STATUS": "You are offline",
@@ -139,6 +140,9 @@
     "PRODUCTS_WON": "PRODUCTS WON",
     "HISTORY_TITLE": "Game History",
     "SEE_ALL": "View all",
+    "ADD_BALANCE": "Top up balance",
+    "EMPTY_HISTORY_TITLE": "No entries yet",
+    "EMPTY_HISTORY_DESC": "Your next tickets and results will appear here.",
     "LOGOUT": "Logout",
     "LIVE": "LIVE",
     "WON": "Won",
@@ -446,7 +450,7 @@
     "EMAIL_READONLY": "Email address cannot be changed.",
     "PHONE_PLACEHOLDER": "+237 6xx xx xx xx",
     "SECURITY": "Security",
-    "PASSWORD_LAST_UPDATE": "Last updated 3 months ago",
+    "PASSWORD_RESET_DESC": "Receive a secure reset link by email",
     "SAVE": "Save changes",
     "TOAST_CAMERA_OPEN_FAILED": "Unable to open camera",
     "TOAST_UPDATED": "Profile updated ✅",

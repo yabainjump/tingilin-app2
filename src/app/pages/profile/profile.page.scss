@@ -1,8 +1,8 @@
 :host {
-  --primary: #8b5cf6;
-  --primary-2: #a855f7;
-  --bg-dark: #0f0720;
-  --bg-dark-2: #190d30;
+  --primary: #9d5cff;
+  --primary-2: #d169ff;
+  --bg-dark: #0b0712;
+  --bg-dark-2: #160b21;
   --surface-dark: #1f1438;
   --success: #2bee79;
   --danger: #f87171;
@@ -24,7 +24,7 @@ ion-content.premium-bg {
 }
 
 .page {
-  max-width: 420px;
+  max-width: 760px;
   margin: 0 auto;
   min-height: 100dvh;
   position: relative;
@@ -575,5 +575,23 @@ ion-content.premium-bg {
   .h-meta {
     font-size: 11px;
     gap: 8px;
+  }
+}
+
+@media (min-width: 640px) {
+  .header {
+    padding-inline: 28px;
+  }
+
+  .body {
+    padding-inline: 28px;
+  }
+
+  .history-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .logout-wrap {
+    grid-column: 1 / -1;
   }
 }

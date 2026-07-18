@@ -1,0 +1,14 @@
+<section class="empty-state" [class.compact]="compact" role="status">
+  <div class="icon-shell" aria-hidden="true">
+    <div class="icon-glow"></div>
+    <ion-icon [name]="icon"></ion-icon>
+  </div>
+
+  <h2>{{ title }}</h2>
+  <p *ngIf="description">{{ description }}</p>
+
+  <button *ngIf="actionLabel" type="button" (click)="action.emit()">
+    <span>{{ actionLabel }}</span>
+    <ion-icon name="arrow-forward-outline"></ion-icon>
+  </button>
+</section>

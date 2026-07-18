@@ -1,17 +1,20 @@
 .connectivity-banner {
   position: fixed;
-  top: 12px;
-  left: 12px;
-  right: 12px;
+  top: calc(env(safe-area-inset-top) + 12px);
+  left: 50%;
+  right: auto;
+  width: min(520px, calc(100% - 24px));
+  transform: translateX(-50%);
   z-index: 1200;
   display: grid;
   grid-template-columns: 34px 1fr;
   column-gap: 12px;
   align-items: center;
   padding: 12px 14px 12px 12px;
-  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
   color: #fff;
-  background: rgba(27, 31, 59, 0.95);
+  background: rgba(24, 16, 34, 0.96);
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
   backdrop-filter: blur(14px);
   pointer-events: none;

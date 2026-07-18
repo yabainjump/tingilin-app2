@@ -1,16 +1,16 @@
 :host {
-  --bg: #071335;
-  --bg-soft: #0b1a43;
-  --card: rgba(20, 33, 74, 0.9);
-  --stroke: rgba(120, 147, 218, 0.24);
-  --text-main: #e8efff;
-  --text-muted: #94a3c0;
-  --accent: #8b5cf6;
+  --bg: #0b0712;
+  --bg-soft: #150b20;
+  --card: rgba(255, 255, 255, 0.065);
+  --stroke: rgba(255, 255, 255, 0.11);
+  --text-main: #f8f5ff;
+  --text-muted: #aaa0b8;
+  --accent: #9d5cff;
 }
 
 .create-header ion-toolbar {
-  --background: rgba(7, 19, 53, 0.88);
-  --border-color: rgba(120, 147, 218, 0.18);
+  --background: rgba(11, 7, 18, 0.86);
+  --border-color: rgba(255, 255, 255, 0.09);
   --color: var(--text-main);
   backdrop-filter: blur(10px);
 }
@@ -27,16 +27,8 @@
 
 .create-content {
   --background:
-    radial-gradient(
-      560px 320px at -10% -10%,
-      rgba(139, 92, 246, 0.22),
-      transparent 55%
-    ),
-    radial-gradient(
-      420px 260px at 120% 5%,
-      rgba(86, 133, 255, 0.16),
-      transparent 60%
-    ),
+    radial-gradient(560px 320px at -10% -10%, rgba(157, 92, 255, 0.24), transparent 58%),
+    radial-gradient(420px 260px at 120% 5%, rgba(209, 105, 255, 0.11), transparent 62%),
     linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
 }
 

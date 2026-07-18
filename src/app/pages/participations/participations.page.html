@@ -49,12 +49,11 @@
 
     <ng-container *ngIf="!loading">
 
-      <div class="empty" *ngIf="filtered.length === 0">
-        <div class="empty-icon">
-          <ion-icon name="ticket-outline"></ion-icon>
-        </div>
-        <div class="empty-copy">{{ 'PARTICIPATIONS_PAGE.EMPTY' | translate }}</div>
-      </div>
+      <app-empty-state
+        *ngIf="filtered.length === 0"
+        icon="ticket-outline"
+        [title]="'PARTICIPATIONS_PAGE.EMPTY' | translate"
+      ></app-empty-state>
 
       <article class="card" *ngFor="let it of filtered; trackBy: trackByItem">
         <div class="glow"></div>

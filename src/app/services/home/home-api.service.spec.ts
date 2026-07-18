@@ -45,6 +45,7 @@ describe('HomeApiService', () => {
         request.params.get('category') === 'GENERAL',
     );
 
+    expect(req.request.params.get('category')).toBe('GENERAL');
     req.flush([]);
   });
 

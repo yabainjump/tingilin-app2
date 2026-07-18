@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthStateService } from 'src/app/services/auth/auth-state.service';
 import { NavController } from '@ionic/angular';
@@ -11,7 +11,7 @@ import { NotificationsStateService } from 'src/app/services/notifications/notifi
   styleUrls: ['./tabs.page.scss'],
   standalone: false,
 })
-export class TabsPage implements OnInit {
+export class TabsPage {
   isAdmin$: Observable<boolean>;
   isAdmin = false;
 
@@ -34,11 +34,5 @@ export class TabsPage implements OnInit {
 
   goCreateRaffle(): void {
     this.nav.navigateForward('/tabs/admin/create-raffle');
-  }
-  ngOnInit() {}
-
-  onAdd(): void {
-    // Placeholder (plus tard: modal / buy ticket / create draw etc.)
-    console.log('Add action');
   }
 }

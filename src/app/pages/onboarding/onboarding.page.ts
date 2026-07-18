@@ -78,6 +78,11 @@ export class OnboardingPage implements OnInit {
     this.currentIndex -= 1;
   }
 
+  goToSlide(index: number): void {
+    if (index < 0 || index >= this.slides.length) return;
+    this.currentIndex = index;
+  }
+
   skip(): void {
     this.finish();
   }

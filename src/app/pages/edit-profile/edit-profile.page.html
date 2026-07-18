@@ -49,14 +49,22 @@
         <!-- Form -->
         <form class="form" [formGroup]="form">
           <div class="row">
-            <div class="field">
+            <div class="field" [class.invalid]="form.controls.firstName.invalid && form.controls.firstName.touched">
               <label>{{ 'REGISTER_PAGE.FIRST_NAME' | translate }}</label>
-              <input type="text" formControlName="firstName" [placeholder]="'EDIT_PROFILE_PAGE.FIRST_NAME_PLACEHOLDER' | translate" />
+              <input type="text" formControlName="firstName" [placeholder]="'EDIT_PROFILE_PAGE.FIRST_NAME_PLACEHOLDER' | translate"
+                [attr.aria-invalid]="form.controls.firstName.invalid && form.controls.firstName.touched" />
+              <small class="field-error" *ngIf="form.controls.firstName.invalid && form.controls.firstName.touched">
+                {{ 'COMMON.REQUIRED_FIELD' | translate }}
+              </small>
             </div>
 
-            <div class="field">
+            <div class="field" [class.invalid]="form.controls.lastName.invalid && form.controls.lastName.touched">
               <label>{{ 'REGISTER_PAGE.LAST_NAME' | translate }}</label>
-              <input type="text" formControlName="lastName" [placeholder]="'EDIT_PROFILE_PAGE.LAST_NAME_PLACEHOLDER' | translate" />
+              <input type="text" formControlName="lastName" [placeholder]="'EDIT_PROFILE_PAGE.LAST_NAME_PLACEHOLDER' | translate"
+                [attr.aria-invalid]="form.controls.lastName.invalid && form.controls.lastName.touched" />
+              <small class="field-error" *ngIf="form.controls.lastName.invalid && form.controls.lastName.touched">
+                {{ 'COMMON.REQUIRED_FIELD' | translate }}
+              </small>
             </div>
           </div>
 
@@ -72,12 +80,17 @@
             <p class="hint">{{ 'EDIT_PROFILE_PAGE.EMAIL_READONLY' | translate }}</p>
           </div>
 
-          <div class="field">
+          <div class="field" [class.invalid]="form.controls.phone.invalid && form.controls.phone.touched">
             <label>{{ 'COMMON.PHONE' | translate }}</label>
             <div class="input-ico">
               <span class="material-icons-round left">smartphone</span>
-              <input type="tel" formControlName="phone" [placeholder]="'EDIT_PROFILE_PAGE.PHONE_PLACEHOLDER' | translate" />
+              <input type="tel" inputmode="tel" autocomplete="tel" formControlName="phone"
+                [placeholder]="'EDIT_PROFILE_PAGE.PHONE_PLACEHOLDER' | translate"
+                [attr.aria-invalid]="form.controls.phone.invalid && form.controls.phone.touched" />
             </div>
+            <small class="field-error" *ngIf="form.controls.phone.invalid && form.controls.phone.touched">
+              {{ 'COMMON.REQUIRED_FIELD' | translate }}
+            </small>
           </div>
 
           <!-- Security -->
@@ -90,7 +103,7 @@
               </div>
               <div class="sec-text">
                 <div class="sec-title">{{ 'COMMON.PASSWORD' | translate }}</div>
-                <div class="sec-sub">{{ 'EDIT_PROFILE_PAGE.PASSWORD_LAST_UPDATE' | translate }}</div>
+                <div class="sec-sub">{{ 'EDIT_PROFILE_PAGE.PASSWORD_RESET_DESC' | translate }}</div>
               </div>
             </div>
             <span class="material-icons-round sec-chevron">chevron_right</span>
@@ -129,9 +142,11 @@
 
     <!-- Footer fixed -->
     <footer class="cta">
-      <button class="save-btn" type="button" (click)="save()" [disabled]="loading || submitting || form.invalid">
+      <button class="save-btn" type="button" (click)="save()" [disabled]="loading || submitting"
+        [attr.aria-busy]="submitting">
         <span>{{ 'EDIT_PROFILE_PAGE.SAVE' | translate }}</span>
-        <span class="material-icons-round">save</span>
+        <ion-spinner *ngIf="submitting; else saveIcon" name="crescent"></ion-spinner>
+        <ng-template #saveIcon><span class="material-icons-round">save</span></ng-template>
       </button>
     </footer>
 

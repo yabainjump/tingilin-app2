@@ -1,9 +1,11 @@
 .edit-bg {
-  --background: #0f0720;
+  --background: #0b0712;
 }
 
 .screen {
   height: 100%;
+  width: min(100%, 720px);
+  margin: 0 auto;
   position: relative;
   overflow: hidden;
   color: #fff;
@@ -253,6 +255,19 @@
   box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.24);
 }
 
+.field.invalid input {
+  border-color: rgba(248, 113, 113, 0.72);
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.12);
+}
+
+.field-error {
+  display: block;
+  margin: 7px 0 0 12px;
+  color: #fca5a5;
+  font-size: 0.72rem;
+  font-weight: 650;
+}
+
 .input-ico {
   position: relative;
 }
@@ -355,15 +370,17 @@
 
 .cta {
   position: fixed;
-  left: 0;
-  right: 0;
+  left: 50%;
+  right: auto;
   bottom: 0;
+  width: min(100%, 720px);
+  transform: translateX(-50%);
   z-index: 12;
   padding: 14px 20px calc(env(safe-area-inset-bottom) + 14px);
   background: linear-gradient(
     to top,
-    rgba(15, 7, 32, 1) 45%,
-    rgba(15, 7, 32, 0.08)
+    rgba(11, 7, 18, 1) 45%,
+    rgba(11, 7, 18, 0.08)
   );
 }
 
@@ -375,8 +392,8 @@
   font-size: 15px;
   font-weight: 900;
   color: #fff;
-  background: linear-gradient(90deg, #8b5cf6 0%, #a855f7 100%);
-  box-shadow: 0 14px 24px rgba(139, 92, 246, 0.35);
+  background: var(--app-gradient-brand);
+  box-shadow: var(--app-shadow-brand);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -385,6 +402,12 @@
 
 .save-btn:disabled {
   opacity: 0.55;
+}
+
+.save-btn ion-spinner {
+  width: 20px;
+  height: 20px;
+  color: currentColor;
 }
 
 .sk-avatar {
@@ -438,5 +461,24 @@
   .cta {
     padding-left: 16px;
     padding-right: 16px;
+  }
+}
+
+@media (min-width: 640px) {
+  .content {
+    padding-inline: 32px;
+  }
+
+  .form {
+    padding: 22px;
+    border: 1px solid var(--app-border);
+    border-radius: 26px;
+    background: var(--app-surface);
+    box-shadow: var(--app-shadow-soft);
+    backdrop-filter: blur(22px);
+  }
+
+  .cta {
+    padding-inline: 32px;
   }
 }

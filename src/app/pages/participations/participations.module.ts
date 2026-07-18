@@ -8,6 +8,7 @@ import { ParticipationsPageRoutingModule } from './participations-routing.module
 
 import { ParticipationsPage } from './participations.page';
 import { TranslateModule } from '@ngx-translate/core';
+import { EmptyStateComponent } from '../../shared/ui/empty-state/empty-state.component';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { TranslateModule } from '@ngx-translate/core';
     FormsModule,
     IonicModule,
     ParticipationsPageRoutingModule,
-    TranslateModule
+    TranslateModule,
+    EmptyStateComponent
   ],
   declarations: [ParticipationsPage]
 })

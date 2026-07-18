@@ -43,18 +43,18 @@
       <div class="section-title">{{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_METHOD' | translate }}</div>
 
       <div class="methods">
-        <button class="method-card orange" [class.selected]="paymentMethod === 'ORANGE'"
+        <button type="button" class="method-card orange" [class.selected]="paymentMethod === 'ORANGE'"
           (click)="paymentMethod = 'ORANGE'">
           <div class="method-top">
-            <div class="logo orange-logo"><img class="tgl1" src="../../../assets/img/orange_money.jpg" alt=""></div>
+            <div class="logo orange-logo"><img class="tgl1" src="../../../assets/img/orange_money.jpg" alt="Orange Money"></div>
             <div class="radio" [class.on]="paymentMethod === 'ORANGE'"></div>
           </div>
           <div class="method-name">Orange Money</div>
         </button>
 
-        <button class="method-card mtn" [class.selected]="paymentMethod === 'MTN'" (click)="paymentMethod = 'MTN'">
+        <button type="button" class="method-card mtn" [class.selected]="paymentMethod === 'MTN'" (click)="paymentMethod = 'MTN'">
           <div class="method-top">
-            <div class="logo mtn-logo"><img class="tgl2" src="../../../assets/img/MobileMoney.jpg" alt=""></div>
+            <div class="logo mtn-logo"><img class="tgl2" src="../../../assets/img/MobileMoney.jpg" alt="MTN Mobile Money"></div>
             <div class="radio" [class.on]="paymentMethod === 'MTN'"></div>
           </div>
           <div class="method-name">MTN MoMo</div>
@@ -86,14 +86,14 @@
 
     <!-- Actions -->
     <div class="actions">
-      <button class="pay-btn" (click)="confirmPayment()" [disabled]="loading">
+      <button type="button" class="pay-btn" (click)="confirmPayment()" [disabled]="loading">
         <ng-container *ngIf="!loading; else payBusy">
           <span>{{ 'PAYMENT_CONFIRMATION_PAGE.CONFIRM_PAYMENT' | translate }}</span>
           <ion-icon name="arrow-forward-outline"></ion-icon>
         </ng-container>
       </button>
 
-      <button class="verify-btn" *ngIf="transactionId" (click)="verifyPayment()" [disabled]="loading">
+      <button type="button" class="verify-btn" *ngIf="transactionId" (click)="verifyPayment()" [disabled]="loading">
         <span *ngIf="!loading">{{ 'PAYMENT_CONFIRMATION_PAGE.VERIFY_PAYMENT' | translate }}</span>
         <ion-skeleton-text *ngIf="loading" animated class="btn-skeleton"></ion-skeleton-text>
       </button>

@@ -1,82 +1,118 @@
 :host {
+  --dock-bg: rgba(20, 12, 29, 0.88);
+  --dock-stroke: rgba(255, 255, 255, 0.11);
+  --dock-muted: #8f849c;
   display: block;
   height: 100%;
 }
 
-/* 🔥 IMPORTANT : remettre le contenu au-dessus */
+ion-tabs,
+ion-content {
+  pointer-events: auto !important;
+}
+
 ion-router-outlet {
   position: relative !important;
   z-index: 1 !important;
   pointer-events: auto !important;
 }
 
-/* Tabbar reste en dessous en “dock”, pas overlay plein écran */
 ion-tab-bar.lotto-tabbar {
-  position: relative !important;
-  z-index: 2 !important;
-  pointer-events: auto !important;
-}
-
-/* Au cas où un parent a mis pointer-events none */
-ion-tabs,
-ion-content {
-  pointer-events: auto !important;
-}
-
-/* Si tu gardes ton style */
-:host {
-  --primary: #a60df2;
-  --bg: #1c1022;
-  --muted: #b09cba;
-  --barbg: rgba(35, 27, 39, 0.90);
-}
-
-ion-tab-bar.lotto-tabbar {
-  --background: var(--barbg);
+  --background: transparent;
   --border: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.10);
-  height: 64px;
-  padding-bottom: env(safe-area-inset-bottom);
-  backdrop-filter: blur(18px);
+  position: absolute !important;
+  z-index: 20 !important;
+  left: 14px;
+  right: 14px;
+  bottom: calc(10px + env(safe-area-inset-bottom));
+  width: auto;
+  height: 68px;
+  padding: 6px;
+  overflow: hidden;
+  border: 1px solid var(--dock-stroke);
+  border-radius: 24px;
+  background: var(--dock-bg);
+  box-shadow:
+    0 22px 52px rgba(0, 0, 0, 0.44),
+    inset 0 1px 0 rgba(255, 255, 255, 0.055);
+  backdrop-filter: blur(26px) saturate(150%);
+  pointer-events: auto !important;
 }
 
 ion-tab-button {
-  --color: var(--muted);
-  --color-selected: var(--primary);
+  --color: var(--dock-muted);
+  --color-selected: #fff;
   --background: transparent;
   --background-focused: transparent;
   --background-activated: transparent;
-  background: transparent !important;
+  position: relative;
   min-width: 0;
+  min-height: 54px;
+  overflow: visible;
+  border-radius: 18px;
+  background: transparent !important;
+  transition:
+    color 0.22s ease,
+    transform 0.22s var(--app-ease-out);
+}
+
+ion-tab-button::part(native) {
+  border-radius: 18px;
+}
+
+ion-tab-button.tab-selected {
+  background: linear-gradient(145deg, rgba(157, 92, 255, 0.24), rgba(209, 105, 255, 0.1)) !important;
+  box-shadow: inset 0 0 0 1px rgba(209, 105, 255, 0.2);
+}
+
+ion-tab-button.tab-selected::after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ffc857;
+  box-shadow: 0 0 12px rgba(255, 200, 87, 0.7);
 }
 
 ion-tab-button ion-label {
-  font-size: 0.62rem;
-  letter-spacing: 0.04em;
+  margin-top: 4px;
+  font-size: 0.61rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 ion-tab-button .material-symbols-outlined,
 ion-tab-button ion-icon {
-  font-size: 1.22rem;
+  margin: 0;
+  font-size: 1.3rem;
+  transition: transform 0.22s var(--app-ease-out);
 }
 
-
-.add-circle {
-  width: 56px;
-  height: 56px;
-  border-radius: 999px;
-  background: var(--primary);
-
-  display: grid;
-  place-items: center;
-
-  transform: translateY(-18px);
-
-  border: 4px solid var(--bg);
-  box-shadow: 0 0 20px rgba(166, 13, 242, 0.55);
+ion-tab-button.tab-selected .material-symbols-outlined,
+ion-tab-button.tab-selected ion-icon {
+  color: #c987ff;
+  transform: translateY(-1px) scale(1.08);
+  filter: drop-shadow(0 0 10px rgba(157, 92, 255, 0.4));
 }
 
-.add-circle .material-symbols-outlined {
-  font-size: 28px;
-  color: #fff;
+.center-fab {
+  bottom: calc(76px + env(safe-area-inset-bottom));
+}
+
+.center-fab ion-fab-button {
+  --background: var(--app-gradient-brand);
+  --box-shadow: var(--app-shadow-brand);
+  width: 52px;
+  height: 52px;
+}
+
+@media (min-width: 720px) {
+  ion-tab-bar.lotto-tabbar {
+    left: 50%;
+    right: auto;
+    width: min(520px, calc(100% - 32px));
+    transform: translateX(-50%);
+  }
 }
