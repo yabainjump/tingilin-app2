@@ -15,7 +15,8 @@
     "FR": "Français",
     "EN": "English",
     "OPTIONAL": "optionnel",
-    "RETRY": "Réessayer"
+    "RETRY": "Réessayer",
+    "REQUIRED_FIELD": "Ce champ est obligatoire."
   },
   "OFFLINE": {
     "STATUS": "Vous êtes hors ligne",
@@ -111,7 +112,7 @@
   },
   "TABS": {
     "HOME": "Accueil",
-    "LOTTERY": "Loterie",
+    "LOTTERY": "jeux",
     "REFERRAL": "Parrainage",
     "PROFILE": "Profil"
   },
@@ -139,6 +140,9 @@
     "PRODUCTS_WON": "PRODUITS GAGNÉS",
     "HISTORY_TITLE": "Historique des Jeux",
     "SEE_ALL": "Tout voir",
+    "ADD_BALANCE": "Recharger le solde",
+    "EMPTY_HISTORY_TITLE": "Aucune participation pour le moment",
+    "EMPTY_HISTORY_DESC": "Tes prochains tickets et résultats apparaîtront ici.",
     "LOGOUT": "Déconnexion",
     "LIVE": "LIVE",
     "WON": "Gagné",
@@ -446,7 +450,7 @@
     "EMAIL_READONLY": "L'adresse email ne peut pas être modifiée.",
     "PHONE_PLACEHOLDER": "+237 6xx xx xx xx",
     "SECURITY": "Sécurité",
-    "PASSWORD_LAST_UPDATE": "Dernière modification il y a 3 mois",
+    "PASSWORD_RESET_DESC": "Recevoir un lien sécurisé par email",
     "SAVE": "Enregistrer les modifications",
     "TOAST_CAMERA_OPEN_FAILED": "Impossible d’ouvrir la caméra",
     "TOAST_UPDATED": "Profil mis à jour ✅",

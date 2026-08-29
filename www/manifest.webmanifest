@@ -1,8 +1,8 @@
 {
   "name": "Tingilin",
   "short_name": "Tingilin",
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
+  "theme_color": "#0b0712",
+  "background_color": "#0b0712",
   "display": "standalone",
   "scope": "/",
   "start_url": "/",

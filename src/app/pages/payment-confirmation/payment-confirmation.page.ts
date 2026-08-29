@@ -119,7 +119,7 @@ export class PaymentConfirmationPage {
       );
 
       this.transactionId = res?.transactionId;
-      this.paymentLink = res?.paymentLink;
+      this.paymentLink = this.safePaymentLink(res?.paymentLink);
       this.paymentWithTaxes = res?.paymentWithTaxes;
 
       if (res?.provider === 'MOCK' && this.transactionId) {
@@ -160,12 +160,6 @@ export class PaymentConfirmationPage {
       const message = Array.isArray(rawErrorMessage)
         ? rawErrorMessage.filter(Boolean).join(', ').trim()
         : String(rawErrorMessage ?? e?.message ?? '').trim();
-
-      console.error('Payment intent failed', {
-        status,
-        message,
-        error: e?.error,
-      });
 
       if (
         status === 401 ||
@@ -283,5 +277,14 @@ export class PaymentConfirmationPage {
         ? crypto.randomUUID().replace(/-/g, '').slice(0, 16)
         : `${Date.now()}${Math.floor(Math.random() * 9999)}`;
     return `payment-${safeRaffle}-${this.amount}-${randomPart}`.slice(0, 80);
+  }
+
+  private safePaymentLink(value: unknown): string | undefined {
+    try {
+      const parsed = new URL(String(value ?? '').trim());
+      return parsed.protocol === 'https:' ? parsed.toString() : undefined;
+    } catch {
+      return undefined;
+    }
   }
 }

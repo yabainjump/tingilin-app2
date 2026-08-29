@@ -52,6 +52,24 @@ npm run lint
 npm run test
 ```
 
+## Spec Kit
+
+Ce dépôt utilise GitHub Spec Kit `v1.0.1` avec l'intégration Codex. Les règles
+UX, accessibilité, sécurité client et qualité sont définies dans
+`.specify/memory/constitution.md`; les skills sont dans `.agents/skills/`.
+
+Pour une nouvelle fonctionnalité, ouvrir Codex depuis ce dossier puis suivre :
+
+```text
+$speckit-specify → $speckit-clarify → $speckit-plan
+→ $speckit-tasks → $speckit-analyze → $speckit-implement
+→ $speckit-converge
+```
+
+Les artefacts de la fonctionnalité sont versionnés dans `specs/`. Toute
+modification du contrat REST ou Socket.IO doit référencer une spec compagnon
+dans `tingilin-api`.
+
 ## Onboarding dev recommande
 
 1. Ouvrir `/landing`, puis inscription/login.
@@ -75,4 +93,3 @@ npm run test
 - `431 Request Header Fields Too Large`: vider le localStorage et se reconnecter.
 - `CORS blocked`: verifier que l'app tourne bien sur port `8100` ou ajuster CORS backend.
 - `GET /null` sur avatar: verifier `avatar` user (string valide ou vide).
-
