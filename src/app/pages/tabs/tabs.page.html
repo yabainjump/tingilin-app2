@@ -1,10 +1,9 @@
 <ion-tabs>
-
   <ion-router-outlet></ion-router-outlet>
 
   <ion-tab-bar slot="bottom" class="lotto-tabbar">
     <ion-tab-button tab="home">
-      <span class="notranslate material-symbols-outlined">home</span>
+      <ion-icon name="home-outline"></ion-icon>
       <ion-label>{{ 'TABS.HOME' | translate }}</ion-label>
     </ion-tab-button>
 
@@ -14,23 +13,27 @@
     </ion-tab-button>
 
     <ion-tab-button tab="referral" href="/tabs/referral">
-      <span class="notranslate material-symbols-outlined">redeem</span>
+      <ion-icon name="gift-outline"></ion-icon>
       <ion-label>{{ 'TABS.REFERRAL' | translate }}</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="profile">
-      <span class="notranslate material-symbols-outlined">person</span>
+      <ion-icon name="person-outline"></ion-icon>
       <ion-label>{{ 'TABS.PROFILE' | translate }}</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
 
-
-  <ion-fab *ngIf="isAdmin" class="center-fab" vertical="bottom" horizontal="center">
-    <ion-fab-button (click)="goCreateRaffle()" [attr.aria-label]="'CREATE_RAFFLE_PAGE.TITLE' | translate">
+  <ion-fab
+    *ngIf="isAdmin"
+    class="center-fab"
+    vertical="bottom"
+    horizontal="center"
+  >
+    <ion-fab-button
+      (click)="goCreateRaffle()"
+      [attr.aria-label]="'CREATE_RAFFLE_PAGE.TITLE' | translate"
+    >
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
-
 </ion-tabs>
-

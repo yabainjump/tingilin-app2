@@ -152,7 +152,7 @@ export class HomePage implements OnInit, OnDestroy {
 
     this.api
       .getHomeFeed(this.selectedCategoryId, {
-        forceRefresh: reason !== 'init',
+        forceRefresh: reason === 'refresh',
       })
       .pipe(
         finalize(() => {
@@ -170,14 +170,14 @@ export class HomePage implements OnInit, OnDestroy {
           this.endingSoon = endingSoonRows.filter((x) => this.isPurchasable(x));
           this.heroCards = this.endingSoon;
 
-          const all = (feed?.liveRows ?? []).filter((x) => this.isVisibleOnHome(x));
+          const all = (feed?.liveRows ?? []).filter((x) =>
+            this.isVisibleOnHome(x),
+          );
           const featured = all.find((x) => this.isPurchasable(x)) ?? null;
           this.featured = featured;
 
           const fid = featured?.id;
-          this.liveRows = fid
-            ? all.filter((x) => x?.id !== fid)
-            : all;
+          this.liveRows = fid ? all.filter((x) => x?.id !== fid) : all;
         },
         error: () => {
           this.featured = null;
@@ -219,10 +219,7 @@ export class HomePage implements OnInit, OnDestroy {
     const remaining = Math.max(0, end - this.nowMs);
     const fallbackWindow = 24 * 60 * 60 * 1000;
     const elapsedFallback = Math.max(0, fallbackWindow - remaining);
-    return Math.max(
-      0,
-      Math.min(100, (elapsedFallback / fallbackWindow) * 100),
-    );
+    return Math.max(0, Math.min(100, (elapsedFallback / fallbackWindow) * 100));
   }
 
   openRaffle(d: DrawCard): void {
@@ -287,6 +284,10 @@ export class HomePage implements OnInit, OnDestroy {
       'onLine' in navigator &&
       navigator.onLine === false
     ) {
+      return false;
+    }
+
+    if (this.networkStatus.isConstrained()) {
       return false;
     }
 

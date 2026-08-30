@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpParams,
+} from '@angular/common/http';
 import {
   Observable,
   catchError,
@@ -58,9 +62,7 @@ export class HomeApiService {
     limit: number,
     categoryId: string,
   ): HttpParams {
-    let params = new HttpParams()
-      .set('sort', sort)
-      .set('limit', String(limit));
+    let params = new HttpParams().set('sort', sort).set('limit', String(limit));
 
     const normalizedCategoryId = this.normalizeCategoryId(categoryId);
     if (normalizedCategoryId) {
@@ -131,22 +133,16 @@ export class HomeApiService {
           liveRows: (res?.liveRows ?? []).map((row) => this.toCard(row)),
         })),
         tap((feed) => void this.persistHomeFeed(cacheKey, feed)),
-        catchError(() =>
-          this.loadLegacyHomeFeed(categoryId).pipe(
-            tap((feed) => void this.persistHomeFeed(cacheKey, feed)),
-            catchError((error) =>
-              this.loadStoredHomeFeed(cacheKey).pipe(
-                mergeMap((cached) =>
-                  cached ? of(cached.value) : throwError(() => error),
-                ),
-              ),
-            ),
-          ),
+        catchError((error) =>
+          this.recoverHomeFeed(error, categoryId, cacheKey),
         ),
         shareReplay({ bufferSize: 1, refCount: false }),
       );
 
-    const value$ = this.networkStatus.isOffline()
+    const preferStored =
+      !options?.forceRefresh &&
+      (this.networkStatus.isOffline() || this.networkStatus.isConstrained());
+    const value$ = preferStored
       ? this.loadStoredHomeFeed(cacheKey).pipe(
           mergeMap((cached) => (cached ? of(cached.value) : request$)),
           shareReplay({ bufferSize: 1, refCount: false }),
@@ -170,7 +166,11 @@ export class HomeApiService {
   private toCard(raw: any): DrawCard {
     const product = raw?.product ?? raw?.productId ?? raw?.productRef ?? {};
     const mappedPrice = Number(
-      raw?.ticketPrice ?? raw?.ticket_price ?? raw?.price ?? product?.ticketPrice ?? 0,
+      raw?.ticketPrice ??
+        raw?.ticket_price ??
+        raw?.price ??
+        product?.ticketPrice ??
+        0,
     );
     const mappedCurrency = String(
       raw?.currency ?? raw?.ticketCurrency ?? product?.currency ?? 'XAF',
@@ -183,7 +183,9 @@ export class HomeApiService {
       imageUrl: this.cleanUrl(
         product?.imageUrl ?? product?.image ?? raw?.imageUrl ?? raw?.image,
       ),
-      categoryId: String(product?.categoryId ?? raw?.categoryId ?? '').toUpperCase() || undefined,
+      categoryId:
+        String(product?.categoryId ?? raw?.categoryId ?? '').toUpperCase() ||
+        undefined,
 
       // ✅ sold/total corrects (sinon tu vois 0/0)
       sold: Number(raw?.ticketsSold ?? raw?.sold ?? 0),
@@ -240,9 +242,34 @@ export class HomeApiService {
     await this.storage.setJson(`${this.storagePrefix}${cacheKey}`, payload);
   }
 
-  private loadStoredHomeFeed(cacheKey: string): Observable<StoredHomeFeed | null> {
+  private loadStoredHomeFeed(
+    cacheKey: string,
+  ): Observable<StoredHomeFeed | null> {
     return from(
       this.storage.getJson<StoredHomeFeed>(`${this.storagePrefix}${cacheKey}`),
+    );
+  }
+
+  private recoverHomeFeed(
+    error: unknown,
+    categoryId: string,
+    cacheKey: string,
+  ): Observable<HomeFeed> {
+    const status = error instanceof HttpErrorResponse ? error.status : 0;
+    const recovery$ = [404, 405].includes(status)
+      ? this.loadLegacyHomeFeed(categoryId).pipe(
+          tap((feed) => void this.persistHomeFeed(cacheKey, feed)),
+        )
+      : throwError(() => error);
+
+    return recovery$.pipe(
+      catchError((recoveryError) =>
+        this.loadStoredHomeFeed(cacheKey).pipe(
+          mergeMap((cached) =>
+            cached ? of(cached.value) : throwError(() => recoveryError),
+          ),
+        ),
+      ),
     );
   }
 }

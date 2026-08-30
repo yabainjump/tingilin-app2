@@ -33,4 +33,3 @@ export interface DrawCard {
   currency?: string;     
   status?: 'DRAFT' | 'LIVE' | 'CLOSED' | 'DRAWN';
 }
-

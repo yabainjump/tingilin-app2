@@ -1,15 +1,19 @@
 <ion-content [fullscreen]="true" class="login">
   <!-- Back -->
   <div class="topbar">
-    <button class="icon-btn" routerLink="/landing" [attr.aria-label]="'COMMON.BACK' | translate">
-      <span class="notranslate material-symbols-outlined">arrow_back</span>
+    <button
+      class="icon-btn"
+      routerLink="/landing"
+      [attr.aria-label]="'COMMON.BACK' | translate"
+    >
+      <ion-icon name="arrow-back-outline"></ion-icon>
     </button>
   </div>
 
   <div class="wrap">
     <div class="head">
       <div class="logo">
-        <span class="notranslate material-symbols-outlined"><img src="../../../../assets/img/Asset_7.png" alt=""></span>
+        <span><img src="../../../../assets/img/Asset_7.png" alt="" /></span>
       </div>
 
       <h1>{{ 'LOGIN_PAGE.TITLE' | translate }}</h1>
@@ -23,32 +27,50 @@
       <div class="field">
         <label>{{ 'LOGIN_PAGE.IDENTIFIER' | translate }}</label>
         <div class="input">
-          <span class="notranslate material-symbols-outlined left">mail</span>
-          <input type="text" [placeholder]="'LOGIN_PAGE.IDENTIFIER_PLACEHOLDER' | translate" [formControl]="form.controls.identifier" />
+          <ion-icon class="left" name="mail-outline"></ion-icon>
+          <input
+            type="text"
+            [placeholder]="'LOGIN_PAGE.IDENTIFIER_PLACEHOLDER' | translate"
+            [formControl]="form.controls.identifier"
+          />
         </div>
       </div>
 
       <div class="field">
         <div class="row">
           <label>{{ 'LOGIN_PAGE.PASSWORD_LABEL' | translate }}</label>
-          <a class="link" routerLink="/auth/forgot-password">{{ 'LOGIN_PAGE.FORGOT' | translate }}</a>
+          <a class="link" routerLink="/auth/forgot-password"
+            >{{ 'LOGIN_PAGE.FORGOT' | translate }}</a
+          >
         </div>
 
         <div class="input">
-          <span class="notranslate material-symbols-outlined left">lock</span>
-          <input [type]="showPassword ? 'text' : 'password'" placeholder="••••••••"
-            [formControl]="form.controls.password" />
-          <button type="button" class="eye" (click)="togglePassword()" [attr.aria-label]="'LOGIN_PAGE.TOGGLE_PASSWORD' | translate">
-            <span class="notranslate material-symbols-outlined">
-              {{ showPassword ? 'visibility' : 'visibility_off' }}
-            </span>
+          <ion-icon class="left" name="lock-closed-outline"></ion-icon>
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="••••••••"
+            [formControl]="form.controls.password"
+          />
+          <button
+            type="button"
+            class="eye"
+            (click)="togglePassword()"
+            [attr.aria-label]="'LOGIN_PAGE.TOGGLE_PASSWORD' | translate"
+          >
+            <ion-icon
+              [name]="showPassword ? 'eye-outline' : 'eye-off-outline'"
+            ></ion-icon>
           </button>
         </div>
       </div>
 
       <button class="cta" (click)="submit()" [disabled]="loading">
         <span *ngIf="!loading">{{ 'LOGIN_PAGE.SUBMIT' | translate }}</span>
-        <ion-skeleton-text *ngIf="loading" animated class="btn-skeleton"></ion-skeleton-text>
+        <ion-skeleton-text
+          *ngIf="loading"
+          animated
+          class="btn-skeleton"
+        ></ion-skeleton-text>
       </button>
     </div>
 
@@ -60,15 +82,20 @@
       </div>
 
       <div class="social-btns">
-        <button class="social-btn" type="button" aria-label="Google"><span class="g">G</span></button>
-        <button class="social-btn" type="button" aria-label="Apple"><span class="a"></span></button>
+        <button class="social-btn" type="button" aria-label="Google">
+          <span class="g">G</span>
+        </button>
+        <button class="social-btn" type="button" aria-label="Apple">
+          <span class="a"></span>
+        </button>
       </div>
     </div>
 
     <div class="foot">
       <span>{{ 'LOGIN_PAGE.NEW_HERE' | translate }}</span>
-      <a routerLink="/auth/register">{{ 'LOGIN_PAGE.CREATE_ACCOUNT' | translate }}</a>
+      <a routerLink="/auth/register"
+        >{{ 'LOGIN_PAGE.CREATE_ACCOUNT' | translate }}</a
+      >
     </div>
   </div>
 </ion-content>
-

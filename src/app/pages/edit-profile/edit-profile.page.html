@@ -1,10 +1,14 @@
 <ion-content [fullscreen]="true" class="edit-bg">
   <div class="screen">
-
     <!-- Header sticky -->
     <header class="topbar">
-      <button class="top-btn" type="button" (click)="back()" [attr.aria-label]="'COMMON.BACK' | translate">
-        <span class="material-icons-round">arrow_back_ios_new</span>
+      <button
+        class="top-btn"
+        type="button"
+        (click)="back()"
+        [attr.aria-label]="'COMMON.BACK' | translate"
+      >
+        <ion-icon name="chevron-back-outline"></ion-icon>
       </button>
 
       <h1 class="top-title">{{ 'EDIT_PROFILE_PAGE.TITLE' | translate }}</h1>
@@ -13,56 +17,82 @@
 
     <!-- Content -->
     <main class="content no-scrollbar">
-
       <ng-container *ngIf="!loading; else skel">
-
         <!-- Avatar -->
         <div class="avatar-block">
           <div class="avatar-ring">
             <div class="avatar-frame">
-              <img class="avatar-img" [src]="avatarPreview || user?.avatar || defaultAvatar" alt="avatar" />
+              <img
+                class="avatar-img"
+                [src]="avatarPreview || user?.avatar || defaultAvatar"
+                alt="avatar"
+              />
               <div class="avatar-hover">
-                <span class="material-icons-round">camera_alt</span>
+                <ion-icon name="camera-outline"></ion-icon>
               </div>
             </div>
           </div>
 
           <button class="avatar-edit-btn" type="button" (click)="pickAvatar()">
-            <span class="material-icons-round">edit</span>
+            <ion-icon name="create-outline"></ion-icon>
           </button>
         </div>
 
-        <button class="avatar-link" type="button" (click)="pickAvatar()">{{ 'EDIT_PROFILE_PAGE.CHANGE_PHOTO' | translate }}</button>
+        <button class="avatar-link" type="button" (click)="pickAvatar()">
+          {{ 'EDIT_PROFILE_PAGE.CHANGE_PHOTO' | translate }}
+        </button>
         <!-- Badges -->
         <div class="badges">
           <span class="badge active">
             <span class="dot"></span>
-            {{ 'EDIT_PROFILE_PAGE.STATUS' | translate }}: {{ user?.status || 'ACTIVE' }}
+            {{ 'EDIT_PROFILE_PAGE.STATUS' | translate }}: {{ user?.status ||
+            'ACTIVE' }}
           </span>
 
           <span class="badge role">
-            <span class="material-icons-round ico">badge</span>
-            {{ 'EDIT_PROFILE_PAGE.ROLE' | translate }}: {{ user?.role || 'USER' }}
+            <ion-icon class="ico" name="id-card-outline"></ion-icon>
+            {{ 'EDIT_PROFILE_PAGE.ROLE' | translate }}: {{ user?.role || 'USER'
+            }}
           </span>
         </div>
 
         <!-- Form -->
         <form class="form" [formGroup]="form">
           <div class="row">
-            <div class="field" [class.invalid]="form.controls.firstName.invalid && form.controls.firstName.touched">
+            <div
+              class="field"
+              [class.invalid]="form.controls.firstName.invalid && form.controls.firstName.touched"
+            >
               <label>{{ 'REGISTER_PAGE.FIRST_NAME' | translate }}</label>
-              <input type="text" formControlName="firstName" [placeholder]="'EDIT_PROFILE_PAGE.FIRST_NAME_PLACEHOLDER' | translate"
-                [attr.aria-invalid]="form.controls.firstName.invalid && form.controls.firstName.touched" />
-              <small class="field-error" *ngIf="form.controls.firstName.invalid && form.controls.firstName.touched">
+              <input
+                type="text"
+                formControlName="firstName"
+                [placeholder]="'EDIT_PROFILE_PAGE.FIRST_NAME_PLACEHOLDER' | translate"
+                [attr.aria-invalid]="form.controls.firstName.invalid && form.controls.firstName.touched"
+              />
+              <small
+                class="field-error"
+                *ngIf="form.controls.firstName.invalid && form.controls.firstName.touched"
+              >
                 {{ 'COMMON.REQUIRED_FIELD' | translate }}
               </small>
             </div>
 
-            <div class="field" [class.invalid]="form.controls.lastName.invalid && form.controls.lastName.touched">
+            <div
+              class="field"
+              [class.invalid]="form.controls.lastName.invalid && form.controls.lastName.touched"
+            >
               <label>{{ 'REGISTER_PAGE.LAST_NAME' | translate }}</label>
-              <input type="text" formControlName="lastName" [placeholder]="'EDIT_PROFILE_PAGE.LAST_NAME_PLACEHOLDER' | translate"
-                [attr.aria-invalid]="form.controls.lastName.invalid && form.controls.lastName.touched" />
-              <small class="field-error" *ngIf="form.controls.lastName.invalid && form.controls.lastName.touched">
+              <input
+                type="text"
+                formControlName="lastName"
+                [placeholder]="'EDIT_PROFILE_PAGE.LAST_NAME_PLACEHOLDER' | translate"
+                [attr.aria-invalid]="form.controls.lastName.invalid && form.controls.lastName.touched"
+              />
+              <small
+                class="field-error"
+                *ngIf="form.controls.lastName.invalid && form.controls.lastName.touched"
+              >
                 {{ 'COMMON.REQUIRED_FIELD' | translate }}
               </small>
             </div>
@@ -72,44 +102,63 @@
             <label>{{ 'COMMON.EMAIL' | translate }}</label>
 
             <div class="input-ico readonly">
-              <span class="material-icons-round left">mail</span>
+              <ion-icon class="left" name="mail-outline"></ion-icon>
               <input type="email" formControlName="email" readonly />
-              <span class="material-icons-round right">lock</span>
+              <ion-icon class="right" name="lock-closed-outline"></ion-icon>
             </div>
 
-            <p class="hint">{{ 'EDIT_PROFILE_PAGE.EMAIL_READONLY' | translate }}</p>
+            <p class="hint">
+              {{ 'EDIT_PROFILE_PAGE.EMAIL_READONLY' | translate }}
+            </p>
           </div>
 
-          <div class="field" [class.invalid]="form.controls.phone.invalid && form.controls.phone.touched">
+          <div
+            class="field"
+            [class.invalid]="form.controls.phone.invalid && form.controls.phone.touched"
+          >
             <label>{{ 'COMMON.PHONE' | translate }}</label>
             <div class="input-ico">
-              <span class="material-icons-round left">smartphone</span>
-              <input type="tel" inputmode="tel" autocomplete="tel" formControlName="phone"
+              <ion-icon class="left" name="phone-portrait-outline"></ion-icon>
+              <input
+                type="tel"
+                inputmode="tel"
+                autocomplete="tel"
+                formControlName="phone"
                 [placeholder]="'EDIT_PROFILE_PAGE.PHONE_PLACEHOLDER' | translate"
-                [attr.aria-invalid]="form.controls.phone.invalid && form.controls.phone.touched" />
+                [attr.aria-invalid]="form.controls.phone.invalid && form.controls.phone.touched"
+              />
             </div>
-            <small class="field-error" *ngIf="form.controls.phone.invalid && form.controls.phone.touched">
+            <small
+              class="field-error"
+              *ngIf="form.controls.phone.invalid && form.controls.phone.touched"
+            >
               {{ 'COMMON.REQUIRED_FIELD' | translate }}
             </small>
           </div>
 
           <!-- Security -->
-          <div class="sec-label">{{ 'EDIT_PROFILE_PAGE.SECURITY' | translate }}</div>
+          <div class="sec-label">
+            {{ 'EDIT_PROFILE_PAGE.SECURITY' | translate }}
+          </div>
 
           <button class="sec-card" type="button" (click)="goChangePassword()">
             <div class="sec-left">
               <div class="sec-icon">
-                <span class="material-icons-round">vpn_key</span>
+                <ion-icon name="key-outline"></ion-icon>
               </div>
               <div class="sec-text">
                 <div class="sec-title">{{ 'COMMON.PASSWORD' | translate }}</div>
-                <div class="sec-sub">{{ 'EDIT_PROFILE_PAGE.PASSWORD_RESET_DESC' | translate }}</div>
+                <div class="sec-sub">
+                  {{ 'EDIT_PROFILE_PAGE.PASSWORD_RESET_DESC' | translate }}
+                </div>
               </div>
             </div>
-            <span class="material-icons-round sec-chevron">chevron_right</span>
+            <ion-icon
+              class="sec-chevron"
+              name="chevron-forward-outline"
+            ></ion-icon>
           </button>
         </form>
-
       </ng-container>
 
       <!-- Skeleton -->
@@ -142,15 +191,31 @@
 
     <!-- Footer fixed -->
     <footer class="cta">
-      <button class="save-btn" type="button" (click)="save()" [disabled]="loading || submitting"
-        [attr.aria-busy]="submitting">
+      <button
+        class="save-btn"
+        type="button"
+        (click)="save()"
+        [disabled]="loading || submitting"
+        [attr.aria-busy]="submitting"
+      >
         <span>{{ 'EDIT_PROFILE_PAGE.SAVE' | translate }}</span>
-        <ion-spinner *ngIf="submitting; else saveIcon" name="crescent"></ion-spinner>
-        <ng-template #saveIcon><span class="material-icons-round">save</span></ng-template>
+        <ion-spinner
+          *ngIf="submitting; else saveIcon"
+          name="crescent"
+        ></ion-spinner>
+        <ng-template #saveIcon
+          ><ion-icon name="save-outline"></ion-icon
+        ></ng-template>
       </button>
     </footer>
 
     <!-- file input fallback web -->
-    <input #fileInput type="file" accept="image/*" hidden (change)="onFileSelected($event)" />
+    <input
+      #fileInput
+      type="file"
+      accept="image/*"
+      hidden
+      (change)="onFileSelected($event)"
+    />
   </div>
 </ion-content>

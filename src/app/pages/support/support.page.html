@@ -4,21 +4,24 @@
     <div class="support-glow glow-bottom" aria-hidden="true"></div>
 
     <header class="support-header">
-      <button class="back-button" type="button" (click)="goBack()" [attr.aria-label]="'COMMON.BACK' | translate">
-        <span class="notranslate material-symbols-outlined">arrow_back</span>
+      <button
+        class="back-button"
+        type="button"
+        (click)="goBack()"
+        [attr.aria-label]="'COMMON.BACK' | translate"
+      >
+        <ion-icon name="arrow-back-outline"></ion-icon>
       </button>
 
       <div class="headline">
         <p class="eyebrow">{{ 'SUPPORT_PAGE.EYEBROW' | translate }}</p>
         <h1>{{ 'SUPPORT_PAGE.TITLE' | translate }}</h1>
-        <p class="subtitle">
-          {{ 'SUPPORT_PAGE.SUBTITLE' | translate }}
-        </p>
+        <p class="subtitle">{{ 'SUPPORT_PAGE.SUBTITLE' | translate }}</p>
       </div>
     </header>
 
     <section class="search-card">
-      <span class="notranslate material-symbols-outlined search-icon">search</span>
+      <ion-icon class="search-icon" name="search-outline"></ion-icon>
       <input
         type="text"
         [(ngModel)]="searchTerm"
@@ -33,9 +36,13 @@
       </div>
 
       <div class="contact-grid">
-        <button class="contact-card contact-card--primary" type="button" (click)="contactSupport()">
+        <button
+          class="contact-card contact-card--primary"
+          type="button"
+          (click)="contactSupport()"
+        >
           <div class="contact-icon tone-violet">
-            <span class="notranslate material-symbols-outlined">mail</span>
+            <ion-icon name="mail-outline"></ion-icon>
           </div>
 
           <div class="contact-copy">
@@ -43,12 +50,12 @@
             <span>{{ 'SUPPORT_PAGE.CONTACT_WRITE_DESC' | translate }}</span>
           </div>
 
-          <span class="notranslate material-symbols-outlined chevron">chevron_right</span>
+          <ion-icon class="chevron" name="chevron-forward-outline"></ion-icon>
         </button>
 
         <button class="contact-card" type="button" (click)="scrollToFaqs()">
           <div class="contact-icon tone-blue">
-            <span class="notranslate material-symbols-outlined">menu_book</span>
+            <ion-icon name="book-outline"></ion-icon>
           </div>
 
           <div class="contact-copy">
@@ -61,7 +68,9 @@
 
     <section class="section">
       <div class="section-head section-head--center">
-        <p class="section-kicker">{{ 'SUPPORT_PAGE.CATEGORIES' | translate }}</p>
+        <p class="section-kicker">
+          {{ 'SUPPORT_PAGE.CATEGORIES' | translate }}
+        </p>
       </div>
 
       <div class="category-grid">
@@ -74,7 +83,7 @@
           (click)="selectCategory(category.id)"
         >
           <span class="category-icon" [ngClass]="'tone-' + category.tone">
-            <span class="notranslate material-symbols-outlined">{{ category.icon }}</span>
+            <ion-icon [name]="category.icon"></ion-icon>
           </span>
           <span class="category-label">{{ categoryLabel(category.id) }}</span>
         </button>
@@ -112,10 +121,14 @@
               <strong>{{ faqQuestion(faq) }}</strong>
             </div>
 
-            <span class="notranslate material-symbols-outlined arrow">expand_more</span>
+            <ion-icon class="arrow" name="chevron-down-outline"></ion-icon>
           </button>
 
-          <div class="faq-answer" *ngIf="isExpanded(faq.id)" [id]="'faq-answer-' + faq.id">
+          <div
+            class="faq-answer"
+            *ngIf="isExpanded(faq.id)"
+            [id]="'faq-answer-' + faq.id"
+          >
             <p>{{ faqAnswer(faq) }}</p>
 
             <button
@@ -142,4 +155,3 @@
     </section>
   </div>
 </ion-content>
-

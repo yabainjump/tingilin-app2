@@ -61,7 +61,10 @@ export class PaymentConfirmationPage {
 
     this.raffleId = qp.get('raffleId') || '';
     this.title = qp.get('title') || this.title;
-    this.imageUrl = toAbsoluteMediaUrl(qp.get('imageUrl'), environment.apiBaseUrl);
+    this.imageUrl = toAbsoluteMediaUrl(
+      qp.get('imageUrl'),
+      environment.apiBaseUrl,
+    );
 
     this.quantity = Number(qp.get('qty') || 1);
     this.ticketUnitPrice = Number(qp.get('unit') || 0);
@@ -69,7 +72,11 @@ export class PaymentConfirmationPage {
     this.intentKey = this.buildIntentKey();
 
     if (!this.raffleId) {
-      this.presentToast(this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_MISSING_RAFFLE_ID'));
+      this.presentToast(
+        this.translate.instant(
+          'PAYMENT_CONFIRMATION_PAGE.TOAST_MISSING_RAFFLE_ID',
+        ),
+      );
     }
 
     await this.prefillPayerProfile();
@@ -84,7 +91,9 @@ export class PaymentConfirmationPage {
     if (!this.auth.isLoggedIn()) {
       await this.presentToast('Session expirée. Connecte-toi puis réessaie.');
       await this.router.navigate(['/auth/login'], {
-        queryParams: { redirect: `/tabs/payment-confirmation?raffleId=${encodeURIComponent(this.raffleId)}` },
+        queryParams: {
+          redirect: `/tabs/payment-confirmation?raffleId=${encodeURIComponent(this.raffleId)}`,
+        },
       });
       return;
     }
@@ -92,11 +101,15 @@ export class PaymentConfirmationPage {
     // validation simple
     const cleanedPhone = (this.userPhone || '').replace(/\s+/g, '');
     if (!cleanedPhone || cleanedPhone.length < 8) {
-      return this.presentToast(this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_INVALID_PHONE'));
+      return this.presentToast(
+        this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_INVALID_PHONE'),
+      );
     }
 
     if (!this.payerEmail) {
-      return this.presentToast('Adresse e-mail introuvable. Reconnecte-toi puis réessaie.');
+      return this.presentToast(
+        'Adresse e-mail introuvable. Reconnecte-toi puis réessaie.',
+      );
     }
 
     this.loading = true;
@@ -141,13 +154,22 @@ export class PaymentConfirmationPage {
       }
 
       if (!this.paymentLink) {
-        throw new Error(this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_MISSING_PAYMENT_LINK'));
+        throw new Error(
+          this.translate.instant(
+            'PAYMENT_CONFIRMATION_PAGE.TOAST_MISSING_PAYMENT_LINK',
+          ),
+        );
       }
 
       await this.presentToast(
         this.paymentWithTaxes
-          ? this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_AMOUNT_TTC', { amount: this.paymentWithTaxes })
-          : this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_LINK_GENERATED'),
+          ? this.translate.instant(
+              'PAYMENT_CONFIRMATION_PAGE.TOAST_AMOUNT_TTC',
+              { amount: this.paymentWithTaxes },
+            )
+          : this.translate.instant(
+              'PAYMENT_CONFIRMATION_PAGE.TOAST_LINK_GENERATED',
+            ),
       );
 
       // Ouvre le lien (web)
@@ -185,7 +207,9 @@ export class PaymentConfirmationPage {
 
       await this.presentToast(
         message ||
-          this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_PAYMENT_ERROR'),
+          this.translate.instant(
+            'PAYMENT_CONFIRMATION_PAGE.TOAST_PAYMENT_ERROR',
+          ),
       );
     } finally {
       this.loading = false;
@@ -226,7 +250,11 @@ export class PaymentConfirmationPage {
       );
 
       if (res?.status === 'SUCCESS') {
-        await this.presentToast(this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_PAYMENT_CONFIRMED'));
+        await this.presentToast(
+          this.translate.instant(
+            'PAYMENT_CONFIRMATION_PAGE.TOAST_PAYMENT_CONFIRMED',
+          ),
+        );
         // exemple : redirige vers mes tickets
         this.router.navigateByUrl('/tabs/participations');
         return;
@@ -239,7 +267,11 @@ export class PaymentConfirmationPage {
       );
     } catch (e: any) {
       await this.presentToast(
-        e?.error?.message || e?.message || this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_VERIFY_ERROR'),
+        e?.error?.message ||
+          e?.message ||
+          this.translate.instant(
+            'PAYMENT_CONFIRMATION_PAGE.TOAST_VERIFY_ERROR',
+          ),
       );
     } finally {
       this.loading = false;
@@ -271,7 +303,10 @@ export class PaymentConfirmationPage {
   }
 
   private buildIntentKey(): string {
-    const safeRaffle = String(this.raffleId || 'raffle').replace(/[^a-zA-Z0-9_-]/g, '');
+    const safeRaffle = String(this.raffleId || 'raffle').replace(
+      /[^a-zA-Z0-9_-]/g,
+      '',
+    );
     const randomPart =
       typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
         ? crypto.randomUUID().replace(/-/g, '').slice(0, 16)

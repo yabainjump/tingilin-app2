@@ -1,19 +1,3 @@
-/* Material Symbols */
-.material-symbols-outlined {
-  font-variation-settings:
-    "FILL" 0,
-    "wght" 500,
-    "GRAD" 0,
-    "opsz" 24;
-}
-.material-symbols-outlined.filled {
-  font-variation-settings:
-    "FILL" 1,
-    "wght" 500,
-    "GRAD" 0,
-    "opsz" 24;
-}
-
 /* Global-ish for this page */
 :host {
   --card: #ffffff;
@@ -746,7 +730,11 @@
 .app-content {
   --background: #0b0712;
   background:
-    radial-gradient(640px 420px at 6% -4%, rgba(157, 92, 255, 0.22), transparent 62%),
+    radial-gradient(
+      640px 420px at 6% -4%,
+      rgba(157, 92, 255, 0.22),
+      transparent 62%
+    ),
     linear-gradient(180deg, #140a1e 0%, #0b0712 52%);
 }
 
@@ -820,7 +808,11 @@
 .hero-visual {
   border: 1px solid rgba(255, 255, 255, 0.11);
   border-radius: 30px;
-  background: linear-gradient(145deg, rgba(157, 92, 255, 0.16), rgba(255, 255, 255, 0.04));
+  background: linear-gradient(
+    145deg,
+    rgba(157, 92, 255, 0.16),
+    rgba(255, 255, 255, 0.04)
+  );
   box-shadow: var(--soft-shadow);
 }
 
@@ -839,7 +831,11 @@
 .pod-card,
 .boost-card {
   border-color: var(--border);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.035));
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.085),
+    rgba(255, 255, 255, 0.035)
+  );
   box-shadow: var(--soft-shadow2);
   backdrop-filter: blur(18px);
 }
@@ -918,7 +914,11 @@
   border: 1px solid rgba(209, 105, 255, 0.22);
   border-radius: 24px;
   background:
-    radial-gradient(240px 160px at 100% 0%, rgba(255, 200, 87, 0.14), transparent 70%),
+    radial-gradient(
+      240px 160px at 100% 0%,
+      rgba(255, 200, 87, 0.14),
+      transparent 70%
+    ),
     linear-gradient(135deg, #3d1760 0%, #6826a0 58%, #8f3fd0 100%);
   box-shadow: 0 22px 50px rgba(87, 30, 132, 0.36);
 }

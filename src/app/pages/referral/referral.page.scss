@@ -146,7 +146,7 @@ ion-content.referral-page {
 
 .card.referral::before,
 .card.loyalty::before {
-  content: '';
+  content: "";
   position: absolute;
   width: 120px;
   height: 120px;
@@ -187,11 +187,11 @@ ion-content.referral-page {
   font-weight: 600;
 }
 
-.card-head .material-symbols-outlined {
+.card-head ion-icon {
   color: var(--primary);
 }
 
-.card.loyalty .card-head .material-symbols-outlined {
+.card.loyalty .card-head ion-icon {
   color: var(--blue);
 }
 
@@ -270,7 +270,7 @@ ion-content.referral-page {
   border-radius: 14px;
   padding: 10px 12px;
   font-weight: 900;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   text-align: center;
   letter-spacing: 0.08em;
 }

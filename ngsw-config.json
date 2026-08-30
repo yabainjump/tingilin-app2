@@ -10,8 +10,10 @@
         "files": [
           "/favicon.ico",
           "/index.html",
-          "/*.css",
-          "/*.js",
+          "/runtime*.js",
+          "/polyfills*.js",
+          "/main*.js",
+          "/styles*.css",
           "/manifest.webmanifest"
         ]
       }
@@ -19,7 +21,7 @@
     {
       "name": "assets",
       "installMode": "lazy",
-      "updateMode": "prefetch",
+      "updateMode": "lazy",
       "resources": {
         "files": [
           "/assets/**",

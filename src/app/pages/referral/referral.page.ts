@@ -28,8 +28,7 @@ export class ReferralPage {
   referralsTotalPages = 1;
   readonly referralsPageSize = 10;
 
-  heroImage =
-    'assets/img/referal.jpg';
+  heroImage = 'assets/img/referal.jpg';
 
   constructor(
     private readonly api: ReferralApiService,
@@ -64,7 +63,9 @@ export class ReferralPage {
         error: async () => {
           this.summary = null;
           this.referrals = [];
-          await this.showToast(this.translate.instant('REFERRAL_PAGE.TOAST_LOAD_FAILED'));
+          await this.showToast(
+            this.translate.instant('REFERRAL_PAGE.TOAST_LOAD_FAILED'),
+          );
         },
       });
   }
@@ -122,7 +123,10 @@ export class ReferralPage {
   }
 
   fullName(u: ReferralPersonDto): string {
-    return `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim() || this.translate.instant('REFERRAL_PAGE.USER_FALLBACK');
+    return (
+      `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim() ||
+      this.translate.instant('REFERRAL_PAGE.USER_FALLBACK')
+    );
   }
 
   avatar(u: ReferralPersonDto): string {
@@ -134,7 +138,7 @@ export class ReferralPage {
   }
 
   historyIcon(source: string): string {
-    return source === 'REFERRAL' ? 'group_add' : 'confirmation_number';
+    return source === 'REFERRAL' ? 'person-add-outline' : 'ticket-outline';
   }
 
   historyTone(source: string): 'ref' | 'loy' {
@@ -192,14 +196,18 @@ export class ReferralPage {
     const code = this.summary?.referralCode ?? '';
     if (!code) return;
     await this.copyToClipboard(code);
-    await this.showToast(this.translate.instant('REFERRAL_PAGE.TOAST_CODE_COPIED'));
+    await this.showToast(
+      this.translate.instant('REFERRAL_PAGE.TOAST_CODE_COPIED'),
+    );
   }
 
   async copyLink() {
     const link = this.shareLink();
     if (!link) return;
     await this.copyToClipboard(link);
-    await this.showToast(this.translate.instant('REFERRAL_PAGE.TOAST_LINK_COPIED'));
+    await this.showToast(
+      this.translate.instant('REFERRAL_PAGE.TOAST_LINK_COPIED'),
+    );
   }
 
   async share(channel: 'whatsapp' | 'facebook' | 'sms' | 'other') {
@@ -216,11 +224,15 @@ export class ReferralPage {
           url: link,
         });
         if (mode === 'copied') {
-          await this.showToast(this.translate.instant('REFERRAL_PAGE.TOAST_LINK_COPIED'));
+          await this.showToast(
+            this.translate.instant('REFERRAL_PAGE.TOAST_LINK_COPIED'),
+          );
         }
         return;
       } catch {
-        await this.showToast(this.translate.instant('REFERRAL_PAGE.TOAST_SHARE_UNAVAILABLE'));
+        await this.showToast(
+          this.translate.instant('REFERRAL_PAGE.TOAST_SHARE_UNAVAILABLE'),
+        );
         return;
       }
     }
@@ -267,10 +279,7 @@ export class ReferralPage {
     await t.present();
   }
 
-  private applyReferralPage(
-    response: ReferralListDto,
-    append = false,
-  ) {
+  private applyReferralPage(response: ReferralListDto, append = false) {
     const incoming = Array.isArray(response?.data) ? response.data : [];
     this.referrals = append ? [...this.referrals, ...incoming] : incoming;
     this.referralsPage = Math.max(1, Number(response?.page ?? 1) || 1);

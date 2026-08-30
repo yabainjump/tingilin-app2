@@ -4,11 +4,7 @@ import { environment } from 'src/environments/environment';
 import { TranslateService } from '@ngx-translate/core';
 
 type SupportCategoryId =
-  | 'all'
-  | 'account'
-  | 'payments'
-  | 'referral'
-  | 'winnings';
+  'all' | 'account' | 'payments' | 'referral' | 'winnings';
 
 type SupportCategory = {
   id: SupportCategoryId;
@@ -34,11 +30,36 @@ export class SupportPage {
   readonly supportEmail = String(environment.supportEmail ?? '').trim();
 
   readonly categories: SupportCategory[] = [
-    { id: 'all', labelKey: 'SUPPORT_PAGE.CATEGORY_ALL', icon: 'dashboard', tone: 'violet' },
-    { id: 'account', labelKey: 'SUPPORT_PAGE.CATEGORY_ACCOUNT', icon: 'person', tone: 'blue' },
-    { id: 'payments', labelKey: 'SUPPORT_PAGE.CATEGORY_PAYMENTS', icon: 'payments', tone: 'green' },
-    { id: 'referral', labelKey: 'SUPPORT_PAGE.CATEGORY_REFERRAL', icon: 'group', tone: 'violet' },
-    { id: 'winnings', labelKey: 'SUPPORT_PAGE.CATEGORY_WINNINGS', icon: 'emoji_events', tone: 'gold' },
+    {
+      id: 'all',
+      labelKey: 'SUPPORT_PAGE.CATEGORY_ALL',
+      icon: 'grid-outline',
+      tone: 'violet',
+    },
+    {
+      id: 'account',
+      labelKey: 'SUPPORT_PAGE.CATEGORY_ACCOUNT',
+      icon: 'person-outline',
+      tone: 'blue',
+    },
+    {
+      id: 'payments',
+      labelKey: 'SUPPORT_PAGE.CATEGORY_PAYMENTS',
+      icon: 'card-outline',
+      tone: 'green',
+    },
+    {
+      id: 'referral',
+      labelKey: 'SUPPORT_PAGE.CATEGORY_REFERRAL',
+      icon: 'people-outline',
+      tone: 'violet',
+    },
+    {
+      id: 'winnings',
+      labelKey: 'SUPPORT_PAGE.CATEGORY_WINNINGS',
+      icon: 'trophy-outline',
+      tone: 'gold',
+    },
   ];
 
   readonly faqs: FaqItem[] = [
@@ -131,7 +152,9 @@ export class SupportPage {
   async contactSupport(categoryId?: SupportCategoryId): Promise<void> {
     if (!this.supportEmail) {
       const toast = await this.toastController.create({
-        message: this.translate.instant('SUPPORT_PAGE.TOAST_MISSING_SUPPORT_EMAIL'),
+        message: this.translate.instant(
+          'SUPPORT_PAGE.TOAST_MISSING_SUPPORT_EMAIL',
+        ),
         duration: 1800,
         color: 'warning',
       });

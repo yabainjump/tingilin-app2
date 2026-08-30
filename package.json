@@ -29,8 +29,6 @@
     "@capacitor/keyboard": "8.0.0",
     "@capacitor/preferences": "^8.0.0",
     "@capacitor/status-bar": "8.0.0",
-    "@fontsource/material-icons-round": "^5.2.6",
-    "@fontsource/material-symbols-outlined": "^5.2.42",
     "@fontsource/plus-jakarta-sans": "^5.2.8",
     "@ionic/angular": "^8.7.17",
     "@ionic/pwa-elements": "^3.3.0",

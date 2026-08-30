@@ -5,6 +5,7 @@ import {
 } from '@angular/common/http/testing';
 import { HomeApiService } from './home-api.service';
 import { environment } from 'src/environments/environment';
+import { NetworkStatusService } from '../offline/network-status.service';
 
 describe('HomeApiService', () => {
   let service: HomeApiService;
@@ -13,6 +14,15 @@ describe('HomeApiService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
+      providers: [
+        {
+          provide: NetworkStatusService,
+          useValue: {
+            isOffline: () => false,
+            isConstrained: () => false,
+          },
+        },
+      ],
     });
 
     service = TestBed.inject(HomeApiService);
@@ -74,7 +84,7 @@ describe('HomeApiService', () => {
     requests[0].flush({ endingSoon: [], liveRows: [] });
   });
 
-  it('should fall back to legacy endpoints when home-feed is rejected', () => {
+  it('should fall back to legacy endpoints only when home-feed is unavailable', () => {
     service.getHomeFeed('all').subscribe((feed) => {
       expect(feed.endingSoon).toEqual([]);
       expect(feed.liveRows).toEqual([]);
@@ -85,7 +95,7 @@ describe('HomeApiService', () => {
     );
     combinedReq.flush(
       { message: 'legacy backend' },
-      { status: 400, statusText: 'Bad Request' },
+      { status: 404, statusText: 'Not Found' },
     );
 
     const endingSoonReq = httpMock.expectOne(

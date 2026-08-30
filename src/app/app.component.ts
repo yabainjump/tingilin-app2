@@ -3,7 +3,14 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
 import { LoadingService } from './core/loading/loading.service';
 import { AuthStateService } from './services/auth/auth-state.service';
-import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, skip, Subscription } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  distinctUntilChanged,
+  filter,
+  map,
+  Subscription,
+} from 'rxjs';
 import { LanguageService } from './services/i18n/language.service';
 import { NetworkStatusService } from './services/offline/network-status.service';
 import { OfflineActionQueueService } from './services/offline/offline-action-queue.service';
@@ -12,6 +19,7 @@ type ConnectivityBannerState = {
   offline: boolean;
   pending: number;
   syncing: boolean;
+  constrained: boolean;
 };
 
 @Component({
@@ -22,7 +30,8 @@ type ConnectivityBannerState = {
 })
 export class AppComponent implements OnInit, OnDestroy {
   loading$ = this.loading.loading$;
-  private readonly bannerStateSubject = new BehaviorSubject<ConnectivityBannerState | null>(null);
+  private readonly bannerStateSubject =
+    new BehaviorSubject<ConnectivityBannerState | null>(null);
   private bannerHideTimeout?: ReturnType<typeof setTimeout>;
   bannerState$ = this.bannerStateSubject.asObservable();
   private navigationStartSub?: Subscription;
@@ -44,20 +53,28 @@ export class AppComponent implements OnInit, OnDestroy {
     this.bannerStateSub = combineLatest([
       this.networkStatus.online$,
       this.offlineQueue.pendingCount$,
+      this.networkStatus.constrained$,
     ])
       .pipe(
-        map(([online, pending]) => ({ online, pending })),
+        map(([online, pending, constrained]) => ({
+          online,
+          pending,
+          constrained,
+        })),
         distinctUntilChanged(
-          (a, b) => a.online === b.online && a.pending === b.pending,
+          (a, b) =>
+            a.online === b.online &&
+            a.pending === b.pending &&
+            a.constrained === b.constrained,
         ),
-        skip(1),
       )
-      .subscribe(({ online, pending }) => {
+      .subscribe(({ online, pending, constrained }) => {
         if (!online) {
           this.showBannerTemporarily({
             offline: true,
             pending,
             syncing: false,
+            constrained: false,
           });
           return;
         }
@@ -67,6 +84,17 @@ export class AppComponent implements OnInit, OnDestroy {
             offline: false,
             pending,
             syncing: true,
+            constrained: false,
+          });
+          return;
+        }
+
+        if (constrained) {
+          this.showBannerTemporarily({
+            offline: false,
+            pending: 0,
+            syncing: false,
+            constrained: true,
           });
           return;
         }
@@ -76,7 +104,11 @@ export class AppComponent implements OnInit, OnDestroy {
       });
 
     this.navigationStartSub = this.router.events
-      .pipe(filter((event): event is NavigationStart => event instanceof NavigationStart))
+      .pipe(
+        filter(
+          (event): event is NavigationStart => event instanceof NavigationStart,
+        ),
+      )
       .subscribe(() => this.blurActiveElement());
   }
 
@@ -92,7 +124,8 @@ export class AppComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const isRootElement = activeElement.tagName === 'BODY' || activeElement.tagName === 'HTML';
+    const isRootElement =
+      activeElement.tagName === 'BODY' || activeElement.tagName === 'HTML';
     if (!isRootElement) {
       activeElement.blur();
     }

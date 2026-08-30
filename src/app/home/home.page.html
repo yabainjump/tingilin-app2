@@ -3,27 +3,37 @@
   <div class="bg-glow" aria-hidden="true"></div>
 
   <div class="screen">
-
     <!-- HEADER -->
     <div class="header sticky-header">
       <div class="header-row">
-
         <div class="user">
           <div class="avatar-wrap">
-            <div class="avatar" [style.backgroundImage]="'url(' + safeImg(user?.avatarUrl || user?.avatar) + ')'">
-            </div>
+            <div
+              class="avatar"
+              [style.backgroundImage]="'url(' + safeImg(user?.avatarUrl || user?.avatar) + ')'"
+            ></div>
             <div class="online-dot"></div>
           </div>
 
           <div class="user-meta">
             <ng-container *ngIf="!loadingHeader && user; else headerSkel">
-              <div class="welcome">{{ 'HOME_PAGE.WELCOME_BACK' | translate }}</div>
-              <div class="name">{{ user.firstName }} {{ user.lastName || '' }}</div>
+              <div class="welcome">
+                {{ 'HOME_PAGE.WELCOME_BACK' | translate }}
+              </div>
+              <div class="name">
+                {{ user.firstName }} {{ user.lastName || '' }}
+              </div>
             </ng-container>
 
             <ng-template #headerSkel>
-              <ion-skeleton-text animated class="sk sk-welcome"></ion-skeleton-text>
-              <ion-skeleton-text animated class="sk sk-name"></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                class="sk sk-welcome"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                class="sk sk-name"
+              ></ion-skeleton-text>
             </ng-template>
           </div>
         </div>
@@ -34,21 +44,21 @@
             <span>{{ 'HOME_PAGE.LIVE_DRAW' | translate }}</span>
           </button>
 
-
           <ion-tab-button class="notif" href="/tabs/notifications">
-            <span class="notranslate material-symbols-outlined">notifications</span>
             <ion-icon name="notifications-outline"></ion-icon>
             <ion-label>{{ 'HOME_PAGE.NOTIFS' | translate }}</ion-label>
             <span class="notif-dot"></span>
 
-            <ion-badge *ngIf="(notifState.unreadCount$ | async) as n" [hidden]="n===0">
+            <ion-badge
+              *ngIf="(notifState.unreadCount$ | async) as n"
+              [hidden]="n===0"
+            >
               {{ n }}
             </ion-badge>
           </ion-tab-button>
         </div>
-
       </div>
-      
+
       <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
         <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
@@ -56,23 +66,39 @@
       <!-- Category Chips -->
       <div class="chips hide-scroll">
         <ng-container *ngIf="!loadingCategories; else chipsSkel">
-          <button *ngFor="let c of categories; trackBy: trackById" type="button" class="chip"
-            [class.active]="selectedCategoryId === c.id" (click)="selectCategory(c.id)">
+          <button
+            *ngFor="let c of categories; trackBy: trackById"
+            type="button"
+            class="chip"
+            [class.active]="selectedCategoryId === c.id"
+            (click)="selectCategory(c.id)"
+          >
             {{ categoryDisplayLabel(c) }}
           </button>
         </ng-container>
 
         <ng-template #chipsSkel>
-          <ion-skeleton-text animated class="chip-skel" *ngFor="let _ of [1,2,3,4]"></ion-skeleton-text>
+          <ion-skeleton-text
+            animated
+            class="chip-skel"
+            *ngFor="let _ of [1,2,3,4]"
+          ></ion-skeleton-text>
         </ng-template>
       </div>
     </div>
 
     <!-- CONTENT -->
     <div class="content">
-      <div class="offline-empty" *ngIf="(isOffline$ | async) && !showEndingSoonSkeleton && !heroCards.length && !featured && !liveRows.length">
-        <div class="offline-empty-title">{{ 'OFFLINE.EMPTY_TITLE' | translate }}</div>
-        <div class="offline-empty-copy">{{ 'OFFLINE.HOME_EMPTY_COPY' | translate }}</div>
+      <div
+        class="offline-empty"
+        *ngIf="(isOffline$ | async) && !showEndingSoonSkeleton && !heroCards.length && !featured && !liveRows.length"
+      >
+        <div class="offline-empty-title">
+          {{ 'OFFLINE.EMPTY_TITLE' | translate }}
+        </div>
+        <div class="offline-empty-copy">
+          {{ 'OFFLINE.HOME_EMPTY_COPY' | translate }}
+        </div>
         <button type="button" class="offline-retry" (click)="retryLoad()">
           {{ 'COMMON.RETRY' | translate }}
         </button>
@@ -80,8 +106,13 @@
 
       <!-- Ending Soon -->
       <div class="section-head">
-        <h2>{{ 'HOME_PAGE.ENDING_SOON' | translate }} <span class="notranslate material-symbols-outlined fire">local_fire_department</span></h2>
-        <button type="button" class="view-all">{{ 'COMMON.VIEW_ALL' | translate }}</button>
+        <h2>
+          {{ 'HOME_PAGE.ENDING_SOON' | translate }}
+          <ion-icon class="fire" name="flame-outline"></ion-icon>
+        </h2>
+        <button type="button" class="view-all">
+          {{ 'COMMON.VIEW_ALL' | translate }}
+        </button>
       </div>
 
       <div class="hero-scroll hide-scroll">
@@ -90,9 +121,18 @@
           <div class="hero-card skel" *ngFor="let _ of [1,2]">
             <ion-skeleton-text animated class="sk-hero-img"></ion-skeleton-text>
             <div class="hero-body">
-              <ion-skeleton-text animated class="sk-line lg"></ion-skeleton-text>
-              <ion-skeleton-text animated class="sk-line sm"></ion-skeleton-text>
-              <ion-skeleton-text animated class="sk-line bar"></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                class="sk-line lg"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                class="sk-line sm"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                class="sk-line bar"
+              ></ion-skeleton-text>
               <ion-skeleton-text animated class="sk-btn"></ion-skeleton-text>
             </div>
           </div>
@@ -100,13 +140,24 @@
 
         <!-- Data -->
         <ng-template #heroData>
-          <div class="hero-card" *ngFor="let d of heroCards; trackBy: trackById" (click)="openRaffle(d)">
+          <div
+            class="hero-card"
+            *ngFor="let d of heroCards; trackBy: trackById"
+            (click)="openRaffle(d)"
+          >
             <div class="badge" [ngClass]="d.badgeType || 'warn'">
               {{ d.badgeText || ('HOME_PAGE.ENDING_SOON_BADGE' | translate) }}
             </div>
 
-            <div class="hero-img"
-              [style.backgroundImage]="'url(' + (safeImg(d.imageUrl )) + ')'">
+            <div class="hero-img">
+              <img
+                class="network-image"
+                [src]="safeImg(d.imageUrl)"
+                [alt]="d.title"
+                loading="lazy"
+                decoding="async"
+                fetchpriority="low"
+              />
               <div class="hero-grad"></div>
             </div>
 
@@ -121,7 +172,9 @@
 
               <div class="progress">
                 <div class="progress-meta">
-                  <span class="sold">{{ 'HOME_PAGE.TIME_LEFT' | translate }}</span>
+                  <span class="sold"
+                    >{{ 'HOME_PAGE.TIME_LEFT' | translate }}</span
+                  >
                   <span class="left">{{ countdownText(d) }}</span>
                 </div>
 
@@ -145,10 +198,19 @@
       <h2 class="live-title">{{ 'HOME_PAGE.LIVE_DRAWS' | translate }}</h2>
 
       <!-- Featured -->
-      <ng-container *ngIf="!showFeaturedSkeleton && featured; else featuredSkeleton">
+      <ng-container
+        *ngIf="!showFeaturedSkeleton && featured; else featuredSkeleton"
+      >
         <div class="big-card" (click)="openRaffle(featured)">
-          <div class="big-img"
-            [style.backgroundImage]="'url(' + safeImg(featured.imageUrl) + ')'">
+          <div class="big-img">
+            <img
+              class="network-image"
+              [src]="safeImg(featured.imageUrl)"
+              [alt]="featured.title"
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+            />
             <div class="big-grad"></div>
 
             <div class="tag" [ngClass]="featured.badgeType || 'hot'">
@@ -156,7 +218,7 @@
             </div>
 
             <div class="timer" *ngIf="featured.endAt || featured.endsAt">
-              <span class="notranslate material-symbols-outlined">timer</span>
+              <ion-icon name="timer-outline"></ion-icon>
               <!-- <span class="t">Fin {{ (featured.endsAt || featured.endAt) | date:'dd MMM, HH:mm' }}</span> -->
               <span class="t">{{ countdownText(featured) }}</span>
             </div>
@@ -164,28 +226,38 @@
 
           <div class="big-body">
             <div class="big-title">{{ featured.title }}</div>
-            <div class="category-chip-inline">{{ categoryLabel(featured) }}</div>
+            <div class="category-chip-inline">
+              {{ categoryLabel(featured) }}
+            </div>
 
             <div class="verify">
-              <span class="notranslate material-symbols-outlined">verified</span>
+              <ion-icon name="shield-checkmark-outline"></ion-icon>
               {{ 'HOME_PAGE.VERIFIED_DRAW' | translate }}
             </div>
 
             <div class="progress lg">
               <div class="progress-meta">
-                <span class="left muted">{{ 'HOME_PAGE.TIME_LEFT' | translate }}</span>
+                <span class="left muted"
+                  >{{ 'HOME_PAGE.TIME_LEFT' | translate }}</span
+                >
                 <span class="sold">{{ countdownText(featured) }}</span>
               </div>
               <div class="bar lg">
-                <div class="bar-fill grad" [style.width.%]="timeProgress(featured)"></div>
+                <div
+                  class="bar-fill grad"
+                  [style.width.%]="timeProgress(featured)"
+                ></div>
               </div>
             </div>
 
             <div class="big-cta-row">
               <div class="price">
-                {{ featured.ticketPrice ?? 0 }} <span>{{ featured.currency || 'XAF' }}</span>
+                {{ featured.ticketPrice ?? 0 }}
+                <span>{{ featured.currency || 'XAF' }}</span>
               </div>
-              <button type="button" class="btn-primary">{{ 'HOME_PAGE.BUY_TICKET' | translate }}</button>
+              <button type="button" class="btn-primary">
+                {{ 'HOME_PAGE.BUY_TICKET' | translate }}
+              </button>
             </div>
           </div>
         </div>
@@ -201,19 +273,40 @@
       </ng-template>
 
       <!-- Rows -->
-      <ng-container *ngIf="!showRowsSkeleton && liveRows?.length; else rowsSkeleton">
-        <div class="row-card" *ngFor="let r of liveRows; trackBy: trackById" (click)="openRaffle(r)">
-          <div class="row-img"
-            [style.backgroundImage]="'url(' + safeImg(r.imageUrl) + ')'"></div>
+      <ng-container
+        *ngIf="!showRowsSkeleton && liveRows?.length; else rowsSkeleton"
+      >
+        <div
+          class="row-card"
+          *ngFor="let r of liveRows; trackBy: trackById"
+          (click)="openRaffle(r)"
+        >
+          <div class="row-img">
+            <img
+              class="network-image"
+              [src]="safeImg(r.imageUrl)"
+              [alt]="r.title"
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+            />
+          </div>
 
           <div class="row-body">
             <div class="row-title">{{ r.title }}</div>
             <div class="category-chip-inline">{{ categoryLabel(r) }}</div>
-            <div class="row-sub">{{ 'HOME_PAGE.TIME_REMAINING' | translate }} {{ countdownText(r) }}</div>
+            <div class="row-sub">
+              {{ 'HOME_PAGE.TIME_REMAINING' | translate }} {{ countdownText(r)
+              }}
+            </div>
 
             <div class="row-actions">
-              <div class="row-price">{{ r.ticketPrice ?? 0 }} {{ r.currency || 'XAF' }}</div>
-              <button class="pill" type="button">{{ 'HOME_PAGE.BUY_TICKET' | translate }}</button>
+              <div class="row-price">
+                {{ r.ticketPrice ?? 0 }} {{ r.currency || 'XAF' }}
+              </div>
+              <button class="pill" type="button">
+                {{ 'HOME_PAGE.BUY_TICKET' | translate }}
+              </button>
             </div>
           </div>
         </div>
@@ -231,4 +324,3 @@
     </div>
   </div>
 </ion-content>
-

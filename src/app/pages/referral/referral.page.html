@@ -2,17 +2,20 @@
   <div class="screen">
     <div class="topbar">
       <button class="icon-btn" type="button" (click)="back()">
-        <span class="notranslate material-symbols-outlined">arrow_back</span>
+        <ion-icon name="arrow-back-outline"></ion-icon>
       </button>
       <h1>{{ 'REFERRAL_PAGE.TITLE' | translate }}</h1>
       <button class="icon-btn" type="button" (click)="copyLink()">
-        <span class="notranslate material-symbols-outlined">help</span>
+        <ion-icon name="help-circle-outline"></ion-icon>
       </button>
     </div>
 
     <ng-container *ngIf="!loading && summary; else loadingTpl">
       <section class="hero">
-        <div class="hero-image" [style.backgroundImage]="'url(' + heroImage + ')'">
+        <div
+          class="hero-image"
+          [style.backgroundImage]="'url(' + heroImage + ')'"
+        >
           <div class="hero-grad"></div>
         </div>
         <h2>{{ 'REFERRAL_PAGE.HERO_TITLE' | translate }}</h2>
@@ -23,7 +26,9 @@
       </section>
 
       <section class="reward-balance">
-        <div class="reward-label">{{ 'REFERRAL_PAGE.FREE_TICKETS_AVAILABLE' | translate }}</div>
+        <div class="reward-label">
+          {{ 'REFERRAL_PAGE.FREE_TICKETS_AVAILABLE' | translate }}
+        </div>
         <div class="reward-value">{{ summary.freeTicketsBalance }}</div>
         <button type="button" class="reward-btn" (click)="openTickets()">
           {{ 'REFERRAL_PAGE.USE_NOW' | translate }}
@@ -34,7 +39,7 @@
         <div class="card-head">
           <div>
             <h3>
-              <span class="notranslate material-symbols-outlined">group_add</span>
+              <ion-icon name="person-add-outline"></ion-icon>
               {{ 'REFERRAL_PAGE.REFERRAL_GOAL' | translate }}
             </h3>
             <p>{{ referralProgressLabel }}</p>
@@ -42,7 +47,10 @@
           <div class="chip">+1</div>
         </div>
         <div class="bar">
-          <div class="fill referral-fill" [style.width.%]="referralPercent"></div>
+          <div
+            class="fill referral-fill"
+            [style.width.%]="referralPercent"
+          ></div>
           <div class="knob" [style.left.%]="referralPercent"></div>
         </div>
       </section>
@@ -51,7 +59,7 @@
         <div class="card-head">
           <div>
             <h3>
-              <span class="notranslate material-symbols-outlined">confirmation_number</span>
+              <ion-icon name="ticket-outline"></ion-icon>
               {{ 'REFERRAL_PAGE.LOYALTY_BONUS' | translate }}
             </h3>
             <p>{{ loyaltyProgressLabel }}</p>
@@ -68,7 +76,9 @@
         <p class="code-label">{{ 'REFERRAL_PAGE.UNIQUE_CODE' | translate }}</p>
         <div class="code-row">
           <span class="code">{{ summary.referralCode }}</span>
-          <button type="button" (click)="copyCode()">{{ 'REFERRAL_PAGE.COPY' | translate }}</button>
+          <button type="button" (click)="copyCode()">
+            {{ 'REFERRAL_PAGE.COPY' | translate }}
+          </button>
         </div>
 
         <div class="share-row">
@@ -81,7 +91,10 @@
             Facebook
           </button>
           <button type="button" class="sms" (click)="share('sms')">
-            <ion-icon class="share-ico" name="chatbubble-ellipses-outline"></ion-icon>
+            <ion-icon
+              class="share-ico"
+              name="chatbubble-ellipses-outline"
+            ></ion-icon>
             SMS
           </button>
           <button type="button" class="other" (click)="share('other')">
@@ -103,10 +116,12 @@
 
         <div class="history-row" *ngFor="let h of rewardHistory">
           <div class="h-left">
-            <span class="notranslate material-symbols-outlined h-ico" [class.ref]="historyTone(h.source) === 'ref'"
-              [class.loy]="historyTone(h.source) === 'loy'">
-              {{ historyIcon(h.source) }}
-            </span>
+            <ion-icon
+              class="h-ico"
+              [class.ref]="historyTone(h.source) === 'ref'"
+              [class.loy]="historyTone(h.source) === 'loy'"
+              [name]="historyIcon(h.source)"
+            ></ion-icon>
             <div class="h-meta">
               <div class="h-reason">{{ h.reason }}</div>
               <div class="h-date">{{ historyDate(h.createdAt) }}</div>
@@ -119,24 +134,35 @@
       <section class="list-section">
         <div class="list-head">
           <h3>{{ 'REFERRAL_PAGE.MY_REFERRALS' | translate }}</h3>
-          <div class="badge">{{ summary.referral.qualifiedReferrals }} {{ 'REFERRAL_PAGE.ACTIVE' | translate }}</div>
+          <div class="badge">
+            {{ summary.referral.qualifiedReferrals }} {{ 'REFERRAL_PAGE.ACTIVE'
+            | translate }}
+          </div>
         </div>
 
         <div class="empty" *ngIf="!referrals.length">
           {{ 'REFERRAL_PAGE.EMPTY_REFERRALS' | translate }}
         </div>
 
-        <div class="user-row" *ngFor="let r of referrals; trackBy: trackByReferral">
-          <div class="avatar" [style.backgroundImage]="'url(' + avatar(r) + ')'"></div>
+        <div
+          class="user-row"
+          *ngFor="let r of referrals; trackBy: trackByReferral"
+        >
+          <div
+            class="avatar"
+            [style.backgroundImage]="'url(' + avatar(r) + ')'"
+          ></div>
           <div class="user-meta">
             <div class="name">{{ fullName(r) }}</div>
             <div class="status" [class.active]="r.active">
-              {{ r.active ? ('REFERRAL_PAGE.STATUS_ACTIVE' | translate) : ('REFERRAL_PAGE.STATUS_PENDING' | translate) }}
+              {{ r.active ? ('REFERRAL_PAGE.STATUS_ACTIVE' | translate) :
+              ('REFERRAL_PAGE.STATUS_PENDING' | translate) }}
             </div>
           </div>
-          <span class="notranslate material-symbols-outlined state-ico">
-            {{ r.active ? 'check_circle' : 'schedule' }}
-          </span>
+          <ion-icon
+            class="state-ico"
+            [name]="r.active ? 'checkmark-circle-outline' : 'time-outline'"
+          ></ion-icon>
         </div>
 
         <div class="list-actions" *ngIf="hasMoreReferrals">
@@ -146,11 +172,8 @@
             [disabled]="loadingMoreReferrals"
             (click)="loadMoreReferrals()"
           >
-            {{
-              loadingMoreReferrals
-                ? ('REFERRAL_PAGE.LOADING_MORE' | translate)
-                : ('REFERRAL_PAGE.LOAD_MORE' | translate)
-            }}
+            {{ loadingMoreReferrals ? ('REFERRAL_PAGE.LOADING_MORE' | translate)
+            : ('REFERRAL_PAGE.LOAD_MORE' | translate) }}
           </button>
         </div>
       </section>
@@ -173,4 +196,3 @@
     </ng-template>
   </div>
 </ion-content>
-

@@ -1,20 +1,34 @@
 <ion-content [fullscreen]="true" class="premium-bg">
   <div class="page">
-
     <!-- HEADER -->
     <div class="header">
       <div class="top-actions">
-        <button class="icon-btn" type="button" (click)="back()" [attr.aria-label]="'COMMON.BACK' | translate">
-          <span class="material-icons-round">arrow_back</span>
+        <button
+          class="icon-btn"
+          type="button"
+          (click)="back()"
+          [attr.aria-label]="'COMMON.BACK' | translate"
+        >
+          <ion-icon name="arrow-back-outline"></ion-icon>
         </button>
 
         <div class="right-actions">
-          <button class="icon-btn" type="button" (click)="openSupport()" [attr.aria-label]="'SUPPORT_PAGE.TITLE' | translate">
-            <span class="material-icons-round">support_agent</span>
+          <button
+            class="icon-btn"
+            type="button"
+            (click)="openSupport()"
+            [attr.aria-label]="'SUPPORT_PAGE.TITLE' | translate"
+          >
+            <ion-icon name="headset-outline"></ion-icon>
           </button>
 
-          <button class="icon-btn" type="button" (click)="settings()" [attr.aria-label]="'EDIT_PROFILE_PAGE.TITLE' | translate">
-            <span class="material-icons-round">settings</span>
+          <button
+            class="icon-btn"
+            type="button"
+            (click)="settings()"
+            [attr.aria-label]="'EDIT_PROFILE_PAGE.TITLE' | translate"
+          >
+            <ion-icon name="settings-outline"></ion-icon>
           </button>
         </div>
       </div>
@@ -24,15 +38,22 @@
         <div class="avatar-wrap">
           <div class="avatar-ring">
             <div class="avatar-inner">
-              <img class="avatar"
+              <img
+                class="avatar"
                 [src]="user?.avatar || 'assets/img/profile.svg'"
-                [attr.alt]="(user?.firstName || '') + ' ' + (user?.lastName || '')" />
+                [attr.alt]="(user?.firstName || '') + ' ' + (user?.lastName || '')"
+              />
             </div>
           </div>
 
           <!-- edit avatar -->
-          <button class="avatar-edit" type="button" (click)="editAvatar()" [attr.aria-label]="'EDIT_PROFILE_PAGE.CHANGE_PHOTO' | translate">
-            <span class="material-icons-round">edit</span>
+          <button
+            class="avatar-edit"
+            type="button"
+            (click)="editAvatar()"
+            [attr.aria-label]="'EDIT_PROFILE_PAGE.CHANGE_PHOTO' | translate"
+          >
+            <ion-icon name="create-outline"></ion-icon>
           </button>
         </div>
 
@@ -43,12 +64,19 @@
 
         <div class="balance-pill">
           <div class="balance-meta">
-            <div class="balance-label">{{ 'PROFILE_PAGE.BALANCE_CURRENT' | translate }}</div>
+            <div class="balance-label">
+              {{ 'PROFILE_PAGE.BALANCE_CURRENT' | translate }}
+            </div>
             <div class="balance-value">{{ balanceLabel }}</div>
           </div>
 
-          <button class="balance-add" type="button" (click)="topUp()" [attr.aria-label]="'PROFILE_PAGE.ADD_BALANCE' | translate">
-            <span class="material-icons-round">add</span>
+          <button
+            class="balance-add"
+            type="button"
+            (click)="topUp()"
+            [attr.aria-label]="'PROFILE_PAGE.ADD_BALANCE' | translate"
+          >
+            <ion-icon name="add-outline"></ion-icon>
           </button>
         </div>
       </ng-container>
@@ -64,26 +92,29 @@
 
     <!-- BODY -->
     <div class="body">
-
       <!-- STATS -->
       <ng-container *ngIf="!loadingStats; else statsSkeleton">
         <div class="glass-card stats-card">
           <div class="stat">
             <div class="stat-ico">
-              <span class="material-icons-round">confirmation_number</span>
+              <ion-icon name="ticket-outline"></ion-icon>
             </div>
             <div class="stat-val">{{ stats ? stats.ticketsBought : '—' }}</div>
-            <div class="stat-lbl">{{ 'PROFILE_PAGE.TICKETS_BOUGHT' | translate }}</div>
+            <div class="stat-lbl">
+              {{ 'PROFILE_PAGE.TICKETS_BOUGHT' | translate }}
+            </div>
           </div>
 
           <div class="divider"></div>
 
           <div class="stat">
             <div class="stat-ico alt">
-              <span class="material-icons-round">inventory_2</span>
+              <ion-icon name="cube-outline"></ion-icon>
             </div>
             <div class="stat-val">{{ stats ? stats.productsWon : '—' }}</div>
-            <div class="stat-lbl">{{ 'PROFILE_PAGE.PRODUCTS_WON' | translate }}</div>
+            <div class="stat-lbl">
+              {{ 'PROFILE_PAGE.PRODUCTS_WON' | translate }}
+            </div>
           </div>
         </div>
       </ng-container>
@@ -115,10 +146,18 @@
       <!-- HISTORY LIST -->
       <ng-container *ngIf="!loadingHistory; else historySkeleton">
         <div class="history-list" *ngIf="history.length; else emptyHistory">
-          <button class="glass-panel history-item" [class.is-lost]="isHistoryLost(h)" type="button"
-            *ngFor="let h of history" (click)="openHistoryItem(h)">
+          <button
+            class="glass-panel history-item"
+            [class.is-lost]="isHistoryLost(h)"
+            type="button"
+            *ngFor="let h of history"
+            (click)="openHistoryItem(h)"
+          >
             <div class="thumb">
-              <img [src]="h.imageUrl || 'assets/img/placeholder.png'" alt="product" />
+              <img
+                [src]="h.imageUrl || 'assets/img/placeholder.png'"
+                alt="product"
+              />
               <div class="thumb-grad"></div>
             </div>
 
@@ -126,21 +165,25 @@
               <div class="h-top">
                 <div class="h-title">{{ h.title }}</div>
 
-                <span class="badge" [class.live]="historyBadgeTone(h) === 'live'"
-                  [class.won]="historyBadgeTone(h) === 'won'" [class.lost]="historyBadgeTone(h) === 'lost'"
-                  [class.ended]="historyBadgeTone(h) === 'ended'">
+                <span
+                  class="badge"
+                  [class.live]="historyBadgeTone(h) === 'live'"
+                  [class.won]="historyBadgeTone(h) === 'won'"
+                  [class.lost]="historyBadgeTone(h) === 'lost'"
+                  [class.ended]="historyBadgeTone(h) === 'ended'"
+                >
                   {{ raffleBadgeLabel(h) }}
                 </span>
               </div>
 
               <div class="h-meta">
                 <div class="meta">
-                  <span class="material-icons-round">calendar_today</span>
+                  <ion-icon name="calendar-outline"></ion-icon>
                   <span>{{ h.dateLabel }}</span>
                 </div>
 
                 <div class="meta">
-                  <span class="material-icons-round">local_activity</span>
+                  <ion-icon name="ticket-outline"></ion-icon>
                   <span>{{ h.ticketsLabel }}</span>
                 </div>
               </div>
@@ -160,11 +203,17 @@
 
       <ng-template #historySkeleton>
         <div class="history-list">
-          <div class="glass-panel history-item skel" *ngFor="let _ of [1,2,3,4,5]">
+          <div
+            class="glass-panel history-item skel"
+            *ngFor="let _ of [1,2,3,4,5]"
+          >
             <ion-skeleton-text animated class="sk-thumb"></ion-skeleton-text>
             <div class="h-body">
               <ion-skeleton-text animated class="sk-line"></ion-skeleton-text>
-              <ion-skeleton-text animated class="sk-line sm"></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                class="sk-line sm"
+              ></ion-skeleton-text>
             </div>
           </div>
         </div>
@@ -173,13 +222,12 @@
       <!-- LOGOUT -->
       <div class="logout-wrap">
         <button class="logout" type="button" (click)="logout()">
-          <span class="material-icons-round">logout</span>
+          <ion-icon name="log-out-outline"></ion-icon>
           {{ 'PROFILE_PAGE.LOGOUT' | translate }}
         </button>
       </div>
 
       <div class="bottom-spacer"></div>
     </div>
-
   </div>
 </ion-content>

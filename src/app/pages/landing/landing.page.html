@@ -3,14 +3,16 @@
     <div class="header-row">
       <div class="brand">
         <div class="brand-icon">
-          <img src="../../../assets/img/Asset_6.png" alt="Tinguilin">
+          <img src="../../../assets/img/Asset_6.png" alt="Tinguilin" />
         </div>
         <div class="brand-name">Tinguilin</div>
       </div>
 
       <div class="header-actions">
         <app-language-switch [compact]="true"></app-language-switch>
-        <a class="header-link" routerLink="/auth/login">{{ 'LANDING.CONNECTION' | translate }}</a>
+        <a class="header-link" routerLink="/auth/login"
+          >{{ 'LANDING.CONNECTION' | translate }}</a
+        >
       </div>
     </div>
   </ion-toolbar>
@@ -54,7 +56,7 @@
     <div class="steps">
       <div class="step-card">
         <div class="step-icon">
-          <span class="notranslate material-symbols-outlined filled">shopping_bag</span>
+          <ion-icon class="filled" name="bag-handle"></ion-icon>
         </div>
         <div class="step-text">
           <div class="step-kicker">{{ 'LANDING.STEP_1' | translate }}</div>
@@ -65,7 +67,7 @@
 
       <div class="step-card">
         <div class="step-icon">
-          <span class="notranslate material-symbols-outlined filled">confirmation_number</span>
+          <ion-icon class="filled" name="ticket"></ion-icon>
         </div>
         <div class="step-text">
           <div class="step-kicker">{{ 'LANDING.STEP_2' | translate }}</div>
@@ -76,7 +78,7 @@
 
       <div class="step-card">
         <div class="step-icon">
-          <span class="notranslate material-symbols-outlined filled">trophy</span>
+          <ion-icon class="filled" name="trophy"></ion-icon>
         </div>
         <div class="step-text">
           <div class="step-kicker">{{ 'LANDING.STEP_3' | translate }}</div>
@@ -113,27 +115,36 @@
       <div class="pod-body">
         <div class="count-row">
           <div class="count-left">
-            <span class="notranslate material-symbols-outlined">timer</span>
+            <ion-icon name="timer-outline"></ion-icon>
             <span>{{ 'LANDING.DRAW_END' | translate }}</span>
           </div>
           <div class="count-right">{{ countdown }}</div>
         </div>
 
-        <ion-progress-bar class="progress" [value]="progress"></ion-progress-bar>
+        <ion-progress-bar
+          class="progress"
+          [value]="progress"
+        ></ion-progress-bar>
 
         <div class="meta-row">
-          <div class="meta-muted">{{ sold }} {{ 'LANDING.SOLD' | translate }}</div>
-          <div class="meta-strong">{{ total }} {{ 'LANDING.TOTAL_TICKETS' | translate }}</div>
+          <div class="meta-muted">
+            {{ sold }} {{ 'LANDING.SOLD' | translate }}
+          </div>
+          <div class="meta-strong">
+            {{ total }} {{ 'LANDING.TOTAL_TICKETS' | translate }}
+          </div>
         </div>
 
         <button class="cta">
           <div class="cta-left">
-            <div class="cta-kicker">{{ 'LANDING.TICKET_PRICE' | translate }}</div>
+            <div class="cta-kicker">
+              {{ 'LANDING.TICKET_PRICE' | translate }}
+            </div>
             <div class="cta-price">{{ ticketPrice }} FCFA</div>
           </div>
           <div class="cta-right">
             {{ 'LANDING.PARTICIPATE' | translate }}
-            <span class="notranslate material-symbols-outlined">arrow_forward</span>
+            <ion-icon name="arrow-forward-outline"></ion-icon>
           </div>
         </button>
       </div>
@@ -145,28 +156,34 @@
     <div class="trust-grid">
       <div class="trust-item">
         <div class="trust-icon green">
-          <span class="notranslate material-symbols-outlined">verified_user</span>
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
         </div>
-        <div class="trust-label">{{ 'LANDING.SECURE_PAYMENT' | translate }}</div>
+        <div class="trust-label">
+          {{ 'LANDING.SECURE_PAYMENT' | translate }}
+        </div>
       </div>
 
       <div class="trust-item">
         <div class="trust-icon amber">
-          <span class="notranslate material-symbols-outlined">emoji_events</span>
+          <ion-icon name="trophy-outline"></ion-icon>
         </div>
-        <div class="trust-label">{{ 'LANDING.CERTIFIED_WINNERS' | translate }}</div>
+        <div class="trust-label">
+          {{ 'LANDING.CERTIFIED_WINNERS' | translate }}
+        </div>
       </div>
 
       <div class="trust-item">
         <div class="trust-icon purple">
-          <span class="notranslate material-symbols-outlined">lock</span>
+          <ion-icon name="lock-closed-outline"></ion-icon>
         </div>
         <div class="trust-label">{{ 'LANDING.PRIVATE_DATA' | translate }}</div>
       </div>
     </div>
 
     <div class="payments">
-      <div class="payments-title">{{ 'LANDING.PAYMENT_TITLE' | translate }}</div>
+      <div class="payments-title">
+        {{ 'LANDING.PAYMENT_TITLE' | translate }}
+      </div>
       <div class="payments-logos">
         <div class="logo">Orange</div>
         <div class="logo">MTN</div>
@@ -184,39 +201,53 @@
     <div class="boost-grid">
       <article class="boost-card blue">
         <div class="boost-icon">
-          <span class="notranslate material-symbols-outlined filled">bolt</span>
+          <ion-icon class="filled" name="flash"></ion-icon>
         </div>
-        <div class="boost-title">{{ 'LANDING.BOOST_CARD_1_TITLE' | translate }}</div>
-        <div class="boost-desc">{{ 'LANDING.BOOST_CARD_1_DESC' | translate }}</div>
+        <div class="boost-title">
+          {{ 'LANDING.BOOST_CARD_1_TITLE' | translate }}
+        </div>
+        <div class="boost-desc">
+          {{ 'LANDING.BOOST_CARD_1_DESC' | translate }}
+        </div>
       </article>
 
       <article class="boost-card amber">
         <div class="boost-icon">
-          <span class="notranslate material-symbols-outlined filled">workspace_premium</span>
+          <ion-icon class="filled" name="medal"></ion-icon>
         </div>
-        <div class="boost-title">{{ 'LANDING.BOOST_CARD_2_TITLE' | translate }}</div>
-        <div class="boost-desc">{{ 'LANDING.BOOST_CARD_2_DESC' | translate }}</div>
+        <div class="boost-title">
+          {{ 'LANDING.BOOST_CARD_2_TITLE' | translate }}
+        </div>
+        <div class="boost-desc">
+          {{ 'LANDING.BOOST_CARD_2_DESC' | translate }}
+        </div>
       </article>
 
       <article class="boost-card purple">
         <div class="boost-icon">
-          <span class="notranslate material-symbols-outlined filled">insights</span>
+          <ion-icon class="filled" name="stats-chart"></ion-icon>
         </div>
-        <div class="boost-title">{{ 'LANDING.BOOST_CARD_3_TITLE' | translate }}</div>
-        <div class="boost-desc">{{ 'LANDING.BOOST_CARD_3_DESC' | translate }}</div>
+        <div class="boost-title">
+          {{ 'LANDING.BOOST_CARD_3_TITLE' | translate }}
+        </div>
+        <div class="boost-desc">
+          {{ 'LANDING.BOOST_CARD_3_DESC' | translate }}
+        </div>
       </article>
     </div>
 
     <div class="proof-card">
       <div class="proof-left">
-        <div class="proof-kicker">{{ 'LANDING.COMMUNITY_KICKER' | translate }}</div>
+        <div class="proof-kicker">
+          {{ 'LANDING.COMMUNITY_KICKER' | translate }}
+        </div>
         <div class="proof-stat">{{ 'LANDING.COMMUNITY_STAT' | translate }}</div>
         <div class="proof-mini">{{ 'LANDING.COMMUNITY_SUB' | translate }}</div>
       </div>
 
       <a class="proof-cta" routerLink="/auth/register">
         {{ 'LANDING.START_NOW' | translate }}
-        <span class="notranslate material-symbols-outlined">arrow_forward</span>
+        <ion-icon name="arrow-forward-outline"></ion-icon>
       </a>
     </div>
   </section>
@@ -224,6 +255,3 @@
   <!-- espace pour ne pas être caché par le footer -->
   <div class="spacer"></div>
 </ion-content>
-
-
-

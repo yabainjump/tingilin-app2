@@ -21,6 +21,8 @@
   "OFFLINE": {
     "STATUS": "You are offline",
     "USING_SAVED_DATA": "The app is showing the most recently saved data.",
+    "LOW_BANDWIDTH_TITLE": "Slow connection detected",
+    "LOW_BANDWIDTH_BODY": "Data-saving mode is active: cached content first and fewer refreshes.",
     "SYNCING_TITLE": "Pending sync",
     "SYNCING_BODY": "{{count}} action(s) will be sent as soon as the network returns.",
     "HOME_CACHE_HINT": "Weak connection detected: the home screen can fall back to the last raffles already viewed.",

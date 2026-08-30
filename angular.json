@@ -45,17 +45,9 @@
                 "output": "./svg"
               }
             ],
-            "styles": [
-              "node_modules/@fontsource/material-icons-round/index.css",
-              "node_modules/@fontsource/material-symbols-outlined/index.css",
-              "src/global.scss",
-              "src/theme/variables.scss"
-            ],
+            "styles": ["src/global.scss", "src/theme/variables.scss"],
             "scripts": [],
-            "allowedCommonJsDependencies": [
-              "debug",
-              "socket.io-parser"
-            ]
+            "allowedCommonJsDependencies": ["debug", "socket.io-parser"]
           },
           "configurations": {
             "production": {
@@ -141,12 +133,7 @@
                 "output": "./svg"
               }
             ],
-            "styles": [
-              "node_modules/@fontsource/material-icons-round/index.css",
-              "node_modules/@fontsource/material-symbols-outlined/index.css",
-              "src/global.scss",
-              "src/theme/variables.scss"
-            ],
+            "styles": ["src/global.scss", "src/theme/variables.scss"],
             "scripts": []
           },
           "configurations": {

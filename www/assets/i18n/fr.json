@@ -21,6 +21,8 @@
   "OFFLINE": {
     "STATUS": "Vous êtes hors ligne",
     "USING_SAVED_DATA": "L'application affiche les dernières données enregistrées.",
+    "LOW_BANDWIDTH_TITLE": "Connexion faible détectée",
+    "LOW_BANDWIDTH_BODY": "Mode économie de données activé : cache prioritaire et actualisations réduites.",
     "SYNCING_TITLE": "Synchronisation en attente",
     "SYNCING_BODY": "{{count}} action(s) seront envoyées dès le retour du réseau.",
     "HOME_CACHE_HINT": "Connexion faible détectée : l'accueil peut afficher les dernières raffles déjà consultées.",

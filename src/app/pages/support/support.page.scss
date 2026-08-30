@@ -14,8 +14,14 @@
 
   display: block;
   height: 100%;
-  font-family: "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI, Roboto,
-    Arial, sans-serif;
+  font-family:
+    "Plus Jakarta Sans",
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Arial,
+    sans-serif;
 }
 
 .support-page {
@@ -86,7 +92,9 @@
   color: var(--text-main);
   display: grid;
   place-items: center;
-  transition: transform 150ms ease, background 150ms ease;
+  transition:
+    transform 150ms ease,
+    background 150ms ease;
 }
 
 .back-button:active {
@@ -94,7 +102,7 @@
   background: rgba(255, 255, 255, 0.14);
 }
 
-.back-button .material-symbols-outlined {
+.back-button ion-icon {
   font-size: 1.35rem;
 }
 
@@ -255,7 +263,7 @@
   margin-bottom: 0;
 }
 
-.category-icon .material-symbols-outlined {
+.category-icon ion-icon {
   font-size: 1.15rem;
 }
 

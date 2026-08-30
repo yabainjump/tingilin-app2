@@ -1,7 +1,11 @@
 <ion-content [fullscreen]="true" class="register">
   <div class="topbar">
-    <button class="back" routerLink="/auth/login" [attr.aria-label]="'COMMON.BACK' | translate">
-      <span class="notranslate material-symbols-outlined">arrow_back_ios_new</span>
+    <button
+      class="back"
+      routerLink="/auth/login"
+      [attr.aria-label]="'COMMON.BACK' | translate"
+    >
+      <ion-icon name="chevron-back-outline"></ion-icon>
     </button>
 
     <div class="top-title">{{ 'REGISTER_PAGE.TOP_TITLE' | translate }}</div>
@@ -11,11 +15,14 @@
   <div class="wrap">
     <h1>{{ 'REGISTER_PAGE.TITLE' | translate }}</h1>
     <p class="subtitle">
-      {{ 'REGISTER_PAGE.SUBTITLE' | translate }} <span class="primary">100 FCFA</span>.
+      {{ 'REGISTER_PAGE.SUBTITLE' | translate }}
+      <span class="primary">100 FCFA</span>.
     </p>
 
     <div class="language-choice">
-      <div class="language-label">{{ 'REGISTER_PAGE.LANGUAGE_PROMPT' | translate }}</div>
+      <div class="language-label">
+        {{ 'REGISTER_PAGE.LANGUAGE_PROMPT' | translate }}
+      </div>
       <app-language-switch></app-language-switch>
     </div>
 
@@ -23,23 +30,39 @@
       <div class="grid-2">
         <div class="field">
           <label>{{ 'REGISTER_PAGE.LAST_NAME' | translate }}</label>
-          <input type="text" [placeholder]="'REGISTER_PAGE.LAST_NAME_PLACEHOLDER' | translate" [formControl]="form.controls.lastName" />
+          <input
+            type="text"
+            [placeholder]="'REGISTER_PAGE.LAST_NAME_PLACEHOLDER' | translate"
+            [formControl]="form.controls.lastName"
+          />
         </div>
 
         <div class="field">
           <label>{{ 'REGISTER_PAGE.FIRST_NAME' | translate }}</label>
-          <input type="text" [placeholder]="'REGISTER_PAGE.FIRST_NAME_PLACEHOLDER' | translate" [formControl]="form.controls.firstName" />
+          <input
+            type="text"
+            [placeholder]="'REGISTER_PAGE.FIRST_NAME_PLACEHOLDER' | translate"
+            [formControl]="form.controls.firstName"
+          />
         </div>
       </div>
 
       <div class="field">
         <label>{{ 'REGISTER_PAGE.USERNAME' | translate }}</label>
-        <input type="text" [placeholder]="'REGISTER_PAGE.USERNAME_PLACEHOLDER' | translate" [formControl]="form.controls.username" />
+        <input
+          type="text"
+          [placeholder]="'REGISTER_PAGE.USERNAME_PLACEHOLDER' | translate"
+          [formControl]="form.controls.username"
+        />
       </div>
 
       <div class="field">
         <label>{{ 'COMMON.EMAIL' | translate }}</label>
-        <input type="email" [placeholder]="'REGISTER_PAGE.EMAIL_PLACEHOLDER' | translate" [formControl]="form.controls.email" />
+        <input
+          type="email"
+          [placeholder]="'REGISTER_PAGE.EMAIL_PLACEHOLDER' | translate"
+          [formControl]="form.controls.email"
+        />
       </div>
 
       <div class="field">
@@ -47,27 +70,45 @@
 
         <div class="phone-row">
           <select class="cc-select" [formControl]="form.controls.countryCode">
-            <option *ngFor="let c of countryCodes" [value]="c.code">{{ c.label }}</option>
+            <option *ngFor="let c of countryCodes" [value]="c.code">
+              {{ c.label }}
+            </option>
           </select>
 
-          <input type="tel" [placeholder]="'REGISTER_PAGE.PHONE_PLACEHOLDER' | translate" [formControl]="form.controls.phone" />
+          <input
+            type="tel"
+            [placeholder]="'REGISTER_PAGE.PHONE_PLACEHOLDER' | translate"
+            [formControl]="form.controls.phone"
+          />
         </div>
       </div>
 
       <div class="field">
         <label>{{ 'REGISTER_PAGE.REFERRAL_LABEL' | translate }}</label>
-        <input type="text" [placeholder]="'REGISTER_PAGE.REFERRAL_PLACEHOLDER' | translate" [formControl]="form.controls.referralCode" />
+        <input
+          type="text"
+          [placeholder]="'REGISTER_PAGE.REFERRAL_PLACEHOLDER' | translate"
+          [formControl]="form.controls.referralCode"
+        />
       </div>
 
       <div class="grid-2">
         <div class="field">
           <label>{{ 'COMMON.COUNTRY' | translate }}</label>
-          <input type="text" [placeholder]="'REGISTER_PAGE.COUNTRY_PLACEHOLDER' | translate" [formControl]="form.controls.country" />
+          <input
+            type="text"
+            [placeholder]="'REGISTER_PAGE.COUNTRY_PLACEHOLDER' | translate"
+            [formControl]="form.controls.country"
+          />
         </div>
 
         <div class="field">
           <label>{{ 'COMMON.CITY' | translate }}</label>
-          <input type="text" [placeholder]="'REGISTER_PAGE.CITY_PLACEHOLDER' | translate" [formControl]="form.controls.city" />
+          <input
+            type="text"
+            [placeholder]="'REGISTER_PAGE.CITY_PLACEHOLDER' | translate"
+            [formControl]="form.controls.city"
+          />
         </div>
       </div>
 
@@ -79,33 +120,41 @@
             placeholder="••••••••"
             [formControl]="form.controls.password"
           />
-          <button type="button" class="eye" (click)="togglePassword()" [attr.aria-label]="'LOGIN_PAGE.TOGGLE_PASSWORD' | translate">
-            <span class="notranslate material-symbols-outlined">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+          <button
+            type="button"
+            class="eye"
+            (click)="togglePassword()"
+            [attr.aria-label]="'LOGIN_PAGE.TOGGLE_PASSWORD' | translate"
+          >
+            <ion-icon
+              [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+            ></ion-icon>
           </button>
         </div>
 
-        <div class="hint">
-          {{ 'REGISTER_PAGE.PASSWORD_HINT' | translate }}
-        </div>
+        <div class="hint">{{ 'REGISTER_PAGE.PASSWORD_HINT' | translate }}</div>
       </div>
 
       <div class="terms">
         <ion-checkbox [formControl]="form.controls.terms"></ion-checkbox>
-        <div class="terms-text">
-          {{ 'REGISTER_PAGE.TERMS' | translate }}
-        </div>
+        <div class="terms-text">{{ 'REGISTER_PAGE.TERMS' | translate }}</div>
       </div>
 
       <button class="cta" type="submit" [disabled]="loading">
         <span *ngIf="!loading">{{ 'REGISTER_PAGE.SUBMIT' | translate }}</span>
-        <ion-skeleton-text *ngIf="loading" animated class="btn-skeleton"></ion-skeleton-text>
+        <ion-skeleton-text
+          *ngIf="loading"
+          animated
+          class="btn-skeleton"
+        ></ion-skeleton-text>
       </button>
     </form>
 
     <div class="foot">
       {{ 'REGISTER_PAGE.ALREADY' | translate }}
-      <a routerLink="/auth/login">{{ 'REGISTER_PAGE.LOGIN_LINK' | translate }}</a>
+      <a routerLink="/auth/login"
+        >{{ 'REGISTER_PAGE.LOGIN_LINK' | translate }}</a
+      >
     </div>
   </div>
 </ion-content>
-
