@@ -42,9 +42,9 @@
         "https://backend.tinguilin.yaba-in.com/share/**"
       ],
       "cacheConfig": {
-        "strategy": "performance",
+        "strategy": "freshness",
         "maxSize": 100,
-        "maxAge": "1d",
+        "maxAge": "5m",
         "timeout": "5s"
       }
     },

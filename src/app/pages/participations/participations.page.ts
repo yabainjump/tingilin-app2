@@ -1,17 +1,16 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
-import { firstValueFrom, from } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 import {
-  TicketsApiService,
-  TicketDto,
-} from 'src/app/services/tickets/tickets-api.service';
-import {
-  RafflesPublicApiService,
-  RaffleDetailsDto,
-} from 'src/app/services/raffles/raffles-public-api.service';
+  ParticipationsApiService,
+  ParticipationOverviewItemDto,
+} from 'src/app/services/participations/participations-api.service';
+import { RaffleDetailsDto } from 'src/app/services/raffles/raffles-public-api.service';
+import { toAbsoluteMediaUrl } from 'src/app/shared/utils/media-url';
+import { environment } from 'src/environments/environment';
 
 type FilterKey = 'ongoing' | 'completed';
 
@@ -20,13 +19,16 @@ type ResultBadge = 'WIN' | 'LOSE' | 'NONE';
 interface ParticipationItem {
   raffleId: string;
   raffle?: RaffleDetailsDto;
-  tickets: TicketDto[];
   ticketsCount: number;
   maskedTicketRef: string;
   progressPct: number; // 0-100
   isCompleted: boolean;
   result: ResultBadge; // WIN/LOSE (optionnel)
+  lastTicketAt?: string;
+  createdTs?: string;
 }
+
+const COMPLETED_STATUSES = ['CLOSED', 'DRAWN', 'FINISHED', 'ENDED'];
 
 @Component({
   selector: 'app-participations',
@@ -41,8 +43,7 @@ export class ParticipationsPage {
   items: ParticipationItem[] = [];
 
   constructor(
-    private ticketsApi: TicketsApiService,
-    private rafflesApi: RafflesPublicApiService,
+    private participationsApi: ParticipationsApiService,
     private router: Router,
     private toast: ToastController,
     private translate: TranslateService,
@@ -72,65 +73,21 @@ export class ParticipationsPage {
   async load() {
     this.loading = true;
     try {
-      const tickets = await firstValueFrom(this.ticketsApi.myTickets());
+      const res = await firstValueFrom(this.participationsApi.overview());
 
-      // group by raffleId
-      const map = new Map<string, TicketDto[]>();
-      for (const t of tickets) {
-        if (!map.has(t.raffleId)) map.set(t.raffleId, []);
-        map.get(t.raffleId)!.push(t);
-      }
-
-      const groups: ParticipationItem[] = [];
-      for (const [raffleId, list] of map.entries()) {
-        list.sort((a, b) =>
-          (b.createdAt || '').localeCompare(a.createdAt || ''),
-        );
-        const firstSerial = list[0]?.serial || '';
-        groups.push({
-          raffleId,
-          tickets: list,
-          ticketsCount: list.length,
-          maskedTicketRef: this.maskSerial(firstSerial),
-          progressPct: 0,
-          isCompleted: false,
-          result: 'NONE',
-        });
-      }
-
-      // Fetch raffle details in parallel to keep the dashboard snappy.
-      await Promise.all(
-        groups.map(async (g) => {
-        try {
-          const r = await firstValueFrom(this.rafflesApi.getById(g.raffleId));
-          g.raffle = r;
-
-          // completed vs ongoing
-          const st = String((r as any).status || '').toUpperCase();
-          g.isCompleted = ['CLOSED', 'DRAWN', 'FINISHED', 'ENDED'].includes(st);
-
-          // progress: sold/total (fallback safe)
-          const total = Number((r as any).total || 0);
-          const sold = Number((r as any).sold || 0);
-          g.progressPct =
-            total > 0 ? Math.max(0, Math.min(100, (sold / total) * 100)) : 0;
-
-          // WIN/LOSE: optionnel (si tu ajoutes winner endpoint plus tard)
-          // -> pour le moment: NONE (mais la structure est prête)
-        } catch {
-          // raffle may be missing: keep minimal
-        }
-        }),
+      const items = (res?.data ?? []).map((item) =>
+        this.toParticipationItem(item),
       );
 
-      // sort by most recent ticket
-      groups.sort((a, b) =>
-        (b.tickets[0]?.createdAt || '').localeCompare(
-          a.tickets[0]?.createdAt || '',
-        ),
-      );
+      // tri par ticket le plus recent (lastTicketAt ISO -> localeCompare)
+      items.sort((a, b) => {
+        const aAt = a.lastTicketAt || '';
+        const bAt = b.lastTicketAt || '';
+        if (aAt !== bAt) return bAt.localeCompare(aAt);
+        return (b.createdTs || '').localeCompare(a.createdTs || '');
+      });
 
-      this.items = groups;
+      this.items = items;
     } catch (e: any) {
       const t = await this.toast.create({
         message:
@@ -142,6 +99,34 @@ export class ParticipationsPage {
     } finally {
       this.loading = false;
     }
+  }
+
+  private toParticipationItem(item: ParticipationOverviewItemDto): ParticipationItem {
+    const raffle = (item.raffle ?? null) as RaffleDetailsDto | null;
+    const st = String(raffle?.status || '').toUpperCase();
+    const total = Number(raffle?.total || 0);
+    const sold = Number(raffle?.sold || 0);
+
+    return {
+      raffleId: item.raffleId,
+      raffle: raffle
+        ? {
+            ...raffle,
+            id: String(raffle.id ?? item.raffleId),
+            imageUrl:
+              toAbsoluteMediaUrl(raffle.imageUrl, environment.apiBaseUrl) ??
+              raffle.imageUrl,
+          }
+        : undefined,
+      ticketsCount: Number(item.ticketsCount || 0),
+      maskedTicketRef: this.maskSerial(item.firstSerial ?? ''),
+      isCompleted: COMPLETED_STATUSES.includes(st),
+      progressPct:
+        total > 0 ? Math.max(0, Math.min(100, (sold / total) * 100)) : 0,
+      result: 'NONE',
+      lastTicketAt: item.lastTicketAt,
+      createdTs: item.createdTs,
+    };
   }
 
   openDetails(item: ParticipationItem) {

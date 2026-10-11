@@ -4,7 +4,7 @@ import { skeletonController } from '../shared/utils/skeleton-timing';
 import { HomeApiService } from '../services/home/home-api.service';
 import { DrawCard, UserSummary } from '../services/home/home.models';
 import { Router } from '@angular/router';
-import { Subscription, interval } from 'rxjs';
+import { Subscription, interval, timer } from 'rxjs';
 import { NotificationsStateService } from '../services/notifications/notifications-state.service';
 import { RafflesApiService } from '../services/raffles/raffles-api.service';
 import { raffleCategoryLabel } from '../core/constants/raffle-categories';
@@ -25,9 +25,11 @@ type DrawLoadReason = 'init' | 'refresh' | 'category' | 'background';
 })
 export class HomePage implements OnInit, OnDestroy {
   private readonly autoRefreshMs = 90000;
+  private readonly autoRefreshJitterMs = 15000;
   private hasEnteredView = false;
   private raffleRefreshSub?: Subscription;
   private autoRefreshSub?: Subscription;
+  private feedInFlight = false;
   readonly isOffline$ = this.networkStatus.offline$;
 
   ionViewWillEnter(): void {
@@ -251,9 +253,16 @@ export class HomePage implements OnInit, OnDestroy {
 
   private startAutoRefresh(): void {
     if (this.autoRefreshSub) return;
-    this.autoRefreshSub = interval(this.autoRefreshMs).subscribe(() => {
-      if (!this.canAutoRefresh()) return;
-      this.loadDraws('background', undefined, false);
+    this.scheduleAutoRefresh();
+  }
+
+  // Intervalle de base + jitter aleatoire 0-15s pour desynchroniser les clients.
+  private scheduleAutoRefresh(): void {
+    const delay =
+      this.autoRefreshMs +
+      Math.floor(Math.random() * (this.autoRefreshJitterMs + 1));
+    this.autoRefreshSub = timer(delay).subscribe(() => {
+      this.backgroundRefresh(() => this.scheduleAutoRefresh());
     });
   }
 
@@ -262,11 +271,26 @@ export class HomePage implements OnInit, OnDestroy {
     this.autoRefreshSub = undefined;
   }
 
+  private backgroundRefresh(done?: () => void): void {
+    if (this.feedInFlight) {
+      done?.();
+      return;
+    }
+    if (!this.canAutoRefresh()) {
+      done?.();
+      return;
+    }
+    this.feedInFlight = true;
+    this.loadDraws('background', () => {
+      this.feedInFlight = false;
+      done?.();
+    }, false);
+  }
+
   private subscribeToRaffleRefresh(): void {
     if (this.raffleRefreshSub) return;
     this.raffleRefreshSub = this.rafflesService.refresh$.subscribe(() => {
-      if (!this.canAutoRefresh()) return;
-      this.loadDraws('background', undefined, false);
+      this.backgroundRefresh();
     });
   }
 

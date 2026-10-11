@@ -19,7 +19,9 @@ export class TicketsApiService {
 
   constructor(private http: HttpClient) {}
 
-  myTickets() {
-    return this.http.get<TicketDto[]>(`${this.base}/tickets/me`);
+  myTickets(opts?: { raffleId?: string }) {
+    return this.http.get<TicketDto[]>(`${this.base}/tickets/me`, {
+      params: opts?.raffleId ? { raffleId: opts.raffleId } : undefined,
+    });
   }
 }

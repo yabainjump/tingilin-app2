@@ -57,24 +57,15 @@ export class ForgotPasswordPage implements OnDestroy {
             0,
             Number(res?.retryAfterSeconds ?? 0) || 0,
           );
-          const devCode = String(res?.devResetCode ?? '').trim();
 
-          if (devCode) {
-            await this.showToast(
-              this.translate.instant('FORGOT_PASSWORD_PAGE.TOAST_DEV_CODE', {
-                code: devCode,
-              }),
-            );
-          } else {
-            await this.showToast(
-              this.translate.instant(
-                cooldownSeconds > 0
-                  ? 'FORGOT_PASSWORD_PAGE.TOAST_CODE_ALREADY_SENT'
-                  : 'FORGOT_PASSWORD_PAGE.TOAST_CHECK_EMAIL_HINT',
-                cooldownSeconds > 0 ? { seconds: cooldownSeconds } : {},
-              ),
-            );
-          }
+          await this.showToast(
+            this.translate.instant(
+              cooldownSeconds > 0
+                ? 'FORGOT_PASSWORD_PAGE.TOAST_CODE_ALREADY_SENT'
+                : 'FORGOT_PASSWORD_PAGE.TOAST_CHECK_EMAIL_HINT',
+              cooldownSeconds > 0 ? { seconds: cooldownSeconds } : {},
+            ),
+          );
 
           this.router.navigateByUrl('/auth/forgot-password-sent', {
             state: { identifier, cooldownSeconds },

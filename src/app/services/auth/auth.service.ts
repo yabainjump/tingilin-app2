@@ -39,7 +39,6 @@ export interface ForgotPasswordResponse {
     | 'SMTP_CONFIG_MISSING'
     | 'SMTP_SEND_FAILED'
     | 'USER_NOT_FOUND';
-  devResetCode?: string;
 }
 
 @Injectable({ providedIn: 'root' })

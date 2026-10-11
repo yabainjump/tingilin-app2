@@ -8,6 +8,8 @@ export class NotificationsStateService {
   private _unread = new BehaviorSubject<number>(0);
   unreadCount$ = this._unread.asObservable();
 
+  private refreshInFlight: Promise<void> | null = null;
+
   constructor(
     private api: NotificationsApiService,
     private auth: AuthService,
@@ -17,12 +19,23 @@ export class NotificationsStateService {
     this.auth.sessionReset$.subscribe(() => this._unread.next(0));
   }
 
-  async refresh() {
+  async refresh(): Promise<void> {
     if (!this.auth.isLoggedIn()) {
       this._unread.next(0);
       return;
     }
 
+    // Deduplication: si un rafraichissement est deja en vol, on partage sa reponse
+    // au lieu de doubler la requete.
+    if (this.refreshInFlight) return this.refreshInFlight;
+
+    this.refreshInFlight = this.doRefresh().finally(() => {
+      this.refreshInFlight = null;
+    });
+    return this.refreshInFlight;
+  }
+
+  private async doRefresh(): Promise<void> {
     try {
       const res = await firstValueFrom(this.api.unreadCount());
       this._unread.next(res.count || 0);

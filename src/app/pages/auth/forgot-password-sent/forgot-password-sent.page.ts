@@ -128,27 +128,17 @@ export class ForgotPasswordSentPage implements OnDestroy {
             1,
             Number(res?.retryAfterSeconds ?? 59) || 59,
           );
-          const devCode = String(res?.devResetCode ?? '').trim();
 
-          if (devCode) {
-            await this.showToast(
-              this.translate.instant(
-                'FORGOT_PASSWORD_SENT_PAGE.TOAST_DEV_CODE',
-                { code: devCode },
-              ),
-            );
-          } else {
-            await this.showToast(
-              this.translate.instant(
-                Number(res?.retryAfterSeconds ?? 0) > 0
-                  ? 'FORGOT_PASSWORD_SENT_PAGE.TOAST_CODE_ALREADY_SENT'
-                  : 'FORGOT_PASSWORD_SENT_PAGE.TOAST_RESEND_HINT',
-                Number(res?.retryAfterSeconds ?? 0) > 0
-                  ? { seconds: cooldownSeconds }
-                  : {},
-              ),
-            );
-          }
+          await this.showToast(
+            this.translate.instant(
+              Number(res?.retryAfterSeconds ?? 0) > 0
+                ? 'FORGOT_PASSWORD_SENT_PAGE.TOAST_CODE_ALREADY_SENT'
+                : 'FORGOT_PASSWORD_SENT_PAGE.TOAST_RESEND_HINT',
+              Number(res?.retryAfterSeconds ?? 0) > 0
+                ? { seconds: cooldownSeconds }
+                : {},
+            ),
+          );
 
           this.initialCooldownSeconds = cooldownSeconds;
           this.startCountdown(cooldownSeconds);

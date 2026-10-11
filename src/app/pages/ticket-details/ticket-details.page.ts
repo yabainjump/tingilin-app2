@@ -87,15 +87,15 @@ export class TicketDetailsPage {
 
     this.loading = true;
     try {
-      const [allTickets, raffle] = await Promise.all([
-        firstValueFrom(this.ticketsApi.myTickets()),
+      const [raffleTickets, raffle] = await Promise.all([
+        firstValueFrom(this.ticketsApi.myTickets({ raffleId: this.raffleId })),
         firstValueFrom(this.rafflesApi.getById(this.raffleId)),
       ]);
 
       this.raffle = raffle;
-      this.tickets = allTickets
-        .filter((t) => t.raffleId === this.raffleId)
-        .sort((a, b) => (a.serial || '').localeCompare(b.serial || ''));
+      this.tickets = raffleTickets.sort((a, b) =>
+        (a.serial || '').localeCompare(b.serial || ''),
+      );
     } catch (e: any) {
       const t = await this.toast.create({
         message:
