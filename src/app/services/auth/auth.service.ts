@@ -113,6 +113,14 @@ export class AuthService {
       );
   }
 
+  // Returns the public Google Web Client ID used to initialize the
+  // Google Identity Services library in the browser / webview.
+  // The value is injected at build time from the environment files and is
+  // safe to expose (it is not a secret).
+  getGoogleClientId(): string | null {
+    return environment.googleWebClientId ?? null;
+  }
+
   updateRegion(region: UserRegion) {
     return this.http
       .patch<{ region?: string | null }>(
