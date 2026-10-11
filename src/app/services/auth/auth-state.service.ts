@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, of } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
 import { AuthService } from './auth.service';
+import { UserRegion } from 'src/app/shared/region-picker/regions';
 
 export type UserRole = 'ADMIN' | 'USER';
 
@@ -11,6 +12,7 @@ export interface MeDto {
   firstName?: string;
   lastName?: string;
   phone?: string;
+  region?: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -22,6 +24,11 @@ export class AuthStateService {
   readonly isLoggedIn$ = this.me$.pipe(map((u) => !!u));
 
   constructor(private auth: AuthService) {}
+
+  // Snapshot synchrone de l'utilisateur courant (region incluse).
+  get me(): MeDto | null {
+    return this.meSubject.value;
+  }
 
   bootstrap(): void {
     // si pas de token => pas besoin d'appeler /me
@@ -49,5 +56,21 @@ export class AuthStateService {
 
   clear(): void {
     this.meSubject.next(null);
+  }
+
+  // PATCH /users/me { region } puis mise a jour du cache local.
+  updateRegion(region: UserRegion): Observable<MeDto | null> {
+    return this.auth.updateRegion(region).pipe(
+      map(() => {
+        const current = this.meSubject.value;
+        if (!current) return null;
+        return { ...current, region };
+      }),
+      tap((updated) => {
+        if (updated) {
+          this.meSubject.next(updated);
+        }
+      }),
+    );
   }
 }

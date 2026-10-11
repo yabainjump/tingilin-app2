@@ -26,6 +26,19 @@
       <app-language-switch></app-language-switch>
     </div>
 
+    <div class="region-choice">
+      <h2 class="region-title">
+        {{ 'REGISTER_PAGE.REGION_TITLE' | translate }}
+      </h2>
+      <p class="region-hint">
+        {{ 'REGISTER_PAGE.REGION_HINT' | translate }}
+      </p>
+      <app-region-picker
+        [region]="selectedRegion"
+        (regionChange)="onRegionChange($event)"
+      ></app-region-picker>
+    </div>
+
     <form (ngSubmit)="submit()" class="form">
       <div class="grid-2">
         <div class="field">
@@ -140,7 +153,11 @@
         <div class="terms-text">{{ 'REGISTER_PAGE.TERMS' | translate }}</div>
       </div>
 
-      <button class="cta" type="submit" [disabled]="loading">
+      <button
+        class="cta"
+        type="submit"
+        [disabled]="loading || !canSubmit"
+      >
         <span *ngIf="!loading">{{ 'REGISTER_PAGE.SUBMIT' | translate }}</span>
         <ion-skeleton-text
           *ngIf="loading"

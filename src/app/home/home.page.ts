@@ -12,6 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { toAbsoluteMediaUrl } from '../shared/utils/media-url';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../services/auth/auth.service';
+import { AuthStateService } from '../services/auth/auth-state.service';
 import { NetworkStatusService } from '../services/offline/network-status.service';
 
 type HomeCategory = { id: string; label: string };
@@ -77,6 +78,7 @@ export class HomePage implements OnInit, OnDestroy {
     private rafflesService: RafflesApiService,
     private translate: TranslateService,
     private auth: AuthService,
+    private authState: AuthStateService,
     private networkStatus: NetworkStatusService,
   ) {}
 
@@ -155,6 +157,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.api
       .getHomeFeed(this.selectedCategoryId, {
         forceRefresh: reason === 'refresh',
+        region: this.authState.me?.region ?? undefined,
       })
       .pipe(
         finalize(() => {

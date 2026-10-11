@@ -11,6 +11,7 @@ export interface ProfileUser {
   firstName?: string;
   lastName?: string;
   phone?: string;
+  region?: string | null;
   role?: 'USER' | 'ADMIN' | 'MODERATOR';
   avatar?: string;
   status?: 'ACTIVE' | 'SUSPEND';

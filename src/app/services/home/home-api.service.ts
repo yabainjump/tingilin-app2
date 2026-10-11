@@ -72,17 +72,25 @@ export class HomeApiService {
     return params;
   }
 
-  private buildHomeFeedParams(categoryId: string): HttpParams {
+  private buildHomeFeedParams(categoryId: string, region?: string): HttpParams {
     let params = new HttpParams();
     const normalizedCategoryId = this.normalizeCategoryId(categoryId);
     if (normalizedCategoryId) {
       params = params.set('category', normalizedCategoryId);
     }
+
+    const normalizedRegion = String(region ?? '').trim();
+    if (normalizedRegion) {
+      params = params.set('region', normalizedRegion.toUpperCase());
+    }
     return params;
   }
 
-  private homeFeedCacheKey(categoryId: string): string {
-    return this.normalizeCategoryId(categoryId) ?? 'ALL';
+  private homeFeedCacheKey(categoryId: string, region?: string): string {
+    const normalizedRegion = String(region ?? '').trim().toUpperCase();
+    return `${this.normalizeCategoryId(categoryId) ?? 'ALL'}|${
+      normalizedRegion || 'ANY'
+    }`;
   }
 
   // Header user
@@ -114,9 +122,9 @@ export class HomeApiService {
 
   getHomeFeed(
     categoryId: string,
-    options?: { forceRefresh?: boolean },
+    options?: { forceRefresh?: boolean; region?: string },
   ): Observable<HomeFeed> {
-    const cacheKey = this.homeFeedCacheKey(categoryId);
+    const cacheKey = this.homeFeedCacheKey(categoryId, options?.region);
     const now = Date.now();
     const cached = this.homeFeedCache.get(cacheKey);
 
@@ -124,7 +132,7 @@ export class HomeApiService {
       return cached.value$;
     }
 
-    const params = this.buildHomeFeedParams(categoryId);
+    const params = this.buildHomeFeedParams(categoryId, options?.region);
     const request$ = this.http
       .get<HomeFeedResponse>(`${this.baseUrl}/raffles/home-feed`, { params })
       .pipe(

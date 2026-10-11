@@ -4,6 +4,7 @@ import { Observable, Subject, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthTokenStorageService } from './auth-token-storage.service';
 import { Capacitor } from '@capacitor/core';
+import { UserRegion } from 'src/app/shared/region-picker/regions';
 
 export type LoginPayload = {
   email?: string;
@@ -18,6 +19,7 @@ export type RegisterPayload = {
   email: string;
   phone: string;
   password: string;
+  region?: UserRegion;
   referralCode?: string;
 };
 
@@ -82,6 +84,7 @@ export class AuthService {
     firstName: string;
     lastName: string;
     phone: string;
+    region?: UserRegion;
     referralCode?: string;
   }) {
     return this.http
@@ -91,6 +94,31 @@ export class AuthService {
           this.setTokens(res.access_token, res.refresh_token);
           this.sessionReset.next();
         }),
+      );
+  }
+
+  // Connexion Google: POST /auth/google avec l'idToken Google Sign-In.
+  // Meme contrat de reponse que /auth/login (refresh token en cookie sur web,
+  // dans la reponse sur natif via X-Client-Platform: native).
+  loginWithGoogle(idToken: string, region?: UserRegion) {
+    const body: { idToken: string; region?: UserRegion } = { idToken };
+    if (region) body.region = region;
+    return this.http
+      .post<AuthTokenResponse>(`${this.baseUrl}/auth/google`, body, this.authRequestOptions())
+      .pipe(
+        tap((res) => {
+          this.setTokens(res.access_token, res.refresh_token);
+          this.sessionReset.next();
+        }),
+      );
+  }
+
+  updateRegion(region: UserRegion) {
+    return this.http
+      .patch<{ region?: string | null }>(
+        `${this.baseUrl}/users/me`,
+        { region },
+        this.authRequestOptions(),
       );
   }
 

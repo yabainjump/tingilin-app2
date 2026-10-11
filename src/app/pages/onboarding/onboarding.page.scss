@@ -288,6 +288,51 @@
   font-size: 0.82rem;
 }
 
+/* ---- Etape region ---- */
+.region-step {
+  width: min(100%, 480px);
+  text-align: center;
+}
+
+.region-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 14px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(209, 105, 255, 0.28);
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(157, 92, 255, 0.24), rgba(255, 255, 255, 0.055));
+  box-shadow: 0 18px 40px rgba(157, 92, 255, 0.22);
+  font-size: 28px;
+  color: #d7a4ff;
+}
+
+.region-step h2 {
+  margin: 0 0 8px;
+  font-size: clamp(1.5rem, 7vw, 2rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.region-step p {
+  margin: 0 auto 18px;
+  max-width: 400px;
+  color: var(--app-muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.region-picker-wrap {
+  padding: 14px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--app-radius-lg, 26px);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.035));
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(22px) saturate(135%);
+  text-align: left;
+}
+
 @media (max-height: 700px) {
   .screen {
     gap: 10px;

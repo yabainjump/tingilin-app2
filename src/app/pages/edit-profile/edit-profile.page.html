@@ -136,6 +136,20 @@
             </small>
           </div>
 
+          <!-- Region -->
+          <div class="sec-label region-label">
+            {{ 'EDIT_PROFILE_PAGE.REGION_TITLE' | translate }}
+          </div>
+          <div class="region-card">
+            <p class="region-desc">
+              {{ 'EDIT_PROFILE_PAGE.REGION_DESC' | translate }}
+            </p>
+            <app-region-picker
+              [region]="selectedRegion"
+              (regionChange)="onRegionChange($event)"
+            ></app-region-picker>
+          </div>
+
           <!-- Security -->
           <div class="sec-label">
             {{ 'EDIT_PROFILE_PAGE.SECURITY' | translate }}

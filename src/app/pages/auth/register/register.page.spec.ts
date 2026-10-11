@@ -81,6 +81,7 @@ describe('RegisterPage', () => {
       referralCode: 'ABCD12',
       terms: true,
     });
+    component.selectedRegion = 'LITTORAL';
 
     await component.submit();
     await fixture.whenStable();

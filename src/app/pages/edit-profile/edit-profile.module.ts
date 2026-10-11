@@ -8,6 +8,7 @@ import { EditProfilePageRoutingModule } from './edit-profile-routing.module';
 
 import { EditProfilePage } from './edit-profile.page';
 import { TranslateModule } from '@ngx-translate/core';
+import { RegionPickerModule } from 'src/app/shared/region-picker/region-picker.module';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { TranslateModule } from '@ngx-translate/core';
     ReactiveFormsModule,
     IonicModule,
     EditProfilePageRoutingModule,
-    TranslateModule
+    TranslateModule,
+    RegionPickerModule
   ],
   declarations: [EditProfilePage]
 })

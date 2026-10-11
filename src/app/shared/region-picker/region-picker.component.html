@@ -1,0 +1,26 @@
+<div class="region-picker" role="radiogroup" aria-label="Région">
+  <button
+    *ngFor="let option of options"
+    type="button"
+    class="region-card"
+    role="radio"
+    [attr.aria-checked]="isSelected(option.value)"
+    [class.selected]="isSelected(option.value)"
+    (click)="select(option.value)"
+  >
+    <span class="radio" aria-hidden="true">
+      <span class="radio-dot"></span>
+    </span>
+
+    <span class="texts">
+      <span class="label">{{ option.labelKey | translate }}</span>
+      <span class="cities">{{ option.citiesKey | translate }}</span>
+    </span>
+
+    <ion-icon
+      class="pin"
+      name="location-outline"
+      aria-hidden="true"
+    ></ion-icon>
+  </button>
+</div>

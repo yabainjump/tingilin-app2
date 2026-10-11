@@ -2,6 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { convertToParamMap, ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
+import { of } from 'rxjs';
+import { AuthService } from '../../services/auth/auth.service';
+import { AuthStateService } from '../../services/auth/auth-state.service';
 import { OnboardingPage } from './onboarding.page';
 
 describe('OnboardingPage', () => {
@@ -18,6 +21,14 @@ describe('OnboardingPage', () => {
       imports: [IonicModule.forRoot(), TranslateModule.forRoot()],
       providers: [
         { provide: Router, useValue: router },
+        {
+          provide: AuthService,
+          useValue: { isLoggedIn: () => false },
+        },
+        {
+          provide: AuthStateService,
+          useValue: { me: null, updateRegion: () => of(null) },
+        },
         {
           provide: ActivatedRoute,
           useValue: {
@@ -53,12 +64,19 @@ describe('OnboardingPage', () => {
     expect(component.currentIndex).toBe(2);
 
     component.goToSlide(-1);
-    component.goToSlide(component.slides.length);
+    component.goToSlide(component.slides.length + 1);
     expect(component.currentIndex).toBe(2);
   });
 
-  it('should finish and redirect on last slide', () => {
+  it('should move to the region step after the last slide', () => {
     component.currentIndex = component.slides.length - 1;
+    component.next();
+    expect(component.currentIndex).toBe(component.regionStepIndex);
+    expect(component.isRegionStep).toBeTrue();
+  });
+
+  it('should finish and redirect on the region step', () => {
+    component.currentIndex = component.regionStepIndex;
     component.next();
     expect(router.navigateByUrl).toHaveBeenCalledWith(
       '/tabs/raffle-details/test-id',

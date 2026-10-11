@@ -1,0 +1,105 @@
+:host {
+  display: block;
+}
+
+.region-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.region-card {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  text-align: left;
+  border: 1px solid var(--app-border, rgba(255, 255, 255, 0.1));
+  border-radius: var(--app-radius, 18px);
+  background: rgba(255, 255, 255, 0.055);
+  color: inherit;
+  transition:
+    border-color 0.18s var(--app-ease, ease),
+    background 0.18s var(--app-ease, ease),
+    box-shadow 0.18s var(--app-ease, ease);
+
+  &:active {
+    transform: scale(0.985);
+  }
+
+  &.selected {
+    border-color: rgba(157, 92, 255, 0.8);
+    background: rgba(157, 92, 255, 0.14);
+    box-shadow: 0 0 0 4px rgba(157, 92, 255, 0.12);
+
+    .radio {
+      border-color: #9d5cff;
+      background: #9d5cff;
+    }
+
+    .radio-dot {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .label {
+      color: #fff;
+    }
+  }
+}
+
+.radio {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease;
+}
+
+.radio-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #fff;
+  opacity: 0;
+  transform: scale(0.4);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s var(--app-ease, ease);
+}
+
+.texts {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: rgba(248, 245, 255, 0.92);
+}
+
+.cities {
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: var(--app-muted, #aaa0b8);
+}
+
+.pin {
+  margin-left: auto;
+  flex: 0 0 auto;
+  font-size: 20px;
+  color: rgba(157, 92, 255, 0.85);
+}
+
+.region-card.selected .pin {
+  color: #d169ff;
+}

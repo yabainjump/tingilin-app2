@@ -6,6 +6,7 @@ import { ToastController } from '@ionic/angular';
 import { finalize } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../services/auth/auth.service';
+import { UserRegion } from '../../../shared/region-picker/regions';
 
 const PASSWORD_RULE = /^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/;
 // 8+ caractères, 1 majuscule, 1 caractère spécial
@@ -19,6 +20,7 @@ const PASSWORD_RULE = /^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/;
 export class RegisterPage implements OnInit {
   loading = false;
   showPassword = false;
+  selectedRegion: UserRegion | null = null;
   private redirectAfterOnboarding = '/tabs/home';
 
   // mini liste (tu pourras l’étendre)
@@ -77,8 +79,23 @@ export class RegisterPage implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
+  onRegionChange(region: UserRegion): void {
+    this.selectedRegion = region;
+  }
+
+  get canSubmit(): boolean {
+    return !!this.selectedRegion;
+  }
+
   async submit(): Promise<void> {
     if (this.loading) return;
+
+    if (!this.selectedRegion) {
+      await this.showToast(
+        this.translate.instant('REGISTER_PAGE.TOAST_REGION_REQUIRED'),
+      );
+      return;
+    }
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -103,6 +120,7 @@ export class RegisterPage implements OnInit {
       firstName: String(v.firstName ?? '').trim(),
       lastName: String(v.lastName ?? '').trim(),
       phone: String(phoneFull),
+      region: this.selectedRegion,
       referralCode: String(v.referralCode ?? '').trim().toUpperCase() || undefined,
     };
 

@@ -11,6 +11,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { firstValueFrom } from 'rxjs';
 import { blobFromUrl, fileFromBlob } from 'src/app/shared/utils/blob-file';
+import { AuthStateService } from 'src/app/services/auth/auth-state.service';
+import { UserRegion } from 'src/app/shared/region-picker/regions';
 
 @Component({
   selector: 'app-edit-profile',
@@ -29,6 +31,7 @@ export class EditProfilePage implements OnDestroy {
   defaultAvatar = 'assets/img/profile.svg';
 
   avatarPreview: string | null = null;
+  selectedRegion: UserRegion | null = null;
   private avatarFileToSave: File | null = null;
 
   form = this.fb.group({
@@ -41,6 +44,7 @@ export class EditProfilePage implements OnDestroy {
   constructor(
     private fb: FormBuilder,
     private api: ProfileApiService,
+    private authState: AuthStateService,
     private nav: NavController,
     private toast: ToastController,
     private platform: Platform,
@@ -62,6 +66,7 @@ export class EditProfilePage implements OnDestroy {
       .pipe(finalize(() => (this.loading = false)))
       .subscribe((u) => {
         this.user = u;
+        this.selectedRegion = this.toKnownRegion(u?.region);
         this.form.patchValue({
           firstName: u?.firstName ?? '',
           lastName: u?.lastName ?? '',
@@ -118,6 +123,36 @@ export class EditProfilePage implements OnDestroy {
 
   goChangePassword() {
     this.nav.navigateForward('/auth/forgot-password');
+  }
+
+  private toKnownRegion(value: unknown): UserRegion | null {
+    const region = String(value ?? '').trim().toUpperCase();
+    return (['CENTRE', 'LITTORAL', 'OUEST', 'SUD_OUEST'] as const).includes(
+      region as UserRegion,
+    )
+      ? (region as UserRegion)
+      : null;
+  }
+
+  async onRegionChange(region: UserRegion): Promise<void> {
+    const previous = this.selectedRegion;
+    this.selectedRegion = region;
+
+    try {
+      await firstValueFrom(this.authState.updateRegion(region));
+      const t = await this.toast.create({
+        message: this.translate.instant('EDIT_PROFILE_PAGE.TOAST_REGION_UPDATED'),
+        duration: 1400,
+      });
+      await t.present();
+    } catch {
+      this.selectedRegion = previous;
+      const t = await this.toast.create({
+        message: this.translate.instant('EDIT_PROFILE_PAGE.TOAST_REGION_UPDATE_FAILED'),
+        duration: 2000,
+      });
+      await t.present();
+    }
   }
 
   async save() {

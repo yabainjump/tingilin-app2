@@ -18,21 +18,37 @@
 
     <div class="card-wrap">
       <div
+        *ngIf="!isRegionStep; else regionStep"
         class="hero"
         role="img"
         [attr.aria-label]="currentSlideTitle"
         [style.background-image]="'url(' + currentSlide.imageUrl + ')'"
       ></div>
+      <ng-template #regionStep>
+        <section class="region-step">
+          <div class="region-icon">
+            <ion-icon name="location-outline"></ion-icon>
+          </div>
+          <h2>{{ 'ONBOARDING_PAGE.REGION_TITLE' | translate }}</h2>
+          <p>{{ 'ONBOARDING_PAGE.REGION_DESC' | translate }}</p>
+          <div class="region-picker-wrap">
+            <app-region-picker
+              [region]="selectedRegion"
+              (regionChange)="onRegionChange($event)"
+            ></app-region-picker>
+          </div>
+        </section>
+      </ng-template>
     </div>
 
-    <section class="content">
+    <section class="content" *ngIf="!isRegionStep">
       <h2>{{ currentSlideTitle }}</h2>
       <p>{{ currentSlideDescription }}</p>
     </section>
 
     <div class="dots">
       <button
-        *ngFor="let _ of slides; let i = index"
+        *ngFor="let _ of dots; let i = index"
         type="button"
         class="dot"
         [class.active]="i === currentIndex"
