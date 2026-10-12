@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { AdminGuard } from './guard/admin-guard';
 import { AuthGuard } from './guard/auth-guard';
+import { RegionGuard } from './guard/region-guard';
 import { NoPreloading, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
@@ -57,7 +58,7 @@ const routes: Routes = [
 
   {
     path: 'tabs',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, RegionGuard],
     loadChildren: () =>
       import('./pages/tabs/tabs.module').then((m) => m.TabsPageModule),
   },
@@ -73,7 +74,7 @@ const routes: Routes = [
 
   {
     path: 'admin/create-raffle',
-    canActivate: [AuthGuard, AdminGuard],
+    canActivate: [AuthGuard, RegionGuard, AdminGuard],
     loadChildren: () =>
       import('./pages/admin/create-raffle/create-raffle.module').then(
         (m) => m.CreateRafflePageModule,
@@ -81,7 +82,7 @@ const routes: Routes = [
   },
   {
     path: 'edit-profile',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, RegionGuard],
     loadChildren: () =>
       import('./pages/edit-profile/edit-profile.module').then(
         (m) => m.EditProfilePageModule,
@@ -89,7 +90,7 @@ const routes: Routes = [
   },
   {
     path: 'support',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, RegionGuard],
     loadChildren: () =>
       import('./pages/support/support.module').then((m) => m.SupportPageModule),
   },
@@ -102,7 +103,7 @@ const routes: Routes = [
   },
   {
     path: 'payment-confirmation',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, RegionGuard],
     loadChildren: () =>
       import('./pages/payment-confirmation/payment-confirmation.module').then(
         (m) => m.PaymentConfirmationPageModule,
@@ -110,7 +111,7 @@ const routes: Routes = [
   },
   {
     path: 'participations',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, RegionGuard],
     loadChildren: () =>
       import('./pages/participations/participations.module').then(
         (m) => m.ParticipationsPageModule,
@@ -118,7 +119,7 @@ const routes: Routes = [
   },
   {
     path: 'ticket-details/:raffleId',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, RegionGuard],
     loadChildren: () =>
       import('./pages/ticket-details/ticket-details.module').then(
         (m) => m.TicketDetailsPageModule,
@@ -126,7 +127,7 @@ const routes: Routes = [
   },
   {
     path: 'notifications',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, RegionGuard],
     loadChildren: () =>
       import('./pages/notifications/notifications.module').then(
         (m) => m.NotificationsPageModule,

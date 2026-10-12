@@ -282,6 +282,12 @@
   font-size: 20px;
 }
 
+.next-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  box-shadow: none;
+}
+
 .link-btn {
   min-height: 42px;
   color: #91869d;
@@ -321,6 +327,18 @@
   color: var(--app-muted);
   font-size: 0.9rem;
   line-height: 1.55;
+}
+
+.region-step .region-error {
+  margin: 12px auto 0;
+  color: #ff9aaf;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.top-spacer {
+  width: 44px;
+  height: 44px;
 }
 
 .region-picker-wrap {

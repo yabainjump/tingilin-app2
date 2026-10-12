@@ -11,10 +11,22 @@ describe('OnboardingPage', () => {
   let component: OnboardingPage;
   let fixture: ComponentFixture<OnboardingPage>;
   let router: jasmine.SpyObj<Router>;
+  let auth: jasmine.SpyObj<AuthService>;
+  let authState: jasmine.SpyObj<AuthStateService>;
 
   beforeEach(async () => {
-    router = jasmine.createSpyObj<Router>('Router', ['navigateByUrl']);
+    router = jasmine.createSpyObj<Router>('Router', [
+      'navigateByUrl',
+      'navigate',
+    ]);
     router.navigateByUrl.and.returnValue(Promise.resolve(true));
+    auth = jasmine.createSpyObj<AuthService>('AuthService', ['isLoggedIn']);
+    auth.isLoggedIn.and.returnValue(false);
+    authState = jasmine.createSpyObj<AuthStateService>('AuthStateService', [
+      'updateRegion',
+    ]);
+    Object.defineProperty(authState, 'me', { get: () => null });
+    authState.updateRegion.and.returnValue(of(null));
 
     await TestBed.configureTestingModule({
       declarations: [OnboardingPage],
@@ -23,11 +35,11 @@ describe('OnboardingPage', () => {
         { provide: Router, useValue: router },
         {
           provide: AuthService,
-          useValue: { isLoggedIn: () => false },
+          useValue: auth,
         },
         {
           provide: AuthStateService,
-          useValue: { me: null, updateRegion: () => of(null) },
+          useValue: authState,
         },
         {
           provide: ActivatedRoute,
@@ -90,5 +102,27 @@ describe('OnboardingPage', () => {
       '/tabs/raffle-details/test-id',
       { replaceUrl: true },
     );
+  });
+
+  it('requires and persists a region during profile completion', () => {
+    auth.isLoggedIn.and.returnValue(true);
+    component.regionRequired = true;
+    component.currentIndex = component.regionStepIndex;
+    component.onRegionChange('LITTORAL');
+
+    component.next();
+
+    expect(authState.updateRegion).toHaveBeenCalledOnceWith('LITTORAL');
+    expect(router.navigateByUrl).toHaveBeenCalledWith(
+      '/tabs/raffle-details/test-id',
+      { replaceUrl: true },
+    );
+  });
+
+  it('cannot skip mandatory region completion', () => {
+    component.regionRequired = true;
+    component.skip();
+
+    expect(router.navigateByUrl).not.toHaveBeenCalled();
   });
 });

@@ -4,16 +4,21 @@
       <button
         class="icon-btn"
         type="button"
-        [class.hidden]="currentIndex === 0"
+        [class.hidden]="currentIndex === 0 || regionRequired"
         (click)="back()"
         [attr.aria-label]="'COMMON.BACK' | translate"
       >
         <ion-icon name="arrow-back"></ion-icon>
       </button>
 
-      <h1 class="title">{{ 'ONBOARDING_PAGE.TOP_TITLE' | translate }}</h1>
+      <h1 class="title">
+        {{ (regionRequired ? 'ONBOARDING_PAGE.COMPLETE_TITLE' : 'ONBOARDING_PAGE.TOP_TITLE') | translate }}
+      </h1>
 
-      <button class="skip-btn" type="button" (click)="skip()">{{ 'ONBOARDING_PAGE.SKIP' | translate }}</button>
+      <button *ngIf="!regionRequired" class="skip-btn" type="button" (click)="skip()">
+        {{ 'ONBOARDING_PAGE.SKIP' | translate }}
+      </button>
+      <span *ngIf="regionRequired" class="top-spacer" aria-hidden="true"></span>
     </header>
 
     <div class="card-wrap">
@@ -30,13 +35,18 @@
             <ion-icon name="location-outline"></ion-icon>
           </div>
           <h2>{{ 'ONBOARDING_PAGE.REGION_TITLE' | translate }}</h2>
-          <p>{{ 'ONBOARDING_PAGE.REGION_DESC' | translate }}</p>
+          <p>
+            {{ (regionRequired ? 'ONBOARDING_PAGE.REGION_REQUIRED_DESC' : 'ONBOARDING_PAGE.REGION_DESC') | translate }}
+          </p>
           <div class="region-picker-wrap">
             <app-region-picker
               [region]="selectedRegion"
               (regionChange)="onRegionChange($event)"
             ></app-region-picker>
           </div>
+          <p *ngIf="regionErrorKey" class="region-error" role="alert">
+            {{ regionErrorKey | translate }}
+          </p>
         </section>
       </ng-template>
     </div>
@@ -46,7 +56,7 @@
       <p>{{ currentSlideDescription }}</p>
     </section>
 
-    <div class="dots">
+    <div class="dots" *ngIf="!regionRequired">
       <button
         *ngFor="let _ of dots; let i = index"
         type="button"
@@ -59,13 +69,28 @@
     </div>
 
     <footer class="footer">
-      <button class="next-btn" type="button" (click)="next()">
-        <span>{{ isLast ? ('ONBOARDING_PAGE.START' | translate) : ('ONBOARDING_PAGE.NEXT' | translate) }}</span>
+      <button
+        class="next-btn"
+        type="button"
+        [disabled]="savingRegion || (regionRequired && !selectedRegion)"
+        (click)="next()"
+      >
+        <span>
+          {{
+            savingRegion
+              ? ('ONBOARDING_PAGE.SAVING' | translate)
+              : regionRequired
+                ? ('ONBOARDING_PAGE.SAVE_REGION' | translate)
+                : isLast
+                  ? ('ONBOARDING_PAGE.START' | translate)
+                  : ('ONBOARDING_PAGE.NEXT' | translate)
+          }}
+        </span>
         <ion-icon name="arrow-forward"></ion-icon>
       </button>
 
       <button
-        *ngIf="!isLast"
+        *ngIf="!isLast && !regionRequired"
         class="link-btn"
         type="button"
         (click)="skip()"

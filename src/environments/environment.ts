@@ -12,7 +12,7 @@ export const environment = {
   // Utilise par SocialLogin sur Android/web. Ce Client ID public doit aussi
   // etre configure dans GOOGLE_CLIENT_ID sur l'API pour verifier l'idToken.
   // A REMPLIR manuellement (voir console Google Cloud) - vide = Google desactive.
-  googleWebClientId: '',
+  googleWebClientId: '352465042993-mdn2aug25q85ohc8gce28gec5hinn4jv.apps.googleusercontent.com',
 };
 
 /*

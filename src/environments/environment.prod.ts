@@ -7,5 +7,5 @@ export const environment = {
   supportEmail: '',
   // Google Sign-In (Web OAuth Client ID). Le meme ID doit etre configure
   // dans GOOGLE_CLIENT_ID sur l'API.
-  googleWebClientId: '',
+  googleWebClientId: '352465042993-mdn2aug25q85ohc8gce28gec5hinn4jv.apps.googleusercontent.com',
 };

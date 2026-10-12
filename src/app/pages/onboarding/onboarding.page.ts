@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../services/auth/auth.service';
 import { AuthStateService } from '../../services/auth/auth-state.service';
 import { UserRegion } from '../../shared/region-picker/regions';
+import { finalize } from 'rxjs';
 
 type IntroSlide = {
   titleKey: string;
@@ -20,6 +21,9 @@ type IntroSlide = {
 export class OnboardingPage implements OnInit {
   currentIndex = 0;
   selectedRegion: UserRegion | null = null;
+  regionRequired = false;
+  savingRegion = false;
+  regionErrorKey = '';
   private redirectTo = '/tabs/home';
 
   readonly slides: IntroSlide[] = [
@@ -52,7 +56,26 @@ export class OnboardingPage implements OnInit {
     const redirect = String(
       this.route.snapshot.queryParamMap.get('redirect') ?? '',
     ).trim();
-    this.redirectTo = redirect.startsWith('/') ? redirect : '/tabs/home';
+    this.redirectTo =
+      redirect.startsWith('/') && !redirect.startsWith('//')
+        ? redirect
+        : '/tabs/home';
+
+    this.regionRequired =
+      this.route.snapshot.queryParamMap.get('requiredRegion') === '1';
+
+    if (this.regionRequired) {
+      if (!this.auth.isLoggedIn()) {
+        void this.router.navigate(['/auth/login'], {
+          replaceUrl: true,
+          queryParams: { redirect: this.redirectTo },
+        });
+        return;
+      }
+      // Apres Google Sign-In, ne pas imposer les slides: demander uniquement
+      // l'information necessaire pour terminer le profil.
+      this.currentIndex = this.regionStepIndex;
+    }
 
     // Preselection avec la region du profil (si deja connecte).
     if (this.authState.me?.region) {
@@ -94,6 +117,7 @@ export class OnboardingPage implements OnInit {
 
   onRegionChange(region: UserRegion): void {
     this.selectedRegion = region;
+    this.regionErrorKey = '';
   }
 
   next(): void {
@@ -115,6 +139,7 @@ export class OnboardingPage implements OnInit {
   }
 
   skip(): void {
+    if (this.regionRequired) return;
     this.finish();
   }
 
@@ -124,11 +149,34 @@ export class OnboardingPage implements OnInit {
 
   private finish(): void {
     const region = this.selectedRegion;
-    if (region && this.auth.isLoggedIn()) {
-      this.authState.updateRegion(region).subscribe({
-        error: () => undefined, // non bloquant: on peut continuer sans region
-      });
+    if (this.regionRequired) {
+      if (!region) {
+        this.regionErrorKey = 'ONBOARDING_PAGE.REGION_REQUIRED';
+        return;
+      }
+      if (this.savingRegion) return;
+
+      this.savingRegion = true;
+      this.regionErrorKey = '';
+      this.authState
+        .updateRegion(region)
+        .pipe(finalize(() => (this.savingRegion = false)))
+        .subscribe({
+          next: () => this.navigateToRedirect(),
+          error: () => {
+            this.regionErrorKey = 'ONBOARDING_PAGE.REGION_SAVE_FAILED';
+          },
+        });
+      return;
     }
+
+    if (region && this.auth.isLoggedIn()) {
+      this.authState.updateRegion(region).subscribe({ error: () => undefined });
+    }
+    this.navigateToRedirect();
+  }
+
+  private navigateToRedirect(): void {
     void this.router.navigateByUrl(this.redirectTo, { replaceUrl: true });
   }
 }

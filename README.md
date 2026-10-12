@@ -40,6 +40,11 @@ de l'ID token. La valeur est publique, mais elle doit etre identique dans:
 - `googleWebClientId` dans `src/environments/environment.prod.ts`;
 - `GOOGLE_CLIENT_ID` dans le `.env` de `tingilin-api`.
 
+En production, ajouter `GOOGLE_CLIENT_ID` dans les variables d'environnement
+du serveur puis redemarrer l'API. Le fichier `.env` local n'est pas envoye au
+serveur. Cette valeur est le Client ID Web public, pas un ID token utilisateur
+et pas un Client Secret.
+
 Dans Google Cloud Console, creer aussi un **Client OAuth Android** dans le meme
 projet avec:
 
@@ -52,6 +57,12 @@ projet avec:
 Le Client Android n'est pas copie dans le code. Le `webClientId` doit rester le
 Client **Web**, jamais le Client Android. Si l'ecran de consentement est en mode
 test, ajouter les comptes Google utilises dans la liste des testeurs.
+
+Au premier Google Sign-In, l'API cree automatiquement le compte avec l'email,
+le nom et l'avatar verifies par Google. L'application demande ensuite seulement
+la region et attend son enregistrement avant d'ouvrir l'espace connecte. Aux
+connexions suivantes, les routes protegees relisent `/auth/me`; le choix de
+region n'est redemande que s'il manque encore.
 
 L'empreinte debug depend de `~/.android/debug.keystore`. La regenerer avec
 `cd android; .\gradlew.bat signingReport` si la cle ou la machine change.
