@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Tingilin</string>
+    <string name="title_activity_main">Tingilin</string>
+    <string name="package_name">com.tinguilin.app</string>
+    <string name="custom_url_scheme">com.tinguilin.app</string>
+</resources>

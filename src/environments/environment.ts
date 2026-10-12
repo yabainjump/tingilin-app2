@@ -9,7 +9,8 @@ export const environment = {
   paymentProvider: 'DIGIKUNTZ' as const,
   supportEmail: '',
   // Google Sign-In (Web OAuth Client ID, "xxxx.apps.googleusercontent.com").
-  // Utilise par GoogleAuth (web) et envoye au backend pour verifier l'idToken.
+  // Utilise par SocialLogin sur Android/web. Ce Client ID public doit aussi
+  // etre configure dans GOOGLE_CLIENT_ID sur l'API pour verifier l'idToken.
   // A REMPLIR manuellement (voir console Google Cloud) - vide = Google desactive.
   googleWebClientId: '',
 };

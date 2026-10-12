@@ -24,6 +24,7 @@ export class AuthInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     const isAuthEndpoint =
       req.url.includes('/auth/login') ||
+      req.url.includes('/auth/google') ||
       req.url.includes('/auth/register') ||
       req.url.includes('/auth/forgot-password') ||
       req.url.includes('/auth/reset-password') ||

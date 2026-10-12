@@ -2,26 +2,13 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastController } from '@ionic/angular';
-import { finalize } from 'rxjs';
-import { Capacitor } from '@capacitor/core';
+import { finalize, firstValueFrom } from 'rxjs';
 import { AuthService } from '../../../services/auth/auth.service';
+import {
+  GoogleSignInError,
+  GoogleSignInService,
+} from '../../../services/auth/google-sign-in.service';
 import { TranslateService } from '@ngx-translate/core';
-import { environment } from 'src/environments/environment';
-
-declare global {
-  interface Window {
-    google: {
-      accounts: {
-        id: {
-          initialize: (config: { client_id: string; callback: (response: { credential: string }) => void }) => void;
-          renderButton: (parent: HTMLElement, options: { theme: string; size: string }) => void;
-          prompt: (notificationCb?: (notification: { isNotDisplayed: boolean; isSkippedMoment: boolean }) => void) => void;
-          disableAutoSelect: () => void;
-        };
-      };
-    };
-  }
-}
 
 @Component({
   selector: 'app-login',
@@ -43,6 +30,7 @@ export class LoginPage {
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
+    private googleSignIn: GoogleSignInService,
     private router: Router,
     private route: ActivatedRoute,
     private toast: ToastController,
@@ -76,9 +64,7 @@ export class LoginPage {
       )
       .subscribe({
         next: () => {
-          const redirect =
-            this.route.snapshot.queryParamMap.get('redirect') || '/home';
-          this.router.navigateByUrl(redirect);
+          void this.router.navigateByUrl(this.safeRedirectUrl());
         },
         error: async (err) => {
           await this.showToast(
@@ -91,135 +77,32 @@ export class LoginPage {
   async signInWithGoogle(): Promise<void> {
     if (this.googleLoading) return;
 
-    const clientId = environment.googleWebClientId;
-    if (!clientId) {
-      await this.showToast(
-        this.translate.instant('LOGIN_PAGE.TOAST_GOOGLE_NOT_CONFIGURED'),
-      );
-      return;
-    }
-
     this.googleLoading = true;
     try {
-      // Load Google Identity Services script and initialize if not loaded
-      await this.loadGoogleSdk();
-
-      // Create a hidden container for the Google button
-      const container = document.createElement('div');
-      container.id = 'google-signin-button-login';
-      container.style.cssText = 'position:fixed;top:-50px;left:-50px;width:1px;height:1px;opacity:0.01;pointer-events:none;z-index:-1;';
-      document.body.appendChild(container);
-
-      window.google.accounts.id.initialize({
-        client_id: clientId,
-        callback: (response: { credential: string }) => {
-          document.body.removeChild(container);
-          const idToken = response.credential;
-          if (!idToken) {
-            this.googleLoading = false;
-            this.showToast(
-              this.translate.instant('LOGIN_PAGE.TOAST_GOOGLE_FAILED'),
-            );
-            return;
-          }
-
-          this.auth
-            .loginWithGoogle(idToken)
-            .pipe(
-              finalize(() => {
-                this.googleLoading = false;
-              }),
-            )
-            .subscribe({
-              next: () => {
-                const redirect =
-                  this.route.snapshot.queryParamMap.get('redirect') || '/home';
-                this.router.navigateByUrl(redirect);
-              },
-              error: async (err) => {
-                await this.showToast(
-                  this.readError(err) ||
-                    this.translate.instant('LOGIN_PAGE.TOAST_GOOGLE_FAILED'),
-                );
-              },
-            });
-        },
-      });
-
-      window.google.accounts.id.renderButton(container, {
-        theme: 'outline',
-        size: 'large',
-      });
-
-      // Trigger the button click programmatically
-      const googleButton = container.querySelector('div');
-      if (googleButton) {
-        (googleButton as HTMLElement).click();
-      } else {
-        // Fallback: use prompt() which shows One Tap UI
-        window.google.accounts.id.prompt();
-      }
+      const idToken = await this.googleSignIn.signIn();
+      await firstValueFrom(this.auth.loginWithGoogle(idToken));
+      await this.router.navigateByUrl(this.safeRedirectUrl());
     } catch (err) {
-      this.googleLoading = false;
+      if (this.googleSignIn.isUserCancellation(err)) return;
+
+      const message =
+        err instanceof GoogleSignInError && err.code === 'NOT_CONFIGURED'
+          ? this.translate.instant('LOGIN_PAGE.TOAST_GOOGLE_NOT_CONFIGURED')
+          : this.translate.instant('LOGIN_PAGE.TOAST_GOOGLE_FAILED');
       await this.showToast(
-        this.readError(err) ||
-          this.translate.instant('LOGIN_PAGE.TOAST_GOOGLE_FAILED'),
+        message,
       );
+    } finally {
+      this.googleLoading = false;
     }
   }
 
-  private googleScriptLoaded = false;
-
-  private async loadGoogleSdk(): Promise<void> {
-    // On web platform (Capacitor), GIS works directly in the webview.
-    // If the script is already loaded, skip re-loading.
-    if (window.google && window.google.accounts) {
-      return;
-    }
-
-    if (this.googleScriptLoaded) {
-      // Script tag added but not yet loaded; wait for it
-      return this.waitForGoogleSdk();
-    }
-
-    this.googleScriptLoaded = true;
-    return new Promise<void>((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = 'https://accounts.google.com/gsi/client';
-      script.async = true;
-      script.defer = true;
-      script.onload = () => {
-        if (window.google && window.google.accounts) {
-          resolve();
-        } else {
-          reject(new Error('Google SDK failed to initialize'));
-        }
-      };
-      script.onerror = () => {
-        reject(new Error('Failed to load Google SDK'));
-      };
-      document.head.appendChild(script);
-    });
-  }
-
-  private waitForGoogleSdk(): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      const check = () => {
-        if (window.google && window.google.accounts) {
-          resolve();
-        } else {
-          setTimeout(check, 100);
-        }
-      };
-      const timeout = setTimeout(() => {
-        reject(new Error('Google SDK took too long to load'));
-      }, 10000);
-      check();
-      // Clear timeout after resolution
-      const orig = setTimeout(() => {}, 0);
-      clearTimeout(orig);
-      clearTimeout(timeout);
-    });
+  private safeRedirectUrl(): string {
+    const redirect =
+      this.route.snapshot.queryParamMap.get('redirect')?.trim() || '/home';
+    return redirect.startsWith('/') && !redirect.startsWith('//')
+      ? redirect
+      : '/home';
   }
 
   private readError(err: any): string | null {

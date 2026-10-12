@@ -20,6 +20,7 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LanguageSwitchModule } from './shared/language-switch/language-switch.module';
 import { environment } from 'src/environments/environment';
 import { OfflineActionQueueService } from './services/offline/offline-action-queue.service';
+import { GoogleSignInService } from './services/auth/google-sign-in.service';
 
 export function initializeAuthTokenStorage(
   tokenStorage: AuthTokenStorageService,
@@ -29,6 +30,11 @@ export function initializeAuthTokenStorage(
 
 export function initializeOfflineQueue(queue: OfflineActionQueueService) {
   return () => queue.init();
+}
+
+export function initializeGoogleSignIn(googleSignIn: GoogleSignInService) {
+  // Une panne du SDK Google ne doit pas bloquer le demarrage de l'application.
+  return () => googleSignIn.initialize().catch(() => undefined);
 }
 
 @NgModule({
@@ -61,6 +67,12 @@ export function initializeOfflineQueue(queue: OfflineActionQueueService) {
       provide: APP_INITIALIZER,
       useFactory: initializeOfflineQueue,
       deps: [OfflineActionQueueService],
+      multi: true,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeGoogleSignIn,
+      deps: [GoogleSignInService],
       multi: true,
     },
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

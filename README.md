@@ -6,6 +6,7 @@ Frontend Ionic/Angular pour le parcours utilisateur (auth, home, raffles, ticket
 
 - Node.js 20+
 - npm 10+
+- JDK 21 pour compiler le projet Android Capacitor 8
 - API backend lancee sur `http://localhost:3000/api/v1`
 
 ## Installation
@@ -27,12 +28,48 @@ apiBaseUrl: 'http://localhost:3000/api/v1'
 
 ### Environnement prod
 
-`src/environments/environment.prod.ts` contient encore un placeholder.
-Avant un build prod, remplacer:
+`src/environments/environment.prod.ts` utilise l'API de production. Verifier
+l'URL avant chaque release.
 
-```ts
-apiBaseUrl: 'https://TON_DOMAINE/api/v1'
+### Google Sign-In (Web + Android)
+
+Google Auth utilise un **Client OAuth de type Application Web** comme audience
+de l'ID token. La valeur est publique, mais elle doit etre identique dans:
+
+- `googleWebClientId` dans `src/environments/environment.ts`;
+- `googleWebClientId` dans `src/environments/environment.prod.ts`;
+- `GOOGLE_CLIENT_ID` dans le `.env` de `tingilin-api`.
+
+Dans Google Cloud Console, creer aussi un **Client OAuth Android** dans le meme
+projet avec:
+
+- package: `com.tinguilin.app`;
+- SHA-1 debug actuel:
+  `07:94:99:56:6B:8D:47:3A:B0:21:0C:01:82:A0:D8:6D:CD:4A:95:DF`;
+- un autre Client Android pour la cle release et un autre pour la cle Play App
+  Signing, si elles ont des SHA-1 differents.
+
+Le Client Android n'est pas copie dans le code. Le `webClientId` doit rester le
+Client **Web**, jamais le Client Android. Si l'ecran de consentement est en mode
+test, ajouter les comptes Google utilises dans la liste des testeurs.
+
+L'empreinte debug depend de `~/.android/debug.keystore`. La regenerer avec
+`cd android; .\gradlew.bat signingReport` si la cle ou la machine change.
+
+Apres un changement de dependance ou de configuration native:
+
+```powershell
+npm run build
+npx cap sync android
+npx cap open android
 ```
+
+Verifier que `JAVA_HOME` pointe vers un JDK 21 avant d'executer Gradle. Le JDK
+embarque par une version recente d'Android Studio peut aussi etre selectionne
+dans les parametres Gradle d'Android Studio.
+
+Pour un emulateur qui appelle une API locale, utiliser `10.0.2.2` a la place de
+`localhost`. Un telephone physique doit utiliser une URL HTTPS joignable.
 
 ## Lancer en local
 
@@ -50,6 +87,7 @@ App dispo sur `http://localhost:8100`.
 npm run build
 npm run lint
 npm run test
+npx cap sync android
 ```
 
 ## Spec Kit
