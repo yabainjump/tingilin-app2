@@ -29,6 +29,7 @@ export class GoogleSignInService {
       google: {
         webClientId: this.clientId,
         mode: 'online',
+        redirectUrl: this.redirectUrl,
       },
     });
 
@@ -77,5 +78,9 @@ export class GoogleSignInService {
 
   private get clientId(): string {
     return String(environment.googleWebClientId ?? '').trim();
+  }
+
+  private get redirectUrl(): string {
+    return String(environment.googleRedirectUrl ?? '').trim();
   }
 }

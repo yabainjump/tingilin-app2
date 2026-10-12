@@ -13,6 +13,9 @@ export const environment = {
   // etre configure dans GOOGLE_CLIENT_ID sur l'API pour verifier l'idToken.
   // A REMPLIR manuellement (voir console Google Cloud) - vide = Google desactive.
   googleWebClientId: '352465042993-mdn2aug25q85ohc8gce28gec5hinn4jv.apps.googleusercontent.com',
+  // Doit correspondre exactement a une URI de redirection autorisee dans le
+  // client OAuth Web Google (schema, domaine, port et chemin compris).
+  googleRedirectUrl: 'http://localhost:8100/auth/login',
 };
 
 /*

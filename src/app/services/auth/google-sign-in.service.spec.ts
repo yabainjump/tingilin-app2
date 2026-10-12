@@ -9,15 +9,18 @@ import {
 describe('GoogleSignInService', () => {
   let service: GoogleSignInService;
   let originalClientId: string;
+  let originalRedirectUrl: string;
 
   beforeEach(() => {
     originalClientId = environment.googleWebClientId;
+    originalRedirectUrl = environment.googleRedirectUrl;
     TestBed.configureTestingModule({});
     service = TestBed.inject(GoogleSignInService);
   });
 
   afterEach(() => {
     environment.googleWebClientId = originalClientId;
+    environment.googleRedirectUrl = originalRedirectUrl;
   });
 
   it('fails closed when the Web OAuth client ID is missing', async () => {
@@ -54,6 +57,7 @@ describe('GoogleSignInService', () => {
       google: {
         webClientId: environment.googleWebClientId,
         mode: 'online',
+        redirectUrl: environment.googleRedirectUrl,
       },
     });
   });

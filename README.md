@@ -40,6 +40,17 @@ de l'ID token. La valeur est publique, mais elle doit etre identique dans:
 - `googleWebClientId` dans `src/environments/environment.prod.ts`;
 - `GOOGLE_CLIENT_ID` dans le `.env` de `tingilin-api`.
 
+Dans le client OAuth **Application Web** de Google Cloud, configurer aussi:
+
+- Origines JavaScript autorisees:
+  `https://tinguilin.yaba-in.com` et `http://localhost:8100`;
+- URI de redirection autorisees:
+  `https://tinguilin.yaba-in.com/auth/login` et
+  `http://localhost:8100/auth/login`.
+
+L'URI doit correspondre exactement, sans slash final supplementaire. Elle est
+declaree dans `googleRedirectUrl` dans les deux fichiers d'environnement.
+
 En production, ajouter `GOOGLE_CLIENT_ID` dans les variables d'environnement
 du serveur puis redemarrer l'API. Le fichier `.env` local n'est pas envoye au
 serveur. Cette valeur est le Client ID Web public, pas un ID token utilisateur
