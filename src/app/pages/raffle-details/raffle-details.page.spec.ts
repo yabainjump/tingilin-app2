@@ -2,7 +2,12 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
-import { AlertController, IonicModule, NavController, ToastController } from '@ionic/angular';
+import {
+  AlertController,
+  IonicModule,
+  NavController,
+  ToastController,
+} from '@ionic/angular';
 import { of } from 'rxjs';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { RafflesPublicApiService } from 'src/app/services/raffles/raffles-public-api.service';
@@ -27,7 +32,9 @@ describe('RaffleDetailsPage', () => {
     router.navigate.and.resolveTo(true);
 
     auth = jasmine.createSpyObj<AuthService>('AuthService', ['isLoggedIn']);
-    alertController = jasmine.createSpyObj<AlertController>('AlertController', ['create']);
+    alertController = jasmine.createSpyObj<AlertController>('AlertController', [
+      'create',
+    ]);
     alertController.create.and.resolveTo({
       present: async () => undefined,
     } as any);
@@ -37,18 +44,22 @@ describe('RaffleDetailsPage', () => {
       'raffleShareUrl',
     ]);
     shareService.share.and.resolveTo('shared');
-    shareService.raffleShareUrl.and.returnValue('http://localhost:3000/share/raffle/test-id');
-    referralApi = jasmine.createSpyObj<ReferralApiService>('ReferralApiService', [
-      'summary',
-    ]);
+    shareService.raffleShareUrl.and.returnValue(
+      'http://localhost:3000/share/raffle/test-id',
+    );
+    referralApi = jasmine.createSpyObj<ReferralApiService>(
+      'ReferralApiService',
+      ['summary'],
+    );
     referralApi.summary.and.returnValue(
       of({
         freeTicketsBalance: 0,
       } as any),
     );
-    paymentsApi = jasmine.createSpyObj<PaymentsApiService>('PaymentsApiService', [
-      'useFreeTicket',
-    ]);
+    paymentsApi = jasmine.createSpyObj<PaymentsApiService>(
+      'PaymentsApiService',
+      ['useFreeTicket'],
+    );
     paymentsApi.useFreeTicket.and.returnValue(of({ ok: true } as any));
 
     await TestBed.configureTestingModule({
@@ -61,7 +72,10 @@ describe('RaffleDetailsPage', () => {
         { provide: ShareService, useValue: shareService },
         { provide: ReferralApiService, useValue: referralApi },
         { provide: PaymentsApiService, useValue: paymentsApi },
-        { provide: NavController, useValue: jasmine.createSpyObj('NavController', ['back']) },
+        {
+          provide: NavController,
+          useValue: jasmine.createSpyObj('NavController', ['back']),
+        },
         {
           provide: ToastController,
           useValue: {
@@ -115,7 +129,10 @@ describe('RaffleDetailsPage', () => {
     await component.goToPayment();
 
     expect(alertController.create).toHaveBeenCalled();
-    expect(router.navigate).not.toHaveBeenCalledWith(['/tabs/payment-confirmation'], jasmine.anything());
+    expect(router.navigate).not.toHaveBeenCalledWith(
+      ['/tabs/payment-confirmation'],
+      jasmine.anything(),
+    );
   });
 
   it('should show free ticket CTA when logged in with balance', () => {
@@ -134,7 +151,10 @@ describe('RaffleDetailsPage', () => {
 
     expect(paymentsApi.useFreeTicket).toHaveBeenCalledWith('test-id');
     expect(component.freeTicketsBalance).toBe(0);
-    expect(router.navigate).toHaveBeenCalledWith(['/tabs/ticket-details', 'test-id']);
+    expect(router.navigate).toHaveBeenCalledWith([
+      '/tabs/ticket-details',
+      'test-id',
+    ]);
   });
 
   it('should navigate to payment when user is logged in', async () => {
@@ -143,14 +163,26 @@ describe('RaffleDetailsPage', () => {
 
     await component.goToPayment();
 
-    expect(router.navigate).toHaveBeenCalledWith(['/tabs/payment-confirmation'], {
-      queryParams: jasmine.objectContaining({
-        raffleId: 'test-id',
-        qty: 2,
-        unit: 100,
-        amount: 200,
-      }),
-    });
+    expect(router.navigate).toHaveBeenCalledWith(
+      ['/tabs/payment-confirmation'],
+      {
+        queryParams: jasmine.objectContaining({
+          raffleId: 'test-id',
+          qty: 2,
+          unit: 100,
+          amount: 200,
+        }),
+      },
+    );
+  });
+
+  it('should not allow payment for a stale DRAWN raffle', () => {
+    component.raffle = {
+      ...component.raffle!,
+      status: 'DRAWN',
+    };
+
+    expect(component.canParticipate).toBeFalse();
   });
 
   it('should build and share raffle link', async () => {

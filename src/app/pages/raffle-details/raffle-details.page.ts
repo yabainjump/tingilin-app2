@@ -1,6 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, NavController, ToastController } from '@ionic/angular';
+import {
+  AlertController,
+  NavController,
+  ToastController,
+} from '@ionic/angular';
 import { finalize, firstValueFrom, interval, Subscription } from 'rxjs';
 import {
   RafflesPublicApiService,
@@ -78,7 +82,9 @@ export class RaffleDetailsPage implements OnInit, OnDestroy {
 
     if (!this.canParticipate) {
       const t = await this.toast.create({
-        message: this.translate.instant('RAFFLE_DETAILS_PAGE.TOAST_RAFFLE_CLOSED_PURCHASE'),
+        message: this.translate.instant(
+          'RAFFLE_DETAILS_PAGE.TOAST_RAFFLE_CLOSED_PURCHASE',
+        ),
         duration: 1500,
       });
       await t.present();
@@ -103,7 +109,8 @@ export class RaffleDetailsPage implements OnInit, OnDestroy {
       r?.imageUrl ||
       r?.image ||
       '';
-    const imageUrl = toAbsoluteMediaUrl(imageUrlRaw, environment.apiBaseUrl) || '';
+    const imageUrl =
+      toAbsoluteMediaUrl(imageUrlRaw, environment.apiBaseUrl) || '';
 
     this.router.navigate(['/tabs/payment-confirmation'], {
       queryParams: { raffleId, title, imageUrl, qty, unit, amount },
@@ -131,7 +138,9 @@ export class RaffleDetailsPage implements OnInit, OnDestroy {
         },
         error: async () => {
           const t = await this.toast.create({
-            message: this.translate.instant('RAFFLE_DETAILS_PAGE.TOAST_NOT_FOUND'),
+            message: this.translate.instant(
+              'RAFFLE_DETAILS_PAGE.TOAST_NOT_FOUND',
+            ),
             duration: 1500,
           });
           await t.present();
@@ -171,13 +180,20 @@ export class RaffleDetailsPage implements OnInit, OnDestroy {
   private mapWinnerCard(w: WinnerDto): RecentWinnerCard {
     const prize = String(w?.prizeTitle ?? '').trim();
     const note = prize
-      ? this.translate.instant('RAFFLE_DETAILS_PAGE.WINNER_NOTE_WITH_PRIZE', { prize })
+      ? this.translate.instant('RAFFLE_DETAILS_PAGE.WINNER_NOTE_WITH_PRIZE', {
+          prize,
+        })
       : w?.ticketCode
-        ? this.translate.instant('RAFFLE_DETAILS_PAGE.WINNER_NOTE_WITH_TICKET', { ticket: w.ticketCode })
+        ? this.translate.instant(
+            'RAFFLE_DETAILS_PAGE.WINNER_NOTE_WITH_TICKET',
+            { ticket: w.ticketCode },
+          )
         : this.translate.instant('RAFFLE_DETAILS_PAGE.RECENT_WINNER');
 
     return {
-      name: String(w?.winnerName ?? this.translate.instant('RAFFLE_DETAILS_PAGE.WINNER')),
+      name: String(
+        w?.winnerName ?? this.translate.instant('RAFFLE_DETAILS_PAGE.WINNER'),
+      ),
       note,
       avatar: this.avatarSrc(w?.avatar),
     };
@@ -185,7 +201,8 @@ export class RaffleDetailsPage implements OnInit, OnDestroy {
 
   private avatarSrc(raw?: string | null): string {
     const s = String(raw ?? '').trim();
-    if (!s || s === 'null' || s === 'undefined') return 'assets/img/profile.svg';
+    if (!s || s === 'null' || s === 'undefined')
+      return 'assets/img/profile.svg';
     if (s.startsWith('http://') || s.startsWith('https://')) return s;
     if (s.startsWith('data:') || s.startsWith('assets/')) return s;
     if (s.startsWith('../assets/')) return s.replace('../', '');
@@ -256,10 +273,7 @@ export class RaffleDetailsPage implements OnInit, OnDestroy {
     const remaining = Math.max(0, end - now);
     const fallbackWindow = 24 * 60 * 60 * 1000;
     const elapsedFallback = Math.max(0, fallbackWindow - remaining);
-    return Math.max(
-      0,
-      Math.min(100, (elapsedFallback / fallbackWindow) * 100),
-    );
+    return Math.max(0, Math.min(100, (elapsedFallback / fallbackWindow) * 100));
   }
 
   // ✅ MODIF: inc/dec doivent modifier qty (et synchroniser quantity)
@@ -294,8 +308,12 @@ export class RaffleDetailsPage implements OnInit, OnDestroy {
     const raffleId = this.currentRaffleId;
     if (!raffleId) return;
 
-    const title = this.raffle?.title || this.translate.instant('RAFFLE_DETAILS_PAGE.SHARE_FALLBACK_TITLE');
-    const text = this.translate.instant('RAFFLE_DETAILS_PAGE.SHARE_TEXT', { title });
+    const title =
+      this.raffle?.title ||
+      this.translate.instant('RAFFLE_DETAILS_PAGE.SHARE_FALLBACK_TITLE');
+    const text = this.translate.instant('RAFFLE_DETAILS_PAGE.SHARE_TEXT', {
+      title,
+    });
     const url = this.shareService.raffleShareUrl(raffleId);
 
     try {
@@ -307,14 +325,18 @@ export class RaffleDetailsPage implements OnInit, OnDestroy {
 
       if (mode === 'copied') {
         const t = await this.toast.create({
-          message: this.translate.instant('RAFFLE_DETAILS_PAGE.TOAST_LINK_COPIED'),
+          message: this.translate.instant(
+            'RAFFLE_DETAILS_PAGE.TOAST_LINK_COPIED',
+          ),
           duration: 1400,
         });
         await t.present();
       }
     } catch {
       const t = await this.toast.create({
-        message: this.translate.instant('RAFFLE_DETAILS_PAGE.TOAST_SHARE_UNAVAILABLE'),
+        message: this.translate.instant(
+          'RAFFLE_DETAILS_PAGE.TOAST_SHARE_UNAVAILABLE',
+        ),
         duration: 1400,
       });
       await t.present();
@@ -355,7 +377,15 @@ export class RaffleDetailsPage implements OnInit, OnDestroy {
   }
 
   get canParticipate(): boolean {
-    return !!this.raffle && !this.loading && !this.isRaffleClosed;
+    const status = String(this.raffle?.status ?? '')
+      .trim()
+      .toUpperCase();
+    return (
+      !!this.raffle &&
+      !this.loading &&
+      status === 'LIVE' &&
+      !this.isRaffleClosed
+    );
   }
 
   get canUseFreeTicket(): boolean {
@@ -382,7 +412,9 @@ export class RaffleDetailsPage implements OnInit, OnDestroy {
 
     if (this.freeTicketsBalance <= 0) {
       const t = await this.toast.create({
-        message: this.translate.instant('RAFFLE_DETAILS_PAGE.TOAST_NO_FREE_TICKET'),
+        message: this.translate.instant(
+          'RAFFLE_DETAILS_PAGE.TOAST_NO_FREE_TICKET',
+        ),
         duration: 1500,
       });
       await t.present();
@@ -391,7 +423,9 @@ export class RaffleDetailsPage implements OnInit, OnDestroy {
 
     if (!this.canParticipate) {
       const t = await this.toast.create({
-        message: this.translate.instant('RAFFLE_DETAILS_PAGE.TOAST_RAFFLE_CLOSED_USE'),
+        message: this.translate.instant(
+          'RAFFLE_DETAILS_PAGE.TOAST_RAFFLE_CLOSED_USE',
+        ),
         duration: 1500,
       });
       await t.present();
@@ -404,7 +438,9 @@ export class RaffleDetailsPage implements OnInit, OnDestroy {
       this.freeTicketsBalance = Math.max(0, this.freeTicketsBalance - 1);
 
       const t = await this.toast.create({
-        message: this.translate.instant('RAFFLE_DETAILS_PAGE.TOAST_FREE_TICKET_USED'),
+        message: this.translate.instant(
+          'RAFFLE_DETAILS_PAGE.TOAST_FREE_TICKET_USED',
+        ),
         duration: 1600,
       });
       await t.present();
@@ -415,7 +451,9 @@ export class RaffleDetailsPage implements OnInit, OnDestroy {
         message:
           e?.error?.message ||
           e?.message ||
-          this.translate.instant('RAFFLE_DETAILS_PAGE.TOAST_FREE_TICKET_FAILED'),
+          this.translate.instant(
+            'RAFFLE_DETAILS_PAGE.TOAST_FREE_TICKET_FAILED',
+          ),
         duration: 1700,
       });
       await t.present();
@@ -442,10 +480,17 @@ export class RaffleDetailsPage implements OnInit, OnDestroy {
   private async promptAuthBeforePurchase(raffleId: string): Promise<void> {
     const redirect = `/tabs/raffle-details/${encodeURIComponent(raffleId)}`;
     const alert = await this.alertCtrl.create({
-      header: this.translate.instant('RAFFLE_DETAILS_PAGE.AUTH_REQUIRED_HEADER'),
-      message: this.translate.instant('RAFFLE_DETAILS_PAGE.AUTH_REQUIRED_MESSAGE'),
+      header: this.translate.instant(
+        'RAFFLE_DETAILS_PAGE.AUTH_REQUIRED_HEADER',
+      ),
+      message: this.translate.instant(
+        'RAFFLE_DETAILS_PAGE.AUTH_REQUIRED_MESSAGE',
+      ),
       buttons: [
-        { text: this.translate.instant('RAFFLE_DETAILS_PAGE.CANCEL'), role: 'cancel' },
+        {
+          text: this.translate.instant('RAFFLE_DETAILS_PAGE.CANCEL'),
+          role: 'cancel',
+        },
         {
           text: this.translate.instant('RAFFLE_DETAILS_PAGE.LOGIN'),
           handler: () => {

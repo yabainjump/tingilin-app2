@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1791830124620,
+  "timestamp": 1793697573285,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -15,7 +15,7 @@
         "/main.0cb70a19998fe016.js",
         "/manifest.webmanifest",
         "/polyfills.06cbf0422dbf6c09.js",
-        "/runtime.2fc69cb0b12f2390.js",
+        "/runtime.6331ec2b0e19b802.js",
         "/styles.009a4cf57081a198.css"
       ],
       "patterns": []
@@ -1468,7 +1468,7 @@
     "/assets/img/slide2.png": "5baf79684957a50af91773154d09753128e9373b",
     "/assets/img/slide3.png": "c0f010efd1eaad0108e6d395eaf62aa8c98cd9a4",
     "/assets/shapes.svg": "5413e95adabcb2cb639970051f55e0ddb64ace53",
-    "/index.html": "067ca305d846c860798330ce3700adb723553087",
+    "/index.html": "0fecbae7b4ecf7470a050d1d040844c5e29be312",
     "/main.0cb70a19998fe016.js": "cc98e8644f25789d469fbe848f63710398a366c8",
     "/manifest.webmanifest": "32bf5b840a0fc693d5cd01ff9d268a38b8e6332c",
     "/phone_couche.4e0e983121ea0fa9.png": "019615d50aeb86b4a1d7d212cdddfb436b4c6245",
@@ -1484,7 +1484,7 @@
     "/plus-jakarta-sans-latin-800-normal.23a2d53395ddb14f.woff": "8dd9eb7e3c14704ca8049affc609182dbc9b6952",
     "/plus-jakarta-sans-latin-800-normal.f5722262b6e7214e.woff2": "9b74d53a7dca5c40d770c0007d12f240e0b145f1",
     "/polyfills.06cbf0422dbf6c09.js": "937619036a8b0ad87acb2897cc94f6eaedc45426",
-    "/runtime.2fc69cb0b12f2390.js": "f1eddbe24a0a505b62a8273ece0caab56bbc5376",
+    "/runtime.6331ec2b0e19b802.js": "b4d8a80239fbb32ce58670bb5a578b00993072d5",
     "/styles.009a4cf57081a198.css": "6ea0ec5aa1becf9970bd29774f0f11ac37f5392e",
     "/svg/accessibility-outline.svg": "92bc5fbc69bc5b55f75c5d29686d6f3b949857bd",
     "/svg/accessibility-sharp.svg": "0c6447c380f04b29bef7413d50d088dd4a5fd61c",

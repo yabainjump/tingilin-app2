@@ -20,13 +20,15 @@ ion-router-outlet {
 ion-tab-bar.lotto-tabbar {
   --background: transparent;
   --border: 0;
-  position: absolute !important;
+  position: relative !important;
   z-index: 20 !important;
-  left: 14px;
-  right: 14px;
-  bottom: calc(10px + env(safe-area-inset-bottom));
-  width: auto;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  flex: 0 0 68px;
+  width: calc(100% - 28px);
   height: 68px;
+  margin: 0 14px calc(10px + env(safe-area-inset-bottom));
   padding: 6px;
   overflow: hidden;
   border: 1px solid var(--dock-stroke);
@@ -112,9 +114,7 @@ ion-tab-button.tab-selected ion-icon {
 
 @media (min-width: 720px) {
   ion-tab-bar.lotto-tabbar {
-    left: 50%;
-    right: auto;
     width: min(520px, calc(100% - 32px));
-    transform: translateX(-50%);
+    margin-inline: auto;
   }
 }

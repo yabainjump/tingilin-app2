@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, from, map, mergeMap, of, tap, throwError, catchError } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {
+  Observable,
+  from,
+  map,
+  mergeMap,
+  of,
+  tap,
+  throwError,
+  catchError,
+} from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { toAbsoluteMediaUrl } from 'src/app/shared/utils/media-url';
 import { AppStorageService } from 'src/app/shared/storage/app-storage.service';
@@ -23,8 +32,8 @@ export interface RaffleDetailsDto {
   total?: number;
 
   startAt?: string; // ISO
-  endsAt?: string;   // ISO
-  endAt?: string;    // ISO (compat backend)
+  endsAt?: string; // ISO
+  endAt?: string; // ISO (compat backend)
   badgeText?: string;
   badgeType?: 'danger' | 'warn' | 'hot';
 
@@ -44,7 +53,10 @@ export class RafflesPublicApiService {
   ) {}
 
   private normalizeRaffle(raw: any): RaffleDetailsDto {
-    const topImage = toAbsoluteMediaUrl(raw?.imageUrl ?? raw?.image, this.baseUrl);
+    const topImage = toAbsoluteMediaUrl(
+      raw?.imageUrl ?? raw?.image,
+      this.baseUrl,
+    );
     const productImage = toAbsoluteMediaUrl(
       raw?.product?.imageUrl ?? raw?.product?.image,
       this.baseUrl,
@@ -70,13 +82,20 @@ export class RafflesPublicApiService {
       .pipe(
         map((raw) => this.normalizeRaffle(raw)),
         tap((raffle) => void this.persistRaffle(id, raffle)),
-        catchError((error) =>
-          this.loadStoredRaffle(id).pipe(
+        catchError((error: HttpErrorResponse) => {
+          // Une reponse 4xx est une reponse metier definitive (raffle absente,
+          // non publique, etc.). Ne jamais la masquer avec une ancienne copie,
+          // sinon un ancien statut DRAWN peut rester affiche apres une mise a jour.
+          if (error.status >= 400 && error.status < 500) {
+            return throwError(() => error);
+          }
+
+          return this.loadStoredRaffle(id).pipe(
             mergeMap((cached) =>
               cached ? of(cached.value) : throwError(() => error),
             ),
-          ),
-        ),
+          );
+        }),
       );
 
     if (this.networkStatus.isOffline()) {
