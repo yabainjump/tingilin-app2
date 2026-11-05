@@ -15,95 +15,159 @@
 <ion-content [fullscreen]="true" class="page-bg">
   <ng-container *ngIf="!pageLoading; else pageSkeleton">
     <div class="container">
+      <!-- Product / raffle card -->
+      <div class="glass-card product-card">
+        <div class="glow-dot"></div>
 
-    <!-- Product / raffle card -->
-    <div class="glass-card product-card">
-      <div class="glow-dot"></div>
+        <img
+          class="product-img"
+          [src]="imageUrl || fallbackImage"
+          [alt]="title"
+          (error)="onProductImageError($event)"
+        />
 
-      <div class="product-img" [style.backgroundImage]="'url(' + (imageUrl || fallbackImage) + ')'"></div>
+        <div class="product-body">
+          <div class="chip">TINGUILIN</div>
+          <div class="title">{{ title }}</div>
 
-      <div class="product-body">
-        <div class="chip">TINGUILIN</div>
-        <div class="title">{{ title }}</div>
+          <div class="divider"></div>
 
-        <div class="divider"></div>
-
-        <div class="totals">
-          <div>
-            <div class="label">{{ 'PAYMENT_CONFIRMATION_PAGE.TOTAL' | translate }}</div>
-            <div class="sub">{{ quantity }} {{ quantity > 1 ? ('PAYMENT_CONFIRMATION_PAGE.TICKETS' | translate) : ('PAYMENT_CONFIRMATION_PAGE.TICKET' | translate) }}</div>
+          <div class="totals">
+            <div>
+              <div class="label">
+                {{ 'PAYMENT_CONFIRMATION_PAGE.TOTAL' | translate }}
+              </div>
+              <div class="sub">
+                {{ quantity }} {{ quantity > 1 ?
+                ('PAYMENT_CONFIRMATION_PAGE.TICKETS' | translate) :
+                ('PAYMENT_CONFIRMATION_PAGE.TICKET' | translate) }}
+              </div>
+            </div>
+            <div class="amount">{{ amount }} FCFA</div>
           </div>
-          <div class="amount">{{ amount }} FCFA</div>
         </div>
       </div>
-    </div>
 
-    <!-- Payment method -->
-    <div class="section">
-      <div class="section-title">{{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_METHOD' | translate }}</div>
-
-      <div class="methods">
-        <button type="button" class="method-card orange" [class.selected]="paymentMethod === 'ORANGE'"
-          (click)="paymentMethod = 'ORANGE'">
-          <div class="method-top">
-            <div class="logo orange-logo"><img class="tgl1" src="../../../assets/img/orange_money.jpg" alt="Orange Money"></div>
-            <div class="radio" [class.on]="paymentMethod === 'ORANGE'"></div>
-          </div>
-          <div class="method-name">Orange Money</div>
-        </button>
-
-        <button type="button" class="method-card mtn" [class.selected]="paymentMethod === 'MTN'" (click)="paymentMethod = 'MTN'">
-          <div class="method-top">
-            <div class="logo mtn-logo"><img class="tgl2" src="../../../assets/img/MobileMoney.jpg" alt="MTN Mobile Money"></div>
-            <div class="radio" [class.on]="paymentMethod === 'MTN'"></div>
-          </div>
-          <div class="method-name">MTN MoMo</div>
-        </button>
-      </div>
-
-      <div class="hint">
-        {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_HINT' | translate }}
-      </div>
-    </div>
-
-    <!-- Phone -->
-    <div class="section">
-      <div class="section-title">{{ 'PAYMENT_CONFIRMATION_PAGE.PHONE_NUMBER' | translate }}</div>
-
-      <div class="phone-wrap">
-        <div class="phone-left">
-          <span class="flag">🇨🇲</span>
-          <span class="code">+237</span>
+      <!-- Payment method -->
+      <div class="section">
+        <div class="section-title">
+          {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_METHOD' | translate }}
         </div>
 
-        <ion-input class="phone-input" type="tel" inputmode="numeric" [placeholder]="'PAYMENT_CONFIRMATION_PAGE.PHONE_PLACEHOLDER' | translate"
-          [(ngModel)]="userPhone">
-        </ion-input>
+        <div class="methods">
+          <button
+            type="button"
+            class="method-card orange"
+            [class.selected]="paymentMethod === 'ORANGE'"
+            (click)="paymentMethod = 'ORANGE'"
+            [disabled]="loading || directChargePending"
+          >
+            <div class="method-top">
+              <div class="logo orange-logo">
+                <img
+                  class="tgl1"
+                  src="../../../assets/img/orange_money.jpg"
+                  alt="Orange Money"
+                />
+              </div>
+              <div class="radio" [class.on]="paymentMethod === 'ORANGE'"></div>
+            </div>
+            <div class="method-name">Orange Money</div>
+          </button>
 
-        <ion-icon name="phone-portrait-outline" class="phone-ico"></ion-icon>
+          <button
+            type="button"
+            class="method-card mtn"
+            [class.selected]="paymentMethod === 'MTN'"
+            (click)="paymentMethod = 'MTN'"
+            [disabled]="loading || directChargePending"
+          >
+            <div class="method-top">
+              <div class="logo mtn-logo">
+                <img
+                  class="tgl2"
+                  src="../../../assets/img/MobileMoney.jpg"
+                  alt="MTN Mobile Money"
+                />
+              </div>
+              <div class="radio" [class.on]="paymentMethod === 'MTN'"></div>
+            </div>
+            <div class="method-name">MTN MoMo</div>
+          </button>
+        </div>
+
+        <div class="hint">
+          {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_HINT' | translate }}
+        </div>
       </div>
-    </div>
 
-    <!-- Actions -->
-    <div class="actions">
-      <button type="button" class="pay-btn" (click)="confirmPayment()" [disabled]="loading">
-        <ng-container *ngIf="!loading; else payBusy">
-          <span>{{ 'PAYMENT_CONFIRMATION_PAGE.CONFIRM_PAYMENT' | translate }}</span>
-          <ion-icon name="arrow-forward-outline"></ion-icon>
-        </ng-container>
-      </button>
+      <!-- Phone -->
+      <div class="section">
+        <div class="section-title">
+          {{ 'PAYMENT_CONFIRMATION_PAGE.PHONE_NUMBER' | translate }}
+        </div>
 
-      <button type="button" class="verify-btn" *ngIf="transactionId" (click)="verifyPayment()" [disabled]="loading">
-        <span *ngIf="!loading">{{ 'PAYMENT_CONFIRMATION_PAGE.VERIFY_PAYMENT' | translate }}</span>
-        <ion-skeleton-text *ngIf="loading" animated class="btn-skeleton"></ion-skeleton-text>
-      </button>
+        <div class="phone-wrap">
+          <div class="phone-left">
+            <span class="flag">🇨🇲</span>
+            <span class="code">+237</span>
+          </div>
 
-      <div class="secure">
-        <ion-icon name="lock-closed-outline"></ion-icon>
-        <span>{{ 'PAYMENT_CONFIRMATION_PAGE.SECURE_PAYMENT' | translate }}</span>
+          <ion-input
+            class="phone-input"
+            type="tel"
+            inputmode="numeric"
+            [placeholder]="'PAYMENT_CONFIRMATION_PAGE.PHONE_PLACEHOLDER' | translate"
+            [(ngModel)]="userPhone"
+            [readonly]="loading || directChargePending"
+          >
+          </ion-input>
+
+          <ion-icon name="phone-portrait-outline" class="phone-ico"></ion-icon>
+        </div>
       </div>
-    </div>
 
+      <!-- Actions -->
+      <div class="actions">
+        <button
+          type="button"
+          class="pay-btn"
+          (click)="confirmPayment()"
+          [disabled]="loading || directChargePending"
+        >
+          <ng-container *ngIf="!loading; else payBusy">
+            <span
+              >{{ 'PAYMENT_CONFIRMATION_PAGE.CONFIRM_PAYMENT' | translate
+              }}</span
+            >
+            <ion-icon name="arrow-forward-outline"></ion-icon>
+          </ng-container>
+        </button>
+
+        <button
+          type="button"
+          class="verify-btn"
+          *ngIf="transactionId"
+          (click)="verifyPayment()"
+          [disabled]="loading"
+        >
+          <span *ngIf="!loading"
+            >{{ 'PAYMENT_CONFIRMATION_PAGE.VERIFY_PAYMENT' | translate }}</span
+          >
+          <ion-skeleton-text
+            *ngIf="loading"
+            animated
+            class="btn-skeleton"
+          ></ion-skeleton-text>
+        </button>
+
+        <div class="secure">
+          <ion-icon name="lock-closed-outline"></ion-icon>
+          <span
+            >{{ 'PAYMENT_CONFIRMATION_PAGE.SECURE_PAYMENT' | translate }}</span
+          >
+        </div>
+      </div>
     </div>
   </ng-container>
 
@@ -122,3 +186,108 @@
     </div>
   </ng-template>
 </ion-content>
+
+<div
+  class="payment-overlay"
+  *ngIf="paymentOverlayVisible"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="payment-status-title"
+  aria-describedby="payment-status-message"
+>
+  <section
+    class="payment-dialog"
+    [class.is-success]="paymentOverlayState === 'SUCCESS'"
+    [class.is-failed]="paymentOverlayState === 'FAILED' || paymentOverlayState === 'CANCELLED'"
+    aria-live="assertive"
+  >
+    <div
+      class="payment-visual"
+      [class.is-success]="paymentOverlayState === 'SUCCESS'"
+      [class.is-failed]="paymentOverlayState === 'FAILED' || paymentOverlayState === 'CANCELLED'"
+    >
+      <ion-spinner
+        *ngIf="paymentOverlayState === 'STARTING' || paymentOverlayState === 'WAITING'"
+        name="crescent"
+      ></ion-spinner>
+      <ion-icon
+        *ngIf="paymentOverlayState === 'SUCCESS'"
+        name="checkmark-outline"
+      ></ion-icon>
+      <ion-icon
+        *ngIf="paymentOverlayState === 'FAILED' || paymentOverlayState === 'CANCELLED'"
+        name="close-outline"
+      ></ion-icon>
+    </div>
+
+    <ng-container [ngSwitch]="paymentOverlayState">
+      <div *ngSwitchCase="'STARTING'" class="payment-copy">
+        <h2 id="payment-status-title">
+          {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_STARTING_TITLE' | translate }}
+        </h2>
+        <p id="payment-status-message">
+          {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_STARTING_MESSAGE' | translate }}
+        </p>
+      </div>
+
+      <div *ngSwitchCase="'WAITING'" class="payment-copy">
+        <h2 id="payment-status-title">
+          {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_WAITING_TITLE' | translate }}
+        </h2>
+        <p id="payment-status-message">
+          {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_WAITING_MESSAGE' | translate:{ operator: paymentMethod } }}
+        </p>
+      </div>
+
+      <div *ngSwitchCase="'SUCCESS'" class="payment-copy">
+        <h2 id="payment-status-title">
+          {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_SUCCESS_TITLE' | translate }}
+        </h2>
+        <p id="payment-status-message">
+          {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_SUCCESS_MESSAGE' | translate }}
+        </p>
+      </div>
+
+      <div *ngSwitchCase="'FAILED'" class="payment-copy">
+        <h2 id="payment-status-title">
+          {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_FAILED_TITLE' | translate }}
+        </h2>
+        <p id="payment-status-message">
+          {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_FAILED_MESSAGE' | translate }}
+        </p>
+      </div>
+
+      <div *ngSwitchCase="'CANCELLED'" class="payment-copy">
+        <h2 id="payment-status-title">
+          {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_CANCELLED_TITLE' | translate }}
+        </h2>
+        <p id="payment-status-message">
+          {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_CANCELLED_MESSAGE' | translate }}
+        </p>
+      </div>
+    </ng-container>
+
+    <div class="payment-summary" *ngIf="paymentOverlayState !== 'STARTING'">
+      <span>{{ paymentMethod }}</span>
+      <strong>{{ paymentWithTaxes || amount }} FCFA</strong>
+    </div>
+
+    <button
+      type="button"
+      class="payment-cancel-btn"
+      *ngIf="paymentOverlayState === 'WAITING'"
+      (click)="cancelPaymentWaiting()"
+    >
+      {{ 'PAYMENT_CONFIRMATION_PAGE.CANCEL_WAITING' | translate }}
+    </button>
+
+    <button
+      type="button"
+      class="payment-close-btn"
+      *ngIf="paymentOverlayState === 'FAILED' || paymentOverlayState === 'CANCELLED'"
+      (click)="closePaymentOverlay()"
+    >
+      {{ 'PAYMENT_CONFIRMATION_PAGE.CLOSE' | translate }}
+    </button>
+  </section>
+</div>

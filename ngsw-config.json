@@ -10,10 +10,8 @@
         "files": [
           "/favicon.ico",
           "/index.html",
-          "/runtime*.js",
-          "/polyfills*.js",
-          "/main*.js",
-          "/styles*.css",
+          "/*.js",
+          "/*.css",
           "/manifest.webmanifest"
         ]
       }

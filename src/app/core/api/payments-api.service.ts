@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
 export type PaymentProvider = 'MOCK' | 'DIGIKUNTZ';
+export type PaymentMethodCode = 'ORANGE' | 'MTN';
 
 export interface CreateIntentPayload {
   raffleId: string;
@@ -12,6 +13,7 @@ export interface CreateIntentPayload {
   userPhone: string;
   userCountry: string;
   senderName: string;
+  paymentMethodCode: PaymentMethodCode;
   idempotencyKey?: string;
 }
 
@@ -25,6 +27,9 @@ export interface CreateIntentResponse {
   ticketUnitPrice: number;
   paymentLink?: string;
   paymentWithTaxes?: number;
+  paymentMethodCode?: PaymentMethodCode;
+  paymentFlow?: 'DIRECT_CHARGE' | 'HOSTED_CHECKOUT';
+  providerStatus?: string;
 }
 
 export interface VerifyResponse {
