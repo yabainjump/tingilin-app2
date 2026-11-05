@@ -46,15 +46,10 @@
 
           <ion-tab-button class="notif" href="/tabs/notifications">
             <ion-icon name="notifications-outline"></ion-icon>
-            <ion-label>{{ 'HOME_PAGE.NOTIFS' | translate }}</ion-label>
-            <span class="notif-dot"></span>
-
             <ion-badge
               *ngIf="(notifState.unreadCount$ | async) as n"
-              [hidden]="n===0"
-            >
-              {{ n }}
-            </ion-badge>
+              [hidden]="n === 0"
+            >{{ n }}</ion-badge>
           </ion-tab-button>
         </div>
       </div>

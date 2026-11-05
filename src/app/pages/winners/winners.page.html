@@ -24,28 +24,23 @@
           <button
             class="row-card"
             type="button"
-            *ngFor="let draw of allDraws; trackBy: trackByRecent"
+            *ngFor="let draw of allDraws; trackBy: trackByDraw"
             (click)="selectDraw(draw)"
           >
             <div
               class="row-img"
-              [style.background-image]="'url(' + (draw.prizeImageUrl || 'assets/img/placeholder.png') + ')'"
+              [style.background-image]="'url(' + (draw.imageUrl || 'assets/img/placeholder.png') + ')'"
               role="img"
-              [attr.aria-label]="draw.prizeTitle"
+              [attr.aria-label]="draw.title"
             ></div>
             <div class="row-body">
-              <div class="row-title">{{ draw.prizeTitle }}</div>
-              <div class="row-sub">
-                <span class="row-label">{{ 'WINNERS_PAGE.LIST_WINNER' | translate }}</span>
-                {{ draw.winnerName }}
-              </div>
-              <div class="row-sub">
-                <span class="row-label">{{ 'WINNERS_PAGE.LIST_TICKET' | translate }}</span>
-                #{{ draw.ticketCode }}
+              <div class="row-title">{{ draw.title }}</div>
+              <div class="row-sub" *ngIf="draw.ticketPrice">
+                {{ draw.ticketPrice }} {{ draw.currency || 'XAF' }}
               </div>
             </div>
-            <div class="row-badge" *ngIf="draw.badgeTone"
-              [style.background]="draw.badgeTone"
+            <div class="row-badge" *ngIf="draw.badgeType"
+              [ngClass]="safeBadgeClass(draw.badgeType)"
             ></div>
             <ion-icon name="chevron-forward-outline" class="row-chevron"></ion-icon>
           </button>
@@ -91,7 +86,7 @@
           </div>
 
           <!-- Tirage verifiable (commit-reveal) -->
-          <div class="fairness" *ngIf="(selectedRaffle ?? featured)?.raffleId">
+          <div class="fairness" *ngIf="selectedRaffle?.id">
             <button class="proof-btn" type="button" (click)="toggleProof()" [disabled]="proofLoading">
               <ion-icon [name]="proofOpen ? 'shield-checkmark' : 'shield-checkmark-outline'"></ion-icon>
               <span>{{ (proofOpen ? 'WINNERS_PAGE.PROOF_HIDE' : 'WINNERS_PAGE.PROOF_SHOW') | translate }}</span>

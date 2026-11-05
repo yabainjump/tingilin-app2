@@ -128,7 +128,7 @@ export class ProfilePage {
     await t.present();
   }
   goHistory() {
-    this.router.navigate(['/tabs/participations']);
+    this.router.navigate(['/tabs/all-raffles']);
   }
 
   async openHistoryItem(h: ProfileHistoryItem) {

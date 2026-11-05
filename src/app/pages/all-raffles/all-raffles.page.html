@@ -10,6 +10,28 @@
 <ion-content [fullscreen]="true" class="all-raffles">
   <div class="screen">
 
+    <!-- Filtre statut -->
+    <div class="status-filter">
+      <button
+        type="button"
+        class="status-btn"
+        [class.active]="statusFilter === 'all'"
+        (click)="setStatusFilter('all')"
+      >{{ 'ALL_RAFFLES.FILTER_ALL' | translate }}</button>
+      <button
+        type="button"
+        class="status-btn"
+        [class.active]="statusFilter === 'active'"
+        (click)="setStatusFilter('active')"
+      >{{ 'ALL_RAFFLES.FILTER_ACTIVE' | translate }}</button>
+      <button
+        type="button"
+        class="status-btn"
+        [class.active]="statusFilter === 'ended'"
+        (click)="setStatusFilter('ended')"
+      >{{ 'ALL_RAFFLES.FILTER_ENDED' | translate }}</button>
+    </div>
+
     <!-- Category chips -->
     <div class="chips hide-scroll">
       <button
@@ -45,6 +67,7 @@
     <ng-container *ngIf="!loading">
       <article
         class="row-card"
+        [class.ended]="isEnded(d)"
         *ngFor="let d of raffles; trackBy: trackById"
         (click)="openRaffle(d)"
       >
@@ -56,18 +79,21 @@
         <div class="row-body">
           <div class="row-title">{{d.title}}</div>
           <div class="row-sub" *ngIf="d.endsAt || d.endAt">
-            {{countdownText(d)}}
+            <span *ngIf="!isEnded(d)">{{ countdownText(d) }}</span>
+            <span *ngIf="isEnded(d)" class="ended-label">{{ 'HOME_PAGE.ENDED' | translate }}</span>
           </div>
 
           <div class="row-actions">
             <span class="row-price">{{d.ticketPrice ?? 0}} {{d.currency || 'XAF'}}</span>
             <button
+              *ngIf="!isEnded(d)"
               type="button"
               class="pill"
               (click)="openRaffle(d); $event.stopPropagation()"
             >
               {{'ALL_RAFFLES.PARTICIPATE' | translate}}
             </button>
+            <span *ngIf="isEnded(d)" class="pill ended-pill">{{ 'HOME_PAGE.ENDED' | translate }}</span>
           </div>
         </div>
       </article>

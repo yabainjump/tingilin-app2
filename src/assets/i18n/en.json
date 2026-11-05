@@ -471,7 +471,12 @@
     "SHARE_TEXT": "Follow Tingilin live draws.",
     "TOAST_LINK_COPIED": "Link copied ✅",
     "TOAST_RESULTS_SOON": "Full results will be available soon.",
-    "TOAST_WINNER": "Winner: {{winner}} — #{{ticket}}"
+    "TOAST_WINNER": "Winner: {{winner}} — #{{ticket}}",
+    "LIST_TITLE": "Live Draws",
+    "LIST_EMPTY": "No draws available at the moment.",
+    "LIST_WINNER": "Winner",
+    "LIST_TICKET": "Ticket",
+    "BACK_TO_LIST": "Back"
   },
   "EDIT_PROFILE_PAGE": {
     "TITLE": "Edit profile",

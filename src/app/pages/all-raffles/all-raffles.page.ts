@@ -6,6 +6,7 @@ import { HomeApiService } from 'src/app/services/home/home-api.service';
 import { DrawCard } from 'src/app/services/home/home.models';
 
 type HomeCategory = { id: string; label: string };
+type StatusFilter = 'all' | 'active' | 'ended';
 
 @Component({
   selector: 'app-all-raffles',
@@ -17,6 +18,9 @@ export class AllRafflesPage implements OnDestroy {
   loading = true;
   categories: HomeCategory[] = [{ id: 'all', label: 'Tout' }];
   selectedCategoryId = 'all';
+  statusFilter: StatusFilter = 'all';
+
+  private allRaffles: DrawCard[] = [];
   raffles: DrawCard[] = [];
   nowMs = Date.now();
 
@@ -53,6 +57,12 @@ export class AllRafflesPage implements OnDestroy {
     this.loadRaffles(id);
   }
 
+  setStatusFilter(f: StatusFilter): void {
+    if (f === this.statusFilter) return;
+    this.statusFilter = f;
+    this.applyFilter();
+  }
+
   loadRaffles(categoryId: string): void {
     this.loading = true;
     forkJoin({
@@ -73,13 +83,28 @@ export class AllRafflesPage implements OnDestroy {
           const bMs = b.endsAt ? new Date(b.endsAt).getTime() : Infinity;
           return aMs - bMs;
         });
-        this.raffles = merged;
+        this.allRaffles = merged;
+        this.applyFilter();
         this.loading = false;
       },
       error: () => {
+        this.allRaffles = [];
         this.raffles = [];
         this.loading = false;
       },
+    });
+  }
+
+  private applyFilter(): void {
+    if (this.statusFilter === 'all') {
+      this.raffles = this.allRaffles;
+      return;
+    }
+    const now = this.nowMs;
+    this.raffles = this.allRaffles.filter((d) => {
+      const endMs = d.endsAt ? new Date(d.endsAt).getTime() : Infinity;
+      const isEnded = endMs <= now;
+      return this.statusFilter === 'ended' ? isEnded : !isEnded;
     });
   }
 
@@ -101,6 +126,12 @@ export class AllRafflesPage implements OnDestroy {
     return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
   }
 
+  isEnded(d: DrawCard): boolean {
+    const raw = (d as any).endsAt ?? (d as any).endAt;
+    if (!raw) return false;
+    return new Date(raw).getTime() <= this.nowMs;
+  }
+
   categoryDisplayLabel(c: HomeCategory): string {
     if (String(c.id).toLowerCase() !== 'all') return c.label;
     return this.translate.instant('HOME_PAGE.CATEGORY_ALL');
@@ -112,6 +143,9 @@ export class AllRafflesPage implements OnDestroy {
 
   private startClock(): void {
     if (this.clockSub) return;
-    this.clockSub = interval(1000).subscribe(() => { this.nowMs = Date.now(); });
+    this.clockSub = interval(1000).subscribe(() => {
+      this.nowMs = Date.now();
+      this.applyFilter();
+    });
   }
 }

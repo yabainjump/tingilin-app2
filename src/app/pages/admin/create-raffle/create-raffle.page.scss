@@ -248,6 +248,8 @@
   --background: var(--app-bg);
   --border-color: var(--app-border);
   backdrop-filter: none;
+  position: relative;
+  z-index: 30;
 }
 
 .footer-inner {

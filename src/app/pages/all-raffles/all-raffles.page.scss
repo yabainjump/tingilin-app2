@@ -18,11 +18,36 @@
     &::-webkit-scrollbar { display: none; }
   }
 
+  /* STATUS FILTER */
+  .status-filter {
+    display: flex;
+    gap: 8px;
+    padding: 4px 0 12px;
+  }
+
+  .status-btn {
+    flex: 1;
+    height: 38px;
+    border-radius: 12px;
+    border: 1px solid var(--app-border);
+    background: var(--app-surface-2);
+    color: var(--app-muted);
+    font-weight: 800;
+    font-size: 13px;
+    transition: 180ms ease;
+  }
+
+  .status-btn.active {
+    background: var(--app-primary);
+    border-color: var(--app-primary);
+    color: var(--app-on-primary);
+  }
+
   /* CHIPS */
   .chips {
     display: flex;
     gap: 10px;
-    padding: 6px 2px 14px;
+    padding: 0 2px 14px;
     overflow-x: auto;
   }
 
@@ -54,6 +79,11 @@
     border: 1px solid var(--app-border);
     margin-bottom: 12px;
     cursor: pointer;
+    transition: opacity 180ms ease;
+  }
+
+  .row-card.ended {
+    opacity: 0.55;
   }
 
   .row-img {
@@ -86,6 +116,10 @@
     font-weight: 700;
   }
 
+  .ended-label {
+    color: var(--app-danger);
+  }
+
   .row-actions {
     margin-top: 10px;
     display: flex;
@@ -108,6 +142,16 @@
     background: var(--app-surface-2);
     color: var(--app-ink);
     font-weight: 900;
+  }
+
+  .ended-pill {
+    background: transparent;
+    border-color: var(--app-danger);
+    color: var(--app-danger);
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* EMPTY STATE */

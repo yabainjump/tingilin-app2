@@ -4,6 +4,7 @@ import { AuthStateService } from 'src/app/services/auth/auth-state.service';
 import { NavController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { NotificationsStateService } from 'src/app/services/notifications/notifications-state.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tabs',
@@ -20,6 +21,7 @@ export class TabsPage {
     private nav: NavController,
     public notifState: NotificationsStateService,
     private auth: AuthService,
+    private router: Router,
   ) {
     this.isAdmin$ = this.authState.isAdmin$;
   }
@@ -30,6 +32,10 @@ export class TabsPage {
       error: () => (this.isAdmin = false),
     });
     this.notifState.refresh();
+  }
+
+  get showFab(): boolean {
+    return this.isAdmin && !this.router.url.includes('create-raffle');
   }
 
   goCreateRaffle(): void {

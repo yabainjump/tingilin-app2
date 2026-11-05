@@ -249,16 +249,29 @@
 
 .share-btn {
   width: 100%;
-  margin-top: 14px;
-  min-height: 52px;
+  margin-top: 16px;
+  min-height: 56px;
   border-radius: 18px;
-  background: var(--app-surface);
-  color: var(--app-ink);
+  background: var(--app-primary);
+  color: var(--app-on-primary);
   font-weight: 900;
+  font-size: 16px;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
+  box-shadow: var(--app-shadow-brand);
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.share-btn:active {
+  opacity: 0.88;
+  transform: scale(0.98);
+}
+
+.share-btn ion-icon {
+  font-size: 20px;
 }
 
 .tickets-panel {

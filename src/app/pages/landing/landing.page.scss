@@ -79,6 +79,29 @@
   opacity: 0.7;
 }
 
+.header-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: var(--ion-color-primary);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(var(--ion-color-primary-rgb), 0.35);
+  transition: opacity 0.15s, transform 0.15s;
+}
+.header-cta-btn ion-icon {
+  font-size: 14px;
+}
+.header-cta-btn:active {
+  opacity: 0.85;
+  transform: scale(0.97);
+}
+
 /* HERO */
 .hero {
   position: relative;

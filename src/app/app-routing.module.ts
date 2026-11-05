@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { AdminGuard } from './guard/admin-guard';
 import { AuthGuard } from './guard/auth-guard';
+import { GuestGuard } from './guard/guest-guard';
 import { RegionGuard } from './guard/region-guard';
 import { NoPreloading, RouterModule, Routes } from '@angular/router';
 
@@ -9,6 +10,7 @@ const routes: Routes = [
 
   {
     path: 'landing',
+    canActivate: [GuestGuard],
     loadChildren: () =>
       import('./pages/landing/landing.module').then((m) => m.LandingPageModule),
   },

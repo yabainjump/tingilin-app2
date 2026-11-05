@@ -10,9 +10,10 @@
 
       <div class="header-actions">
         <app-language-switch [compact]="true"></app-language-switch>
-        <a class="header-link" routerLink="/auth/login"
-          >{{ 'LANDING.CONNECTION' | translate }}</a
-        >
+        <a class="header-cta-btn" routerLink="/auth/login">
+          {{ 'LANDING.CONNECTION' | translate }}
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </a>
       </div>
     </div>
   </ion-toolbar>

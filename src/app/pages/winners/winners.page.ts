@@ -13,6 +13,8 @@ import {
   WinnersLiveSocketService,
 } from 'src/app/services/winners/winners-live-socket.service';
 import { TranslateService } from '@ngx-translate/core';
+import { HomeApiService } from 'src/app/services/home/home-api.service';
+import { DrawCard } from 'src/app/services/home/home.models';
 
 @Component({
   selector: 'app-winners',
@@ -23,21 +25,21 @@ import { TranslateService } from '@ngx-translate/core';
 export class WinnersPage implements OnInit, OnDestroy {
   loading = true;
 
-  featured: WinnerDto | null = null;
+  // Tirages actifs (non terminés)
+  allDraws: DrawCard[] = [];
+  selectedRaffle: DrawCard | null = null;
+
+  // Données pour la vue détail (scanner / proof)
   recent: WinnerDto[] = [];
-  selectedRaffle: WinnerDto | null = null;
-  allDraws: WinnerDto[] = [];
   scanTickets: string[] = [];
   activeScanIndex = 0;
   analysisProgress = 0;
   analysisLabel = '';
   isScanning = true;
   liveViewers = 0;
-  // Tirage verifiable (commit-reveal) cote backend. Plus de faux pourcentage.
   provablyFair = true;
   hasRealtime = false;
 
-  // Preuve verifiable du tirage (panneau depliable).
   proof: FairnessDto | null = null;
   proofOpen = false;
   proofLoading = false;
@@ -48,6 +50,7 @@ export class WinnersPage implements OnInit, OnDestroy {
 
   constructor(
     private api: WinnersApiService,
+    private homeApi: HomeApiService,
     private toast: ToastController,
     private nav: NavController,
     private shareService: ShareService,
@@ -80,8 +83,8 @@ export class WinnersPage implements OnInit, OnDestroy {
 
   load() {
     this.loading = true;
-    this.api
-      .list(30)
+    this.homeApi
+      .getLiveRows('all')
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -91,12 +94,15 @@ export class WinnersPage implements OnInit, OnDestroy {
         }),
       )
       .subscribe({
-        next: (res: any) => {
-          const list = Array.isArray(res) ? res : (res?.data ?? []);
-          this.allDraws = list;
-          this.featured = list.length ? list[0] : null;
-          this.recent = list.slice(1, 9);
-          this.scanTickets = this.buildScanTickets(this.featured, this.recent);
+        next: (cards: DrawCard[]) => {
+          // Garder uniquement les raffles non terminées
+          const now = Date.now();
+          const active = cards.filter((c) => {
+            const endMs = c.endsAt ? new Date(c.endsAt).getTime() : Infinity;
+            return endMs > now;
+          });
+          this.allDraws = active;
+          this.scanTickets = this.buildScanTicketsFromCards(active.slice(0, 9));
           this.activeScanIndex = Math.min(2, this.scanTickets.length - 1);
         },
         error: async () => {
@@ -105,32 +111,22 @@ export class WinnersPage implements OnInit, OnDestroy {
             duration: 1400,
           });
           await t.present();
-          this.featured = null;
-          this.recent = [];
-          this.scanTickets = this.buildScanTickets(null, []);
+          this.allDraws = [];
+          this.scanTickets = ['X922', 'B738', 'A492', 'C102', 'E551'];
         },
       });
   }
 
-  private buildScanTickets(
-    featured: WinnerDto | null,
-    recent: WinnerDto[],
-  ): string[] {
-    const fromApi = [
-      featured?.ticketCode,
-      ...recent.map((x) => x.ticketCode),
-    ]
-      .map((x) => String(x ?? '').trim().toUpperCase())
+  private buildScanTicketsFromCards(cards: DrawCard[]): string[] {
+    const fromCards = cards
+      .map((c) => String(c.id ?? '').slice(-5).toUpperCase())
       .filter(Boolean);
-
     const fallback = ['X922', 'B738', 'A492', 'C102', 'E551'];
-    const merged = [...fromApi, ...fallback];
-    return merged.slice(0, 5);
+    return [...fromCards, ...fallback].slice(0, 5);
   }
 
   private startScanAnimation() {
     this.stopScanAnimation();
-
     this.isScanning = true;
     this.analysisLabel = this.translate.instant('WINNERS_PAGE.SCANNING');
     this.analysisProgress = 18;
@@ -175,40 +171,47 @@ export class WinnersPage implements OnInit, OnDestroy {
   get participantsSeen(): number {
     if (this.liveViewers > 0) return this.liveViewers;
     const base = 1200;
-    const delta = (this.recent?.length ?? 0) * 17;
+    const delta = (this.allDraws?.length ?? 0) * 17;
     return base + delta;
   }
 
   get verifiableLabel(): string {
     return this.translate.instant(
-      this.provablyFair
-        ? 'WINNERS_PAGE.VERIFIABLE_YES'
-        : 'WINNERS_PAGE.VERIFIABLE_NO',
+      this.provablyFair ? 'WINNERS_PAGE.VERIFIABLE_YES' : 'WINNERS_PAGE.VERIFIABLE_NO',
     );
   }
 
   get featureTitle(): string {
-    return (this.selectedRaffle ?? this.featured)?.prizeTitle || this.translate.instant('WINNERS_PAGE.PREMIUM_PRODUCT');
+    return this.selectedRaffle?.title
+      || this.translate.instant('WINNERS_PAGE.PREMIUM_PRODUCT');
   }
 
   get featureImage(): string {
-    return (this.selectedRaffle ?? this.featured)?.prizeImageUrl || 'assets/img/placeholder.png';
+    return this.selectedRaffle?.imageUrl || 'assets/img/placeholder.png';
   }
 
   get selectedAvatar(): string {
-    return this.avatarSrc((this.selectedRaffle ?? this.featured)?.avatar);
+    return 'assets/img/profile.svg';
   }
 
   get selectedWinnerName(): string {
-    return (this.selectedRaffle ?? this.featured)?.winnerName || this.translate.instant('WINNERS_PAGE.CANDIDATE');
+    return this.translate.instant('WINNERS_PAGE.CANDIDATE');
   }
 
-  selectDraw(w: WinnerDto): void {
+  /** Classe CSS sûre pour le badge (allowlist, jamais de valeur serveur en style). */
+  safeBadgeClass(tone?: string | null): string {
+    const allowed = ['pink', 'gold', 'violet', 'danger', 'warn', 'hot'];
+    return allowed.includes(String(tone ?? '')) ? `badge-${tone}` : 'badge-default';
+  }
+
+  selectDraw(w: DrawCard): void {
     this.selectedRaffle = w;
-    this.featured = w;
-    this.recent = this.allDraws.filter(d => d !== w).slice(0, 8);
-    this.scanTickets = this.buildScanTickets(w, this.recent);
+    this.scanTickets = this.buildScanTicketsFromCards(
+      this.allDraws.filter((d) => d !== w).slice(0, 4),
+    );
     this.activeScanIndex = Math.min(2, this.scanTickets.length - 1);
+    this.proof = null;
+    this.proofOpen = false;
   }
 
   backToList(): void {
@@ -217,31 +220,12 @@ export class WinnersPage implements OnInit, OnDestroy {
     this.proofOpen = false;
   }
 
+  trackByDraw(index: number, item: DrawCard): string {
+    return item.id || String(index);
+  }
+
   trackByRecent(index: number, item: WinnerDto) {
     return item.raffleId || item.ticketCode || index;
-  }
-
-  avatarUrl(a?: string): string {
-    if (!a) return 'assets/img/placeholder.png';
-    if (a === 'defpic.jpg') return 'assets/img/defpic.jpg';
-    if (a.startsWith('http') || a.startsWith('assets/')) return a;
-    return a;
-  }
-
-  timeAgo(iso: string): string {
-    const d = new Date(iso).getTime();
-    const diff = Math.max(0, Date.now() - d);
-
-    const min = Math.floor(diff / 60000);
-    if (min < 1) return 'Just now';
-    if (min < 60) return `Drawn ${min} mins ago`;
-
-    const h = Math.floor(min / 60);
-    if (h < 24) return `${h}h ago`;
-
-    const days = Math.floor(h / 24);
-    if (days === 1) return 'Yesterday';
-    return `${days}d ago`;
   }
 
   back() {
@@ -250,13 +234,11 @@ export class WinnersPage implements OnInit, OnDestroy {
 
   async shareLive() {
     const url = this.shareService.liveShareUrl();
-
     const mode = await this.shareService.share({
       title: this.translate.instant('WINNERS_PAGE.SHARE_TITLE'),
       text: this.translate.instant('WINNERS_PAGE.SHARE_TEXT'),
       url,
     });
-
     if (mode === 'copied') {
       const t = await this.toast.create({
         message: this.translate.instant('WINNERS_PAGE.TOAST_LINK_COPIED'),
@@ -280,12 +262,9 @@ export class WinnersPage implements OnInit, OnDestroy {
       return;
     }
 
-    const raffleId = (this.selectedRaffle ?? this.featured)?.raffleId;
-    if (!raffleId) {
-      return;
-    }
+    const raffleId = this.selectedRaffle?.id;
+    if (!raffleId) return;
 
-    // Deja charge pour ce tirage: simple re-ouverture.
     if (this.proof && this.proof.raffleId === raffleId) {
       this.proofOpen = true;
       return;
@@ -312,9 +291,7 @@ export class WinnersPage implements OnInit, OnDestroy {
 
   async copyProofValue(value?: string | null) {
     const v = String(value ?? '').trim();
-    if (!v || !navigator?.clipboard?.writeText) {
-      return;
-    }
+    if (!v || !navigator?.clipboard?.writeText) return;
     try {
       await navigator.clipboard.writeText(v);
       const t = await this.toast.create({
@@ -329,10 +306,28 @@ export class WinnersPage implements OnInit, OnDestroy {
 
   short(value?: string | null, head = 10, tail = 6): string {
     const v = String(value ?? '').trim();
-    if (v.length <= head + tail + 1) {
-      return v;
-    }
+    if (v.length <= head + tail + 1) return v;
     return `${v.slice(0, head)}…${v.slice(-tail)}`;
+  }
+
+  async openWinner(w: WinnerDto) {
+    const t = await this.toast.create({
+      message: this.translate.instant('WINNERS_PAGE.TOAST_WINNER', {
+        winner: w.winnerName,
+        ticket: w.ticketCode,
+      }),
+      duration: 1400,
+    });
+    await t.present();
+  }
+
+  avatarSrc(a?: string | null): string {
+    const s = String(a ?? '').trim();
+    if (!s || s === 'null' || s === 'undefined') return 'assets/img/profile.svg';
+    if (s.startsWith('http://') || s.startsWith('https://')) return s;
+    if (s.startsWith('data:') || s.startsWith('assets/')) return s;
+    if (s.startsWith('../assets/')) return s.replace('../', '');
+    return `assets/img/${s}`;
   }
 
   private connectRealtime() {
@@ -345,6 +340,9 @@ export class WinnersPage implements OnInit, OnDestroy {
   }
 
   private applyLiveState(state: LiveDrawState) {
+    // Ne pas écraser le contexte si l'utilisateur est en vue détail.
+    if (this.selectedRaffle) return;
+
     this.hasRealtime = true;
     this.stopScanAnimation();
 
@@ -380,48 +378,7 @@ export class WinnersPage implements OnInit, OnDestroy {
 
     const recent = Array.isArray(state?.recent) ? state.recent : [];
     if (recent.length) {
-      this.featured = recent[0] || null;
       this.recent = recent.slice(1, 9);
     }
-  }
-
-  async openWinner(w: WinnerDto) {
-    const t = await this.toast.create({
-      message: this.translate.instant('WINNERS_PAGE.TOAST_WINNER', {
-        winner: w.winnerName,
-        ticket: w.ticketCode,
-      }),
-      duration: 1400,
-    });
-    await t.present();
-  }
-
-  avatarSrc(a?: string | null): string {
-    const s = String(a ?? '').trim();
-
-    if (!s || s === 'null' || s === 'undefined') {
-      return '../../../assets/img/profile.svg';
-    }
-
-    if (s.startsWith('http://') || s.startsWith('https://')) {
-      return s;
-    }
-
-    if (s.startsWith('data:')) {
-      return s;
-    }
-
-    if (s.startsWith('assets/')) {
-      return s;
-    }
-
-    if (s.startsWith('../assets/')) {
-      return s.replace('../', '');
-    }
-    if (s.startsWith('../asset/')) {
-      return s.replace('../asset/', 'assets/');
-    }
-
-    return `assets/img/${s}`;
   }
 }

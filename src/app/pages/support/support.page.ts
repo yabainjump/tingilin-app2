@@ -148,49 +148,30 @@ export class SupportPage {
     return this.expandedFaqId === faqId;
   }
 
-  async contactSupport(categoryId?: SupportCategoryId): Promise<void> {
-    if (!this.supportEmail) {
-      const toast = await this.toastController.create({
-        message: this.translate.instant(
-          'SUPPORT_PAGE.TOAST_MISSING_SUPPORT_EMAIL',
-        ),
-        duration: 1800,
-        color: 'warning',
-      });
-      await toast.present();
-      return;
-    }
+  readonly whatsappNumber = '237694949617';
 
+  async contactSupport(categoryId?: SupportCategoryId): Promise<void> {
     const category =
       categoryId && categoryId !== 'all'
         ? this.categories.find((item) => item.id === categoryId)
         : this.categories.find((item) => item.id === this.selectedCategoryId);
 
-    const subject =
+    const categoryLabel =
       category && category.id !== 'all'
-        ? this.translate.instant('SUPPORT_PAGE.MAIL_SUBJECT_WITH_CATEGORY', {
-            category: this.categoryLabel(category.id),
-          })
-        : this.translate.instant('SUPPORT_PAGE.MAIL_SUBJECT');
+        ? this.categoryLabel(category.id)
+        : this.translate.instant('SUPPORT_PAGE.MAIL_BODY_GENERAL_SUPPORT');
 
-    const body = [
+    const message = [
       this.translate.instant('SUPPORT_PAGE.MAIL_BODY_HELLO'),
       '',
       this.translate.instant('SUPPORT_PAGE.MAIL_BODY_NEED_HELP'),
-      category && category.id !== 'all'
-        ? this.categoryLabel(category.id)
-        : this.translate.instant('SUPPORT_PAGE.MAIL_BODY_GENERAL_SUPPORT'),
+      categoryLabel,
       '',
       this.translate.instant('SUPPORT_PAGE.MAIL_BODY_DESCRIBE'),
-      '',
-      '',
-      '--',
-      this.translate.instant('SUPPORT_PAGE.MAIL_BODY_SENT_FROM_APP'),
     ].join('\n');
 
-    window.location.href = `mailto:${encodeURIComponent(
-      this.supportEmail,
-    )}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const url = `https://wa.me/${this.whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
 
   resetFilters(): void {

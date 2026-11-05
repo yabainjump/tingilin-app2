@@ -15,16 +15,13 @@
 
 <ion-content [fullscreen]="true" class="bg">
   <div class="screen" *ngIf="!loading; else skel">
+
     <section class="hero-shell">
       <div class="hero-copy">
         <div class="eyebrow">{{ 'TICKET_DETAILS_PAGE.TITLE' | translate }}</div>
         <h1>{{ raffle?.title || '—' }}</h1>
         <p>{{ 'TICKET_DETAILS_PAGE.SUBTITLE' | translate }}</p>
       </div>
-
-      <button class="top-share-btn" type="button" (click)="share()">
-        <ion-icon name="share-social-outline"></ion-icon>
-      </button>
     </section>
 
     <section class="hero-card">
@@ -45,21 +42,10 @@
           <div class="h2">{{ raffle?.subtitle || raffle?.description || '' }}</div>
         </div>
       </div>
-
-      <div class="info-grid">
-        <div class="cell">
-          <div class="lbl">{{ 'TICKET_DETAILS_PAGE.RAFFLE_ID' | translate }}</div>
-          <div class="val mono">{{ raffleShortId }}</div>
-        </div>
-        <div class="cell">
-          <div class="lbl">{{ 'TICKET_DETAILS_PAGE.DRAW_DATE' | translate }}</div>
-          <div class="val">{{ drawDateLabel }}</div>
-        </div>
-      </div>
     </section>
 
-    <section class="stats">
-      <div class="stat-card">
+    <!-- Stats -->
+    <section class="stats">      <div class="stat-card">
         <div class="lbl">{{ 'TICKET_DETAILS_PAGE.TOTAL_SPENT' | translate }}</div>
         <div class="big primary">{{ totalSpent }} {{ raffle?.currency || 'XAF' }}</div>
       </div>
@@ -69,11 +55,13 @@
       </div>
     </section>
 
+    <!-- CTA principal -->
     <button class="share-btn" type="button" (click)="share()">
-      <ion-icon name="share-outline"></ion-icon>
+      <ion-icon name="share-social-outline"></ion-icon>
       {{ 'TICKET_DETAILS_PAGE.SHARE_ACTION' | translate }}
     </button>
 
+    <!-- Panel tickets -->
     <section class="tickets-panel">
       <div class="tickets-head">
         <div>
@@ -130,6 +118,7 @@
         </button>
       </div>
     </section>
+
   </div>
 
   <ng-template #skel>
