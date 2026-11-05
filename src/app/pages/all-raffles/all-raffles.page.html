@@ -1,0 +1,78 @@
+<ion-header translucent="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'ALL_RAFFLES.TITLE' | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="all-raffles">
+  <div class="screen">
+
+    <!-- Category chips -->
+    <div class="chips hide-scroll">
+      <button
+        *ngFor="let c of categories; trackBy: trackById"
+        type="button"
+        class="chip"
+        [class.active]="selectedCategoryId === c.id"
+        (click)="selectCategory(c.id)"
+      >
+        {{categoryDisplayLabel(c)}}
+      </button>
+    </div>
+
+    <!-- Skeleton -->
+    <ng-container *ngIf="loading">
+      <div class="row-card skel" *ngFor="let _ of [1,2,3,4,5]">
+        <ion-skeleton-text animated class="sk-row-img"></ion-skeleton-text>
+        <div class="row-body">
+          <ion-skeleton-text animated class="sk sk-line lg"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk sk-line sm"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk sk-btn"></ion-skeleton-text>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Empty state -->
+    <div class="empty" *ngIf="!loading && raffles.length === 0">
+      <ion-icon name="ticket-outline" class="empty-icon"></ion-icon>
+      <p>{{'ALL_RAFFLES.EMPTY' | translate}}</p>
+    </div>
+
+    <!-- Raffle list -->
+    <ng-container *ngIf="!loading">
+      <article
+        class="row-card"
+        *ngFor="let d of raffles; trackBy: trackById"
+        (click)="openRaffle(d)"
+      >
+        <div
+          class="row-img"
+          [style.backgroundImage]="'url(' + (d.imageUrl || 'assets/img/placeholder.png') + ')'"
+        ></div>
+
+        <div class="row-body">
+          <div class="row-title">{{d.title}}</div>
+          <div class="row-sub" *ngIf="d.endsAt || d.endAt">
+            {{countdownText(d)}}
+          </div>
+
+          <div class="row-actions">
+            <span class="row-price">{{d.ticketPrice ?? 0}} {{d.currency || 'XAF'}}</span>
+            <button
+              type="button"
+              class="pill"
+              (click)="openRaffle(d); $event.stopPropagation()"
+            >
+              {{'ALL_RAFFLES.PARTICIPATE' | translate}}
+            </button>
+          </div>
+        </div>
+      </article>
+    </ng-container>
+
+    <div class="bottom-spacer"></div>
+  </div>
+</ion-content>

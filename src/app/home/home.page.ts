@@ -232,7 +232,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   viewAll(): void {
-    this.router.navigate(['/tabs/participations']);
+    this.router.navigate(['/tabs/all-raffles']);
   }
 
   openLiveDraws(): void {

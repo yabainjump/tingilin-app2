@@ -1,0 +1,169 @@
+.all-raffles {
+  --bg: var(--app-bg);
+  --gold: var(--app-warning);
+
+  ion-content {
+    --background: transparent;
+  }
+
+  .screen {
+    position: relative;
+    z-index: 1;
+    padding: calc(env(safe-area-inset-top) + 14px) 16px 18px;
+    color: var(--app-ink);
+  }
+
+  .hide-scroll {
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
+
+  /* CHIPS */
+  .chips {
+    display: flex;
+    gap: 10px;
+    padding: 6px 2px 14px;
+    overflow-x: auto;
+  }
+
+  .chip {
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 12px;
+    color: var(--app-ink);
+    background: var(--app-surface-2);
+    border: 1px solid var(--app-border);
+    white-space: nowrap;
+    transition: 180ms ease;
+  }
+
+  .chip.active {
+    background: var(--app-primary);
+    border-color: var(--app-border);
+    color: var(--app-on-primary);
+  }
+
+  /* ROW CARDS */
+  .row-card {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 18px;
+    background: var(--app-surface-2);
+    border: 1px solid var(--app-border);
+    margin-bottom: 12px;
+    cursor: pointer;
+  }
+
+  .row-img {
+    width: 62px;
+    height: 62px;
+    border-radius: 14px;
+    background-size: cover;
+    background-position: center;
+    flex: 0 0 62px;
+    overflow: hidden;
+  }
+
+  .row-body {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .row-title {
+    font-weight: 900;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .row-sub {
+    margin-top: 3px;
+    font-size: 12px;
+    color: var(--app-muted);
+    font-weight: 700;
+  }
+
+  .row-actions {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .row-price {
+    font-weight: 900;
+    font-size: 14px;
+    color: var(--gold);
+  }
+
+  .pill {
+    height: 34px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid var(--app-border);
+    background: var(--app-surface-2);
+    color: var(--app-ink);
+    font-weight: 900;
+  }
+
+  /* EMPTY STATE */
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 60px 20px;
+    color: var(--app-muted);
+    text-align: center;
+  }
+
+  .empty-icon {
+    font-size: 48px;
+    opacity: 0.5;
+  }
+
+  /* SKELETON */
+  .row-card.skel {
+    pointer-events: none;
+  }
+
+  .sk {
+    display: block;
+    border-radius: 10px;
+    opacity: 0.75;
+  }
+
+  .sk-row-img {
+    width: 62px;
+    height: 62px;
+    border-radius: 14px;
+    flex: 0 0 62px;
+  }
+
+  .sk-line.lg {
+    height: 16px;
+    width: 70%;
+    margin-top: 4px;
+  }
+
+  .sk-line.sm {
+    height: 11px;
+    width: 45%;
+    margin-top: 6px;
+  }
+
+  .sk-btn {
+    height: 30px;
+    width: 90px;
+    border-radius: 999px;
+    margin-top: 10px;
+  }
+
+  .bottom-spacer {
+    height: 90px;
+  }
+}

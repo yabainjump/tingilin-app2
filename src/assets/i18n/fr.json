@@ -35,7 +35,7 @@
   "LANDING": {
     "CONNECTION": "Connexion",
     "NEW_CONCEPT": "Nouveau Concept",
-    "HERO_TITLE": "Votre prochain iPhone\npour le prix d'un biscuit",
+    "HERO_TITLE": "Gagnez de grands prix\npour le prix d'un biscuit",
     "HERO_SUBTITLE": "Gagnez gros, dépensez peu.",
     "HOW_TITLE": "Comment ça marche ?",
     "HOW_TAG": "Simple & Rapide",
@@ -534,5 +534,10 @@
   },
   "TICKETS_PAGE": {
     "TITLE": "Tickets"
+  },
+  "ALL_RAFFLES": {
+    "TITLE": "Tous les raffles",
+    "EMPTY": "Aucun raffle disponible pour le moment.",
+    "PARTICIPATE": "Participer"
   }
 }

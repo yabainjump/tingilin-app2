@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { AdminGuard } from 'src/app/guard/admin-guard';
+import { AuthGuard } from 'src/app/guard/auth-guard';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
 
@@ -85,6 +86,15 @@ const routes: Routes = [
         loadChildren: () =>
           import('../admin/create-raffle/create-raffle.module').then(
             (m) => m.CreateRafflePageModule,
+          ),
+      },
+
+      {
+        path: 'all-raffles',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('../../pages/all-raffles/all-raffles.module').then(
+            (m) => m.AllRafflesPageModule,
           ),
       },
 
