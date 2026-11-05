@@ -1,143 +1,428 @@
 // =============================================================================
 // Tinguilin — Design tokens (Ionic theme)
-// Palette unifiee: VIOLET (marque) + OR/AMBRE (recompense) sur base claire.
-// Alignee sur le violet deja utilise dans les pages (#a60df2 / #7c3aed / #8b5cf6).
-// https://ionicframework.com/docs/theming/
+// Direction « Violet solide » : une seule teinte de marque, surfaces opaques,
+// aucun dégradé décoratif. Deux palettes complètes : clair et sombre.
+//
+// Le thème est piloté par l'attribut `data-theme` posé sur <html> :
+//   - absent           -> suit la préférence système
+//   - data-theme=light -> force le mode clair
+//   - data-theme=dark  -> force le mode sombre
 // =============================================================================
-:root {
-  /* ---- Primary : violet marque (accessible, texte blanc AA) ---------------- */
-  --ion-color-primary: #9d5cff;
-  --ion-color-primary-rgb: 157, 92, 255;
+
+// -----------------------------------------------------------------------------
+// Palette applicative — mode clair
+// -----------------------------------------------------------------------------
+@mixin app-light {
+  /* Marque */
+  --app-primary: #6d28d9;
+  --app-primary-strong: #5b21b6;
+  --app-primary-soft: #ede4fd;
+  --app-primary-bright: #7c3aed;
+  --app-on-primary: #ffffff;
+
+  /* Sémantique (états uniquement, jamais en décoration) */
+  --app-success: #15803d;
+  --app-success-soft: #dcfce7;
+  --app-on-success: #ffffff;
+  --app-warning: #b45309;
+  --app-warning-soft: #fef3c7;
+  --app-on-warning: #ffffff;
+  --app-danger: #b91c1c;
+  --app-danger-soft: #fee2e2;
+  --app-on-danger: #ffffff;
+
+  /* Fonds et surfaces */
+  --app-bg: #f7f4fc;
+  --app-bg-soft: #f0eaf9;
+  --app-surface: #ffffff;
+  --app-surface-2: #f4effb;
+  --app-surface-3: #ede5fd;
+  --app-ink: #1a1226;
+  --app-muted: #675c7a;
+  --app-muted-soft: #8e82a3;
+  --app-border: #e6ddf4;
+  --app-border-strong: #c9b6ea;
+
+  /* Voile de lisibilité, uniquement au-dessus des médias. */
+  --app-overlay: rgba(26, 18, 38, 0.40);
+
+  /* Ombres */
+  --app-shadow-color: rgba(46, 16, 101, 0.1);
+  --app-shadow-sm: 0 8px 24px var(--app-shadow-color);
+  --app-shadow: 0 20px 54px var(--app-shadow-color);
+  --app-shadow-brand: 0 18px 42px rgba(109, 40, 217, 0.22);
+
+  /* Compatibilité : anciens noms de variables encore utilisés par les pages. */
+  --bg: #f7f4fc;
+  --bg2: #f0eaf9;
+  --bg-2: #f0eaf9;
+  --bg-soft: #f0eaf9;
+  --bg-top: #f7f4fc;
+  --bg-mid: #f4effb;
+  --bg-bottom: #f0eaf9;
+  --bg-dark: #f7f4fc;
+  --bg-dark-2: #ffffff;
+  --surface: #ffffff;
+  --card: #ffffff;
+  --card-strong: #f4effb;
+  --text: #1a1226;
+  --text-main: #1a1226;
+  --text-muted: #675c7a;
+  --text-soft: #8e82a3;
+  --muted: #675c7a;
+  --muted2: #8e82a3;
+  --muted3: #8e82a3;
+  --login-muted: #8e82a3;
+  --onb-sub: #675c7a;
+  --onb-text: #1a1226;
+  --primary: #6d28d9;
+  --primary-2: #7c3aed;
+  --primaryLight: #7c3aed;
+  --onb-primary: #6d28d9;
+  --blue: #6d28d9;
+  --p: #6d28d9;
+  --accent: #6d28d9;
+  --accent2: #7c3aed;
+  --accentGlow: rgba(109, 40, 217, 0.22);
+  --gold: #b45309;
+  --gold-deep: #92400e;
+  --goldGlow: rgba(180, 83, 9, 0.18);
+  --border: #e6ddf4;
+  --stroke: #e6ddf4;
+  --stroke-strong: #c9b6ea;
+  --login-stroke: #e6ddf4;
+  --soft-shadow: 0 10px 30px rgba(46, 16, 101, 0.08);
+  --soft-shadow2: 0 18px 44px rgba(46, 16, 101, 0.12);
+  --app-shadow-soft: 0 10px 30px rgba(46, 16, 101, 0.08);
+  --dock-bg: #ffffff;
+  --dock-stroke: #e6ddf4;
+  --dock-muted: #675c7a;
+  --onb-bg-a: #f7f4fc;
+  --onb-bg-b: #f0eaf9;
+}
+
+// -----------------------------------------------------------------------------
+// Palette applicative — mode sombre
+// -----------------------------------------------------------------------------
+@mixin app-dark {
+  --app-primary: #8b5cf6;
+  --app-primary-strong: #a78bfa;
+  --app-primary-soft: #2a1b44;
+  --app-primary-bright: #c4b5fd;
+  --app-on-primary: #ffffff;
+
+  --app-success: #4ade80;
+  --app-success-soft: #14351f;
+  --app-on-success: #052e16;
+  --app-warning: #fbbf24;
+  --app-warning-soft: #3a2a08;
+  --app-on-warning: #2b1c00;
+  --app-danger: #f87171;
+  --app-danger-soft: #3b1616;
+  --app-on-danger: #2b0b0b;
+
+  --app-bg: #0d0913;
+  --app-bg-soft: #120c1b;
+  --app-surface: #171020;
+  --app-surface-2: #211630;
+  --app-surface-3: #2a1b44;
+  --app-ink: #f5f1fb;
+  --app-muted: #a99cb9;
+  --app-muted-soft: #7c6f8e;
+  --app-border: #2c2140;
+  --app-border-strong: #4c3572;
+
+  --app-overlay: rgba(13, 9, 19, 0.46);
+
+  --app-shadow-color: rgba(0, 0, 0, 0.42);
+  --app-shadow-sm: 0 8px 24px var(--app-shadow-color);
+  --app-shadow: 0 20px 54px var(--app-shadow-color);
+  --app-shadow-brand: 0 18px 42px rgba(139, 92, 246, 0.3);
+
+  --bg: #0d0913;
+  --bg2: #120c1b;
+  --bg-2: #120c1b;
+  --bg-soft: #120c1b;
+  --bg-top: #0d0913;
+  --bg-mid: #120c1b;
+  --bg-bottom: #0d0913;
+  --bg-dark: #0d0913;
+  --bg-dark-2: #171020;
+  --surface: #171020;
+  --card: #171020;
+  --card-strong: #211630;
+  --text: #f5f1fb;
+  --text-main: #f5f1fb;
+  --text-muted: #a99cb9;
+  --text-soft: #7c6f8e;
+  --muted: #a99cb9;
+  --muted2: #7c6f8e;
+  --muted3: #7c6f8e;
+  --login-muted: #a99cb9;
+  --onb-sub: #a99cb9;
+  --onb-text: #f5f1fb;
+  --primary: #8b5cf6;
+  --primary-2: #a78bfa;
+  --primaryLight: #a78bfa;
+  --onb-primary: #8b5cf6;
+  --blue: #8b5cf6;
+  --p: #8b5cf6;
+  --accent: #8b5cf6;
+  --accent2: #a78bfa;
+  --accentGlow: rgba(139, 92, 246, 0.28);
+  --gold: #fbbf24;
+  --gold-deep: #f59e0b;
+  --goldGlow: rgba(251, 191, 36, 0.2);
+  --border: #2c2140;
+  --stroke: #2c2140;
+  --stroke-strong: #4c3572;
+  --login-stroke: #2c2140;
+  --soft-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --soft-shadow2: 0 18px 44px rgba(0, 0, 0, 0.45);
+  --app-shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --dock-bg: #171020;
+  --dock-stroke: #2c2140;
+  --dock-muted: #a99cb9;
+  --onb-bg-a: #0d0913;
+  --onb-bg-b: #120c1b;
+}
+
+// -----------------------------------------------------------------------------
+// Mapping Ionic — mode clair
+// -----------------------------------------------------------------------------
+@mixin ion-light {
+  --ion-color-primary: #6d28d9;
+  --ion-color-primary-rgb: 109, 40, 217;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #8a51e0;
-  --ion-color-primary-tint: #a76cff;
+  --ion-color-primary-shade: #5b21b6;
+  --ion-color-primary-tint: #7c3aed;
 
-  /* ---- Secondary : violet clair (surfaces, puces, etats secondaires) ------- */
-  --ion-color-secondary: #d169ff;
-  --ion-color-secondary-rgb: 209, 105, 255;
+  --ion-color-secondary: #a855f7;
+  --ion-color-secondary-rgb: 168, 85, 247;
   --ion-color-secondary-contrast: #ffffff;
   --ion-color-secondary-contrast-rgb: 255, 255, 255;
-  --ion-color-secondary-shade: #b85ce0;
-  --ion-color-secondary-tint: #d678ff;
+  --ion-color-secondary-shade: #944ae0;
+  --ion-color-secondary-tint: #b166f8;
 
-  /* ---- Tertiary : rose CTA (variete ponctuelle) --------------------------- */
-  --ion-color-tertiary: #ff5da2;
-  --ion-color-tertiary-rgb: 255, 93, 162;
+  --ion-color-tertiary: #4c1d95;
+  --ion-color-tertiary-rgb: 76, 29, 149;
   --ion-color-tertiary-contrast: #ffffff;
   --ion-color-tertiary-contrast-rgb: 255, 255, 255;
-  --ion-color-tertiary-shade: #e0528f;
-  --ion-color-tertiary-tint: #ff6dab;
+  --ion-color-tertiary-shade: #431a83;
+  --ion-color-tertiary-tint: #5e34a0;
 
-  /* ---- Success : vert -------------------------------------------------------*/
-  --ion-color-success: #16a34a;
-  --ion-color-success-rgb: 22, 163, 74;
+  --ion-color-success: #15803d;
+  --ion-color-success-rgb: 21, 128, 61;
   --ion-color-success-contrast: #ffffff;
   --ion-color-success-contrast-rgb: 255, 255, 255;
-  --ion-color-success-shade: #138f41;
-  --ion-color-success-tint: #2eac5c;
+  --ion-color-success-shade: #127136;
+  --ion-color-success-tint: #2c8d50;
 
-  /* ---- Warning : OR / ambre (recompense, "acheter un ticket") -------------- */
-  --ion-color-warning: #ffc857;
-  --ion-color-warning-rgb: 255, 200, 87;
-  --ion-color-warning-contrast: #1c1330;
-  --ion-color-warning-contrast-rgb: 28, 19, 48;
-  --ion-color-warning-shade: #e0b04d;
-  --ion-color-warning-tint: #ffce68;
+  --ion-color-warning: #b45309;
+  --ion-color-warning-rgb: 180, 83, 9;
+  --ion-color-warning-contrast: #ffffff;
+  --ion-color-warning-contrast-rgb: 255, 255, 255;
+  --ion-color-warning-shade: #9e4908;
+  --ion-color-warning-tint: #bc6422;
 
-  /* ---- Danger : rouge -------------------------------------------------------*/
-  --ion-color-danger: #ef4444;
-  --ion-color-danger-rgb: 239, 68, 68;
+  --ion-color-danger: #b91c1c;
+  --ion-color-danger-rgb: 185, 28, 28;
   --ion-color-danger-contrast: #ffffff;
   --ion-color-danger-contrast-rgb: 255, 255, 255;
-  --ion-color-danger-shade: #d23c3c;
-  --ion-color-danger-tint: #f15858;
+  --ion-color-danger-shade: #a31919;
+  --ion-color-danger-tint: #c03333;
 
-  /* ---- Neutres -------------------------------------------------------------*/
-  --ion-color-light: #f8f5ff;
-  --ion-color-light-rgb: 248, 245, 255;
-  --ion-color-light-contrast: #1c1330;
-  --ion-color-light-contrast-rgb: 28, 19, 48;
-  --ion-color-light-shade: #d7d5dd;
-  --ion-color-light-tint: #f5f3fb;
+  --ion-color-light: #f4effb;
+  --ion-color-light-rgb: 244, 239, 251;
+  --ion-color-light-contrast: #1a1226;
+  --ion-color-light-contrast-rgb: 26, 18, 38;
+  --ion-color-light-shade: #d7d2dd;
+  --ion-color-light-tint: #f5f1fb;
 
-  --ion-color-medium: #aaa0b8;
-  --ion-color-medium-rgb: 170, 160, 184;
+  --ion-color-medium: #776b8b;
+  --ion-color-medium-rgb: 119, 107, 139;
   --ion-color-medium-contrast: #ffffff;
   --ion-color-medium-contrast-rgb: 255, 255, 255;
-  --ion-color-medium-shade: #5e5971;
-  --ion-color-medium-tint: #7a748d;
+  --ion-color-medium-shade: #695e7a;
+  --ion-color-medium-tint: #857a96;
 
-  --ion-color-dark: #0b0712;
-  --ion-color-dark-rgb: 11, 7, 18;
+  --ion-color-dark: #1a1226;
+  --ion-color-dark-rgb: 26, 18, 38;
   --ion-color-dark-contrast: #ffffff;
   --ion-color-dark-contrast-rgb: 255, 255, 255;
-  --ion-color-dark-shade: #0a0610;
-  --ion-color-dark-tint: #231f2a;
+  --ion-color-dark-shade: #170f22;
+  --ion-color-dark-tint: #2a2036;
 
-  /* ---- Accent custom : conserve pour compat (mappe sur l'ambre/or) -------- */
-  --ion-color-accent: #ffc857;
-  --ion-color-accent-rgb: 255, 200, 87;
-  --ion-color-accent-contrast: #1c1330;
-  --ion-color-accent-contrast-rgb: 28, 19, 48;
-  --ion-color-accent-shade: #e0b04d;
-  --ion-color-accent-tint: #ffce68;
+  --ion-background-color: #f7f4fc;
+  --ion-background-color-rgb: 247, 244, 252;
+  --ion-text-color: #1a1226;
+  --ion-text-color-rgb: 26, 18, 38;
+  --ion-toolbar-background: #f7f4fc;
+  --ion-item-background: transparent;
+  --ion-card-background: #ffffff;
+}
 
-  /* ---- Couleur "gold" pour les mises en avant (prix, gains) --------------- */
-  --ion-color-gold: #ffc857;
-  --ion-color-gold-rgb: 255, 200, 87;
-  --ion-color-gold-contrast: #1c1330;
-  --ion-color-gold-contrast-rgb: 28, 19, 48;
-  --ion-color-gold-shade: #e0b04d;
-  --ion-color-gold-tint: #ffce68;
+// -----------------------------------------------------------------------------
+// Mapping Ionic — mode sombre
+// -----------------------------------------------------------------------------
+@mixin ion-dark {
+  --ion-color-primary: #8b5cf6;
+  --ion-color-primary-rgb: 139, 92, 246;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #7c3aed;
+  --ion-color-primary-tint: #a78bfa;
 
-  /* ---- Fond, texte, surfaces ---------------------------------------------- */
-  --ion-background-color: #0b0712;
-  --ion-background-color-rgb: 11, 7, 18;
-  --ion-text-color: #f8f5ff;
-  --ion-text-color-rgb: 248, 245, 255;
+  --ion-color-secondary: #c4b5fd;
+  --ion-color-secondary-rgb: 196, 181, 253;
+  --ion-color-secondary-contrast: #1a1226;
+  --ion-color-secondary-contrast-rgb: 26, 18, 38;
+  --ion-color-secondary-shade: #ac9fdf;
+  --ion-color-secondary-tint: #cabcfd;
 
-  --ion-toolbar-background: rgba(11, 7, 18, 0.82);
+  --ion-color-tertiary: #6d28d9;
+  --ion-color-tertiary-rgb: 109, 40, 217;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #6023bf;
+  --ion-color-tertiary-tint: #7c3aed;
+
+  --ion-color-success: #4ade80;
+  --ion-color-success-rgb: 74, 222, 128;
+  --ion-color-success-contrast: #052e16;
+  --ion-color-success-contrast-rgb: 5, 46, 22;
+  --ion-color-success-shade: #41c371;
+  --ion-color-success-tint: #5ce18d;
+
+  --ion-color-warning: #fbbf24;
+  --ion-color-warning-rgb: 251, 191, 36;
+  --ion-color-warning-contrast: #2b1c00;
+  --ion-color-warning-contrast-rgb: 43, 28, 0;
+  --ion-color-warning-shade: #dda820;
+  --ion-color-warning-tint: #fbc53a;
+
+  --ion-color-danger: #f87171;
+  --ion-color-danger-rgb: 248, 113, 113;
+  --ion-color-danger-contrast: #2b0b0b;
+  --ion-color-danger-contrast-rgb: 43, 11, 11;
+  --ion-color-danger-shade: #da6363;
+  --ion-color-danger-tint: #f97f7f;
+
+  --ion-color-light: #211630;
+  --ion-color-light-rgb: 33, 22, 48;
+  --ion-color-light-contrast: #f5f1fb;
+  --ion-color-light-contrast-rgb: 245, 241, 251;
+  --ion-color-light-shade: #1d132a;
+  --ion-color-light-tint: #372d45;
+
+  --ion-color-medium: #a99cb9;
+  --ion-color-medium-rgb: 169, 156, 185;
+  --ion-color-medium-contrast: #1a1226;
+  --ion-color-medium-contrast-rgb: 26, 18, 38;
+  --ion-color-medium-shade: #958aa3;
+  --ion-color-medium-tint: #b2a6c0;
+
+  --ion-color-dark: #0d0913;
+  --ion-color-dark-rgb: 13, 9, 19;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #0b0811;
+  --ion-color-dark-tint: #251f2b;
+
+  --ion-background-color: #0d0913;
+  --ion-background-color-rgb: 13, 9, 19;
+  --ion-text-color: #f5f1fb;
+  --ion-text-color-rgb: 245, 241, 251;
+  --ion-toolbar-background: #0d0913;
   --ion-item-background: transparent;
   --ion-card-background: #171020;
+}
 
-  /* ---- Tokens applicatifs (utilises par global.scss et les pages) --------- */
-  --app-bg: #0b0712;
-  --app-bg-soft: #130a1c;
-  --app-surface: #171020;
-  --app-surface-2: #21162f;
-  --app-surface-glass: rgba(255, 255, 255, 0.065);
-  --app-surface-glass-strong: rgba(255, 255, 255, 0.095);
-  --app-ink: #f8f5ff;
-  --app-muted: #aaa0b8;
-  --app-muted-soft: #7f748d;
-  --app-border: rgba(255, 255, 255, 0.1);
-  --app-border-strong: rgba(157, 92, 255, 0.38);
-  --app-brand-vivid: #b13dff;
-  --app-gradient-brand: linear-gradient(135deg, #8b5cf6 0%, #b13dff 54%, #d169ff 100%);
-  --app-gradient-gold: linear-gradient(135deg, #f0a928 0%, #ffc857 100%);
-  --app-gradient-page:
-    radial-gradient(720px 420px at 8% -8%, rgba(157, 92, 255, 0.22), transparent 60%),
-    radial-gradient(620px 440px at 100% 10%, rgba(209, 105, 255, 0.1), transparent 62%),
-    linear-gradient(180deg, #130a1c 0%, #0b0712 66%);
+// -----------------------------------------------------------------------------
+// Application des palettes
+// -----------------------------------------------------------------------------
+:root {
+  @include app-light;
+  @include ion-light;
+  color-scheme: light;
 
-  /* ---- Rayons & ombres modernes ------------------------------------------- */
-  --app-radius-sm: 14px;
-  --app-radius: 18px;
-  --app-radius-lg: 26px;
-  --app-radius-xl: 32px;
+  /* Accent de compatibilité (mappé sur le violet de marque) */
+  --ion-color-accent: #6d28d9;
+  --ion-color-accent-rgb: 109, 40, 217;
+  --ion-color-accent-contrast: #ffffff;
+  --ion-color-accent-contrast-rgb: 255, 255, 255;
+  --ion-color-accent-shade: #5b21b6;
+  --ion-color-accent-tint: #7c3aed;
+
+  --ion-color-gold: #b45309;
+  --ion-color-gold-rgb: 180, 83, 9;
+  --ion-color-gold-contrast: #ffffff;
+  --ion-color-gold-contrast-rgb: 255, 255, 255;
+  --ion-color-gold-shade: #9e4908;
+  --ion-color-gold-tint: #bc6422;
+
+  /* Noms historiques : conservés mais aplatis (plus aucun dégradé). */
+  --app-gradient-brand: var(--app-primary);
+  --app-gradient-gold: var(--app-warning);
+  --app-gradient-page: var(--app-bg);
+
+  /* Rayons et mouvement */
+  --app-radius-sm: 12px;
+  --app-radius: 16px;
+  --app-radius-lg: 22px;
+  --app-radius-xl: 28px;
   --app-radius-pill: 999px;
-  --app-shadow-sm: 0 8px 24px rgba(0, 0, 0, 0.2);
-  --app-shadow: 0 20px 54px rgba(0, 0, 0, 0.3);
-  --app-shadow-brand: 0 18px 42px rgba(157, 92, 255, 0.3);
+  --app-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --app-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
-  /** Typographie **/
   --ion-font-family:
     "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
-/* Enregistre la couleur "accent" dans Ionic (compat existant) */
+:root[data-theme="dark"] {
+  @include app-dark;
+  @include ion-dark;
+  color-scheme: dark;
+
+  --ion-color-accent: #8b5cf6;
+  --ion-color-accent-rgb: 139, 92, 246;
+  --ion-color-accent-contrast: #ffffff;
+  --ion-color-accent-contrast-rgb: 255, 255, 255;
+  --ion-color-accent-shade: #7c3aed;
+  --ion-color-accent-tint: #a78bfa;
+
+  --ion-color-gold: #fbbf24;
+  --ion-color-gold-rgb: 251, 191, 36;
+  --ion-color-gold-contrast: #2b1c00;
+  --ion-color-gold-contrast-rgb: 43, 28, 0;
+  --ion-color-gold-shade: #dda820;
+  --ion-color-gold-tint: #fbc53a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    @include app-dark;
+    @include ion-dark;
+    color-scheme: dark;
+
+    --ion-color-accent: #8b5cf6;
+    --ion-color-accent-rgb: 139, 92, 246;
+    --ion-color-accent-contrast: #ffffff;
+    --ion-color-accent-contrast-rgb: 255, 255, 255;
+    --ion-color-accent-shade: #7c3aed;
+    --ion-color-accent-tint: #a78bfa;
+
+    --ion-color-gold: #fbbf24;
+    --ion-color-gold-rgb: 251, 191, 36;
+    --ion-color-gold-contrast: #2b1c00;
+    --ion-color-gold-contrast-rgb: 43, 28, 0;
+    --ion-color-gold-shade: #dda820;
+    --ion-color-gold-tint: #fbc53a;
+  }
+}
+
+/* Enregistre les couleurs custom dans Ionic (compat existant) */
 .ion-color-accent {
   --ion-color-base: var(--ion-color-accent);
   --ion-color-base-rgb: var(--ion-color-accent-rgb);
@@ -147,7 +432,6 @@
   --ion-color-tint: var(--ion-color-accent-tint);
 }
 
-/* Nouvelle couleur "gold" utilisable via color="gold" */
 .ion-color-gold {
   --ion-color-base: var(--ion-color-gold);
   --ion-color-base-rgb: var(--ion-color-gold-rgb);

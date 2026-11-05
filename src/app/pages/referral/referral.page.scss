@@ -1,10 +1,10 @@
 :host {
-  --bg: #1b0e25;
-  --card: rgba(255, 255, 255, 0.06);
-  --stroke: rgba(255, 255, 255, 0.1);
-  --muted: #a99eb6;
-  --primary: #9d5cff;
-  --blue: #7c3aed;
+  --bg: var(--app-bg);
+  --card: var(--app-surface);
+  --stroke: var(--app-border);
+  --muted: var(--app-muted);
+  --primary: var(--app-primary);
+  --blue: var(--app-primary);
 }
 
 ion-content.referral-page {
@@ -14,18 +14,8 @@ ion-content.referral-page {
 .screen {
   min-height: 100%;
   background:
-    radial-gradient(
-      500px 260px at 50% -60px,
-      rgba(166, 13, 242, 0.22),
-      transparent 60%
-    ),
-    radial-gradient(
-      420px 340px at 100% 80%,
-      rgba(61, 139, 255, 0.12),
-      transparent 70%
-    ),
-    var(--bg);
-  color: #fff;
+    transparent;
+  color: var(--app-ink);
   padding: calc(env(safe-area-inset-top) + 8px) 18px 100px;
 }
 
@@ -50,8 +40,8 @@ ion-content.referral-page {
   height: 40px;
   border-radius: 999px;
   border: 1px solid var(--stroke);
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: var(--app-surface-2);
+  color: var(--app-ink);
   display: grid;
   place-items: center;
 }
@@ -74,7 +64,8 @@ ion-content.referral-page {
 .hero-grad {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(27, 14, 37, 0.9), transparent 55%);
+  background: var(--app-overlay);
+  display: none;
 }
 
 .hero h2 {
@@ -98,11 +89,7 @@ ion-content.referral-page {
 
 .reward-balance {
   border-radius: 22px;
-  background: linear-gradient(
-    120deg,
-    rgba(166, 13, 242, 0.2),
-    rgba(61, 139, 255, 0.15)
-  );
+  background: var(--app-surface-2);
   border: 1px solid var(--stroke);
   padding: 14px 16px;
   margin-bottom: 14px;
@@ -114,7 +101,7 @@ ion-content.referral-page {
 
 .reward-label {
   font-size: 12px;
-  color: #d3cce1;
+  color: var(--app-muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -127,8 +114,8 @@ ion-content.referral-page {
 .reward-btn {
   border: 0;
   border-radius: 999px;
-  background: #fff;
-  color: #200f2f;
+  background: var(--app-surface);
+  color: var(--app-ink);
   font-size: 12px;
   font-weight: 900;
   padding: 8px 12px;
@@ -146,22 +133,15 @@ ion-content.referral-page {
 
 .card.referral::before,
 .card.loyalty::before {
-  content: "";
-  position: absolute;
-  width: 120px;
-  height: 120px;
-  border-radius: 999px;
-  filter: blur(40px);
-  top: -40px;
-  right: -30px;
+  display: none;
 }
 
 .card.referral::before {
-  background: rgba(166, 13, 242, 0.35);
+  background: var(--app-primary-soft);
 }
 
 .card.loyalty::before {
-  background: rgba(61, 139, 255, 0.35);
+  background: var(--app-primary-soft);
 }
 
 .card-head {
@@ -198,7 +178,7 @@ ion-content.referral-page {
 .chip {
   border-radius: 999px;
   padding: 6px 12px;
-  border: 1px solid rgba(166, 13, 242, 0.5);
+  border: 1px solid var(--app-border-strong);
   color: var(--primary);
   font-weight: 900;
   font-size: 14px;
@@ -206,13 +186,13 @@ ion-content.referral-page {
 
 .chip.blue {
   color: var(--blue);
-  border-color: rgba(61, 139, 255, 0.5);
+  border-color: var(--app-border-strong);
 }
 
 .bar {
   height: 14px;
   border-radius: 999px;
-  background: rgba(10, 5, 16, 0.65);
+  background: var(--app-surface-2);
   position: relative;
   overflow: visible;
 }
@@ -223,11 +203,11 @@ ion-content.referral-page {
 }
 
 .referral-fill {
-  background: linear-gradient(90deg, #9d5cff, #d169ff);
+  background: var(--app-primary);
 }
 
 .loyalty-fill {
-  background: linear-gradient(90deg, #7c3aed, #74bcff);
+  background: var(--app-primary);
 }
 
 .knob {
@@ -236,22 +216,23 @@ ion-content.referral-page {
   width: 16px;
   height: 16px;
   border-radius: 999px;
-  background: #fff;
+  background: var(--app-primary);
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 16px rgba(255, 255, 255, 0.9);
+  box-shadow: none;
 }
 
 .code-card {
   margin-top: 6px;
   border-radius: 20px;
   border: 1px solid var(--stroke);
-  background: rgba(34, 22, 47, 0.9);
+  background: var(--app-primary);
   padding: 16px;
 }
 
 .code-label {
   margin: 0 0 10px;
-  color: var(--muted);
+  color: var(--app-on-primary);
+  opacity: 0.82;
   text-align: center;
   font-size: 12px;
   text-transform: uppercase;
@@ -266,20 +247,21 @@ ion-content.referral-page {
 }
 
 .code {
-  border: 1px dashed rgba(166, 13, 242, 0.5);
+  border: 1px dashed var(--app-border-strong);
   border-radius: 14px;
   padding: 10px 12px;
   font-weight: 900;
   font-family: "Courier New", monospace;
   text-align: center;
   letter-spacing: 0.08em;
+  color: var(--app-on-primary);
 }
 
 .code-row button {
   border: 0;
   border-radius: 12px;
-  background: var(--primary);
-  color: #fff;
+  background: var(--app-surface);
+  color: var(--app-primary);
   font-size: 13px;
   font-weight: 800;
   padding: 10px 14px;
@@ -293,10 +275,10 @@ ion-content.referral-page {
 }
 
 .share-row button {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--app-border);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.06);
-  color: #fff;
+  background: var(--app-surface-2);
+  color: var(--app-ink);
   font-size: 11px;
   font-weight: 800;
   padding: 10px 6px;
@@ -314,19 +296,19 @@ ion-content.referral-page {
 }
 
 .share-row button.wa .share-ico {
-  color: #25d366;
+  color: var(--app-success);
 }
 
 .share-row button.fb .share-ico {
-  color: #1877f2;
+  color: var(--app-ink);
 }
 
 .share-row button.sms .share-ico {
-  color: #89d5ff;
+  color: var(--app-primary);
 }
 
 .share-row button.other .share-ico {
-  color: #e7dbff;
+  color: var(--app-primary);
 }
 
 .list-section {
@@ -352,7 +334,7 @@ ion-content.referral-page {
 
 .badge {
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--app-surface-2);
   border: 1px solid var(--stroke);
   padding: 6px 10px;
   font-size: 12px;
@@ -369,7 +351,7 @@ ion-content.referral-page {
   margin-bottom: 8px;
   border-radius: 14px;
   border: 1px solid var(--stroke);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--app-surface);
   padding: 10px;
   display: flex;
   align-items: center;
@@ -400,16 +382,16 @@ ion-content.referral-page {
 
 .status {
   margin-top: 2px;
-  color: #c4bbd0;
+  color: var(--app-muted);
   font-size: 12px;
 }
 
 .status.active {
-  color: #5ce78d;
+  color: var(--app-success);
 }
 
 .state-ico {
-  color: #c4bbd0;
+  color: var(--app-muted);
 }
 
 .list-actions {
@@ -419,10 +401,10 @@ ion-content.referral-page {
 }
 
 .load-more-btn {
-  border: 1px solid rgba(166, 13, 242, 0.45);
+  border: 1px solid var(--app-border-strong);
   border-radius: 999px;
-  background: rgba(166, 13, 242, 0.14);
-  color: #fff;
+  background: var(--app-primary-soft);
+  color: var(--app-ink);
   font-size: 13px;
   font-weight: 800;
   padding: 10px 18px;
@@ -436,7 +418,7 @@ ion-content.referral-page {
   margin-bottom: 8px;
   border-radius: 14px;
   border: 1px solid var(--stroke);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--app-surface);
   padding: 10px;
   display: flex;
   align-items: center;
@@ -485,11 +467,11 @@ ion-content.referral-page {
 .h-amount {
   font-size: 13px;
   font-weight: 900;
-  color: #fff;
+  color: var(--app-ink);
   border-radius: 999px;
   padding: 4px 10px;
-  background: rgba(166, 13, 242, 0.25);
-  border: 1px solid rgba(166, 13, 242, 0.4);
+  background: var(--app-primary-soft);
+  border: 1px solid var(--app-border-strong);
 }
 
 .sk-wrap {
