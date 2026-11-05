@@ -1,25 +1,21 @@
 :host {
-  --primary: #9d5cff;
-  --primary-2: #ce5cff;
-  --blue: #7c3aed;
-  --bg: #160d1f;
-  --bg-2: #241233;
-  --card: rgba(255, 255, 255, 0.06);
-  --card-strong: linear-gradient(
-    145deg,
-    rgba(40, 24, 62, 0.9) 0%,
-    rgba(24, 15, 40, 0.94) 100%
-  );
-  --stroke: rgba(255, 255, 255, 0.1);
-  --text: #fff;
-  --muted: rgba(255, 255, 255, 0.64);
+  --primary: var(--app-primary);
+  --primary-2: var(--app-primary-soft);
+  --blue: var(--app-primary);
+  --bg: var(--app-bg);
+  --bg-2: var(--app-bg);
+  --card: var(--app-surface);
+  --card-strong: var(--app-surface-2);
+  --stroke: var(--app-border);
+  --text: var(--app-ink);
+  --muted: var(--app-muted);
 }
 
 .hdr ion-toolbar {
-  --background: rgba(20, 12, 24, 0.84);
+  --background: var(--app-bg);
   --color: var(--text);
   --border-color: transparent;
-  backdrop-filter: blur(18px);
+  backdrop-filter: none;
 }
 
 .hdr ion-title,
@@ -30,17 +26,7 @@
 .bg {
   --background: transparent;
   background:
-    radial-gradient(
-      860px 500px at 10% -8%,
-      rgba(166, 13, 242, 0.26),
-      transparent 58%
-    ),
-    radial-gradient(
-      720px 460px at 92% 10%,
-      rgba(61, 139, 255, 0.12),
-      transparent 56%
-    ),
-    linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
+    transparent;
   color: var(--text);
 }
 
@@ -61,23 +47,13 @@
   padding: 20px;
   border-radius: 26px;
   background: var(--card-strong);
-  border: 1px solid rgba(168, 85, 247, 0.24);
-  box-shadow: 0 18px 42px rgba(3, 2, 8, 0.42);
+  border: 1px solid var(--app-border-strong);
+  box-shadow: none;
   position: relative;
   overflow: hidden;
 }
 
-.hero-panel::after {
-  content: "";
-  position: absolute;
-  top: -30px;
-  right: -26px;
-  width: 160px;
-  height: 160px;
-  border-radius: 999px;
-  background: rgba(168, 85, 247, 0.18);
-  filter: blur(48px);
-}
+.hero-panel::after { display: none; }
 
 .hero-copy,
 .hero-stats {
@@ -94,9 +70,9 @@
   align-items: center;
   padding: 6px 10px;
   border-radius: 999px;
-  background: rgba(166, 13, 242, 0.18);
-  border: 1px solid rgba(168, 85, 247, 0.26);
-  color: #f3e8ff;
+  background: var(--app-primary-soft);
+  border: 1px solid var(--app-border-strong);
+  color: var(--app-primary);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -127,21 +103,21 @@
   min-width: 90px;
   padding: 12px 14px;
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--app-surface-2);
   border: 1px solid var(--stroke);
-  backdrop-filter: blur(18px);
+  backdrop-filter: none;
 }
 
 .stat-chip.accent {
-  background: rgba(166, 13, 242, 0.16);
-  border-color: rgba(168, 85, 247, 0.3);
+  background: var(--app-primary-soft);
+  border-color: var(--app-border-strong);
 }
 
 .stat-chip .label {
   display: block;
   font-size: 10px;
   font-weight: 800;
-  color: rgba(255, 255, 255, 0.52);
+  color: var(--app-muted);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
@@ -159,16 +135,16 @@
 }
 
 .seg {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--app-surface-2);
   border: 1px solid var(--stroke);
   border-radius: 16px;
   padding: 4px;
 }
 
 ion-segment-button {
-  --color: rgba(255, 255, 255, 0.55);
-  --color-checked: #fff;
-  --indicator-color: rgba(166, 13, 242, 0.28);
+  --color: var(--app-ink);
+  --color-checked: var(--app-primary);
+  --indicator-color: var(--app-surface);
   min-height: 44px;
   font-weight: 800;
 }
@@ -181,8 +157,8 @@ ion-segment-button {
   border-radius: 24px;
   background: var(--card-strong);
   border: 1px solid var(--stroke);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.24);
-  backdrop-filter: blur(18px);
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .card {
@@ -190,15 +166,7 @@ ion-segment-button {
 }
 
 .glow {
-  position: absolute;
-  right: -44px;
-  top: -44px;
-  width: 150px;
-  height: 150px;
-  background: rgba(166, 13, 242, 0.18);
-  filter: blur(46px);
-  border-radius: 999px;
-  pointer-events: none;
+  display: none;
 }
 
 .top {
@@ -212,8 +180,8 @@ ion-segment-button {
   border-radius: 18px;
   background-size: cover;
   background-position: center;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.32);
+  border: 1px solid var(--app-border);
+  box-shadow: none;
 }
 
 .info {
@@ -238,7 +206,7 @@ ion-segment-button {
 .ref {
   margin-top: 8px;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--app-muted);
 }
 
 .tickets {
@@ -246,12 +214,12 @@ ion-segment-button {
   display: inline-flex;
   gap: 8px;
   align-items: center;
-  color: #f1dcff;
+  color: var(--app-primary);
   font-weight: 800;
   padding: 8px 10px;
   border-radius: 999px;
-  background: rgba(166, 13, 242, 0.14);
-  border: 1px solid rgba(166, 13, 242, 0.24);
+  background: var(--app-primary-soft);
+  border: 1px solid var(--app-border-strong);
 }
 
 .badge {
@@ -259,25 +227,25 @@ ion-segment-button {
   font-weight: 900;
   padding: 6px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--app-border);
 }
 
 .badge.vip {
-  background: rgba(255, 185, 72, 0.18);
-  color: #fde68a;
-  border-color: rgba(255, 204, 77, 0.24);
+  background: var(--app-warning-soft);
+  color: var(--app-warning);
+  border-color: var(--app-warning);
 }
 
 .badge.win {
-  background: rgba(43, 238, 121, 0.18);
-  color: #bbf7d0;
-  border-color: rgba(43, 238, 121, 0.24);
+  background: var(--app-success-soft);
+  color: var(--app-success);
+  border-color: var(--app-success);
 }
 
 .badge.lose {
-  background: rgba(248, 113, 113, 0.18);
-  color: #fecaca;
-  border-color: rgba(248, 113, 113, 0.24);
+  background: var(--app-danger-soft);
+  color: var(--app-danger);
+  border-color: var(--app-danger);
 }
 
 .prog {
@@ -292,12 +260,12 @@ ion-segment-button {
 }
 
 .muted {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--app-muted);
   font-weight: 700;
 }
 
 .pct {
-  color: #f0d6ff;
+  color: var(--app-primary);
   font-weight: 900;
 }
 
@@ -305,16 +273,16 @@ ion-segment-button {
   margin-top: 8px;
   height: 10px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.35);
+  background: var(--app-surface-2);
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--app-border);
 }
 
 .fill {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, rgba(166, 13, 242, 0.72), rgba(61, 139, 255, 1));
-  box-shadow: 0 0 18px rgba(166, 13, 242, 0.42);
+  background: var(--app-primary);
+  box-shadow: none;
   border-radius: 999px;
 }
 
@@ -329,25 +297,19 @@ ion-segment-button {
   padding: 0 16px;
   border-radius: 999px;
   border: 0;
-  background: linear-gradient(90deg, var(--primary), var(--primary-2));
-  color: #fff;
+  background: var(--app-surface);
+  color: var(--app-ink);
   font-weight: 800;
   display: inline-flex;
   gap: 6px;
   align-items: center;
-  box-shadow: 0 12px 24px rgba(166, 13, 242, 0.24);
+  box-shadow: none;
 }
 
 .skel-card {
   height: 148px;
   background:
-    linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.02),
-      rgba(255, 255, 255, 0.12),
-      rgba(255, 255, 255, 0.02)
-    ),
-    var(--card-strong);
+    transparent;
   background-size: 220px 100%, 100% 100%;
   background-repeat: no-repeat;
   animation: shimmer 1.2s linear infinite;
@@ -368,9 +330,9 @@ ion-segment-button {
   border-radius: 20px;
   display: grid;
   place-items: center;
-  background: rgba(166, 13, 242, 0.16);
-  border: 1px solid rgba(168, 85, 247, 0.24);
-  color: #f3e8ff;
+  background: var(--app-primary-soft);
+  border: 1px solid var(--app-border-strong);
+  color: var(--app-primary);
 }
 
 .empty-icon ion-icon {

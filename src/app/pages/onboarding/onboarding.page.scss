@@ -1,13 +1,13 @@
 :host {
-  --onb-bg-a: #1a0826;
-  --onb-bg-b: #12051d;
-  --onb-text: #eef1ff;
-  --onb-sub: #9ea3bc;
-  --onb-primary: #9d5cff;
+  --onb-bg-a: var(--app-bg);
+  --onb-bg-b: var(--app-bg);
+  --onb-text: var(--app-ink);
+  --onb-sub: var(--app-muted);
+  --onb-primary: var(--app-primary);
 }
 
 .onboarding {
-  --background: radial-gradient(120% 90% at 50% -10%, #2b0d40 0%, var(--onb-bg-a) 45%, var(--onb-bg-b) 100%);
+  --background: var(--app-bg);
   color: var(--onb-text);
 }
 
@@ -32,7 +32,7 @@
   border: 0;
   border-radius: 12px;
   background: transparent;
-  color: #e7e2fb;
+  color: var(--app-ink);
   font-size: 22px;
 }
 
@@ -67,7 +67,7 @@
   border-radius: 36px;
   background-size: cover;
   background-position: center;
-  box-shadow: inset 0 0 0 1px rgba(186, 147, 255, 0.18);
+  box-shadow: none;
 }
 
 .content {
@@ -105,12 +105,12 @@
   height: 12px;
   border: 0;
   border-radius: 999px;
-  background: rgba(166, 13, 242, 0.42);
+  background: var(--app-primary-soft);
 }
 
 .dot.active {
   width: 48px;
-  background: linear-gradient(90deg, #9d5cff 0%, #d169ff 100%);
+  background: var(--app-primary);
 }
 
 .footer {
@@ -128,12 +128,12 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  color: #fff;
+  color: var(--app-on-primary);
   font-size: 42px;
   font-weight: 900;
   letter-spacing: -0.2px;
-  background: linear-gradient(135deg, #9f08f4 0%, #be35ff 100%);
-  box-shadow: 0 16px 40px rgba(166, 13, 242, 0.38);
+  background: var(--app-primary);
+  box-shadow: none;
 }
 
 .next-btn ion-icon {
@@ -143,7 +143,7 @@
 .link-btn {
   border: 0;
   background: transparent;
-  color: #6d7185;
+  color: var(--app-ink);
   font-size: 34px;
   font-weight: 700;
   padding: 2px 0;
@@ -171,10 +171,7 @@
 /* Premium responsive layout */
 .onboarding {
   --background: transparent;
-  background:
-    radial-gradient(520px 420px at 6% -8%, rgba(157, 92, 255, 0.3), transparent 65%),
-    radial-gradient(420px 360px at 100% 82%, rgba(209, 105, 255, 0.13), transparent 68%),
-    linear-gradient(180deg, #160b21 0%, #0b0712 68%);
+  background: var(--app-bg);
 }
 
 .screen {
@@ -198,7 +195,7 @@
 .icon-btn {
   border: 1px solid var(--app-border);
   border-radius: 15px;
-  background: rgba(255, 255, 255, 0.055);
+  background: var(--app-surface-2);
 }
 
 .title {
@@ -208,7 +205,7 @@
 
 .skip-btn {
   padding-inline: 10px;
-  color: #d7a4ff;
+  color: var(--app-primary);
   font-size: 0.82rem;
 }
 
@@ -222,11 +219,9 @@
   width: min(100%, 480px);
   max-height: 46dvh;
   aspect-ratio: 4 / 3;
-  border: 1px solid rgba(209, 105, 255, 0.2);
+  border: 1px solid var(--app-border-strong);
   border-radius: 30px;
-  box-shadow:
-    0 28px 70px rgba(0, 0, 0, 0.36),
-    0 0 0 1px rgba(255, 255, 255, 0.045) inset;
+  box-shadow: none;
 }
 
 .content {
@@ -256,13 +251,13 @@
   width: 9px;
   height: 9px;
   padding: 0;
-  background: rgba(209, 105, 255, 0.24);
+  background: var(--app-primary-soft);
   transition: width 180ms var(--app-ease), background 180ms ease;
 }
 
 .dot.active {
   width: 30px;
-  background: var(--app-gradient-brand);
+  background: var(--app-primary);
 }
 
 .footer {
@@ -272,7 +267,7 @@
 .next-btn {
   min-height: 56px;
   border-radius: 18px;
-  background: var(--app-gradient-brand);
+  background: var(--app-primary);
   box-shadow: var(--app-shadow-brand);
   font-size: 1rem;
   letter-spacing: 0;
@@ -290,7 +285,7 @@
 
 .link-btn {
   min-height: 42px;
-  color: #91869d;
+  color: var(--app-muted);
   font-size: 0.82rem;
 }
 
@@ -306,12 +301,12 @@
   margin: 0 auto 14px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(209, 105, 255, 0.28);
+  border: 1px solid var(--app-border-strong);
   border-radius: 20px;
-  background: linear-gradient(145deg, rgba(157, 92, 255, 0.24), rgba(255, 255, 255, 0.055));
-  box-shadow: 0 18px 40px rgba(157, 92, 255, 0.22);
+  background: var(--app-surface-2);
+  box-shadow: none;
   font-size: 28px;
-  color: #d7a4ff;
+  color: var(--app-primary);
 }
 
 .region-step h2 {
@@ -331,7 +326,7 @@
 
 .region-step .region-error {
   margin: 12px auto 0;
-  color: #ff9aaf;
+  color: var(--app-danger);
   font-size: 0.82rem;
   font-weight: 700;
 }
@@ -343,11 +338,11 @@
 
 .region-picker-wrap {
   padding: 14px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--app-border);
   border-radius: var(--app-radius-lg, 26px);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.035));
-  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(22px) saturate(135%);
+  background: var(--app-surface);
+  box-shadow: none;
+  backdrop-filter: none;
   text-align: left;
 }
 

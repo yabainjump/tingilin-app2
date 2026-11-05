@@ -5,8 +5,9 @@
  * the entire app and not just one component. Additionally, this file can be
  * used as an entry point to import other CSS/Sass files to be included in the
  * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
+ *
+ * Direction « Violet solide » : aplats, bordures fines, aucune décoration
+ * en dégradé. Les couleurs viennent exclusivement de src/theme/variables.scss.
  */
 
 /* Core CSS required for Ionic components to work properly */
@@ -35,24 +36,12 @@
 *::after {
   box-sizing: border-box;
 }
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-
-:root {
-  color-scheme: dark;
-}
 
 html,
 body,
 ion-app {
-  color-scheme: dark;
+  background: var(--app-bg);
+  color: var(--app-ink);
 }
 
 ion-content {
@@ -74,17 +63,13 @@ ion-toast.toast-middle {
 }
 
 /* ===========================================================================
- * Tinguilin — Couche UI moderne (baseline, faible specificite: les pages
- * peuvent toujours surcharger). Violet marque + or, coins arrondis, ombres
- * douces, feedback tactile, focus accessibles.
+ * Couche UI de base (faible spécificité : les pages peuvent surcharger).
  * ======================================================================== */
 
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  background: var(--app-bg);
-  color: var(--app-ink);
 }
 
 button,
@@ -99,7 +84,8 @@ button {
 }
 
 ::selection {
-  background: rgba(124, 58, 237, 0.2);
+  background: var(--app-primary-soft);
+  color: var(--app-ink);
 }
 
 /* Titres un peu plus affirmes */
@@ -111,7 +97,7 @@ h3 {
   text-wrap: balance;
 }
 
-/* Boutons: arrondis, pas de MAJUSCULES forcees, feedback au press --------- */
+/* Boutons : arrondis, pas de MAJUSCULES forcees, feedback au press --------- */
 ion-button {
   --border-radius: var(--app-radius-sm);
   --box-shadow: none;
@@ -135,26 +121,30 @@ ion-button.button-solid {
 ion-button.button-solid.ion-color-warning,
 ion-button.button-solid.ion-color-success,
 ion-button.button-solid.ion-color-medium {
-  --box-shadow: var(--app-shadow-sm);
+  --box-shadow: none;
 }
-/* Press: leger enfoncement (sans decaler la mise en page) */
 ion-button:active {
   transform: scale(0.975);
 }
-
-/* Cartes: coins plus doux + ombre legere -------------------------------- */
-ion-card {
-  border-radius: var(--app-radius-lg);
-  box-shadow: var(--app-shadow-sm);
-  border: 1px solid var(--app-border);
-  background: var(--app-surface-glass);
-  backdrop-filter: blur(18px) saturate(130%);
+ion-button.button-outline {
+  --border-width: 1px;
+  --border-color: var(--app-border-strong);
+  --color: var(--app-primary);
 }
 
-/* Champs: arrondis + anneau de focus accessible ------------------------- */
+/* Cartes : surface opaque + bordure, pas d'ombre par defaut -------------- */
+ion-card {
+  border-radius: var(--app-radius-lg);
+  box-shadow: none;
+  border: 1px solid var(--app-border);
+  background: var(--app-surface);
+  color: var(--app-ink);
+}
+
+/* Champs : arrondis + anneau de focus accessible ------------------------- */
 ion-item {
   --border-radius: var(--app-radius-sm);
-  --background: var(--app-surface-glass);
+  --background: var(--app-surface-2);
   --color: var(--app-ink);
 }
 ion-input,
@@ -174,15 +164,15 @@ ion-badge {
   font-weight: 600;
 }
 
-/* Barre d'onglets: indicateur actif clair, safe-area respectee ----------- */
+/* Barre d'onglets: surface pleine, indicateur actif net ------------------ */
 ion-tab-bar {
-  --background: rgba(18, 11, 27, 0.88);
+  --background: var(--app-surface);
   border-top: 1px solid var(--app-border);
   padding-bottom: env(safe-area-inset-bottom);
 }
 ion-tab-button {
   --color: var(--app-muted);
-  --color-selected: var(--ion-color-primary);
+  --color-selected: var(--app-primary);
 }
 
 /* En-tete plus epure */
@@ -190,7 +180,7 @@ ion-toolbar {
   --border-width: 0 0 1px 0;
   --border-color: var(--app-border);
   --color: var(--app-ink);
-  backdrop-filter: blur(20px) saturate(140%);
+  --background: var(--app-bg);
 }
 ion-title {
   font-weight: 800;
@@ -203,7 +193,7 @@ ion-menu-button {
 }
 
 ion-segment {
-  --background: rgba(255, 255, 255, 0.055);
+  --background: var(--app-surface-2);
   padding: 4px;
   border: 1px solid var(--app-border);
   border-radius: var(--app-radius);
@@ -211,7 +201,7 @@ ion-segment {
 
 ion-segment-button {
   --border-radius: calc(var(--app-radius) - 5px);
-  --indicator-color: var(--app-surface-2);
+  --indicator-color: var(--app-surface);
   --color: var(--app-muted);
   --color-checked: var(--app-ink);
   min-height: 42px;
@@ -220,7 +210,7 @@ ion-segment-button {
 }
 
 ion-searchbar {
-  --background: rgba(255, 255, 255, 0.065);
+  --background: var(--app-surface-2);
   --color: var(--app-ink);
   --placeholder-color: var(--app-muted);
   --icon-color: var(--app-muted);
@@ -228,8 +218,7 @@ ion-searchbar {
 }
 
 ion-skeleton-text {
-  --background: rgba(255, 255, 255, 0.075);
-  --background-rgb: 255, 255, 255;
+  --background: var(--app-surface-2);
   border-radius: 12px;
 }
 
@@ -238,21 +227,21 @@ ion-refresher-content {
 }
 
 ion-toast {
-  --background: rgba(24, 16, 34, 0.96);
+  --background: var(--app-surface);
   --color: var(--app-ink);
   --border-radius: 18px;
   --box-shadow: var(--app-shadow);
+  border: 1px solid var(--app-border);
 }
 
 ion-alert .alert-wrapper,
 ion-action-sheet .action-sheet-group,
 ion-loading .loading-wrapper {
-  background: rgba(24, 16, 34, 0.96) !important;
+  background: var(--app-surface) !important;
   color: var(--app-ink) !important;
   border: 1px solid var(--app-border);
   border-radius: 24px !important;
   box-shadow: var(--app-shadow);
-  backdrop-filter: blur(24px) saturate(140%);
 }
 
 /* Primitives reutilisables pour les ecrans applicatifs. */
@@ -264,19 +253,14 @@ ion-loading .loading-wrapper {
 }
 
 .ui-surface {
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.09),
-    rgba(255, 255, 255, 0.045)
-  );
+  background: var(--app-surface);
   border: 1px solid var(--app-border);
   border-radius: var(--app-radius-lg);
-  box-shadow: var(--app-shadow-sm);
-  backdrop-filter: blur(20px) saturate(135%);
+  box-shadow: none;
 }
 
 .ui-eyebrow {
-  color: var(--ion-color-secondary);
+  color: var(--app-primary);
   font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -291,8 +275,7 @@ ion-loading .loading-wrapper {
   border: 1px solid var(--app-border);
   border-radius: 16px;
   color: var(--app-ink);
-  background: rgba(255, 255, 255, 0.065);
-  backdrop-filter: blur(18px);
+  background: var(--app-surface);
   transition:
     transform 0.18s var(--app-ease-out),
     border-color 0.18s ease,
@@ -305,7 +288,7 @@ ion-loading .loading-wrapper {
 
 @media (hover: hover) and (pointer: fine) {
   .ui-icon-button:hover {
-    background: rgba(157, 92, 255, 0.14);
+    background: var(--app-primary-soft);
     border-color: var(--app-border-strong);
   }
 }

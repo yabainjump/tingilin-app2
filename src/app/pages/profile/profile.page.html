@@ -92,6 +92,49 @@
 
     <!-- BODY -->
     <div class="body">
+      <!-- APPARENCE -->
+      <div class="appearance-card">
+        <div class="appearance-label">
+          {{ 'PROFILE_PAGE.APPEARANCE' | translate }}
+        </div>
+        <div
+          class="appearance-options"
+          role="group"
+          [attr.aria-label]="'PROFILE_PAGE.APPEARANCE' | translate"
+        >
+          <button
+            type="button"
+            class="appearance-option"
+            [class.active]="themeMode === 'system'"
+            [attr.aria-pressed]="themeMode === 'system'"
+            (click)="setTheme('system')"
+          >
+            <ion-icon name="phone-portrait-outline"></ion-icon>
+            <span>{{ 'PROFILE_PAGE.THEME_SYSTEM' | translate }}</span>
+          </button>
+          <button
+            type="button"
+            class="appearance-option"
+            [class.active]="themeMode === 'light'"
+            [attr.aria-pressed]="themeMode === 'light'"
+            (click)="setTheme('light')"
+          >
+            <ion-icon name="sunny-outline"></ion-icon>
+            <span>{{ 'PROFILE_PAGE.THEME_LIGHT' | translate }}</span>
+          </button>
+          <button
+            type="button"
+            class="appearance-option"
+            [class.active]="themeMode === 'dark'"
+            [attr.aria-pressed]="themeMode === 'dark'"
+            (click)="setTheme('dark')"
+          >
+            <ion-icon name="moon-outline"></ion-icon>
+            <span>{{ 'PROFILE_PAGE.THEME_DARK' | translate }}</span>
+          </button>
+        </div>
+      </div>
+
       <!-- STATS -->
       <ng-container *ngIf="!loadingStats; else statsSkeleton">
         <div class="glass-card stats-card">

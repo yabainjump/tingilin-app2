@@ -1,7 +1,7 @@
 :host {
-  --dock-bg: rgba(20, 12, 29, 0.88);
-  --dock-stroke: rgba(255, 255, 255, 0.11);
-  --dock-muted: #8f849c;
+  --dock-bg: var(--app-surface);
+  --dock-stroke: var(--app-border);
+  --dock-muted: var(--app-muted);
   display: block;
   height: 100%;
 }
@@ -34,16 +34,14 @@ ion-tab-bar.lotto-tabbar {
   border: 1px solid var(--dock-stroke);
   border-radius: 24px;
   background: var(--dock-bg);
-  box-shadow:
-    0 22px 52px rgba(0, 0, 0, 0.44),
-    inset 0 1px 0 rgba(255, 255, 255, 0.055);
-  backdrop-filter: blur(26px) saturate(150%);
+  box-shadow: var(--app-shadow-sm);
+  backdrop-filter: none;
   pointer-events: auto !important;
 }
 
 ion-tab-button {
   --color: var(--dock-muted);
-  --color-selected: #fff;
+  --color-selected: var(--app-primary);
   --background: transparent;
   --background-focused: transparent;
   --background-activated: transparent;
@@ -63,12 +61,8 @@ ion-tab-button::part(native) {
 }
 
 ion-tab-button.tab-selected {
-  background: linear-gradient(
-    145deg,
-    rgba(157, 92, 255, 0.24),
-    rgba(209, 105, 255, 0.1)
-  ) !important;
-  box-shadow: inset 0 0 0 1px rgba(209, 105, 255, 0.2);
+  background: transparent;
+  box-shadow: none;
 }
 
 ion-tab-button.tab-selected::after {
@@ -78,8 +72,8 @@ ion-tab-button.tab-selected::after {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #ffc857;
-  box-shadow: 0 0 12px rgba(255, 200, 87, 0.7);
+  background: var(--app-primary);
+  box-shadow: none;
 }
 
 ion-tab-button ion-label {
@@ -96,9 +90,9 @@ ion-tab-button ion-icon {
 }
 
 ion-tab-button.tab-selected ion-icon {
-  color: #c987ff;
+  color: var(--app-primary);
   transform: translateY(-1px) scale(1.08);
-  filter: drop-shadow(0 0 10px rgba(157, 92, 255, 0.4));
+  filter: none;
 }
 
 .center-fab {
@@ -106,7 +100,7 @@ ion-tab-button.tab-selected ion-icon {
 }
 
 .center-fab ion-fab-button {
-  --background: var(--app-gradient-brand);
+  --background: var(--app-primary);
   --box-shadow: var(--app-shadow-brand);
   width: 52px;
   height: 52px;

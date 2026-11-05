@@ -1,25 +1,21 @@
 :host {
-  --primary: #9d5cff;
-  --primary-2: #ce5cff;
-  --blue: #7c3aed;
-  --bg: #160d1f;
-  --bg-2: #241233;
-  --card: rgba(255, 255, 255, 0.06);
-  --card-strong: linear-gradient(
-    145deg,
-    rgba(40, 24, 62, 0.9) 0%,
-    rgba(24, 15, 40, 0.94) 100%
-  );
-  --stroke: rgba(255, 255, 255, 0.1);
-  --text: #fff;
-  --muted: rgba(255, 255, 255, 0.64);
+  --primary: var(--app-primary);
+  --primary-2: var(--app-primary-soft);
+  --blue: var(--app-primary);
+  --bg: var(--app-bg);
+  --bg-2: var(--app-bg);
+  --card: var(--app-surface);
+  --card-strong: var(--app-surface-2);
+  --stroke: var(--app-border);
+  --text: var(--app-ink);
+  --muted: var(--app-muted);
 }
 
 .hdr ion-toolbar {
-  --background: rgba(20, 12, 24, 0.84);
+  --background: var(--app-bg);
   --color: var(--text);
   --border-color: transparent;
-  backdrop-filter: blur(18px);
+  backdrop-filter: none;
 }
 
 .hdr ion-title,
@@ -31,17 +27,7 @@
 .bg {
   --background: transparent;
   background:
-    radial-gradient(
-      860px 500px at 10% -8%,
-      rgba(166, 13, 242, 0.26),
-      transparent 58%
-    ),
-    radial-gradient(
-      720px 460px at 92% 10%,
-      rgba(61, 139, 255, 0.12),
-      transparent 56%
-    ),
-    linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
+    transparent;
   color: var(--text);
 }
 
@@ -69,9 +55,9 @@
   align-items: center;
   padding: 6px 10px;
   border-radius: 999px;
-  background: rgba(166, 13, 242, 0.18);
-  border: 1px solid rgba(168, 85, 247, 0.26);
-  color: #f3e8ff;
+  background: var(--app-primary-soft);
+  border: 1px solid var(--app-border-strong);
+  color: var(--app-primary);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -97,8 +83,8 @@
   height: 46px;
   border-radius: 999px;
   border: 1px solid var(--stroke);
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: var(--app-surface-2);
+  color: var(--app-ink);
   display: grid;
   place-items: center;
   flex: 0 0 auto;
@@ -114,8 +100,8 @@
 .stats .stat-card,
 .share-btn {
   border: 1px solid var(--stroke);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.24);
-  backdrop-filter: blur(18px);
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .hero-card {
@@ -134,12 +120,7 @@
 .hero-grad {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(11, 7, 17, 0.94),
-    rgba(11, 7, 17, 0.15) 48%,
-    rgba(11, 7, 17, 0.24)
-  );
+  background: var(--app-overlay);
 }
 
 .status {
@@ -150,14 +131,14 @@
   border-radius: 999px;
   font-size: 11px;
   font-weight: 900;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--app-surface-2);
+  border: 1px solid var(--app-border);
 }
 
 .status.active {
-  background: rgba(43, 238, 121, 0.18);
-  border-color: rgba(43, 238, 121, 0.28);
-  color: #baf6d1;
+  background: var(--app-success);
+  border-color: var(--app-success);
+  color: var(--app-on-success);
 }
 
 .hero-text {
@@ -177,15 +158,15 @@
 .meta-chip {
   padding: 6px 10px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--app-surface-2);
+  border: 1px solid var(--app-border);
   font-size: 11px;
   font-weight: 800;
-  color: #f5ebff;
+  color: var(--app-ink);
 }
 
 .h1 {
-  color: white;
+  color: var(--app-on-primary);
   font-size: 24px;
   font-weight: 900;
   line-height: 1.05;
@@ -195,14 +176,14 @@
 .h2 {
   margin-top: 6px;
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--app-muted);
   line-height: 1.45;
 }
 
 .info-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid var(--app-border);
 }
 
 .cell {
@@ -210,21 +191,21 @@
 }
 
 .cell + .cell {
-  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 1px solid var(--app-border);
 }
 
 .lbl {
   font-size: 10px;
   letter-spacing: 0.14em;
   font-weight: 900;
-  color: rgba(255, 255, 255, 0.42);
+  color: var(--app-muted);
   text-transform: uppercase;
 }
 
 .val {
   margin-top: 6px;
   font-weight: 900;
-  color: #fff;
+  color: var(--app-ink);
 }
 
 .mono {
@@ -252,14 +233,14 @@
 
 .big {
   margin-top: 8px;
-  color: white;
+  color: var(--app-ink);
   font-size: 24px;
   font-weight: 900;
   letter-spacing: -0.03em;
 }
 
 .primary {
-  color: #e6c6ff;
+  color: var(--app-primary);
 }
 
 .right {
@@ -271,8 +252,8 @@
   margin-top: 14px;
   min-height: 52px;
   border-radius: 18px;
-  background: linear-gradient(90deg, var(--primary), var(--primary-2));
-  color: #fff;
+  background: var(--app-surface);
+  color: var(--app-ink);
   font-weight: 900;
   display: flex;
   align-items: center;
@@ -316,15 +297,15 @@
   width: 38px;
   height: 38px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(0, 0, 0, 0.18);
-  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--app-border);
+  background: var(--app-surface);
+  color: var(--app-muted);
 }
 
 .vbtn.on {
-  color: #fff;
-  background: rgba(166, 13, 242, 0.18);
-  border-color: rgba(166, 13, 242, 0.35);
+  color: var(--app-ink);
+  background: var(--app-primary-soft);
+  border-color: var(--app-border-strong);
 }
 
 .grid {
@@ -341,9 +322,9 @@
   align-items: center;
   padding: 14px;
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: var(--app-surface-2);
+  border: 1px solid var(--app-border);
+  color: var(--app-ink);
   width: 100%;
   text-align: left;
 }
@@ -354,13 +335,13 @@
   border-radius: 14px;
   display: grid;
   place-items: center;
-  background: rgba(166, 13, 242, 0.14);
-  color: #f1dfff;
+  background: var(--app-primary-soft);
+  color: var(--app-primary);
 }
 
 .small {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.58);
+  color: var(--app-muted);
   font-weight: 700;
 }
 
@@ -379,7 +360,7 @@
 }
 
 .row ion-icon {
-  color: #f1dfff;
+  color: var(--app-primary);
   font-size: 22px;
 }
 
@@ -397,8 +378,8 @@
   margin-top: 18px;
   padding: 26px 18px;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px dashed rgba(255, 255, 255, 0.14);
+  background: var(--app-surface-2);
+  border: 1px dashed var(--app-border);
   text-align: center;
 }
 
@@ -409,8 +390,8 @@
   border-radius: 18px;
   display: grid;
   place-items: center;
-  background: rgba(166, 13, 242, 0.16);
-  color: #f3e8ff;
+  background: var(--app-primary-soft);
+  color: var(--app-primary);
 }
 
 .empty-icon ion-icon {
@@ -423,7 +404,7 @@
 }
 
 .skel-block {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--app-surface-2);
   border-radius: 24px;
 }
 

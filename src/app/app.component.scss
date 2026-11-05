@@ -11,25 +11,28 @@
   column-gap: 12px;
   align-items: center;
   padding: 12px 14px 12px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--app-border);
   border-radius: 18px;
-  color: #fff;
-  background: rgba(24, 16, 34, 0.96);
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
-  backdrop-filter: blur(14px);
+  color: var(--app-ink);
+  background: var(--app-surface);
+  box-shadow: none;
+  backdrop-filter: none;
   pointer-events: none;
 }
 
 .connectivity-banner.offline {
-  background: rgba(174, 51, 39, 0.95);
+  background: var(--app-danger);
+  color: var(--app-on-danger);
 }
 
 .connectivity-banner.pending {
-  background: rgba(18, 109, 74, 0.95);
+  background: var(--app-success);
+  color: var(--app-on-success);
 }
 
 .connectivity-banner.constrained {
-  background: rgba(139, 87, 16, 0.97);
+  background: var(--app-warning);
+  color: var(--app-on-warning);
 }
 
 .connectivity-banner .title {
@@ -55,9 +58,9 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.28);
-  border-top-color: #fff;
-  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.08);
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  box-shadow: none;
 }
 
 .status-icon.syncing {

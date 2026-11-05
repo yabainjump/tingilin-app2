@@ -24,8 +24,35 @@
   <meta name="twitter:image:alt" content="Tinguilin - Raffles premium" />
   <base href="/" />
 
-  <meta name="color-scheme" content="dark" />
-  <meta name="theme-color" content="#0b0712" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#f7f4fc" id="app-theme-color" />
+  <script>
+    // Applique la preference enregistree avant le bootstrap Angular
+    // pour eviter un flash de theme (FOUC).
+    (function () {
+      var meta = document.getElementById('app-theme-color');
+      var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+      function paint(theme) {
+        if (meta) {
+          meta.setAttribute('content', theme === 'dark' ? '#0d0913' : '#f7f4fc');
+        }
+      }
+
+      try {
+        var stored = localStorage.getItem('tinguilin.theme');
+        if (stored === 'light' || stored === 'dark') {
+          document.documentElement.setAttribute('data-theme', stored);
+          paint(stored);
+        } else {
+          paint(systemDark ? 'dark' : 'light');
+        }
+      } catch (e) {
+        /* stockage indisponible : on garde le theme systeme */
+        paint(systemDark ? 'dark' : 'light');
+      }
+    })();
+  </script>
   <meta name="viewport"
     content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="format-detection" content="telephone=no" />
@@ -38,7 +65,7 @@
 
   <!-- add to homescreen for ios -->
   <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 </head>
 
 <body>

@@ -10,11 +10,9 @@
   justify-content: center;
   padding: clamp(34px, 9vw, 56px) 22px;
   text-align: center;
-  border: 1px dashed rgba(209, 105, 255, 0.26);
+  border: 1px dashed var(--app-border-strong);
   border-radius: 28px;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(157, 92, 255, 0.14), transparent 48%),
-    rgba(255, 255, 255, 0.035);
+  background: var(--app-surface-2);
 }
 
 .empty-state.compact {
@@ -40,11 +38,11 @@
   display: grid;
   place-items: center;
   margin-bottom: 18px;
-  border: 1px solid rgba(209, 105, 255, 0.28);
+  border: 1px solid var(--app-border-strong);
   border-radius: 24px;
-  color: #d98aff;
-  background: linear-gradient(145deg, rgba(157, 92, 255, 0.2), rgba(255, 255, 255, 0.045));
-  box-shadow: 0 18px 44px rgba(157, 92, 255, 0.2);
+  color: var(--app-primary);
+  background: transparent;
+  box-shadow: none;
 }
 
 .icon-shell ion-icon {
@@ -54,11 +52,7 @@
 }
 
 .icon-glow {
-  position: absolute;
-  inset: 16px;
-  border-radius: 50%;
-  background: rgba(209, 105, 255, 0.48);
-  filter: blur(18px);
+  display: none;
 }
 
 h2 {
@@ -85,8 +79,8 @@ button {
   gap: 8px;
   border: 0;
   border-radius: 15px;
-  color: #fff;
-  background: var(--app-gradient-brand);
+  color: var(--app-on-primary);
+  background: var(--app-primary);
   box-shadow: var(--app-shadow-brand);
   font-weight: 750;
 }
