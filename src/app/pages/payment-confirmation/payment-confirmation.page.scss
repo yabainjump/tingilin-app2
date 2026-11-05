@@ -17,8 +17,16 @@
 .page-bg {
   --background: var(--bg);
   background:
-    radial-gradient(520px 380px at 0% 0%, rgba(157, 92, 255, 0.24), transparent 62%),
-    radial-gradient(440px 340px at 100% 72%, rgba(209, 105, 255, 0.1), transparent 66%),
+    radial-gradient(
+      520px 380px at 0% 0%,
+      rgba(157, 92, 255, 0.24),
+      transparent 62%
+    ),
+    radial-gradient(
+      440px 340px at 100% 72%,
+      rgba(209, 105, 255, 0.1),
+      transparent 66%
+    ),
     linear-gradient(180deg, #150b20 0%, var(--bg) 60%);
 }
 
@@ -32,7 +40,11 @@
 }
 
 .glass-card {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.04));
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.09),
+    rgba(255, 255, 255, 0.04)
+  );
   border: 1px solid rgba(255, 255, 255, 0.11);
   backdrop-filter: blur(22px) saturate(135%);
   -webkit-backdrop-filter: blur(16px);
@@ -159,6 +171,11 @@
   transform: scale(0.98);
 }
 
+.method-card:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
 .method-top {
   display: flex;
   justify-content: space-between;
@@ -169,23 +186,22 @@
   width: 48px;
   height: 38px;
   border-radius: 12px;
-//   background: #fff;
+  //   background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.08);
   background-size: 70%;
   background-position: center;
   background-repeat: no-repeat;
 }
 
-
-.tgl1{
-    height: 40px;
-    border-radius: 12px;
+.tgl1 {
+  height: 40px;
+  border-radius: 12px;
 }
 
-.tgl2{
-    height: 40px;
-    width: 68px;
-    border-radius: 12px;
+.tgl2 {
+  height: 40px;
+  width: 68px;
+  border-radius: 12px;
 }
 
 .method-name {
@@ -280,6 +296,39 @@
   gap: 12px;
 }
 
+.payment-state {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(157, 92, 255, 0.38);
+  border-radius: 16px;
+  background: rgba(157, 92, 255, 0.12);
+  color: #fff;
+}
+
+.payment-state ion-icon {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  font-size: 24px;
+  color: #c99cff;
+}
+
+.payment-state div {
+  display: grid;
+  gap: 4px;
+}
+
+.payment-state strong {
+  font-size: 14px;
+}
+
+.payment-state span {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
 .pay-btn {
   height: 56px;
   border-radius: 18px;
@@ -361,4 +410,3 @@
 .sk-btn.sm {
   height: 46px;
 }
-

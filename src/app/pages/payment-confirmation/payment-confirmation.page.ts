@@ -36,7 +36,13 @@ export class PaymentConfirmationPage {
   transactionId?: string;
   paymentLink?: string;
   paymentWithTaxes?: number;
+  paymentStatus?: string;
+  directChargePending = false;
   private intentKey = '';
+  private verificationTimer?: ReturnType<typeof setTimeout>;
+  private verificationAttempts = 0;
+  private verificationInFlight = false;
+  private readonly maxVerificationAttempts = 12;
 
   loading = false;
   pageLoading = true;
@@ -51,6 +57,7 @@ export class PaymentConfirmationPage {
   ) {}
 
   async ionViewWillEnter() {
+    this.stopVerificationPolling();
     this.pageLoading = true;
     this.payerEmail = '';
     this.payerName = '';
@@ -99,8 +106,8 @@ export class PaymentConfirmationPage {
     }
 
     // validation simple
-    const cleanedPhone = (this.userPhone || '').replace(/\s+/g, '');
-    if (!cleanedPhone || cleanedPhone.length < 8) {
+    const cleanedPhone = this.normalizeCameroonPhone(this.userPhone);
+    if (!cleanedPhone) {
       return this.presentToast(
         this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_INVALID_PHONE'),
       );
@@ -113,6 +120,8 @@ export class PaymentConfirmationPage {
     }
 
     this.loading = true;
+    this.directChargePending = false;
+    this.paymentStatus = undefined;
 
     try {
       const userEmail = this.payerEmail;
@@ -127,6 +136,7 @@ export class PaymentConfirmationPage {
           userPhone: cleanedPhone,
           userCountry: this.userCountry,
           senderName,
+          paymentMethodCode: this.paymentMethod,
           idempotencyKey: this.intentKey,
         }),
       );
@@ -134,6 +144,7 @@ export class PaymentConfirmationPage {
       this.transactionId = res?.transactionId;
       this.paymentLink = this.safePaymentLink(res?.paymentLink);
       this.paymentWithTaxes = res?.paymentWithTaxes;
+      this.paymentStatus = res?.status;
 
       if (res?.provider === 'MOCK' && this.transactionId) {
         const mockProviderRef = [
@@ -153,29 +164,37 @@ export class PaymentConfirmationPage {
         }
       }
 
-      if (!this.paymentLink) {
-        throw new Error(
+      if (this.paymentLink) {
+        await this.presentToast(
           this.translate.instant(
-            'PAYMENT_CONFIRMATION_PAGE.TOAST_MISSING_PAYMENT_LINK',
+            'PAYMENT_CONFIRMATION_PAGE.TOAST_CHECKOUT_FALLBACK',
           ),
         );
+        window.open(this.paymentLink, '_blank', 'noopener,noreferrer');
+        return;
       }
 
-      await this.presentToast(
-        this.paymentWithTaxes
-          ? this.translate.instant(
-              'PAYMENT_CONFIRMATION_PAGE.TOAST_AMOUNT_TTC',
-              { amount: this.paymentWithTaxes },
-            )
-          : this.translate.instant(
-              'PAYMENT_CONFIRMATION_PAGE.TOAST_LINK_GENERATED',
-            ),
+      if (
+        res?.provider === 'DIGIKUNTZ' &&
+        res?.paymentFlow === 'DIRECT_CHARGE' &&
+        this.transactionId
+      ) {
+        this.directChargePending = true;
+        await this.presentToast(
+          this.translate.instant(
+            'PAYMENT_CONFIRMATION_PAGE.TOAST_DIRECT_CHARGE_SENT',
+            { operator: this.paymentMethod },
+          ),
+        );
+        this.startVerificationPolling();
+        return;
+      }
+
+      throw new Error(
+        this.translate.instant(
+          'PAYMENT_CONFIRMATION_PAGE.TOAST_MISSING_PAYMENT_LINK',
+        ),
       );
-
-      // Ouvre le lien (web)
-      window.open(this.paymentLink, '_blank', 'noopener,noreferrer');
-
-      // Option UX : tu laisses un bouton "Vérifier le paiement" visible
     } catch (e: any) {
       const status = Number(e?.status ?? e?.error?.statusCode ?? 0);
       const rawErrorMessage = e?.error?.message;
@@ -239,42 +258,59 @@ export class PaymentConfirmationPage {
     }
   }
 
-  async verifyPayment() {
+  async verifyPayment(silent = false): Promise<string | undefined> {
     if (!this.transactionId) return;
+    if (this.verificationInFlight) return this.paymentStatus;
 
-    this.loading = true;
+    this.verificationInFlight = true;
+    if (!silent) this.loading = true;
 
     try {
       const res = await firstValueFrom(
         this.paymentsApi.verifyDigikuntz(this.transactionId),
       );
+      this.paymentStatus = res?.status || 'PENDING';
 
       if (res?.status === 'SUCCESS') {
+        this.directChargePending = false;
+        this.stopVerificationPolling();
         await this.presentToast(
           this.translate.instant(
             'PAYMENT_CONFIRMATION_PAGE.TOAST_PAYMENT_CONFIRMED',
           ),
         );
         // exemple : redirige vers mes tickets
-        this.router.navigateByUrl('/tabs/participations');
-        return;
+        await this.router.navigateByUrl('/tabs/participations');
+        return 'SUCCESS';
       }
 
-      await this.presentToast(
-        this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_STATUS', {
-          status: res?.status || 'PENDING',
-        }),
-      );
+      if (res?.status === 'FAILED') {
+        this.directChargePending = false;
+        this.stopVerificationPolling();
+      }
+
+      if (!silent) {
+        await this.presentToast(
+          this.translate.instant('PAYMENT_CONFIRMATION_PAGE.TOAST_STATUS', {
+            status: res?.status || 'PENDING',
+          }),
+        );
+      }
+      return res?.status || 'PENDING';
     } catch (e: any) {
-      await this.presentToast(
-        e?.error?.message ||
-          e?.message ||
-          this.translate.instant(
-            'PAYMENT_CONFIRMATION_PAGE.TOAST_VERIFY_ERROR',
-          ),
-      );
+      if (!silent) {
+        await this.presentToast(
+          e?.error?.message ||
+            e?.message ||
+            this.translate.instant(
+              'PAYMENT_CONFIRMATION_PAGE.TOAST_VERIFY_ERROR',
+            ),
+        );
+      }
+      return undefined;
     } finally {
-      this.loading = false;
+      this.verificationInFlight = false;
+      if (!silent) this.loading = false;
     }
   }
 
@@ -300,6 +336,7 @@ export class PaymentConfirmationPage {
 
   ionViewWillLeave() {
     document.removeEventListener('visibilitychange', this.visibilityHandler);
+    this.stopVerificationPolling();
   }
 
   private buildIntentKey(): string {
@@ -317,9 +354,48 @@ export class PaymentConfirmationPage {
   private safePaymentLink(value: unknown): string | undefined {
     try {
       const parsed = new URL(String(value ?? '').trim());
-      return parsed.protocol === 'https:' ? parsed.toString() : undefined;
+      const host = parsed.hostname.toLowerCase();
+      const trustedHost =
+        host === 'app.digikuntz.com' ||
+        host === 'flutterwave.com' ||
+        host.endsWith('.flutterwave.com');
+      return parsed.protocol === 'https:' && trustedHost
+        ? parsed.toString()
+        : undefined;
     } catch {
       return undefined;
+    }
+  }
+
+  private normalizeCameroonPhone(value: unknown): string | undefined {
+    let digits = String(value ?? '').replace(/\D/g, '');
+    if (digits.startsWith('00237')) digits = digits.slice(2);
+    if (/^6\d{8}$/.test(digits)) digits = `237${digits}`;
+    return /^2376\d{8}$/.test(digits) ? digits : undefined;
+  }
+
+  private startVerificationPolling() {
+    this.stopVerificationPolling();
+    this.verificationAttempts = 0;
+
+    const poll = async () => {
+      if (!this.directChargePending || !this.transactionId) return;
+      if (this.verificationAttempts >= this.maxVerificationAttempts) return;
+
+      this.verificationAttempts += 1;
+      const status = await this.verifyPayment(true);
+      if (status === 'SUCCESS' || status === 'FAILED') return;
+
+      this.verificationTimer = setTimeout(poll, 5000);
+    };
+
+    this.verificationTimer = setTimeout(poll, 5000);
+  }
+
+  private stopVerificationPolling() {
+    if (this.verificationTimer) {
+      clearTimeout(this.verificationTimer);
+      this.verificationTimer = undefined;
     }
   }
 }

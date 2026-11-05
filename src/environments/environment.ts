@@ -2,10 +2,12 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import { resolveApiBaseUrl } from "./api-base-url";
+
 export const environment = {
   production: false,
   // apiBaseUrl: 'https://backend.tinguilin.yaba-in.com/api/v1',
-  apiBaseUrl: 'http://localhost:3001/api/v1',
+ apiBaseUrl: resolveApiBaseUrl('https://backend.tinguilin.yaba-in.com/api/v1'),
   paymentProvider: 'DIGIKUNTZ' as const,
   supportEmail: '',
   // Google Sign-In (Web OAuth Client ID, "xxxx.apps.googleusercontent.com").

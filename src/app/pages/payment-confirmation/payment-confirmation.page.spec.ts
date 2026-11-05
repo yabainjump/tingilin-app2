@@ -29,10 +29,15 @@ describe('PaymentConfirmationPage', () => {
           provide: ActivatedRoute,
           useValue: {
             snapshot: {
-              paramMap: convertToParamMap({ id: 'test-id', raffleId: 'test-id' }),
+              paramMap: convertToParamMap({
+                id: 'test-id',
+                raffleId: 'test-id',
+              }),
               queryParamMap: convertToParamMap({}),
             },
-            paramMap: of(convertToParamMap({ id: 'test-id', raffleId: 'test-id' })),
+            paramMap: of(
+              convertToParamMap({ id: 'test-id', raffleId: 'test-id' }),
+            ),
             queryParamMap: of(convertToParamMap({})),
           },
         },
@@ -47,5 +52,26 @@ describe('PaymentConfirmationPage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('normalizes local and international Cameroon phone numbers', () => {
+    const normalize = (component as any).normalizeCameroonPhone.bind(component);
+
+    expect(normalize('691 224 472')).toBe('237691224472');
+    expect(normalize('+237 691 224 472')).toBe('237691224472');
+    expect(normalize('00237-691-224-472')).toBe('237691224472');
+    expect(normalize('1234')).toBeUndefined();
+  });
+
+  it('allows only trusted HTTPS payment fallback hosts', () => {
+    const safeLink = (component as any).safePaymentLink.bind(component);
+
+    expect(
+      safeLink('https://checkout.flutterwave.com/v3/hosted/pay/test'),
+    ).toBe('https://checkout.flutterwave.com/v3/hosted/pay/test');
+    expect(
+      safeLink('http://checkout.flutterwave.com/pay/test'),
+    ).toBeUndefined();
+    expect(safeLink('https://evil.example/pay/test')).toBeUndefined();
   });
 });
