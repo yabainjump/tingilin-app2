@@ -5,6 +5,7 @@
     <ion-tab-button tab="home">
       <ion-icon name="home-outline"></ion-icon>
       <ion-label>{{ 'TABS.HOME' | translate }}</ion-label>
+      <ion-badge *ngIf="(notifState.unreadCount$ | async) as n" [hidden]="n === 0">{{ n }}</ion-badge>
     </ion-tab-button>
 
     <ion-tab-button tab="participations" href="/tabs/participations">

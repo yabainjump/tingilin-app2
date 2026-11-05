@@ -231,6 +231,10 @@ export class HomePage implements OnInit, OnDestroy {
     this.router.navigate(['/tabs/raffle-details', d.id]);
   }
 
+  viewAll(): void {
+    this.router.navigate(['/tabs/participations']);
+  }
+
   openLiveDraws(): void {
     this.router.navigate(['/tabs/winners']);
   }

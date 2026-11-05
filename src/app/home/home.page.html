@@ -110,7 +110,7 @@
           {{ 'HOME_PAGE.ENDING_SOON' | translate }}
           <ion-icon class="fire" name="flame-outline"></ion-icon>
         </h2>
-        <button type="button" class="view-all">
+        <button type="button" class="view-all" (click)="viewAll()">
           {{ 'COMMON.VIEW_ALL' | translate }}
         </button>
       </div>
@@ -183,7 +183,7 @@
                 </div>
               </div>
 
-              <button type="button" class="hero-cta">
+              <button type="button" class="hero-cta" (click)="openRaffle(d); $event.stopPropagation()">
                 <span>{{ 'HOME_PAGE.TRY_TO_WIN' | translate }}</span>
                 <span class="price-pill">
                   {{ d.ticketPrice ?? 0 }} {{ d.currency || 'XAF' }}
@@ -304,7 +304,7 @@
               <div class="row-price">
                 {{ r.ticketPrice ?? 0 }} {{ r.currency || 'XAF' }}
               </div>
-              <button class="pill" type="button">
+              <button class="pill" type="button" (click)="openRaffle(r); $event.stopPropagation()">
                 {{ 'HOME_PAGE.BUY_TICKET' | translate }}
               </button>
             </div>
