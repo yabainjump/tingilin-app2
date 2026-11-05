@@ -26,7 +26,7 @@ export class PaymentConfirmationPage {
   raffleId!: string;
   title = '';
   imageUrl?: string;
-  fallbackImage = 'assets/placeholder-product.png';
+  readonly fallbackImage = 'assets/img/placeholder.png';
 
   quantity = 1;
   ticketUnitPrice = 0;
@@ -125,6 +125,15 @@ export class PaymentConfirmationPage {
   back() {
     history.back();
   }
+
+  onProductImageError(event: Event) {
+    const image = event.target;
+    if (!(image instanceof HTMLImageElement)) return;
+    if (image.getAttribute('src') === this.fallbackImage) return;
+
+    image.src = this.fallbackImage;
+  }
+
   async confirmPayment() {
     if (this.loading) return;
     if (!this.raffleId) return;

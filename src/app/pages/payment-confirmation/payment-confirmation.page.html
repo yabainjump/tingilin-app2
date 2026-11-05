@@ -19,10 +19,12 @@
       <div class="glass-card product-card">
         <div class="glow-dot"></div>
 
-        <div
+        <img
           class="product-img"
-          [style.backgroundImage]="'url(' + (imageUrl || fallbackImage) + ')'"
-        ></div>
+          [src]="imageUrl || fallbackImage"
+          [alt]="title"
+          (error)="onProductImageError($event)"
+        />
 
         <div class="product-body">
           <div class="chip">TINGUILIN</div>

@@ -97,4 +97,13 @@ describe('PaymentConfirmationPage', () => {
 
     expect(component.paymentOverlayVisible).toBeTrue();
   });
+
+  it('uses the local placeholder when the product image is missing', () => {
+    const image = document.createElement('img');
+    image.src = 'https://backend.example.test/uploads/missing.webp';
+
+    component.onProductImageError({ target: image } as unknown as Event);
+
+    expect(image.getAttribute('src')).toBe('assets/img/placeholder.png');
+  });
 });
