@@ -25,6 +25,8 @@ export class WinnersPage implements OnInit, OnDestroy {
 
   featured: WinnerDto | null = null;
   recent: WinnerDto[] = [];
+  selectedRaffle: WinnerDto | null = null;
+  allDraws: WinnerDto[] = [];
   scanTickets: string[] = [];
   activeScanIndex = 0;
   analysisProgress = 0;
@@ -91,6 +93,7 @@ export class WinnersPage implements OnInit, OnDestroy {
       .subscribe({
         next: (res: any) => {
           const list = Array.isArray(res) ? res : (res?.data ?? []);
+          this.allDraws = list;
           this.featured = list.length ? list[0] : null;
           this.recent = list.slice(1, 9);
           this.scanTickets = this.buildScanTickets(this.featured, this.recent);
@@ -185,19 +188,33 @@ export class WinnersPage implements OnInit, OnDestroy {
   }
 
   get featureTitle(): string {
-    return this.featured?.prizeTitle || this.translate.instant('WINNERS_PAGE.PREMIUM_PRODUCT');
+    return (this.selectedRaffle ?? this.featured)?.prizeTitle || this.translate.instant('WINNERS_PAGE.PREMIUM_PRODUCT');
   }
 
   get featureImage(): string {
-    return this.featured?.prizeImageUrl || 'assets/img/placeholder.png';
+    return (this.selectedRaffle ?? this.featured)?.prizeImageUrl || 'assets/img/placeholder.png';
   }
 
   get selectedAvatar(): string {
-    return this.avatarSrc(this.featured?.avatar);
+    return this.avatarSrc((this.selectedRaffle ?? this.featured)?.avatar);
   }
 
   get selectedWinnerName(): string {
-    return this.featured?.winnerName || this.translate.instant('WINNERS_PAGE.CANDIDATE');
+    return (this.selectedRaffle ?? this.featured)?.winnerName || this.translate.instant('WINNERS_PAGE.CANDIDATE');
+  }
+
+  selectDraw(w: WinnerDto): void {
+    this.selectedRaffle = w;
+    this.featured = w;
+    this.recent = this.allDraws.filter(d => d !== w).slice(0, 8);
+    this.scanTickets = this.buildScanTickets(w, this.recent);
+    this.activeScanIndex = Math.min(2, this.scanTickets.length - 1);
+  }
+
+  backToList(): void {
+    this.selectedRaffle = null;
+    this.proof = null;
+    this.proofOpen = false;
   }
 
   trackByRecent(index: number, item: WinnerDto) {
@@ -263,7 +280,7 @@ export class WinnersPage implements OnInit, OnDestroy {
       return;
     }
 
-    const raffleId = this.featured?.raffleId;
+    const raffleId = (this.selectedRaffle ?? this.featured)?.raffleId;
     if (!raffleId) {
       return;
     }

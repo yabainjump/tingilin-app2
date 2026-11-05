@@ -471,7 +471,12 @@
     "SHARE_TEXT": "Suis les tirages Tingilin en direct.",
     "TOAST_LINK_COPIED": "Lien copié ✅",
     "TOAST_RESULTS_SOON": "Résultats complets bientôt disponibles.",
-    "TOAST_WINNER": "Gagnant: {{winner}} — #{{ticket}}"
+    "TOAST_WINNER": "Gagnant: {{winner}} — #{{ticket}}",
+    "LIST_TITLE": "Tirages Live",
+    "LIST_EMPTY": "Aucun tirage disponible pour le moment.",
+    "LIST_WINNER": "Gagnant",
+    "LIST_TICKET": "Ticket",
+    "BACK_TO_LIST": "Retour"
   },
   "EDIT_PROFILE_PAGE": {
     "TITLE": "Modifier le profil",
@@ -538,6 +543,9 @@
   "ALL_RAFFLES": {
     "TITLE": "Tous les raffles",
     "EMPTY": "Aucun raffle disponible pour le moment.",
-    "PARTICIPATE": "Participer"
+    "PARTICIPATE": "Participer",
+    "FILTER_ALL": "Tous",
+    "FILTER_ACTIVE": "Actifs",
+    "FILTER_ENDED": "Terminés"
   }
 }

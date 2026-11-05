@@ -1,189 +1,251 @@
 <ion-content [fullscreen]="true" class="live-winners">
   <div class="bg-lights" aria-hidden="true"></div>
 
-  <div class="page">
-    <div class="topbar">
-      <button class="icon-btn" type="button" (click)="back()" [attr.aria-label]="'WINNERS_PAGE.CLOSE' | translate">
-        <ion-icon name="close-outline"></ion-icon>
-      </button>
-
-      <div class="top-center">
-        <div class="kicker">{{ 'WINNERS_PAGE.DRAWS' | translate }}</div>
-        <h1>{{ 'WINNERS_PAGE.LIVE' | translate }}</h1>
+  <ng-container *ngIf="!selectedRaffle; else detailView">
+    <div class="page">
+      <div class="topbar">
+        <div class="top-center">
+          <div class="kicker">{{ 'WINNERS_PAGE.DRAWS' | translate }}</div>
+          <h1>{{ 'WINNERS_PAGE.LIST_TITLE' | translate }}</h1>
+        </div>
+        <button class="icon-btn" type="button" (click)="shareLive()" [attr.aria-label]="'WINNERS_PAGE.SHARE_LIVE' | translate">
+          <ion-icon name="share-social-outline"></ion-icon>
+        </button>
       </div>
 
-      <button class="icon-btn" type="button" (click)="shareLive()" [attr.aria-label]="'WINNERS_PAGE.SHARE_LIVE' | translate">
-        <ion-icon name="share-social-outline"></ion-icon>
-      </button>
-    </div>
+      <ng-container *ngIf="!loading; else listSkeleton">
 
-    <ng-container *ngIf="!loading; else liveSkeleton">
-      <div class="featured" *ngIf="featureTitle as title">
-        <div class="featured-glow" aria-hidden="true"></div>
-        <div class="featured-card">
-          <div class="thumb" [style.background-image]="'url(' + featureImage + ')'" role="img" aria-label="Featured prize"></div>
-
-          <div class="featured-meta">
-            <span class="badge">{{ 'WINNERS_PAGE.GRAND_PRIZE' | translate }}</span>
-            <div class="title">{{ title }}</div>
-            <div class="subtitle">{{ 'WINNERS_PAGE.WINNER' | translate }}: {{ selectedWinnerName }}</div>
-          </div>
+        <div class="list-empty" *ngIf="allDraws.length === 0">
+          <ion-icon name="trophy-outline"></ion-icon>
+          <p>{{ 'WINNERS_PAGE.LIST_EMPTY' | translate }}</p>
         </div>
 
-        <!-- Tirage verifiable (commit-reveal) -->
-        <div class="fairness" *ngIf="featured?.raffleId">
-          <button class="proof-btn" type="button" (click)="toggleProof()" [disabled]="proofLoading">
-            <ion-icon [name]="proofOpen ? 'shield-checkmark' : 'shield-checkmark-outline'"></ion-icon>
-            <span>{{ (proofOpen ? 'WINNERS_PAGE.PROOF_HIDE' : 'WINNERS_PAGE.PROOF_SHOW') | translate }}</span>
-            <ion-spinner *ngIf="proofLoading" name="dots"></ion-spinner>
+        <div class="draws-list" *ngIf="allDraws.length > 0">
+          <button
+            class="row-card"
+            type="button"
+            *ngFor="let draw of allDraws; trackBy: trackByRecent"
+            (click)="selectDraw(draw)"
+          >
+            <div
+              class="row-img"
+              [style.background-image]="'url(' + (draw.prizeImageUrl || 'assets/img/placeholder.png') + ')'"
+              role="img"
+              [attr.aria-label]="draw.prizeTitle"
+            ></div>
+            <div class="row-body">
+              <div class="row-title">{{ draw.prizeTitle }}</div>
+              <div class="row-sub">
+                <span class="row-label">{{ 'WINNERS_PAGE.LIST_WINNER' | translate }}</span>
+                {{ draw.winnerName }}
+              </div>
+              <div class="row-sub">
+                <span class="row-label">{{ 'WINNERS_PAGE.LIST_TICKET' | translate }}</span>
+                #{{ draw.ticketCode }}
+              </div>
+            </div>
+            <div class="row-badge" *ngIf="draw.badgeTone"
+              [style.background]="draw.badgeTone"
+            ></div>
+            <ion-icon name="chevron-forward-outline" class="row-chevron"></ion-icon>
           </button>
+        </div>
 
-          <div class="proof-panel" *ngIf="proofOpen && proof">
-            <div class="proof-line" *ngIf="proof.verified !== undefined">
-              <span class="k">{{ 'WINNERS_PAGE.PROOF_STATUS' | translate }}</span>
-              <span class="v" [class.ok]="proof.verified" [class.ko]="!proof.verified">
-                {{ (proof.verified ? 'WINNERS_PAGE.PROOF_VERIFIED' : 'WINNERS_PAGE.PROOF_UNVERIFIED') | translate }}
-              </span>
+      </ng-container>
+
+      <ng-template #listSkeleton>
+        <div class="live-skeleton">
+          <ion-skeleton-text animated class="sk sk-row" *ngFor="let _ of [1,2,3,4,5]"></ion-skeleton-text>
+        </div>
+      </ng-template>
+
+    </div>
+  </ng-container>
+
+  <ng-template #detailView>
+    <div class="page">
+      <div class="topbar">
+        <button class="icon-btn" type="button" (click)="backToList()" [attr.aria-label]="'WINNERS_PAGE.BACK_TO_LIST' | translate">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </button>
+        <div class="top-center">
+          <div class="kicker">{{ 'WINNERS_PAGE.DRAWS' | translate }}</div>
+          <h1>{{ 'WINNERS_PAGE.LIVE' | translate }}</h1>
+        </div>
+        <button class="icon-btn" type="button" (click)="shareLive()" [attr.aria-label]="'WINNERS_PAGE.SHARE_LIVE' | translate">
+          <ion-icon name="share-social-outline"></ion-icon>
+        </button>
+      </div>
+
+      <ng-container *ngIf="!loading; else liveSkeleton">
+        <div class="featured" *ngIf="featureTitle as title">
+          <div class="featured-glow" aria-hidden="true"></div>
+          <div class="featured-card">
+            <div class="thumb" [style.background-image]="'url(' + featureImage + ')'" role="img" aria-label="Featured prize"></div>
+
+            <div class="featured-meta">
+              <span class="badge">{{ 'WINNERS_PAGE.GRAND_PRIZE' | translate }}</span>
+              <div class="title">{{ title }}</div>
+              <div class="subtitle">{{ 'WINNERS_PAGE.WINNER' | translate }}: {{ selectedWinnerName }}</div>
             </div>
+          </div>
 
-            <div class="proof-line">
-              <span class="k">{{ 'WINNERS_PAGE.PROOF_ALGO' | translate }}</span>
-              <span class="v">{{ proof.algorithm }}</span>
-            </div>
-
-            <button class="proof-line copyable" type="button" (click)="copyProofValue(proof.commitment)">
-              <span class="k">{{ 'WINNERS_PAGE.PROOF_COMMITMENT' | translate }}</span>
-              <span class="v mono">{{ short(proof.commitment) }}</span>
+          <!-- Tirage verifiable (commit-reveal) -->
+          <div class="fairness" *ngIf="(selectedRaffle ?? featured)?.raffleId">
+            <button class="proof-btn" type="button" (click)="toggleProof()" [disabled]="proofLoading">
+              <ion-icon [name]="proofOpen ? 'shield-checkmark' : 'shield-checkmark-outline'"></ion-icon>
+              <span>{{ (proofOpen ? 'WINNERS_PAGE.PROOF_HIDE' : 'WINNERS_PAGE.PROOF_SHOW') | translate }}</span>
+              <ion-spinner *ngIf="proofLoading" name="dots"></ion-spinner>
             </button>
 
-            <ng-container *ngIf="proof.revealed as rev">
-              <button class="proof-line copyable" type="button" (click)="copyProofValue(rev.serverSeed)">
-                <span class="k">{{ 'WINNERS_PAGE.PROOF_SEED' | translate }}</span>
-                <span class="v mono">{{ short(rev.serverSeed) }}</span>
-              </button>
-              <button class="proof-line copyable" type="button" (click)="copyProofValue(rev.ticketsetHash)">
-                <span class="k">{{ 'WINNERS_PAGE.PROOF_TICKETSET' | translate }}</span>
-                <span class="v mono">{{ short(rev.ticketsetHash) }}</span>
-              </button>
-              <div class="proof-line">
-                <span class="k">{{ 'WINNERS_PAGE.PROOF_INDEX' | translate }}</span>
-                <span class="v">{{ rev.winningIndex }} / {{ rev.ticketCount }}</span>
+            <div class="proof-panel" *ngIf="proofOpen && proof">
+              <div class="proof-line" *ngIf="proof.verified !== undefined">
+                <span class="k">{{ 'WINNERS_PAGE.PROOF_STATUS' | translate }}</span>
+                <span class="v" [class.ok]="proof.verified" [class.ko]="!proof.verified">
+                  {{ (proof.verified ? 'WINNERS_PAGE.PROOF_VERIFIED' : 'WINNERS_PAGE.PROOF_UNVERIFIED') | translate }}
+                </span>
               </div>
-              <button class="proof-line copyable" type="button" (click)="copyProofValue(rev.winningTicketSerial)">
-                <span class="k">{{ 'WINNERS_PAGE.PROOF_TICKET' | translate }}</span>
-                <span class="v mono">{{ rev.winningTicketSerial }}</span>
-              </button>
-            </ng-container>
 
-            <div class="proof-pending" *ngIf="!proof.revealed">
-              {{ 'WINNERS_PAGE.PROOF_PENDING' | translate }}
+              <div class="proof-line">
+                <span class="k">{{ 'WINNERS_PAGE.PROOF_ALGO' | translate }}</span>
+                <span class="v">{{ proof.algorithm }}</span>
+              </div>
+
+              <button class="proof-line copyable" type="button" (click)="copyProofValue(proof.commitment)">
+                <span class="k">{{ 'WINNERS_PAGE.PROOF_COMMITMENT' | translate }}</span>
+                <span class="v mono">{{ short(proof.commitment) }}</span>
+              </button>
+
+              <ng-container *ngIf="proof.revealed as rev">
+                <button class="proof-line copyable" type="button" (click)="copyProofValue(rev.serverSeed)">
+                  <span class="k">{{ 'WINNERS_PAGE.PROOF_SEED' | translate }}</span>
+                  <span class="v mono">{{ short(rev.serverSeed) }}</span>
+                </button>
+                <button class="proof-line copyable" type="button" (click)="copyProofValue(rev.ticketsetHash)">
+                  <span class="k">{{ 'WINNERS_PAGE.PROOF_TICKETSET' | translate }}</span>
+                  <span class="v mono">{{ short(rev.ticketsetHash) }}</span>
+                </button>
+                <div class="proof-line">
+                  <span class="k">{{ 'WINNERS_PAGE.PROOF_INDEX' | translate }}</span>
+                  <span class="v">{{ rev.winningIndex }} / {{ rev.ticketCount }}</span>
+                </div>
+                <button class="proof-line copyable" type="button" (click)="copyProofValue(rev.winningTicketSerial)">
+                  <span class="k">{{ 'WINNERS_PAGE.PROOF_TICKET' | translate }}</span>
+                  <span class="v mono">{{ rev.winningTicketSerial }}</span>
+                </button>
+              </ng-container>
+
+              <div class="proof-pending" *ngIf="!proof.revealed">
+                {{ 'WINNERS_PAGE.PROOF_PENDING' | translate }}
+              </div>
+
+              <div class="proof-formula">{{ proof.formula }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="scanner-zone">
+          <div class="target" aria-hidden="true">
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+            <ion-icon name="chevron-back-outline"></ion-icon>
+          </div>
+
+          <div class="scan-row faded">
+            <div class="ghost-avatar"></div>
+            <span>#{{ ticketAtOffset(-2) }}</span>
+          </div>
+
+          <div class="scan-row soft">
+            <div class="ghost-avatar"></div>
+            <span>#{{ ticketAtOffset(-1) }}</span>
+          </div>
+
+          <div class="scan-row active">
+            <div class="avatar-shell">
+              <img [src]="selectedAvatar" alt="participant avatar" />
             </div>
 
-            <div class="proof-formula">{{ proof.formula }}</div>
-          </div>
-        </div>
-      </div>
+            <div class="active-meta">
+              <div class="active-ticket">#{{ centeredTicket }}</div>
+              <div class="active-label">{{ analysisLabel }}</div>
+            </div>
 
-      <div class="scanner-zone">
-        <div class="target" aria-hidden="true">
-          <ion-icon name="chevron-forward-outline"></ion-icon>
-          <ion-icon name="chevron-back-outline"></ion-icon>
-        </div>
-
-        <div class="scan-row faded">
-          <div class="ghost-avatar"></div>
-          <span>#{{ ticketAtOffset(-2) }}</span>
-        </div>
-
-        <div class="scan-row soft">
-          <div class="ghost-avatar"></div>
-          <span>#{{ ticketAtOffset(-1) }}</span>
-        </div>
-
-        <div class="scan-row active">
-          <div class="avatar-shell">
-            <img [src]="selectedAvatar" alt="participant avatar" />
+            <div class="scan-chip">{{ 'WINNERS_PAGE.SCANNING' | translate }}</div>
           </div>
 
-          <div class="active-meta">
-            <div class="active-ticket">#{{ centeredTicket }}</div>
-            <div class="active-label">{{ analysisLabel }}</div>
+          <div class="scan-row soft">
+            <div class="ghost-avatar"></div>
+            <span>#{{ ticketAtOffset(1) }}</span>
           </div>
 
-          <div class="scan-chip">{{ 'WINNERS_PAGE.SCANNING' | translate }}</div>
-        </div>
-
-        <div class="scan-row soft">
-          <div class="ghost-avatar"></div>
-          <span>#{{ ticketAtOffset(1) }}</span>
-        </div>
-
-        <div class="scan-row faded">
-          <div class="ghost-avatar"></div>
-          <span>#{{ ticketAtOffset(2) }}</span>
-        </div>
-      </div>
-
-      <div class="analysis">
-        <div class="analysis-head">
-          <span>{{ 'WINNERS_PAGE.LIVE_PROGRESS' | translate }}</span>
-          <strong>{{ analysisProgress }}%</strong>
-        </div>
-        <div class="bar">
-          <div class="bar-fill" [style.width.%]="analysisProgress"></div>
-        </div>
-        <div class="analysis-note">
-          {{ 'WINNERS_PAGE.LIVE_VISUAL_INDICATOR' | translate }}
-        </div>
-      </div>
-
-      <div class="stats-grid">
-        <button class="stat-card" type="button" (click)="seeResults()">
-          <div class="stat-k">{{ 'WINNERS_PAGE.LIVE_PEOPLE' | translate }}</div>
-          <div class="stat-v">
-            <span class="live-dot"></span>
-            {{ participantsSeen | number }}
+          <div class="scan-row faded">
+            <div class="ghost-avatar"></div>
+            <span>#{{ ticketAtOffset(2) }}</span>
           </div>
-        </button>
-
-        <div class="stat-card">
-          <div class="stat-k">{{ 'WINNERS_PAGE.DRAW_FAIRNESS' | translate }}</div>
-          <div class="stat-v gold">{{ verifiableLabel }}</div>
         </div>
-      </div>
 
-      <div class="notice">
-        {{ 'WINNERS_PAGE.NOTICE' | translate }}
-      </div>
-
-      <div class="recent" *ngIf="recent.length">
-        <div class="recent-title">{{ 'WINNERS_PAGE.RECENT_WINNERS' | translate }}</div>
-
-        <button class="recent-item" type="button" *ngFor="let w of recent; trackBy: trackByRecent" (click)="openWinner(w)">
-          <div class="recent-avatar" [style.background-image]="'url(' + avatarSrc(w.avatar) + ')'">
+        <div class="analysis">
+          <div class="analysis-head">
+            <span>{{ 'WINNERS_PAGE.LIVE_PROGRESS' | translate }}</span>
+            <strong>{{ analysisProgress }}%</strong>
           </div>
-
-          <div class="recent-body">
-            <div class="recent-name">{{ w.winnerName }}</div>
-            <div class="recent-prize">{{ w.prizeTitle }}</div>
+          <div class="bar">
+            <div class="bar-fill" [style.width.%]="analysisProgress"></div>
           </div>
-
-          <div class="recent-ticket">#{{ w.ticketCode }}</div>
-        </button>
-      </div>
-    </ng-container>
-
-    <ng-template #liveSkeleton>
-      <div class="live-skeleton">
-        <ion-skeleton-text animated class="sk sk-featured"></ion-skeleton-text>
-        <ion-skeleton-text animated class="sk sk-scan"></ion-skeleton-text>
-        <ion-skeleton-text animated class="sk sk-progress"></ion-skeleton-text>
-        <div class="sk-grid">
-          <ion-skeleton-text animated class="sk sk-stat"></ion-skeleton-text>
-          <ion-skeleton-text animated class="sk sk-stat"></ion-skeleton-text>
+          <div class="analysis-note">
+            {{ 'WINNERS_PAGE.LIVE_VISUAL_INDICATOR' | translate }}
+          </div>
         </div>
-        <ion-skeleton-text animated class="sk sk-row" *ngFor="let _ of [1,2,3]"></ion-skeleton-text>
-      </div>
-    </ng-template>
-  </div>
+
+        <div class="stats-grid">
+          <button class="stat-card" type="button" (click)="seeResults()">
+            <div class="stat-k">{{ 'WINNERS_PAGE.LIVE_PEOPLE' | translate }}</div>
+            <div class="stat-v">
+              <span class="live-dot"></span>
+              {{ participantsSeen | number }}
+            </div>
+          </button>
+
+          <div class="stat-card">
+            <div class="stat-k">{{ 'WINNERS_PAGE.DRAW_FAIRNESS' | translate }}</div>
+            <div class="stat-v gold">{{ verifiableLabel }}</div>
+          </div>
+        </div>
+
+        <div class="notice">
+          {{ 'WINNERS_PAGE.NOTICE' | translate }}
+        </div>
+
+        <div class="recent" *ngIf="recent.length">
+          <div class="recent-title">{{ 'WINNERS_PAGE.RECENT_WINNERS' | translate }}</div>
+
+          <button class="recent-item" type="button" *ngFor="let w of recent; trackBy: trackByRecent" (click)="openWinner(w)">
+            <div class="recent-avatar" [style.background-image]="'url(' + avatarSrc(w.avatar) + ')'">
+            </div>
+
+            <div class="recent-body">
+              <div class="recent-name">{{ w.winnerName }}</div>
+              <div class="recent-prize">{{ w.prizeTitle }}</div>
+            </div>
+
+            <div class="recent-ticket">#{{ w.ticketCode }}</div>
+          </button>
+        </div>
+      </ng-container>
+
+      <ng-template #liveSkeleton>
+        <div class="live-skeleton">
+          <ion-skeleton-text animated class="sk sk-featured"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk sk-scan"></ion-skeleton-text>
+          <ion-skeleton-text animated class="sk sk-progress"></ion-skeleton-text>
+          <div class="sk-grid">
+            <ion-skeleton-text animated class="sk sk-stat"></ion-skeleton-text>
+            <ion-skeleton-text animated class="sk sk-stat"></ion-skeleton-text>
+          </div>
+          <ion-skeleton-text animated class="sk sk-row" *ngFor="let _ of [1,2,3]"></ion-skeleton-text>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+
 </ion-content>
