@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -21,6 +21,7 @@ import { LanguageSwitchModule } from './shared/language-switch/language-switch.m
 import { environment } from 'src/environments/environment';
 import { OfflineActionQueueService } from './services/offline/offline-action-queue.service';
 import { GoogleSignInService } from './services/auth/google-sign-in.service';
+import { ChunkLoadErrorHandler } from './core/errors/chunk-load-error.handler';
 
 export function initializeAuthTokenStorage(
   tokenStorage: AuthTokenStorageService,
@@ -76,6 +77,7 @@ export function initializeGoogleSignIn(googleSignIn: GoogleSignInService) {
       multi: true,
     },
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: ErrorHandler, useClass: ChunkLoadErrorHandler },
     { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     provideHttpClient(withInterceptorsFromDi()),

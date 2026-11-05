@@ -2,6 +2,13 @@
   RewriteEngine On
   RewriteBase /
   RewriteRule ^index\.html$ - [L]
+
+  # Un fichier statique absent doit rester une 404. Le transformer en
+  # index.html provoque une erreur MIME et masque la vraie cause au navigateur.
+  RewriteCond %{REQUEST_URI} \.(?:js|mjs|css|json|map|png|jpe?g|gif|svg|webp|avif|ico|woff2?|ttf|otf)$ [NC]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^ - [R=404,L]
+
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . /index.html [L]
