@@ -5,8 +5,8 @@
         <ion-icon name="arrow-back-outline"></ion-icon>
       </button>
       <h1>{{ 'REFERRAL_PAGE.TITLE' | translate }}</h1>
-      <button class="icon-btn" type="button" (click)="copyLink()">
-        <ion-icon name="help-circle-outline"></ion-icon>
+      <button class="icon-btn" type="button" (click)="copyLink()" [attr.aria-label]="'REFERRAL_PAGE.COPY_LINK' | translate">
+        <ion-icon name="copy-outline"></ion-icon>
       </button>
     </div>
 

@@ -129,12 +129,11 @@ export class SupportPage {
   }
 
   goBack(): void {
-    if (window.history.length > 1) {
+    try {
       this.nav.back();
-      return;
+    } catch {
+      this.nav.navigateRoot('/tabs/profile');
     }
-
-    this.nav.navigateRoot('/tabs/profile');
   }
 
   selectCategory(categoryId: SupportCategoryId): void {

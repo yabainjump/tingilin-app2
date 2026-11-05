@@ -4,6 +4,7 @@ import { NavController, ToastController } from '@ionic/angular';
 import { finalize, forkJoin, of, catchError } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { ThemeMode, ThemeService } from 'src/app/services/theme/theme.service';
 import {
   HistoryResult,
   ProfileApiService,
@@ -34,6 +35,7 @@ export class ProfilePage {
     private toast: ToastController,
     private translate: TranslateService,
     private router: Router,
+    private theme: ThemeService,
   ) {}
 
   ionViewWillEnter() {
@@ -79,6 +81,14 @@ export class ProfilePage {
     return `${b.toLocaleString(locale)} ${c}`;
   }
 
+  get themeMode(): ThemeMode {
+    return this.theme.current;
+  }
+
+  setTheme(mode: ThemeMode) {
+    void this.theme.set(mode);
+  }
+
   back() {
     this.nav.navigateBack('/tabs/home');
   }
@@ -108,13 +118,17 @@ export class ProfilePage {
     /* plus tard */
   }
   editAvatar() {
-    /* plus tard */
+    this.nav.navigateForward('/tabs/edit-profile');
   }
-  topUp() {
-    /* plus tard */
+  async topUp() {
+    const t = await this.toast.create({
+      message: this.translate.instant('PROFILE_PAGE.TOPUP_COMING_SOON'),
+      duration: 1800,
+    });
+    await t.present();
   }
   goHistory() {
-    /* navigation historique */
+    this.router.navigate(['/tabs/participations']);
   }
 
   async openHistoryItem(h: ProfileHistoryItem) {

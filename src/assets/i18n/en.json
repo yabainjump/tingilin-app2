@@ -158,6 +158,10 @@
     "PRODUCTS_WON": "PRODUCTS WON",
     "HISTORY_TITLE": "Game History",
     "SEE_ALL": "View all",
+    "APPEARANCE": "Appearance",
+    "THEME_SYSTEM": "System",
+    "THEME_LIGHT": "Light",
+    "THEME_DARK": "Dark",
     "ADD_BALANCE": "Top up balance",
     "EMPTY_HISTORY_TITLE": "No entries yet",
     "EMPTY_HISTORY_DESC": "Your next tickets and results will appear here.",
@@ -168,7 +172,8 @@
     "ENDED": "Ended",
     "TOAST_LOGOUT": "Logged out ✅",
     "TOAST_RAFFLE_MISSING": "Unable to open this raffle (missing id)",
-    "TOAST_NAVIGATION_FAILED": "Unable to navigate to raffle"
+    "TOAST_NAVIGATION_FAILED": "Unable to navigate to raffle",
+    "TOPUP_COMING_SOON": "Top-up coming soon"
   },
   "FORGOT_PASSWORD_PAGE": {
     "TOP_TITLE": "Reset",
@@ -318,7 +323,8 @@
     "TOAST_LOAD_MORE_FAILED": "Unable to load more referrals",
     "TOAST_CODE_COPIED": "Referral code copied",
     "TOAST_LINK_COPIED": "Referral link copied",
-    "TOAST_SHARE_UNAVAILABLE": "Sharing unavailable"
+    "TOAST_SHARE_UNAVAILABLE": "Sharing unavailable",
+    "COPY_LINK": "Copy link"
   },
   "SUPPORT_PAGE": {
     "EYEBROW": "Help center",
@@ -420,6 +426,7 @@
     "TAP_TO_COPY": "Tap to copy",
     "TOAST_MISSING_ID": "Unable to open raffle (missing id)",
     "TOAST_LOAD_FAILED": "Unable to load tickets",
+    "TOAST_NOT_FOUND": "This raffle was not found",
     "SHARE_TEXT": "I’m participating in \"{{title}}\" with {{count}} ticket(s) on Tingilin.",
     "TOAST_LINK_COPIED": "Link copied ✅",
     "TOAST_SHARE_UNAVAILABLE": "Sharing unavailable",

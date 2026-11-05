@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
@@ -33,6 +33,7 @@ export class TicketDetailsPage {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private ticketsApi: TicketsApiService,
     private rafflesApi: RafflesPublicApiService,
     private toast: ToastController,
@@ -97,13 +98,18 @@ export class TicketDetailsPage {
         (a.serial || '').localeCompare(b.serial || ''),
       );
     } catch (e: any) {
+      const is404 = e?.status === 404 || e?.error?.statusCode === 404;
       const t = await this.toast.create({
-        message:
-          e?.error?.message ||
-          this.translate.instant('TICKET_DETAILS_PAGE.TOAST_LOAD_FAILED'),
+        message: is404
+          ? this.translate.instant('TICKET_DETAILS_PAGE.TOAST_NOT_FOUND')
+          : e?.error?.message ||
+            this.translate.instant('TICKET_DETAILS_PAGE.TOAST_LOAD_FAILED'),
         duration: 1600,
       });
       await t.present();
+      if (is404) {
+        await this.router.navigate(['/tabs/participations'], { replaceUrl: true });
+      }
     } finally {
       this.loading = false;
     }
