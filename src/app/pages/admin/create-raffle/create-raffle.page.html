@@ -130,6 +130,7 @@
           type="datetime-local"
           formControlName="endAt"
         />
+        <p class="field-error" *ngIf="form.controls['endAt'].errors?.['pastDate'] && form.controls['endAt'].touched">{{ 'CREATE_RAFFLE_PAGE.END_DATE_PAST' | translate }}</p>
 
         <div class="projection-card">
           <div class="projection-top">

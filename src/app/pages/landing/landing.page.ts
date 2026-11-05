@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
   
 })
 export class LandingPage {
+  // TODO: charger depuis RafflesPublicApiService si les données de la hero section doivent être dynamiques.
   ticketPrice = 100;
   sold = 750;
   total = 1000;

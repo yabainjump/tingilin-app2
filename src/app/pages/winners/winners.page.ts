@@ -61,14 +61,14 @@ export class WinnersPage implements OnInit, OnDestroy {
   }
 
   ionViewWillLeave() {
-    this.stopScanAnimation();
-    this.liveSub?.unsubscribe();
-    this.liveSub = undefined;
-    this.liveSocket.disconnect();
-    this.hasRealtime = false;
+    this.cleanup();
   }
 
   ngOnDestroy(): void {
+    this.cleanup();
+  }
+
+  private cleanup(): void {
     this.stopScanAnimation();
     this.liveSub?.unsubscribe();
     this.liveSub = undefined;

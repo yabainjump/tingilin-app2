@@ -529,7 +529,8 @@
     "TOAST_CAMERA_FAILED": "Impossible d’ouvrir la caméra/galerie sur ce support",
     "TOAST_INCOMPLETE_FORM": "Formulaire incomplet",
     "TOAST_CREATED": "Raffle créée ✅",
-    "TOAST_CREATE_ERROR": "Erreur création"
+    "TOAST_CREATE_ERROR": "Erreur création",
+    "END_DATE_PAST": "La date de fin doit être dans le futur"
   },
   "TICKETS_PAGE": {
     "TITLE": "Tickets"

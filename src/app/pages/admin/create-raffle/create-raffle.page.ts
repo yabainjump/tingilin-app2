@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, ValidationErrors, Validators, FormGroup } from '@angular/forms';
 import {
   NavController,
   ToastController,
@@ -11,6 +11,14 @@ import { RAFFLE_CATEGORY_OPTIONS } from 'src/app/core/constants/raffle-categorie
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { blobFromUrl, fileFromBlob } from 'src/app/shared/utils/blob-file';
+
+function futureDateValidator(control: AbstractControl): ValidationErrors | null {
+  const value = control.value;
+  if (!value) return null;
+  const date = new Date(value);
+  if (isNaN(date.getTime())) return null;
+  return date <= new Date() ? { pastDate: true } : null;
+}
 
 type CreateRaffleForm = {
   title: string;
@@ -64,7 +72,7 @@ export class CreateRafflePage {
         Validators.min(1),
       ]),
       currency: this.fb.nonNullable.control('XAF', [Validators.required]),
-      endAt: this.fb.nonNullable.control('', [Validators.required]),
+      endAt: this.fb.nonNullable.control('', [Validators.required, futureDateValidator]),
 
       publishNow: this.fb.nonNullable.control(true),
     });
@@ -138,6 +146,13 @@ export class CreateRafflePage {
     }
   }
 
+  private readError(err: any): string {
+    const msg = err?.error?.message;
+    if (Array.isArray(msg)) return msg.join(' · ');
+    if (msg != null) return String(msg);
+    return this.translate.instant('CREATE_RAFFLE_PAGE.TOAST_CREATE_ERROR');
+  }
+
   async submit(): Promise<void> {
     if (this.submitting) return;
 
@@ -207,10 +222,7 @@ export class CreateRafflePage {
     } catch (err: unknown) {
       this.submitting = false;
 
-      const message =
-        (err as any)?.error?.message ??
-        (err as any)?.message ??
-        this.translate.instant('CREATE_RAFFLE_PAGE.TOAST_CREATE_ERROR');
+      const message = this.readError(err as any);
 
       const t = await this.toast.create({
         message,
