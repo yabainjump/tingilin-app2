@@ -8,6 +8,13 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { environment } from 'src/environments/environment';
 import { toAbsoluteMediaUrl } from 'src/app/shared/utils/media-url';
 
+type PaymentOverlayState =
+  | 'STARTING'
+  | 'WAITING'
+  | 'SUCCESS'
+  | 'FAILED'
+  | 'CANCELLED';
+
 @Component({
   selector: 'app-payment-confirmation',
   templateUrl: './payment-confirmation.page.html',
@@ -38,8 +45,12 @@ export class PaymentConfirmationPage {
   paymentWithTaxes?: number;
   paymentStatus?: string;
   directChargePending = false;
+  paymentOverlayVisible = false;
+  paymentOverlayState: PaymentOverlayState = 'STARTING';
   private intentKey = '';
+  private paymentContext = '';
   private verificationTimer?: ReturnType<typeof setTimeout>;
+  private successNavigationTimer?: ReturnType<typeof setTimeout>;
   private verificationAttempts = 0;
   private verificationInFlight = false;
   private readonly maxVerificationAttempts = 12;
@@ -58,6 +69,7 @@ export class PaymentConfirmationPage {
 
   async ionViewWillEnter() {
     this.stopVerificationPolling();
+    this.stopSuccessNavigation();
     this.pageLoading = true;
     this.payerEmail = '';
     this.payerName = '';
@@ -76,7 +88,19 @@ export class PaymentConfirmationPage {
     this.quantity = Number(qp.get('qty') || 1);
     this.ticketUnitPrice = Number(qp.get('unit') || 0);
     this.amount = this.quantity * this.ticketUnitPrice;
-    this.intentKey = this.buildIntentKey();
+
+    const nextPaymentContext = `${this.raffleId}:${this.quantity}:${this.amount}`;
+    const isTerminalPayment =
+      this.paymentStatus === 'SUCCESS' || this.paymentStatus === 'FAILED';
+    if (
+      !this.paymentContext ||
+      this.paymentContext !== nextPaymentContext ||
+      isTerminalPayment
+    ) {
+      this.resetPaymentState();
+      this.intentKey = this.buildIntentKey();
+    }
+    this.paymentContext = nextPaymentContext;
 
     if (!this.raffleId) {
       this.presentToast(
@@ -88,6 +112,15 @@ export class PaymentConfirmationPage {
 
     await this.prefillPayerProfile();
     this.pageLoading = false;
+
+    if (
+      this.directChargePending &&
+      this.transactionId &&
+      this.paymentOverlayState === 'WAITING'
+    ) {
+      this.paymentOverlayVisible = true;
+      this.startVerificationPolling();
+    }
   }
   back() {
     history.back();
@@ -122,6 +155,8 @@ export class PaymentConfirmationPage {
     this.loading = true;
     this.directChargePending = false;
     this.paymentStatus = undefined;
+    this.paymentOverlayState = 'STARTING';
+    this.paymentOverlayVisible = true;
 
     try {
       const userEmail = this.payerEmail;
@@ -158,19 +193,22 @@ export class PaymentConfirmationPage {
         );
 
         if (mockResult?.status === 'SUCCESS') {
-          await this.presentToast('Paiement test confirme localement.');
-          await this.router.navigateByUrl('/tabs/participations');
+          this.paymentStatus = 'SUCCESS';
+          this.showPaymentSuccess();
           return;
         }
       }
 
       if (this.paymentLink) {
+        this.directChargePending = true;
+        this.paymentOverlayState = 'WAITING';
         await this.presentToast(
           this.translate.instant(
             'PAYMENT_CONFIRMATION_PAGE.TOAST_CHECKOUT_FALLBACK',
           ),
         );
         window.open(this.paymentLink, '_blank', 'noopener,noreferrer');
+        this.startVerificationPolling();
         return;
       }
 
@@ -180,6 +218,7 @@ export class PaymentConfirmationPage {
         this.transactionId
       ) {
         this.directChargePending = true;
+        this.paymentOverlayState = 'WAITING';
         await this.presentToast(
           this.translate.instant(
             'PAYMENT_CONFIRMATION_PAGE.TOAST_DIRECT_CHARGE_SENT',
@@ -206,6 +245,7 @@ export class PaymentConfirmationPage {
         status === 401 ||
         /no refresh token|unauthorized|jwt/i.test(message)
       ) {
+        this.paymentOverlayVisible = false;
         this.auth.logout();
         await this.presentToast('Session expirée. Connecte-toi puis réessaie.');
         await this.router.navigate(['/auth/login'], {
@@ -215,6 +255,10 @@ export class PaymentConfirmationPage {
         });
         return;
       }
+
+      this.directChargePending = false;
+      this.paymentOverlayState = 'FAILED';
+      this.paymentOverlayVisible = true;
 
       if (status === 409) {
         await this.presentToast(
@@ -272,21 +316,15 @@ export class PaymentConfirmationPage {
       this.paymentStatus = res?.status || 'PENDING';
 
       if (res?.status === 'SUCCESS') {
-        this.directChargePending = false;
-        this.stopVerificationPolling();
-        await this.presentToast(
-          this.translate.instant(
-            'PAYMENT_CONFIRMATION_PAGE.TOAST_PAYMENT_CONFIRMED',
-          ),
-        );
-        // exemple : redirige vers mes tickets
-        await this.router.navigateByUrl('/tabs/participations');
+        this.showPaymentSuccess();
         return 'SUCCESS';
       }
 
       if (res?.status === 'FAILED') {
         this.directChargePending = false;
         this.stopVerificationPolling();
+        this.paymentOverlayState = 'FAILED';
+        this.paymentOverlayVisible = true;
       }
 
       if (!silent) {
@@ -337,6 +375,38 @@ export class PaymentConfirmationPage {
   ionViewWillLeave() {
     document.removeEventListener('visibilitychange', this.visibilityHandler);
     this.stopVerificationPolling();
+    this.stopSuccessNavigation();
+  }
+
+  cancelPaymentWaiting() {
+    if (this.paymentOverlayState !== 'WAITING') return;
+
+    // Digikuntz ne fournit pas d'endpoint d'annulation. On arrête seulement
+    // l'attente locale et on conserve la transaction pour pouvoir la vérifier.
+    this.stopVerificationPolling();
+    this.paymentOverlayState = 'CANCELLED';
+    this.paymentOverlayVisible = true;
+  }
+
+  closePaymentOverlay() {
+    if (
+      this.paymentOverlayState === 'STARTING' ||
+      this.paymentOverlayState === 'WAITING' ||
+      this.paymentOverlayState === 'SUCCESS'
+    ) {
+      return;
+    }
+
+    if (
+      this.paymentOverlayState === 'FAILED' &&
+      this.paymentStatus === 'FAILED'
+    ) {
+      this.resetPaymentState();
+      this.intentKey = this.buildIntentKey();
+      return;
+    }
+
+    this.paymentOverlayVisible = false;
   }
 
   private buildIntentKey(): string {
@@ -397,5 +467,35 @@ export class PaymentConfirmationPage {
       clearTimeout(this.verificationTimer);
       this.verificationTimer = undefined;
     }
+  }
+
+  private showPaymentSuccess() {
+    this.directChargePending = false;
+    this.paymentOverlayState = 'SUCCESS';
+    this.paymentOverlayVisible = true;
+    this.stopVerificationPolling();
+    this.stopSuccessNavigation();
+
+    this.successNavigationTimer = setTimeout(() => {
+      this.successNavigationTimer = undefined;
+      void this.router.navigateByUrl('/tabs/participations');
+    }, 1800);
+  }
+
+  private stopSuccessNavigation() {
+    if (this.successNavigationTimer) {
+      clearTimeout(this.successNavigationTimer);
+      this.successNavigationTimer = undefined;
+    }
+  }
+
+  private resetPaymentState() {
+    this.paymentOverlayVisible = false;
+    this.paymentOverlayState = 'STARTING';
+    this.directChargePending = false;
+    this.transactionId = undefined;
+    this.paymentLink = undefined;
+    this.paymentWithTaxes = undefined;
+    this.paymentStatus = undefined;
   }
 }

@@ -296,39 +296,6 @@
   gap: 12px;
 }
 
-.payment-state {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 14px;
-  border: 1px solid rgba(157, 92, 255, 0.38);
-  border-radius: 16px;
-  background: rgba(157, 92, 255, 0.12);
-  color: #fff;
-}
-
-.payment-state ion-icon {
-  flex: 0 0 auto;
-  margin-top: 2px;
-  font-size: 24px;
-  color: #c99cff;
-}
-
-.payment-state div {
-  display: grid;
-  gap: 4px;
-}
-
-.payment-state strong {
-  font-size: 14px;
-}
-
-.payment-state span {
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 12px;
-  line-height: 1.45;
-}
-
 .pay-btn {
   height: 56px;
   border-radius: 18px;
@@ -409,4 +376,205 @@
 
 .sk-btn.sm {
   height: 46px;
+}
+
+.payment-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  padding:
+    max(22px, env(safe-area-inset-top))
+    18px
+    max(22px, env(safe-area-inset-bottom));
+  background: rgba(5, 2, 10, 0.82);
+  backdrop-filter: blur(12px) saturate(125%);
+  -webkit-backdrop-filter: blur(12px) saturate(125%);
+  animation: payment-overlay-in 180ms ease-out;
+}
+
+.payment-dialog {
+  position: relative;
+  width: min(100%, 370px);
+  max-height: 100%;
+  overflow: auto;
+  padding: 30px 24px 24px;
+  border: 1px solid rgba(190, 133, 255, 0.28);
+  border-radius: 28px;
+  background:
+    radial-gradient(
+      220px 150px at 50% 0%,
+      rgba(157, 92, 255, 0.22),
+      transparent 72%
+    ),
+    linear-gradient(155deg, #21142d 0%, #110a19 100%);
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.62),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  text-align: center;
+  color: #fff;
+  animation: payment-dialog-in 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.payment-dialog.is-success {
+  border-color: rgba(55, 211, 129, 0.42);
+}
+
+.payment-dialog.is-failed {
+  border-color: rgba(255, 91, 115, 0.38);
+}
+
+.payment-visual {
+  width: 94px;
+  height: 94px;
+  margin: 0 auto 22px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(190, 133, 255, 0.35);
+  border-radius: 50%;
+  background: rgba(157, 92, 255, 0.13);
+  box-shadow:
+    0 0 0 10px rgba(157, 92, 255, 0.05),
+    0 0 44px rgba(157, 92, 255, 0.25);
+}
+
+.payment-visual ion-spinner {
+  width: 46px;
+  height: 46px;
+  color: #c99cff;
+}
+
+.payment-visual ion-icon {
+  font-size: 62px;
+  stroke-width: 4px;
+}
+
+.payment-visual.is-success {
+  color: #37d381;
+  border-color: rgba(55, 211, 129, 0.56);
+  background: rgba(55, 211, 129, 0.12);
+  box-shadow:
+    0 0 0 10px rgba(55, 211, 129, 0.06),
+    0 0 48px rgba(55, 211, 129, 0.28);
+  animation: payment-success-pop 440ms cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+.payment-visual.is-failed {
+  color: #ff5b73;
+  border-color: rgba(255, 91, 115, 0.52);
+  background: rgba(255, 91, 115, 0.11);
+  box-shadow:
+    0 0 0 10px rgba(255, 91, 115, 0.05),
+    0 0 44px rgba(255, 91, 115, 0.2);
+}
+
+.payment-copy h2 {
+  margin: 0;
+  font-size: clamp(22px, 6vw, 28px);
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.payment-copy p {
+  max-width: 300px;
+  margin: 12px auto 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.payment-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-top: 22px;
+  padding: 13px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.payment-summary span {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.payment-summary strong {
+  color: var(--gold);
+  font-size: 16px;
+}
+
+.payment-cancel-btn,
+.payment-close-btn {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 18px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.payment-cancel-btn {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.055);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.payment-close-btn {
+  border: 0;
+  background: var(--app-gradient-brand);
+  color: #fff;
+  box-shadow: var(--app-shadow-brand);
+}
+
+@keyframes payment-overlay-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes payment-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+}
+
+@keyframes payment-success-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.62);
+  }
+}
+
+@media (max-height: 560px) {
+  .payment-dialog {
+    padding-top: 22px;
+  }
+
+  .payment-visual {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 16px;
+  }
+
+  .payment-visual ion-icon {
+    font-size: 48px;
+  }
+
+  .payment-visual ion-spinner {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .payment-overlay,
+  .payment-dialog,
+  .payment-visual.is-success {
+    animation: none;
+  }
 }

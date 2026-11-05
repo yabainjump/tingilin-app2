@@ -74,4 +74,27 @@ describe('PaymentConfirmationPage', () => {
     ).toBeUndefined();
     expect(safeLink('https://evil.example/pay/test')).toBeUndefined();
   });
+
+  it('stops local payment polling when the user cancels waiting', () => {
+    component.directChargePending = true;
+    component.paymentOverlayVisible = true;
+    component.paymentOverlayState = 'WAITING';
+    (component as any).verificationTimer = setTimeout(() => undefined, 10_000);
+
+    component.cancelPaymentWaiting();
+
+    expect(component.paymentOverlayState).toBe('CANCELLED');
+    expect(component.paymentOverlayVisible).toBeTrue();
+    expect(component.directChargePending).toBeTrue();
+    expect((component as any).verificationTimer).toBeUndefined();
+  });
+
+  it('does not close a payment overlay while payment is in progress', () => {
+    component.paymentOverlayVisible = true;
+    component.paymentOverlayState = 'WAITING';
+
+    component.closePaymentOverlay();
+
+    expect(component.paymentOverlayVisible).toBeTrue();
+  });
 });

@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1793874800254,
+  "timestamp": 1793877523406,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -12,10 +12,10 @@
       },
       "urls": [
         "/index.html",
-        "/main.0cb70a19998fe016.js",
+        "/main.e395f4612ceb0740.js",
         "/manifest.webmanifest",
         "/polyfills.06cbf0422dbf6c09.js",
-        "/runtime.5ee0c73132cd5d04.js",
+        "/runtime.2266f174cc264020.js",
         "/styles.009a4cf57081a198.css"
       ],
       "patterns": []
@@ -1452,8 +1452,8 @@
     }
   ],
   "hashTable": {
-    "/assets/i18n/en.json": "bcbe619eee9fd0aa08e335773f6c79346a4ea447",
-    "/assets/i18n/fr.json": "279c9eedf3cb0f55b2168a939fc614f3c3365c66",
+    "/assets/i18n/en.json": "6355840fc6276ec7e80d62dad9b49a6c584b2934",
+    "/assets/i18n/fr.json": "79e1c0e067efc7570b982aade714079e4492e57c",
     "/assets/icon/favicon.png": "7798b8e0eb61d7375c245af78bbf5c916932bf13",
     "/assets/img/Asset_6.png": "b5278ea73ce60b583b1bf863435793a1e277d87a",
     "/assets/img/Asset_7.png": "933234bd0c049e22244df2c5f5770728ae09c3c2",
@@ -1468,8 +1468,8 @@
     "/assets/img/slide2.png": "5baf79684957a50af91773154d09753128e9373b",
     "/assets/img/slide3.png": "c0f010efd1eaad0108e6d395eaf62aa8c98cd9a4",
     "/assets/shapes.svg": "5413e95adabcb2cb639970051f55e0ddb64ace53",
-    "/index.html": "3cb84dbd34ba41c389831734e812b8c314b0e391",
-    "/main.0cb70a19998fe016.js": "cc98e8644f25789d469fbe848f63710398a366c8",
+    "/index.html": "fe3447f2f0fcef2aa9c8a339a63b282777f187a1",
+    "/main.e395f4612ceb0740.js": "f4caeedea0aef05767454e4c30b9571923cfeb2f",
     "/manifest.webmanifest": "32bf5b840a0fc693d5cd01ff9d268a38b8e6332c",
     "/phone_couche.4e0e983121ea0fa9.png": "019615d50aeb86b4a1d7d212cdddfb436b4c6245",
     "/phone_montre.faa2d2e29c83d712.png": "3de62c2f0f81b978171d6843f22dcea8dda98ed7",
@@ -1484,7 +1484,7 @@
     "/plus-jakarta-sans-latin-800-normal.23a2d53395ddb14f.woff": "8dd9eb7e3c14704ca8049affc609182dbc9b6952",
     "/plus-jakarta-sans-latin-800-normal.f5722262b6e7214e.woff2": "9b74d53a7dca5c40d770c0007d12f240e0b145f1",
     "/polyfills.06cbf0422dbf6c09.js": "937619036a8b0ad87acb2897cc94f6eaedc45426",
-    "/runtime.5ee0c73132cd5d04.js": "0c24f27845b2829b01a57489917fe240a16610d8",
+    "/runtime.2266f174cc264020.js": "f3c77913a4b7f2babe3df6e774d4429b2ccbc91a",
     "/styles.009a4cf57081a198.css": "6ea0ec5aa1becf9970bd29774f0f11ac37f5392e",
     "/svg/accessibility-outline.svg": "92bc5fbc69bc5b55f75c5d29686d6f3b949857bd",
     "/svg/accessibility-sharp.svg": "0c6447c380f04b29bef7413d50d088dd4a5fd61c",
