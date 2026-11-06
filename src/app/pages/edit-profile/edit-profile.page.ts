@@ -122,7 +122,7 @@ export class EditProfilePage implements OnDestroy {
   }
 
   goChangePassword() {
-    this.nav.navigateForward('/auth/forgot-password');
+    this.nav.navigateForward('/tabs/change-password');
   }
 
   private toKnownRegion(value: unknown): UserRegion | null {

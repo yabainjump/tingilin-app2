@@ -563,5 +563,20 @@
     "FILTER_ALL": "Tous",
     "FILTER_ACTIVE": "Actifs",
     "FILTER_ENDED": "Terminés"
+  },
+  "CHANGE_PASSWORD_PAGE": {
+    "TITLE": "Changer le mot de passe",
+    "CURRENT_PASSWORD": "Mot de passe actuel",
+    "NEW_PASSWORD": "Nouveau mot de passe",
+    "CONFIRM_PASSWORD": "Confirmer le mot de passe",
+    "CURRENT_PASSWORD_PLACEHOLDER": "Votre mot de passe actuel",
+    "NEW_PASSWORD_PLACEHOLDER": "Minimum 8 caractères",
+    "CONFIRM_PASSWORD_PLACEHOLDER": "Répétez le nouveau mot de passe",
+    "SUBMIT": "Enregistrer",
+    "ERROR_MISMATCH": "Les mots de passe ne correspondent pas",
+    "ERROR_SAME": "Le nouveau mot de passe doit être différent de l'ancien",
+    "ERROR_MIN_LENGTH": "Minimum 8 caractères",
+    "TOAST_SUCCESS": "Mot de passe modifié. Un email de confirmation vous a été envoyé.",
+    "TOAST_ERROR": "Impossible de changer le mot de passe"
   }
 }

@@ -35,7 +35,7 @@
   "LANDING": {
     "CONNECTION": "Connexion",
     "NEW_CONCEPT": "Nouveau Concept",
-    "HERO_TITLE": "Votre prochain iPhone\npour le prix d'un biscuit",
+    "HERO_TITLE": "Gagnez de grands prix\npour le prix d'un biscuit",
     "HERO_SUBTITLE": "Gagnez gros, dépensez peu.",
     "HOW_TITLE": "Comment ça marche ?",
     "HOW_TAG": "Simple & Rapide",
@@ -158,6 +158,10 @@
     "PRODUCTS_WON": "PRODUITS GAGNÉS",
     "HISTORY_TITLE": "Historique des Jeux",
     "SEE_ALL": "Tout voir",
+    "APPEARANCE": "Apparence",
+    "THEME_SYSTEM": "Système",
+    "THEME_LIGHT": "Clair",
+    "THEME_DARK": "Sombre",
     "ADD_BALANCE": "Recharger le solde",
     "EMPTY_HISTORY_TITLE": "Aucune participation pour le moment",
     "EMPTY_HISTORY_DESC": "Tes prochains tickets et résultats apparaîtront ici.",
@@ -168,7 +172,8 @@
     "ENDED": "Terminé",
     "TOAST_LOGOUT": "Déconnecté ✅",
     "TOAST_RAFFLE_MISSING": "Impossible d'ouvrir ce raffle (id manquant)",
-    "TOAST_NAVIGATION_FAILED": "Navigation impossible vers le raffle"
+    "TOAST_NAVIGATION_FAILED": "Navigation impossible vers le raffle",
+    "TOPUP_COMING_SOON": "Recharge bientôt disponible"
   },
   "FORGOT_PASSWORD_PAGE": {
     "TOP_TITLE": "Réinitialisation",
@@ -334,7 +339,8 @@
     "TOAST_LOAD_MORE_FAILED": "Impossible de charger plus de filleuls",
     "TOAST_CODE_COPIED": "Code parrainage copié",
     "TOAST_LINK_COPIED": "Lien de parrainage copié",
-    "TOAST_SHARE_UNAVAILABLE": "Partage indisponible"
+    "TOAST_SHARE_UNAVAILABLE": "Partage indisponible",
+    "COPY_LINK": "Copier le lien"
   },
   "SUPPORT_PAGE": {
     "EYEBROW": "Centre d'aide",
@@ -436,6 +442,7 @@
     "TAP_TO_COPY": "Appuie pour copier",
     "TOAST_MISSING_ID": "Impossible d'afficher le raffle (id manquant)",
     "TOAST_LOAD_FAILED": "Impossible de charger les tickets",
+    "TOAST_NOT_FOUND": "Ce tirage est introuvable",
     "SHARE_TEXT": "Je participe à \"{{title}}\" avec {{count}} ticket(s) sur Tinguilin.",
     "TOAST_LINK_COPIED": "Lien copié ✅",
     "TOAST_SHARE_UNAVAILABLE": "Partage indisponible",
@@ -480,7 +487,12 @@
     "SHARE_TEXT": "Suis les tirages Tingilin en direct.",
     "TOAST_LINK_COPIED": "Lien copié ✅",
     "TOAST_RESULTS_SOON": "Résultats complets bientôt disponibles.",
-    "TOAST_WINNER": "Gagnant: {{winner}} — #{{ticket}}"
+    "TOAST_WINNER": "Gagnant: {{winner}} — #{{ticket}}",
+    "LIST_TITLE": "Tirages Live",
+    "LIST_EMPTY": "Aucun tirage disponible pour le moment.",
+    "LIST_WINNER": "Gagnant",
+    "LIST_TICKET": "Ticket",
+    "BACK_TO_LIST": "Retour"
   },
   "EDIT_PROFILE_PAGE": {
     "TITLE": "Modifier le profil",
@@ -538,9 +550,33 @@
     "TOAST_CAMERA_FAILED": "Impossible d’ouvrir la caméra/galerie sur ce support",
     "TOAST_INCOMPLETE_FORM": "Formulaire incomplet",
     "TOAST_CREATED": "Raffle créée ✅",
-    "TOAST_CREATE_ERROR": "Erreur création"
+    "TOAST_CREATE_ERROR": "Erreur création",
+    "END_DATE_PAST": "La date de fin doit être dans le futur"
   },
   "TICKETS_PAGE": {
     "TITLE": "Tickets"
+  },
+  "ALL_RAFFLES": {
+    "TITLE": "Tous les raffles",
+    "EMPTY": "Aucun raffle disponible pour le moment.",
+    "PARTICIPATE": "Participer",
+    "FILTER_ALL": "Tous",
+    "FILTER_ACTIVE": "Actifs",
+    "FILTER_ENDED": "Terminés"
+  },
+  "CHANGE_PASSWORD_PAGE": {
+    "TITLE": "Changer le mot de passe",
+    "CURRENT_PASSWORD": "Mot de passe actuel",
+    "NEW_PASSWORD": "Nouveau mot de passe",
+    "CONFIRM_PASSWORD": "Confirmer le mot de passe",
+    "CURRENT_PASSWORD_PLACEHOLDER": "Votre mot de passe actuel",
+    "NEW_PASSWORD_PLACEHOLDER": "Minimum 8 caractères",
+    "CONFIRM_PASSWORD_PLACEHOLDER": "Répétez le nouveau mot de passe",
+    "SUBMIT": "Enregistrer",
+    "ERROR_MISMATCH": "Les mots de passe ne correspondent pas",
+    "ERROR_SAME": "Le nouveau mot de passe doit être différent de l'ancien",
+    "ERROR_MIN_LENGTH": "Minimum 8 caractères",
+    "TOAST_SUCCESS": "Mot de passe modifié. Un email de confirmation vous a été envoyé.",
+    "TOAST_ERROR": "Impossible de changer le mot de passe"
   }
 }

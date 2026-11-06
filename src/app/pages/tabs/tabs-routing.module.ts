@@ -98,6 +98,15 @@ const routes: Routes = [
           ),
       },
 
+      {
+        path: 'change-password',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('../change-password/change-password.module').then(
+            (m) => m.ChangePasswordPageModule,
+          ),
+      },
+
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
   },

@@ -154,6 +154,14 @@ export class AuthService {
     );
   }
 
+  changePassword(currentPassword: string, newPassword: string): Observable<{ ok: boolean; message?: string }> {
+    return this.http.patch<{ ok: boolean; message?: string }>(
+      `${this.baseUrl}/auth/change-password`,
+      { currentPassword, newPassword },
+      { headers: this.authHeaders() }
+    );
+  }
+
   logout(): void {
     const token = this.getAccessToken();
     const refreshToken = this.getRefreshToken();
