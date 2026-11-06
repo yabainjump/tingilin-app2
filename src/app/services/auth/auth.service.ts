@@ -158,7 +158,6 @@ export class AuthService {
     return this.http.patch<{ ok: boolean; message?: string }>(
       `${this.baseUrl}/auth/change-password`,
       { currentPassword, newPassword },
-      { headers: this.authHeaders() }
     );
   }
 

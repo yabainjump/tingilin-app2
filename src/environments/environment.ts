@@ -8,6 +8,7 @@ export const environment = {
   production: false,
   // apiBaseUrl: 'https://backend.tinguilin.yaba-in.com/api/v1',
  apiBaseUrl: resolveApiBaseUrl('https://backend.tinguilin.yaba-in.com/api/v1'),
+//  apiBaseUrl: resolveApiBaseUrl('http://localhost:8100/api/v1'),
   paymentProvider: 'DIGIKUNTZ' as const,
   supportEmail: '',
   // Google Sign-In (Web OAuth Client ID, "xxxx.apps.googleusercontent.com").

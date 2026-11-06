@@ -349,3 +349,145 @@
   height: 46px;
 }
 
+
+/* ─── PAYMENT STATUS OVERLAY ─────────────────────────────────── */
+
+.payment-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 0 env(safe-area-inset-bottom);
+}
+
+.payment-dialog {
+  width: 100%;
+  max-width: 480px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 28px 28px 0 0;
+  padding: 28px 24px calc(24px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  animation: slide-up 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.payment-dialog.is-success {
+  border-top: 3px solid var(--app-success);
+}
+
+.payment-dialog.is-failed {
+  border-top: 3px solid var(--app-danger);
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.payment-visual {
+  width: 72px;
+  height: 72px;
+  border-radius: 999px;
+  background: var(--app-surface-2);
+  border: 1px solid var(--app-border);
+  display: grid;
+  place-items: center;
+}
+
+.payment-visual ion-spinner {
+  width: 32px;
+  height: 32px;
+  color: var(--app-primary);
+}
+
+.payment-visual ion-icon {
+  font-size: 32px;
+}
+
+.payment-visual.is-success {
+  background: var(--app-success);
+  border-color: var(--app-success);
+}
+
+.payment-visual.is-success ion-icon {
+  color: #fff;
+}
+
+.payment-visual.is-failed {
+  background: var(--app-danger);
+  border-color: var(--app-danger);
+}
+
+.payment-visual.is-failed ion-icon {
+  color: #fff;
+}
+
+.payment-copy {
+  text-align: center;
+}
+
+.payment-copy h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--app-ink);
+}
+
+.payment-copy p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--app-muted);
+  line-height: 1.5;
+}
+
+.payment-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--app-surface-2);
+  border: 1px solid var(--app-border);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--app-muted);
+}
+
+.payment-summary strong {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--app-warning);
+}
+
+.payment-cancel-btn {
+  width: 100%;
+  height: 50px;
+  border-radius: 16px;
+  border: 1px solid var(--app-border);
+  background: var(--app-surface-2);
+  color: var(--app-ink);
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.payment-close-btn {
+  width: 100%;
+  height: 50px;
+  border-radius: 16px;
+  border: none;
+  background: var(--app-primary);
+  color: var(--app-on-primary);
+  font-weight: 900;
+  font-size: 15px;
+  box-shadow: var(--app-shadow-brand);
+}
