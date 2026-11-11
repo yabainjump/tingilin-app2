@@ -10,6 +10,7 @@ import { toAbsoluteMediaUrl } from 'src/app/shared/utils/media-url';
 
 type PaymentOverlayState =
   | 'STARTING'
+  | 'FALLBACK_WAITING'
   | 'WAITING'
   | 'SUCCESS'
   | 'FAILED'
@@ -47,15 +48,21 @@ export class PaymentConfirmationPage {
   paymentStatus?: string;
   paymentExpiresAt?: string;
   directChargePending = false;
+  fallbackCountdownSeconds = 0;
+  hostedCheckoutAvailable = false;
   paymentOverlayVisible = false;
   paymentOverlayState: PaymentOverlayState = 'STARTING';
   private intentKey = '';
   private paymentContext = '';
   private verificationTimer?: ReturnType<typeof setTimeout>;
   private expirationTimer?: ReturnType<typeof setTimeout>;
+  private fallbackTimer?: ReturnType<typeof setTimeout>;
+  private fallbackCountdownTimer?: ReturnType<typeof setInterval>;
+  private fallbackLaunchAt?: number;
   private successNavigationTimer?: ReturnType<typeof setTimeout>;
   private verificationInFlight = false;
   private readonly verificationIntervalMs = 10_000;
+  private readonly hostedFallbackDelayMs = 30_000;
   private readonly defaultPaymentTtlMs = 10 * 60 * 1000;
 
   loading = false;
@@ -72,6 +79,7 @@ export class PaymentConfirmationPage {
 
   async ionViewWillEnter() {
     this.stopVerificationPolling();
+    this.stopHostedCheckoutFallback(false);
     this.stopSuccessNavigation();
     this.pageLoading = true;
     this.payerEmail = '';
@@ -119,10 +127,14 @@ export class PaymentConfirmationPage {
     if (
       this.directChargePending &&
       this.transactionId &&
-      this.paymentOverlayState === 'WAITING'
+      (this.paymentOverlayState === 'WAITING' ||
+        this.paymentOverlayState === 'FALLBACK_WAITING')
     ) {
       this.paymentOverlayVisible = true;
       this.startVerificationPolling();
+      if (this.paymentOverlayState === 'FALLBACK_WAITING' && this.paymentLink) {
+        this.scheduleHostedCheckoutFallback();
+      }
     }
   }
   back() {
@@ -194,6 +206,12 @@ export class PaymentConfirmationPage {
       this.paymentStatus = res?.status;
       this.paymentExpiresAt = this.normalizePaymentExpiry(res?.expiresAt);
 
+      console.info('[PaymentFlow] Payment intent response received', {
+        flow: res?.paymentFlow ?? 'UNKNOWN',
+        status: res?.status ?? 'PENDING',
+        hasHostedFallback: Boolean(this.paymentLink),
+      });
+
       if (res?.provider === 'MOCK' && this.transactionId) {
         const mockProviderRef = [
           'MOCK',
@@ -214,14 +232,14 @@ export class PaymentConfirmationPage {
 
       if (this.paymentLink) {
         this.directChargePending = true;
-        this.paymentOverlayState = 'WAITING';
+        this.paymentOverlayState = 'FALLBACK_WAITING';
         await this.presentToast(
           this.translate.instant(
             'PAYMENT_CONFIRMATION_PAGE.TOAST_CHECKOUT_FALLBACK',
           ),
         );
-        window.open(this.paymentLink, '_blank', 'noopener,noreferrer');
         this.startVerificationPolling();
+        this.scheduleHostedCheckoutFallback(true);
         return;
       }
 
@@ -253,6 +271,9 @@ export class PaymentConfirmationPage {
       const message = Array.isArray(rawErrorMessage)
         ? rawErrorMessage.filter(Boolean).join(', ').trim()
         : String(rawErrorMessage ?? e?.message ?? '').trim();
+      console.warn('[PaymentFlow] Payment intent failed', {
+        httpStatus: status || 'unknown',
+      });
 
       if (
         status === 401 ||
@@ -327,6 +348,9 @@ export class PaymentConfirmationPage {
         this.paymentsApi.verifyDigikuntz(this.transactionId),
       );
       this.paymentStatus = res?.status || 'PENDING';
+      console.info('[PaymentFlow] Payment status checked', {
+        status: this.paymentStatus,
+      });
 
       if (res?.status === 'SUCCESS') {
         this.showPaymentSuccess();
@@ -336,6 +360,7 @@ export class PaymentConfirmationPage {
       if (res?.status === 'FAILED') {
         this.directChargePending = false;
         this.stopVerificationPolling();
+        this.stopHostedCheckoutFallback();
         this.paymentOverlayState =
           res?.remoteStatus === 'payment_expired' ? 'EXPIRED' : 'FAILED';
         this.paymentOverlayVisible = true;
@@ -350,6 +375,10 @@ export class PaymentConfirmationPage {
       }
       return res?.status || 'PENDING';
     } catch (e: any) {
+      const status = Number(e?.status ?? e?.error?.statusCode ?? 0);
+      console.warn('[PaymentFlow] Payment status check failed', {
+        httpStatus: status || 'unknown',
+      });
       if (!silent) {
         await this.presentToast(
           e?.error?.message ||
@@ -389,15 +418,22 @@ export class PaymentConfirmationPage {
   ionViewWillLeave() {
     document.removeEventListener('visibilitychange', this.visibilityHandler);
     this.stopVerificationPolling();
+    this.stopHostedCheckoutFallback(false);
     this.stopSuccessNavigation();
   }
 
   cancelPaymentWaiting() {
-    if (this.paymentOverlayState !== 'WAITING') return;
+    if (
+      this.paymentOverlayState !== 'WAITING' &&
+      this.paymentOverlayState !== 'FALLBACK_WAITING'
+    ) {
+      return;
+    }
 
     // Digikuntz ne fournit pas d'endpoint d'annulation. On arrête seulement
     // l'attente locale et on conserve la transaction pour pouvoir la vérifier.
     this.stopVerificationPolling();
+    this.stopHostedCheckoutFallback();
     this.paymentOverlayState = 'CANCELLED';
     this.paymentOverlayVisible = true;
   }
@@ -405,6 +441,7 @@ export class PaymentConfirmationPage {
   closePaymentOverlay() {
     if (
       this.paymentOverlayState === 'STARTING' ||
+      this.paymentOverlayState === 'FALLBACK_WAITING' ||
       this.paymentOverlayState === 'WAITING' ||
       this.paymentOverlayState === 'SUCCESS'
     ) {
@@ -512,10 +549,87 @@ export class PaymentConfirmationPage {
     }
   }
 
+  private scheduleHostedCheckoutFallback(resetDeadline = false) {
+    if (!this.paymentLink || !this.directChargePending) return;
+
+    this.stopHostedCheckoutFallback(false);
+    if (resetDeadline || !this.fallbackLaunchAt) {
+      this.fallbackLaunchAt = Date.now() + this.hostedFallbackDelayMs;
+    }
+
+    const updateCountdown = () => {
+      const remainingMs = Math.max(0, this.fallbackLaunchAt! - Date.now());
+      this.fallbackCountdownSeconds = Math.ceil(remainingMs / 1000);
+    };
+
+    updateCountdown();
+    console.info(
+      `[PaymentFlow] Direct Pay observation window started (${this.fallbackCountdownSeconds}s)`,
+    );
+
+    const remainingMs = Math.max(0, this.fallbackLaunchAt - Date.now());
+    this.fallbackCountdownTimer = setInterval(updateCountdown, 1_000);
+    this.fallbackTimer = setTimeout(
+      () => void this.launchHostedCheckoutAfterGracePeriod(),
+      remainingMs,
+    );
+  }
+
+  private stopHostedCheckoutFallback(resetState = true) {
+    if (this.fallbackTimer) {
+      clearTimeout(this.fallbackTimer);
+      this.fallbackTimer = undefined;
+    }
+    if (this.fallbackCountdownTimer) {
+      clearInterval(this.fallbackCountdownTimer);
+      this.fallbackCountdownTimer = undefined;
+    }
+    if (resetState) {
+      this.fallbackLaunchAt = undefined;
+      this.fallbackCountdownSeconds = 0;
+      this.hostedCheckoutAvailable = false;
+    }
+  }
+
+  private async launchHostedCheckoutAfterGracePeriod() {
+    if (!this.paymentLink || !this.directChargePending) return;
+
+    this.stopHostedCheckoutFallback(false);
+    this.fallbackCountdownSeconds = 0;
+
+    // Do a final status check before opening the hosted checkout. This avoids
+    // sending a customer to Flutterwave if Direct Pay just succeeded.
+    const status = await this.verifyPayment(true);
+    if (status === 'SUCCESS' || status === 'FAILED') return;
+
+    this.paymentOverlayState = 'WAITING';
+    this.hostedCheckoutAvailable = true;
+    console.info(
+      '[PaymentFlow] Direct Pay is still pending after 30s; requesting hosted checkout',
+    );
+    this.openHostedCheckout();
+  }
+
+  openHostedCheckout() {
+    const paymentLink = this.safePaymentLink(this.paymentLink);
+    if (!paymentLink) {
+      void this.presentToast(
+        this.translate.instant(
+          'PAYMENT_CONFIRMATION_PAGE.TOAST_MISSING_PAYMENT_LINK',
+        ),
+      );
+      return;
+    }
+
+    console.info('[PaymentFlow] Hosted checkout open requested');
+    window.open(paymentLink, '_blank', 'noopener,noreferrer');
+  }
+
   private async expirePaymentWaiting() {
     if (!this.directChargePending || !this.transactionId) return;
 
     this.stopVerificationPolling();
+    this.stopHostedCheckoutFallback();
     const finalStatus = await this.verifyPayment(true);
     if (finalStatus === 'SUCCESS' || finalStatus === 'FAILED') return;
 
@@ -530,6 +644,7 @@ export class PaymentConfirmationPage {
     this.paymentOverlayState = 'SUCCESS';
     this.paymentOverlayVisible = true;
     this.stopVerificationPolling();
+    this.stopHostedCheckoutFallback();
     this.stopSuccessNavigation();
 
     this.successNavigationTimer = setTimeout(() => {
@@ -546,6 +661,8 @@ export class PaymentConfirmationPage {
   }
 
   private resetPaymentState() {
+    this.stopVerificationPolling();
+    this.stopHostedCheckoutFallback();
     this.paymentOverlayVisible = false;
     this.paymentOverlayState = 'STARTING';
     this.directChargePending = false;

@@ -480,6 +480,18 @@
   font-size: 15px;
 }
 
+.payment-checkout-btn {
+  width: 100%;
+  height: 50px;
+  border-radius: 16px;
+  border: none;
+  background: var(--app-primary);
+  color: var(--app-on-primary);
+  font-weight: 900;
+  font-size: 15px;
+  box-shadow: var(--app-shadow-brand);
+}
+
 .payment-close-btn {
   width: 100%;
   height: 50px;

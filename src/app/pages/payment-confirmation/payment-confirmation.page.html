@@ -207,7 +207,7 @@
       [class.is-failed]="paymentOverlayState === 'FAILED' || paymentOverlayState === 'EXPIRED' || paymentOverlayState === 'CANCELLED'"
     >
       <ion-spinner
-        *ngIf="paymentOverlayState === 'STARTING' || paymentOverlayState === 'WAITING'"
+        *ngIf="paymentOverlayState === 'STARTING' || paymentOverlayState === 'FALLBACK_WAITING' || paymentOverlayState === 'WAITING'"
         name="crescent"
       ></ion-spinner>
       <ion-icon
@@ -232,10 +232,23 @@
 
       <div *ngSwitchCase="'WAITING'" class="payment-copy">
         <h2 id="payment-status-title">
-          {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_WAITING_TITLE' | translate }}
+          {{ (hostedCheckoutAvailable
+              ? 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_HOSTED_TITLE'
+              : 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_WAITING_TITLE') | translate }}
         </h2>
         <p id="payment-status-message">
-          {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_WAITING_MESSAGE' | translate:{ operator: paymentMethod } }}
+          {{ (hostedCheckoutAvailable
+              ? 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_HOSTED_MESSAGE'
+              : 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_WAITING_MESSAGE') | translate:{ operator: paymentMethod } }}
+        </p>
+      </div>
+
+      <div *ngSwitchCase="'FALLBACK_WAITING'" class="payment-copy">
+        <h2 id="payment-status-title">
+          {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_FALLBACK_WAIT_TITLE' | translate }}
+        </h2>
+        <p id="payment-status-message">
+          {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_FALLBACK_WAIT_MESSAGE' | translate:{ seconds: fallbackCountdownSeconds } }}
         </p>
       </div>
 
@@ -283,8 +296,17 @@
 
     <button
       type="button"
+      class="payment-checkout-btn"
+      *ngIf="hostedCheckoutAvailable && paymentLink && paymentOverlayState === 'WAITING'"
+      (click)="openHostedCheckout()"
+    >
+      {{ 'PAYMENT_CONFIRMATION_PAGE.OPEN_FALLBACK_CHECKOUT' | translate }}
+    </button>
+
+    <button
+      type="button"
       class="payment-cancel-btn"
-      *ngIf="paymentOverlayState === 'WAITING'"
+      *ngIf="paymentOverlayState === 'WAITING' || paymentOverlayState === 'FALLBACK_WAITING'"
       (click)="cancelPaymentWaiting()"
     >
       {{ 'PAYMENT_CONFIRMATION_PAGE.CANCEL_WAITING' | translate }}

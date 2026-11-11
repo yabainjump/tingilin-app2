@@ -103,6 +103,32 @@ describe('PaymentConfirmationPage', () => {
     expect(component.paymentOverlayVisible).toBeTrue();
   });
 
+  it('waits thirty seconds before opening the hosted checkout fallback', fakeAsync(() => {
+    component.transactionId = 'transaction-id';
+    component.paymentLink =
+      'https://checkout.flutterwave.com/v3/hosted/pay/test';
+    component.directChargePending = true;
+    component.paymentOverlayState = 'FALLBACK_WAITING';
+    spyOn(component, 'verifyPayment').and.resolveTo('PENDING');
+    const openSpy = spyOn(window, 'open').and.returnValue({} as Window);
+    spyOn(console, 'info');
+
+    (component as any).scheduleHostedCheckoutFallback(true);
+    tick(29_999);
+    expect(openSpy).not.toHaveBeenCalled();
+
+    tick(1);
+    flushMicrotasks();
+
+    expect(openSpy).toHaveBeenCalledOnceWith(
+      'https://checkout.flutterwave.com/v3/hosted/pay/test',
+      '_blank',
+      'noopener,noreferrer',
+    );
+    expect(component.hostedCheckoutAvailable).toBeTrue();
+    expect(component.paymentOverlayState).toBe('WAITING');
+  }));
+
   it('expires the waiting popup automatically after ten minutes', fakeAsync(() => {
     component.transactionId = 'transaction-id';
     component.directChargePending = true;
