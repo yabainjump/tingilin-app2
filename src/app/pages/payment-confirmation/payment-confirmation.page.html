@@ -198,13 +198,13 @@
   <section
     class="payment-dialog"
     [class.is-success]="paymentOverlayState === 'SUCCESS'"
-    [class.is-failed]="paymentOverlayState === 'FAILED' || paymentOverlayState === 'CANCELLED'"
+    [class.is-failed]="paymentOverlayState === 'FAILED' || paymentOverlayState === 'EXPIRED' || paymentOverlayState === 'CANCELLED'"
     aria-live="assertive"
   >
     <div
       class="payment-visual"
       [class.is-success]="paymentOverlayState === 'SUCCESS'"
-      [class.is-failed]="paymentOverlayState === 'FAILED' || paymentOverlayState === 'CANCELLED'"
+      [class.is-failed]="paymentOverlayState === 'FAILED' || paymentOverlayState === 'EXPIRED' || paymentOverlayState === 'CANCELLED'"
     >
       <ion-spinner
         *ngIf="paymentOverlayState === 'STARTING' || paymentOverlayState === 'WAITING'"
@@ -215,7 +215,7 @@
         name="checkmark-outline"
       ></ion-icon>
       <ion-icon
-        *ngIf="paymentOverlayState === 'FAILED' || paymentOverlayState === 'CANCELLED'"
+        *ngIf="paymentOverlayState === 'FAILED' || paymentOverlayState === 'EXPIRED' || paymentOverlayState === 'CANCELLED'"
         name="close-outline"
       ></ion-icon>
     </div>
@@ -265,6 +265,15 @@
           {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_CANCELLED_MESSAGE' | translate }}
         </p>
       </div>
+
+      <div *ngSwitchCase="'EXPIRED'" class="payment-copy">
+        <h2 id="payment-status-title">
+          {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_EXPIRED_TITLE' | translate }}
+        </h2>
+        <p id="payment-status-message">
+          {{ 'PAYMENT_CONFIRMATION_PAGE.PAYMENT_EXPIRED_MESSAGE' | translate }}
+        </p>
+      </div>
     </ng-container>
 
     <div class="payment-summary" *ngIf="paymentOverlayState !== 'STARTING'">
@@ -284,7 +293,7 @@
     <button
       type="button"
       class="payment-close-btn"
-      *ngIf="paymentOverlayState === 'FAILED' || paymentOverlayState === 'CANCELLED'"
+      *ngIf="paymentOverlayState === 'FAILED' || paymentOverlayState === 'EXPIRED' || paymentOverlayState === 'CANCELLED'"
       (click)="closePaymentOverlay()"
     >
       {{ 'PAYMENT_CONFIRMATION_PAGE.CLOSE' | translate }}

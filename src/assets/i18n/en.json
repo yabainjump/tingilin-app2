@@ -262,6 +262,8 @@
     "PAYMENT_SUCCESS_MESSAGE": "Your payment has been confirmed. You will be redirected to your entries.",
     "PAYMENT_FAILED_TITLE": "Payment unsuccessful",
     "PAYMENT_FAILED_MESSAGE": "The payment failed or could not be confirmed. Close this window and verify before trying again.",
+    "PAYMENT_EXPIRED_TITLE": "Payment time expired",
+    "PAYMENT_EXPIRED_MESSAGE": "The payment was not confirmed within 10 minutes. The attempt was closed automatically and you can try again. Any late confirmation will be reconciled.",
     "PAYMENT_CANCELLED_TITLE": "Waiting cancelled",
     "PAYMENT_CANCELLED_MESSAGE": "Automatic tracking has stopped. Do not approve the request on your phone. You can still check its status from this page.",
     "CANCEL_WAITING": "Cancel waiting",

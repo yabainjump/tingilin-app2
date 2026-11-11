@@ -262,6 +262,8 @@
     "PAYMENT_SUCCESS_MESSAGE": "Ton paiement a bien été confirmé. Tu vas être redirigé vers tes participations.",
     "PAYMENT_FAILED_TITLE": "Paiement non effectué",
     "PAYMENT_FAILED_MESSAGE": "Le paiement a échoué ou n’a pas pu être confirmé. Ferme cette fenêtre puis vérifie avant de réessayer.",
+    "PAYMENT_EXPIRED_TITLE": "Délai de paiement expiré",
+    "PAYMENT_EXPIRED_MESSAGE": "Le paiement n’a pas été confirmé dans les 10 minutes. La tentative a été clôturée automatiquement et tu peux réessayer. Toute confirmation tardive sera réconciliée.",
     "PAYMENT_CANCELLED_TITLE": "Attente annulée",
     "PAYMENT_CANCELLED_MESSAGE": "Le suivi automatique est arrêté. Ne valide pas la demande sur ton téléphone. Tu pourras encore vérifier son statut depuis cette page.",
     "CANCEL_WAITING": "Annuler l’attente",

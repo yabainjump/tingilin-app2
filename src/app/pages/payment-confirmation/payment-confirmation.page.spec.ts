@@ -1,4 +1,9 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {
+  fakeAsync,
+  flushMicrotasks,
+  tick,
+} from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
@@ -97,6 +102,24 @@ describe('PaymentConfirmationPage', () => {
 
     expect(component.paymentOverlayVisible).toBeTrue();
   });
+
+  it('expires the waiting popup automatically after ten minutes', fakeAsync(() => {
+    component.transactionId = 'transaction-id';
+    component.directChargePending = true;
+    component.paymentOverlayVisible = true;
+    component.paymentOverlayState = 'WAITING';
+    component.paymentExpiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+    spyOn(component, 'verifyPayment').and.resolveTo('PENDING');
+
+    (component as any).startVerificationPolling();
+    tick(10 * 60 * 1000);
+    flushMicrotasks();
+
+    expect(component.paymentOverlayState).toBe('EXPIRED');
+    expect(component.paymentStatus).toBe('EXPIRED');
+    expect(component.directChargePending).toBeFalse();
+    expect(component.paymentOverlayVisible).toBeTrue();
+  }));
 
   it('uses the local placeholder when the product image is missing', () => {
     const image = document.createElement('img');

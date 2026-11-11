@@ -13,6 +13,7 @@ type PaymentOverlayState =
   | 'WAITING'
   | 'SUCCESS'
   | 'FAILED'
+  | 'EXPIRED'
   | 'CANCELLED';
 
 @Component({
@@ -44,16 +45,18 @@ export class PaymentConfirmationPage {
   paymentLink?: string;
   paymentWithTaxes?: number;
   paymentStatus?: string;
+  paymentExpiresAt?: string;
   directChargePending = false;
   paymentOverlayVisible = false;
   paymentOverlayState: PaymentOverlayState = 'STARTING';
   private intentKey = '';
   private paymentContext = '';
   private verificationTimer?: ReturnType<typeof setTimeout>;
+  private expirationTimer?: ReturnType<typeof setTimeout>;
   private successNavigationTimer?: ReturnType<typeof setTimeout>;
-  private verificationAttempts = 0;
   private verificationInFlight = false;
-  private readonly maxVerificationAttempts = 12;
+  private readonly verificationIntervalMs = 10_000;
+  private readonly defaultPaymentTtlMs = 10 * 60 * 1000;
 
   loading = false;
   pageLoading = true;
@@ -189,6 +192,7 @@ export class PaymentConfirmationPage {
       this.paymentLink = this.safePaymentLink(res?.paymentLink);
       this.paymentWithTaxes = res?.paymentWithTaxes;
       this.paymentStatus = res?.status;
+      this.paymentExpiresAt = this.normalizePaymentExpiry(res?.expiresAt);
 
       if (res?.provider === 'MOCK' && this.transactionId) {
         const mockProviderRef = [
@@ -332,7 +336,8 @@ export class PaymentConfirmationPage {
       if (res?.status === 'FAILED') {
         this.directChargePending = false;
         this.stopVerificationPolling();
-        this.paymentOverlayState = 'FAILED';
+        this.paymentOverlayState =
+          res?.remoteStatus === 'payment_expired' ? 'EXPIRED' : 'FAILED';
         this.paymentOverlayVisible = true;
       }
 
@@ -415,6 +420,12 @@ export class PaymentConfirmationPage {
       return;
     }
 
+    if (this.paymentOverlayState === 'EXPIRED') {
+      this.resetPaymentState();
+      this.intentKey = this.buildIntentKey();
+      return;
+    }
+
     this.paymentOverlayVisible = false;
   }
 
@@ -455,20 +466,39 @@ export class PaymentConfirmationPage {
 
   private startVerificationPolling() {
     this.stopVerificationPolling();
-    this.verificationAttempts = 0;
+    this.paymentExpiresAt ??= new Date(
+      Date.now() + this.defaultPaymentTtlMs,
+    ).toISOString();
+
+    const deadline = new Date(this.paymentExpiresAt).getTime();
+    const remainingMs = deadline - Date.now();
+    if (!Number.isFinite(deadline) || remainingMs <= 0) {
+      void this.expirePaymentWaiting();
+      return;
+    }
+
+    this.expirationTimer = setTimeout(
+      () => void this.expirePaymentWaiting(),
+      remainingMs,
+    );
 
     const poll = async () => {
       if (!this.directChargePending || !this.transactionId) return;
-      if (this.verificationAttempts >= this.maxVerificationAttempts) return;
+      if (Date.now() >= deadline) {
+        await this.expirePaymentWaiting();
+        return;
+      }
 
-      this.verificationAttempts += 1;
       const status = await this.verifyPayment(true);
       if (status === 'SUCCESS' || status === 'FAILED') return;
 
-      this.verificationTimer = setTimeout(poll, 5000);
+      this.verificationTimer = setTimeout(
+        poll,
+        this.verificationIntervalMs,
+      );
     };
 
-    this.verificationTimer = setTimeout(poll, 5000);
+    this.verificationTimer = setTimeout(poll, this.verificationIntervalMs);
   }
 
   private stopVerificationPolling() {
@@ -476,6 +506,23 @@ export class PaymentConfirmationPage {
       clearTimeout(this.verificationTimer);
       this.verificationTimer = undefined;
     }
+    if (this.expirationTimer) {
+      clearTimeout(this.expirationTimer);
+      this.expirationTimer = undefined;
+    }
+  }
+
+  private async expirePaymentWaiting() {
+    if (!this.directChargePending || !this.transactionId) return;
+
+    this.stopVerificationPolling();
+    const finalStatus = await this.verifyPayment(true);
+    if (finalStatus === 'SUCCESS' || finalStatus === 'FAILED') return;
+
+    this.directChargePending = false;
+    this.paymentStatus = 'EXPIRED';
+    this.paymentOverlayState = 'EXPIRED';
+    this.paymentOverlayVisible = true;
   }
 
   private showPaymentSuccess() {
@@ -506,5 +553,13 @@ export class PaymentConfirmationPage {
     this.paymentLink = undefined;
     this.paymentWithTaxes = undefined;
     this.paymentStatus = undefined;
+    this.paymentExpiresAt = undefined;
+  }
+
+  private normalizePaymentExpiry(value: unknown): string {
+    const timestamp = new Date(String(value ?? '')).getTime();
+    return Number.isFinite(timestamp)
+      ? new Date(timestamp).toISOString()
+      : new Date(Date.now() + this.defaultPaymentTtlMs).toISOString();
   }
 }

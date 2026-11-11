@@ -26,6 +26,7 @@ export interface CreateIntentResponse {
   quantity: number;
   ticketUnitPrice: number;
   paymentLink?: string;
+  expiresAt?: string;
   paymentWithTaxes?: number;
   paymentMethodCode?: PaymentMethodCode;
   paymentFlow?: 'DIRECT_CHARGE' | 'HOSTED_CHECKOUT';
