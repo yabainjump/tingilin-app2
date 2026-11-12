@@ -38,6 +38,9 @@ export interface VerifyResponse {
   status: 'PENDING' | 'SUCCESS' | 'FAILED' | string;
   transactionId: string;
   remoteStatus?: string;
+  /** Lien de checkout de secours cree par Digikuntz apres un refus du direct charge. */
+  paymentLink?: string;
+  paymentFlow?: 'DIRECT_CHARGE' | 'HOSTED_CHECKOUT';
 }
 
 export interface MockConfirmResponse {

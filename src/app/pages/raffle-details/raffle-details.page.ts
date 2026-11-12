@@ -297,6 +297,25 @@ export class RaffleDetailsPage implements OnInit, OnDestroy {
     return qty * price;
   }
 
+  get raffleTitle(): string {
+    const title = String(this.raffle?.title ?? '').trim();
+    const productTitle = String(this.raffle?.product?.title ?? '').trim();
+    return title || productTitle || '—';
+  }
+
+  get raffleDescription(): string {
+    return (
+      [
+        this.raffle?.description,
+        this.raffle?.product?.description,
+        this.raffle?.subtitle,
+        this.raffle?.rules,
+      ]
+        .map((value) => String(value ?? '').trim())
+        .find(Boolean) ?? ''
+    );
+  }
+
   ngOnInit() {}
 
   back() {

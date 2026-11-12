@@ -75,8 +75,11 @@ export class AuthInterceptor implements HttpInterceptor {
   /**
    * Renvoie le refresh en cours (partage), ou en demarre un nouveau.
    * En cas de succes: stocke les tokens et emet le nouvel access token.
-   * En cas d'echec: deconnecte et propage l'erreur a TOUTES les requetes
-   * en attente (au lieu de les laisser bloquees indefiniment).
+   * En cas d'echec: propage l'erreur a TOUTES les requetes en attente (au lieu
+   * de les laisser bloquees indefiniment). On ne deconnecte que si le serveur
+   * REFUSE la session (401/403). Un 5xx, un 429 ou une coupure reseau pendant
+   * un pic de trafic ne doit pas jeter dehors un utilisateur dont la session
+   * est valide: la requete suivante retentera le refresh.
    */
   private getRefresh(refreshToken: string | null): Observable<string> {
     if (!this.refresh$) {
@@ -84,7 +87,9 @@ export class AuthInterceptor implements HttpInterceptor {
         tap((res) => this.auth.setTokens(res.access_token, res.refresh_token)),
         map((res) => res.access_token),
         catchError((e) => {
-          this.auth.logout();
+          if (isSessionRejected(e)) {
+            this.auth.logout();
+          }
           return throwError(() => e);
         }),
         finalize(() => {
@@ -96,4 +101,11 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return this.refresh$;
   }
+}
+
+function isSessionRejected(error: unknown): boolean {
+  return (
+    error instanceof HttpErrorResponse &&
+    (error.status === 401 || error.status === 403)
+  );
 }

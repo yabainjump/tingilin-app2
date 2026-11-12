@@ -97,40 +97,64 @@ ion-content.details {
 }
 
 .body {
-  margin-top: -28px;
+  position: relative;
+  z-index: 1;
+  margin-top: -12px;
   border-top-left-radius: 36px;
   border-top-right-radius: 36px;
-  padding: 22px 18px 0;
+  padding: 28px 18px 0;
   background: var(--app-bg);
   border-top: 1px solid var(--app-border);
   box-shadow: none;
 }
 
 .title-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 14px;
-  justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .title {
+  min-width: 0;
   font-size: 30px;
-  line-height: 1.05;
+  line-height: 1.12;
   letter-spacing: -0.02em;
   margin: 0;
   font-weight: 900;
+  overflow-wrap: anywhere;
 }
+
+.description-card {
+  margin-top: 16px;
+  padding: 14px 15px;
+  border-radius: 18px;
+  background: var(--app-surface-2);
+  border: 1px solid var(--app-border);
+}
+
+.description-label {
+  margin-bottom: 7px;
+  color: var(--primary);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
 .desc {
-  margin: 10px 0 0;
-  color: var(--app-muted);
-  font-size: 13px;
-  line-height: 1.45;
-  max-width: 92%;
+  margin: 0;
+  color: var(--app-ink);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
 }
 
 .value {
   text-align: right;
   min-width: 84px;
+  max-width: 132px;
 }
 .value-label {
   font-size: 10px;

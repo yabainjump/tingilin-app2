@@ -7,6 +7,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { NetworkStatusService } from '../offline/network-status.service';
 import { AppStorageService } from 'src/app/shared/storage/app-storage.service';
+import { apiOriginFromBase } from 'src/app/shared/utils/media-url';
 import { RafflesPublicApiService } from './raffles-public-api.service';
 
 describe('RafflesPublicApiService', () => {
@@ -71,5 +72,33 @@ describe('RafflesPublicApiService', () => {
     await expectAsync(promise).toBeResolvedTo(
       jasmine.objectContaining({ status: 'DRAWN' }),
     );
+  });
+
+  it('normalizes the public product title, description and first image', async () => {
+    const promise = firstValueFrom(service.getById('raffle-1'));
+    const request = http.expectOne(
+      `${environment.apiBaseUrl}/raffles/public/raffle-1`,
+    );
+    request.flush({
+      _id: 'raffle-1',
+      rules: 'Règlement du raffle',
+      product: {
+        title: 'Smartphone premium',
+        description: 'Un téléphone puissant avec une grande autonomie.',
+        images: ['/uploads/products/smartphone.webp'],
+      },
+    });
+
+    const result = await promise;
+
+    expect(result).toEqual(
+      jasmine.objectContaining({
+        id: 'raffle-1',
+        title: 'Smartphone premium',
+        description: 'Un téléphone puissant avec une grande autonomie.',
+        imageUrl: `${apiOriginFromBase(environment.apiBaseUrl)}/uploads/products/smartphone.webp`,
+      }),
+    );
+    expect(storage.setJson).toHaveBeenCalled();
   });
 });

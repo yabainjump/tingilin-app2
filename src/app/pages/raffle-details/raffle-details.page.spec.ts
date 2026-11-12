@@ -123,6 +123,63 @@ describe('RaffleDetailsPage', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should expose a nested product title and description for legacy cached data', () => {
+    component.raffle = {
+      id: 'test-id',
+      product: {
+        title: 'Téléviseur 4K',
+        description: 'Une description complète du lot.',
+      },
+    } as any;
+
+    expect(component.raffleTitle).toBe('Téléviseur 4K');
+    expect(component.raffleDescription).toBe(
+      'Une description complète du lot.',
+    );
+  });
+
+  it('should use raffle rules when no product description exists', () => {
+    component.raffle = {
+      id: 'test-id',
+      title: 'Lot surprise',
+      rules: 'Ce raffle est ouvert à tous.',
+    } as any;
+
+    expect(component.raffleDescription).toBe(
+      'Ce raffle est ouvert à tous.',
+    );
+  });
+
+  it('should render the description below the title across the available width', () => {
+    component.raffle = {
+      ...component.raffle!,
+      title: 'Tinguilin',
+      description:
+        'Une description assez longue pour rester lisible sur un petit écran mobile.',
+    };
+    fixture.detectChanges();
+
+    const body = fixture.nativeElement.querySelector('.body') as HTMLElement;
+    const titleRow = fixture.nativeElement.querySelector(
+      '.title-row',
+    ) as HTMLElement;
+    const descriptionCard = fixture.nativeElement.querySelector(
+      '.description-card',
+    ) as HTMLElement;
+    const description = fixture.nativeElement.querySelector(
+      '.description-card .desc',
+    ) as HTMLElement;
+
+    expect(getComputedStyle(body).paddingTop).toBe('28px');
+    expect(descriptionCard.getBoundingClientRect().top).toBeGreaterThanOrEqual(
+      titleRow.getBoundingClientRect().bottom,
+    );
+    expect(descriptionCard.getBoundingClientRect().width).toBeGreaterThan(
+      titleRow.getBoundingClientRect().width * 0.9,
+    );
+    expect(description.textContent).toContain('petit écran mobile');
+  });
+
   it('should ask auth when guest tries to buy ticket', async () => {
     auth.isLoggedIn.and.returnValue(false);
 

@@ -20,7 +20,7 @@
 
       <ng-container *ngIf="!loading && raffle; else heroSkel">
         <div class="hero-img"
-          [style.background-image]="'url(' + (raffle.imageUrl) + ')'">
+          [style.background-image]="raffle.imageUrl ? 'url(' + raffle.imageUrl + ')' : null">
           <div class="hero-grad"></div>
 
           <div class="hero-badge">{{ 'RAFFLE_DETAILS_PAGE.OFFICIAL_PARTNER' | translate }}</div>
@@ -48,18 +48,20 @@
 
         <!-- TITLE -->
         <div class="title-row">
-          <div class="title-wrap">
-            <h1 class="title">{{ raffle.title }}</h1>
-            <p class="desc">
-              {{ raffle.description || raffle.subtitle || '—' }}
-            </p>
-          </div>
+          <h1 class="title">{{ raffleTitle }}</h1>
 
           <div class="value">
             <div class="value-label">{{ 'RAFFLE_DETAILS_PAGE.BE_THE_NEXT' | translate }}</div>
             <div class="value-amt">{{ 'RAFFLE_DETAILS_PAGE.WINNER' | translate }}</div>
           </div>
         </div>
+
+        <section class="description-card" *ngIf="raffleDescription">
+          <div class="description-label">
+            {{ 'RAFFLE_DETAILS_PAGE.PRIZE_DESCRIPTION' | translate }}
+          </div>
+          <p class="desc">{{ raffleDescription }}</p>
+        </section>
 
         <!-- PROGRESS -->
         <div class="progress-card">

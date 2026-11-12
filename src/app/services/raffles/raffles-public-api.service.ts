@@ -21,7 +21,11 @@ export interface RaffleDetailsDto {
   subtitle?: string;
   imageUrl?: string;
   product?: {
+    title?: string;
+    description?: string;
     imageUrl?: string;
+    image?: string;
+    images?: string[];
     [key: string]: any;
   };
 
@@ -38,6 +42,7 @@ export interface RaffleDetailsDto {
   badgeType?: 'danger' | 'warn' | 'hot';
 
   description?: string;
+  rules?: string;
   status?: string;
 }
 
@@ -53,18 +58,32 @@ export class RafflesPublicApiService {
   ) {}
 
   private normalizeRaffle(raw: any): RaffleDetailsDto {
+    const topTitle = String(raw?.title ?? '').trim();
+    const productTitle = String(raw?.product?.title ?? '').trim();
+    const description = [
+      raw?.description,
+      raw?.product?.description,
+      raw?.subtitle,
+      raw?.rules,
+    ]
+      .map((value) => String(value ?? '').trim())
+      .find(Boolean) ?? '';
     const topImage = toAbsoluteMediaUrl(
       raw?.imageUrl ?? raw?.image,
       this.baseUrl,
     );
     const productImage = toAbsoluteMediaUrl(
-      raw?.product?.imageUrl ?? raw?.product?.image,
+      raw?.product?.imageUrl ||
+        raw?.product?.image ||
+        raw?.product?.images?.[0],
       this.baseUrl,
     );
 
     return {
       ...raw,
       id: String(raw?._id ?? raw?.id ?? ''),
+      title: topTitle || productTitle || '—',
+      description,
       imageUrl: topImage ?? productImage ?? raw?.imageUrl,
       product: raw?.product
         ? {

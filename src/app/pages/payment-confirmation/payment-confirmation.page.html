@@ -119,6 +119,7 @@
             inputmode="numeric"
             [placeholder]="'PAYMENT_CONFIRMATION_PAGE.PHONE_PLACEHOLDER' | translate"
             [(ngModel)]="userPhone"
+            (ngModelChange)="onPhoneChange($event)"
             [readonly]="loading || directChargePending"
           >
           </ion-input>

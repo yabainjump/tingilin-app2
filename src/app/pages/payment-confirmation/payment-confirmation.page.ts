@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PaymentsApiService } from 'src/app/core/api/payments-api.service';
+import {
+  PaymentMethodCode,
+  PaymentsApiService,
+} from 'src/app/core/api/payments-api.service';
+import { detectCameroonMobileOperator } from 'src/app/shared/utils/mobile-operator';
 import { ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -176,6 +180,17 @@ export class PaymentConfirmationPage {
       );
     }
 
+    // Le prelevement part sur le portefeuille du numero: un numero MTN facture
+    // en Orange Money (ou l'inverse) est refuse par l'operateur.
+    const phoneOperator = detectCameroonMobileOperator(cleanedPhone);
+    if (phoneOperator && phoneOperator !== this.paymentMethod) {
+      const label = (op: PaymentMethodCode) =>
+        op === 'MTN' ? 'MTN Mobile Money' : 'Orange Money';
+      return this.presentToast(
+        `Ce numéro est un numéro ${label(phoneOperator)}. Choisis ${label(phoneOperator)} ou utilise un numéro ${label(this.paymentMethod)}.`,
+      );
+    }
+
     this.loading = true;
     this.directChargePending = false;
     this.paymentStatus = undefined;
@@ -330,6 +345,7 @@ export class PaymentConfirmationPage {
 
       if (!this.userPhone && phone) {
         this.userPhone = phone;
+        this.onPhoneChange(phone);
       }
     } catch {
       // user profile fetch can fail when token expires; keep manual phone entry.
@@ -364,6 +380,27 @@ export class PaymentConfirmationPage {
         this.paymentOverlayState =
           res?.remoteStatus === 'payment_expired' ? 'EXPIRED' : 'FAILED';
         this.paymentOverlayVisible = true;
+      }
+
+      // Prelevement direct refuse par l'operateur: Digikuntz cree un lien de
+      // checkout de secours, visible seulement via verify. Sans cela, l'app
+      // attendait une validation USSD qui n'arrivera jamais (jusqu'a expiration).
+      const fallbackLink = this.safePaymentLink(res?.paymentLink);
+      if (
+        fallbackLink &&
+        !this.paymentLink &&
+        this.directChargePending &&
+        (res?.status ?? 'PENDING') === 'PENDING'
+      ) {
+        this.paymentLink = fallbackLink;
+        this.paymentOverlayState = 'FALLBACK_WAITING';
+        this.paymentOverlayVisible = true;
+        void this.presentToast(
+          this.translate.instant(
+            'PAYMENT_CONFIRMATION_PAGE.TOAST_CHECKOUT_FALLBACK',
+          ),
+        );
+        this.scheduleHostedCheckoutFallback(true);
       }
 
       if (!silent) {
@@ -492,6 +529,16 @@ export class PaymentConfirmationPage {
     } catch {
       return undefined;
     }
+  }
+
+  /**
+   * Selectionne automatiquement l'operateur d'apres le numero saisi.
+   * Avant: ORANGE par defaut, donc un client MTN qui ne changeait pas le
+   * choix envoyait un prelevement Orange sur un numero MTN (refuse).
+   */
+  onPhoneChange(value: unknown) {
+    const operator = detectCameroonMobileOperator(value);
+    if (operator) this.paymentMethod = operator;
   }
 
   private normalizeCameroonPhone(value: unknown): string | undefined {
