@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, Validators, FormGroup } from '@angular/forms';
 import {
   NavController,
@@ -11,6 +11,10 @@ import { RAFFLE_CATEGORY_OPTIONS } from 'src/app/core/constants/raffle-categorie
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { blobFromUrl, fileFromBlob } from 'src/app/shared/utils/blob-file';
+import {
+  compressImageFile,
+  ImageCompressionError,
+} from 'src/app/shared/utils/image-compression';
 
 function futureDateValidator(control: AbstractControl): ValidationErrors | null {
   const value = control.value;
@@ -41,10 +45,11 @@ type CreateRaffleForm = {
   styleUrls: ['./create-raffle.page.scss'],
   standalone: false,
 })
-export class CreateRafflePage {
+export class CreateRafflePage implements OnDestroy {
   submitting = false;
   previewUrl: string | null = null;
   private selectedImageFile: File | null = null;
+  private previewObjectUrl: string | null = null;
   readonly categoryOptions = RAFFLE_CATEGORY_OPTIONS;
 
   form: FormGroup;
@@ -132,18 +137,59 @@ export class CreateRafflePage {
       if (!photo?.webPath) return;
 
       const blob = await blobFromUrl(photo.webPath);
-      this.selectedImageFile = fileFromBlob(blob, `raffle-${Date.now()}.jpg`);
-      this.previewUrl = photo.webPath;
-      this.form.patchValue({ imageUrl: photo.webPath });
+      const sourceFile = fileFromBlob(blob, `raffle-${Date.now()}.jpg`);
+      this.selectedImageFile = await compressImageFile(sourceFile);
+      this.setPreview(this.selectedImageFile);
+      this.form.patchValue({ imageUrl: this.previewUrl });
       this.form.markAsDirty();
-    } catch (err) {
-      console.error('Camera error:', err);
+    } catch (err: unknown) {
+      const errorCode =
+        err instanceof ImageCompressionError ? err.code : 'CAMERA_FAILED';
+      console.warn('[CreateRaffle] Image selection failed', {
+        code: errorCode,
+      });
       const t = await this.toast.create({
-        message: this.translate.instant('CREATE_RAFFLE_PAGE.TOAST_CAMERA_FAILED'),
+        message: this.imageErrorMessage(errorCode),
         duration: 2200,
       });
       await t.present();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.revokePreview();
+  }
+
+  private setPreview(file: File): void {
+    this.revokePreview();
+    this.previewObjectUrl = URL.createObjectURL(file);
+    this.previewUrl = this.previewObjectUrl;
+  }
+
+  private revokePreview(): void {
+    if (this.previewObjectUrl) {
+      URL.revokeObjectURL(this.previewObjectUrl);
+      this.previewObjectUrl = null;
+    }
+  }
+
+  private imageErrorMessage(code: string): string {
+    if (code === 'SOURCE_TOO_LARGE') {
+      return this.translate.instant(
+        'CREATE_RAFFLE_PAGE.TOAST_IMAGE_TOO_LARGE',
+      );
+    }
+    if (code === 'UNSUPPORTED_FORMAT') {
+      return this.translate.instant(
+        'CREATE_RAFFLE_PAGE.TOAST_IMAGE_UNSUPPORTED',
+      );
+    }
+    if (code === 'DECODE_FAILED' || code === 'OUTPUT_TOO_LARGE') {
+      return this.translate.instant(
+        'CREATE_RAFFLE_PAGE.TOAST_IMAGE_COMPRESSION_FAILED',
+      );
+    }
+    return this.translate.instant('CREATE_RAFFLE_PAGE.TOAST_CAMERA_FAILED');
   }
 
   private readError(err: any): string {
