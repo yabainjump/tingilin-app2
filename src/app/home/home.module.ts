@@ -6,6 +6,7 @@ import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
 import { TranslateModule } from '@ngx-translate/core';
+import { CountdownEnergyComponent } from '../shared/ui/countdown-energy/countdown-energy.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { TranslateModule } from '@ngx-translate/core';
     FormsModule,
     IonicModule,
     HomePageRoutingModule,
-    TranslateModule
+    TranslateModule,
+    CountdownEnergyComponent,
   ],
   declarations: [HomePage]
 })

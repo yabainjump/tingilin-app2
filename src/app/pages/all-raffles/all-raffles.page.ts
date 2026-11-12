@@ -126,6 +126,26 @@ export class AllRafflesPage implements OnDestroy {
     return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
   }
 
+  timeProgress(d: DrawCard): number {
+    const endRaw = (d as any).endsAt ?? (d as any).endAt;
+    const end = endRaw ? new Date(endRaw).getTime() : NaN;
+    if (!Number.isFinite(end)) return 0;
+
+    const startRaw = (d as any).startAt ?? (d as any).start_at;
+    const start = startRaw ? new Date(startRaw).getTime() : NaN;
+    if (Number.isFinite(start) && end > start) {
+      const elapsed = Math.max(0, Math.min(end - start, this.nowMs - start));
+      return Math.max(0, Math.min(100, (elapsed / (end - start)) * 100));
+    }
+
+    const remaining = Math.max(0, end - this.nowMs);
+    const fallbackWindow = 24 * 60 * 60 * 1000;
+    return Math.max(
+      0,
+      Math.min(100, ((fallbackWindow - remaining) / fallbackWindow) * 100),
+    );
+  }
+
   isEnded(d: DrawCard): boolean {
     const raw = (d as any).endsAt ?? (d as any).endAt;
     if (!raw) return false;

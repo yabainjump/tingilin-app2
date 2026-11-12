@@ -9,6 +9,7 @@ import { RaffleDetailsPageRoutingModule } from './raffle-details-routing.module'
 
 import { RaffleDetailsPage } from './raffle-details.page';
 import { TranslateModule } from '@ngx-translate/core';
+import { CountdownEnergyComponent } from '../../shared/ui/countdown-energy/countdown-energy.component';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { TranslateModule } from '@ngx-translate/core';
     FormsModule,
     IonicModule,
     RaffleDetailsPageRoutingModule,
-    TranslateModule
+    TranslateModule,
+    CountdownEnergyComponent,
   ],
   declarations: [RaffleDetailsPage]
 })

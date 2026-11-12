@@ -1,0 +1,30 @@
+<div
+  class="energy"
+  [class.compact]="compact"
+  [class.ended]="ended"
+  role="progressbar"
+  aria-valuemin="0"
+  aria-valuemax="100"
+  [attr.aria-valuenow]="normalizedProgress"
+  [attr.aria-valuetext]="value"
+  [attr.aria-label]="label"
+>
+  <div class="energy-head">
+    <span class="energy-label">
+      <ion-icon name="flash" aria-hidden="true"></ion-icon>
+      {{ label }}
+    </span>
+    <strong>{{ value }}</strong>
+  </div>
+
+  <div class="energy-track" aria-hidden="true">
+    <div class="energy-fill" [style.width.%]="normalizedProgress">
+      <span class="spark spark-a"></span>
+      <span class="spark spark-b"></span>
+      <span class="spark spark-c"></span>
+      <span class="spark spark-d"></span>
+      <span class="energy-sheen"></span>
+    </div>
+    <span class="energy-thumb" [style.left.%]="thumbProgress"></span>
+  </div>
+</div>

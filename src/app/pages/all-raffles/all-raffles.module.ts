@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { AllRafflesPageRoutingModule } from './all-raffles-routing.module';
 import { AllRafflesPage } from './all-raffles.page';
+import { CountdownEnergyComponent } from '../../shared/ui/countdown-energy/countdown-energy.component';
 
 @NgModule({
   imports: [
@@ -13,6 +14,7 @@ import { AllRafflesPage } from './all-raffles.page';
     IonicModule,
     AllRafflesPageRoutingModule,
     TranslateModule,
+    CountdownEnergyComponent,
   ],
   declarations: [AllRafflesPage],
 })

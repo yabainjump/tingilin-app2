@@ -63,15 +63,12 @@
 
         <!-- PROGRESS -->
         <div class="progress-card">
-          <div class="progress-top">
-            <span>{{ 'RAFFLE_DETAILS_PAGE.TIME_LEFT' | translate }}</span>
-            <span class="progress-n">{{ remainingLabel }}</span>
-          </div>
-
-          <div class="bar">
-            <div class="bar-pattern"></div>
-            <div class="bar-fill" [style.width.%]="progressPct"></div>
-          </div>
+          <app-countdown-energy
+            [label]="'RAFFLE_DETAILS_PAGE.TIME_LEFT' | translate"
+            [value]="remainingLabel"
+            [progress]="progressPct"
+            [ended]="progressPct >= 100"
+          ></app-countdown-energy>
 
           <div class="progress-bottom">
             <div class="fast">

@@ -79,7 +79,13 @@
         <div class="row-body">
           <div class="row-title">{{d.title}}</div>
           <div class="row-sub" *ngIf="d.endsAt || d.endAt">
-            <span *ngIf="!isEnded(d)">{{ countdownText(d) }}</span>
+            <app-countdown-energy
+              *ngIf="!isEnded(d)"
+              [label]="'HOME_PAGE.TIME_REMAINING' | translate"
+              [value]="countdownText(d)"
+              [progress]="timeProgress(d)"
+              [compact]="true"
+            ></app-countdown-energy>
             <span *ngIf="isEnded(d)" class="ended-label">{{ 'HOME_PAGE.ENDED' | translate }}</span>
           </div>
 
