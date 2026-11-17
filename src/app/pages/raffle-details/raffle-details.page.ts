@@ -22,6 +22,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
 import { toAbsoluteMediaUrl } from 'src/app/shared/utils/media-url';
 import { NetworkStatusService } from 'src/app/services/offline/network-status.service';
+import { ResponsiblePlayGuardService } from 'src/app/services/responsible-play/responsible-play-guard.service';
 
 type RecentWinnerCard = {
   name: string;
@@ -69,6 +70,7 @@ export class RaffleDetailsPage implements OnInit, OnDestroy {
     private paymentsApi: PaymentsApiService,
     private translate: TranslateService,
     private networkStatus: NetworkStatusService,
+    private responsiblePlay: ResponsiblePlayGuardService,
   ) {}
 
   async goToPayment() {
@@ -420,7 +422,7 @@ export class RaffleDetailsPage implements OnInit, OnDestroy {
     return this.auth.isLoggedIn() && this.freeTicketsBalance > 0;
   }
 
-  async useFreeTicket() {
+  async useFreeTicket(retried = false) {
     const raffleId = this.currentRaffleId;
     if (!raffleId) return;
 
@@ -466,6 +468,14 @@ export class RaffleDetailsPage implements OnInit, OnDestroy {
 
       await this.router.navigate(['/tabs/ticket-details', raffleId]);
     } catch (e: any) {
+      // 18+ non confirme: le joueur confirme puis on relance une seule fois.
+      const outcome = await this.responsiblePlay.handlePurchaseError(e);
+      if (outcome === 'RETRY' && !retried) {
+        this.usingFreeTicket = false;
+        await this.useFreeTicket(true);
+        return;
+      }
+      if (outcome === 'HANDLED') return;
       const t = await this.toast.create({
         message:
           e?.error?.message ||

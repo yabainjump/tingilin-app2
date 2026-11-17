@@ -8,6 +8,7 @@ import { WinnersPageRoutingModule } from './winners-routing.module';
 
 import { WinnersPage } from './winners.page';
 import { TranslateModule } from '@ngx-translate/core';
+import { TrustStatsComponent } from 'src/app/shared/engagement/trust-stats.component';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { TranslateModule } from '@ngx-translate/core';
     FormsModule,
     IonicModule,
     WinnersPageRoutingModule,
-    TranslateModule
+    TranslateModule,
+    TrustStatsComponent,
   ],
   declarations: [WinnersPage]
 })

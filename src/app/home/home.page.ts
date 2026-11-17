@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { RewardProgressComponent } from '../shared/engagement/reward-progress.component';
 import { finalize } from 'rxjs/operators';
 import { skeletonController } from '../shared/utils/skeleton-timing';
 import { HomeApiService } from '../services/home/home-api.service';
@@ -33,7 +34,13 @@ export class HomePage implements OnInit, OnDestroy {
   private feedInFlight = false;
   readonly isOffline$ = this.networkStatus.offline$;
 
+  @ViewChild(RewardProgressComponent) private rewards?: RewardProgressComponent;
+  isLoggedIn = false;
+
   ionViewWillEnter(): void {
+    this.isLoggedIn = this.auth.isLoggedIn();
+    // Les compteurs bougent apres chaque achat: on les relit a chaque retour.
+    if (this.hasEnteredView) this.rewards?.reload();
     this.startClock();
     this.startAutoRefresh();
     this.notifState.refresh();

@@ -671,3 +671,34 @@ button.stat-card {
     font-weight: 700;
   }
 }
+
+// Derniers gagnants (preuve de remise + verification du tirage)
+.past-winners {
+  margin: 4px 0 18px;
+}
+
+.past-title {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--app-muted);
+}
+
+.winner-row + .winner-row {
+  margin-top: 8px;
+}
+
+.delivered-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  background: var(--app-success-soft);
+  color: var(--app-success);
+  font-size: 11.5px;
+  font-weight: 700;
+}

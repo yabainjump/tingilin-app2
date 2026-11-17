@@ -1,3 +1,4 @@
+import { LiveActivityTickerComponent } from 'src/app/shared/engagement/live-activity-ticker.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -19,6 +20,7 @@ import { CountdownEnergyComponent } from '../../shared/ui/countdown-energy/count
     RaffleDetailsPageRoutingModule,
     TranslateModule,
     CountdownEnergyComponent,
+    LiveActivityTickerComponent,
   ],
   declarations: [RaffleDetailsPage]
 })

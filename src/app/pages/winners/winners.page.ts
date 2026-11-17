@@ -1,12 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { Subscription, finalize, interval } from 'rxjs';
 import {
   FairnessDto,
+  normalizeWinner,
   WinnersApiService,
   WinnerDto,
 } from 'src/app/services/winners/winners-api.service';
+import { WinnerProofModalComponent } from 'src/app/shared/engagement/winner-proof-modal.component';
+import { environment } from 'src/environments/environment';
 import { ShareService } from 'src/app/services/share/share.service';
 import {
   LiveDrawState,
@@ -31,6 +34,8 @@ export class WinnersPage implements OnInit, OnDestroy {
 
   // Données pour la vue détail (scanner / proof)
   recent: WinnerDto[] = [];
+  // Derniers lots gagnes (vue liste), avec preuve de remise.
+  pastWinners: WinnerDto[] = [];
   scanTickets: string[] = [];
   activeScanIndex = 0;
   analysisProgress = 0;
@@ -56,6 +61,7 @@ export class WinnersPage implements OnInit, OnDestroy {
     private shareService: ShareService,
     private liveSocket: WinnersLiveSocketService,
     private translate: TranslateService,
+    private modals: ModalController,
   ) {}
 
   ngOnInit() {}
@@ -63,6 +69,7 @@ export class WinnersPage implements OnInit, OnDestroy {
   ionViewWillEnter() {
     this.connectRealtime();
     this.load();
+    this.loadPastWinners();
   }
 
   ionViewWillLeave() {
@@ -310,15 +317,23 @@ export class WinnersPage implements OnInit, OnDestroy {
     return `${v.slice(0, head)}…${v.slice(-tail)}`;
   }
 
+  /** Fiche gagnant: preuve de remise + verification du tirage sur le telephone. */
   async openWinner(w: WinnerDto) {
-    const t = await this.toast.create({
-      message: this.translate.instant('WINNERS_PAGE.TOAST_WINNER', {
-        winner: w.winnerName,
-        ticket: w.ticketCode,
-      }),
-      duration: 1400,
+    if (!w?.raffleId) return;
+    const modal = await this.modals.create({
+      component: WinnerProofModalComponent,
+      componentProps: { winner: normalizeWinner(w, environment.apiBaseUrl) },
+      breakpoints: [0, 0.75, 1],
+      initialBreakpoint: 0.75,
     });
-    await t.present();
+    await modal.present();
+  }
+
+  private loadPastWinners(): void {
+    this.api.list(10).subscribe({
+      next: (rows) => (this.pastWinners = rows ?? []),
+      error: () => (this.pastWinners = []),
+    });
   }
 
   avatarSrc(a?: string | null): string {

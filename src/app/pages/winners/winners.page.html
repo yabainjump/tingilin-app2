@@ -15,6 +15,35 @@
 
       <ng-container *ngIf="!loading; else listSkeleton">
 
+        <app-trust-stats></app-trust-stats>
+
+        <!-- Derniers gagnants: preuve de remise + verification du tirage -->
+        <section class="past-winners" *ngIf="pastWinners.length > 0">
+          <div class="past-title">{{ 'ENGAGEMENT.PAST_WINNERS_TITLE' | translate }}</div>
+          <button
+            class="row-card winner-row"
+            type="button"
+            *ngFor="let w of pastWinners; trackBy: trackByRecent"
+            (click)="openWinner(w)"
+          >
+            <div
+              class="row-img"
+              [style.background-image]="'url(' + (w.deliveryProof?.imageUrl || w.prizeImageUrl || 'assets/img/placeholder.png') + ')'"
+              role="img"
+              [attr.aria-label]="w.prizeTitle"
+            ></div>
+            <div class="row-body">
+              <div class="row-title">{{ w.prizeTitle }}</div>
+              <div class="row-sub">{{ 'ENGAGEMENT.WON_BY' | translate: { name: w.winnerName } }}</div>
+              <span class="delivered-chip" *ngIf="w.delivered">
+                <ion-icon name="checkmark-circle"></ion-icon>
+                {{ (w.deliveryProof ? 'ENGAGEMENT.DELIVERED_WITH_PHOTO' : 'ENGAGEMENT.DELIVERED_BADGE') | translate }}
+              </span>
+            </div>
+            <ion-icon name="shield-checkmark-outline" class="row-chevron"></ion-icon>
+          </button>
+        </section>
+
         <div class="list-empty" *ngIf="allDraws.length === 0">
           <ion-icon name="trophy-outline"></ion-icon>
           <p>{{ 'WINNERS_PAGE.LIST_EMPTY' | translate }}</p>

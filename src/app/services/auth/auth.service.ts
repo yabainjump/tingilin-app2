@@ -86,6 +86,7 @@ export class AuthService {
     phone: string;
     region?: UserRegion;
     referralCode?: string;
+    isAdult: boolean;
   }) {
     return this.http
       .post<AuthTokenResponse>(`${this.baseUrl}/auth/register`, dto, this.authRequestOptions())

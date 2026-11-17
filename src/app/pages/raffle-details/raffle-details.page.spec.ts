@@ -1,3 +1,4 @@
+import { ResponsiblePlayGuardService } from 'src/app/services/responsible-play/responsible-play-guard.service';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
@@ -72,6 +73,12 @@ describe('RaffleDetailsPage', () => {
         { provide: ShareService, useValue: shareService },
         { provide: ReferralApiService, useValue: referralApi },
         { provide: PaymentsApiService, useValue: paymentsApi },
+        {
+          provide: ResponsiblePlayGuardService,
+          useValue: jasmine.createSpyObj('ResponsiblePlayGuardService', {
+            handlePurchaseError: Promise.resolve('UNHANDLED'),
+          }),
+        },
         {
           provide: NavController,
           useValue: jasmine.createSpyObj('NavController', ['back']),

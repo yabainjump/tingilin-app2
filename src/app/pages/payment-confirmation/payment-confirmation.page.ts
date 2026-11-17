@@ -11,6 +11,7 @@ import { firstValueFrom } from 'rxjs';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { environment } from 'src/environments/environment';
 import { toAbsoluteMediaUrl } from 'src/app/shared/utils/media-url';
+import { ResponsiblePlayGuardService } from 'src/app/services/responsible-play/responsible-play-guard.service';
 
 type PaymentOverlayState =
   | 'STARTING'
@@ -70,6 +71,8 @@ export class PaymentConfirmationPage {
   private readonly defaultPaymentTtlMs = 10 * 60 * 1000;
 
   loading = false;
+  // Une seule relance automatique apres la confirmation 18+.
+  private ageRetryDone = false;
   pageLoading = true;
 
   constructor(
@@ -79,6 +82,7 @@ export class PaymentConfirmationPage {
     private toastCtrl: ToastController,
     private translate: TranslateService,
     private auth: AuthService,
+    private responsiblePlay: ResponsiblePlayGuardService,
   ) {}
 
   async ionViewWillEnter() {
@@ -303,6 +307,21 @@ export class PaymentConfirmationPage {
           },
         });
         return;
+      }
+
+      // Jeu responsable (18+ / limite de depense): aucun paiement n'a ete
+      // engage, on ferme l'ecran d'attente et on explique.
+      if (status === 403) {
+        this.paymentOverlayVisible = false;
+        this.directChargePending = false;
+        const outcome = await this.responsiblePlay.handlePurchaseError(e);
+        if (outcome === 'RETRY' && !this.ageRetryDone) {
+          this.ageRetryDone = true;
+          this.loading = false;
+          await this.confirmPayment();
+          return;
+        }
+        if (outcome !== 'UNHANDLED') return;
       }
 
       this.directChargePending = false;

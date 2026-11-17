@@ -103,6 +103,9 @@
           [placeholder]="'REGISTER_PAGE.REFERRAL_PLACEHOLDER' | translate"
           [formControl]="form.controls.referralCode"
         />
+        <div class="hint" *ngIf="form.controls.referralCode.value">
+          {{ 'REGISTER_PAGE.REFERRAL_WELCOME_HINT' | translate }}
+        </div>
       </div>
 
       <div class="grid-2">
@@ -151,6 +154,11 @@
       <div class="terms">
         <ion-checkbox [formControl]="form.controls.terms"></ion-checkbox>
         <div class="terms-text">{{ 'REGISTER_PAGE.TERMS' | translate }}</div>
+      </div>
+
+      <div class="terms adult">
+        <ion-checkbox [formControl]="form.controls.adult"></ion-checkbox>
+        <div class="terms-text">{{ 'REGISTER_PAGE.ADULT' | translate }}</div>
       </div>
 
       <button

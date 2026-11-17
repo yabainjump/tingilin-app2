@@ -44,6 +44,8 @@ export class RegisterPage implements OnInit {
     password: ['', [Validators.required, Validators.pattern(PASSWORD_RULE)]],
     referralCode: [''],
     terms: [false, [Validators.requiredTrue]],
+    // Jeu d'argent: declaration 18+ obligatoire (verifiee aussi par l'API).
+    adult: [false, [Validators.requiredTrue]],
   });
 
   constructor(
@@ -97,6 +99,14 @@ export class RegisterPage implements OnInit {
       return;
     }
 
+    if (this.form.controls.adult.value !== true) {
+      this.form.controls.adult.markAsTouched();
+      await this.showToast(
+        this.translate.instant('REGISTER_PAGE.TOAST_ADULT_REQUIRED'),
+      );
+      return;
+    }
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       await this.showToast(
@@ -122,6 +132,7 @@ export class RegisterPage implements OnInit {
       phone: String(phoneFull),
       region: this.selectedRegion,
       referralCode: String(v.referralCode ?? '').trim().toUpperCase() || undefined,
+      isAdult: v.adult === true,
     };
 
     this.auth

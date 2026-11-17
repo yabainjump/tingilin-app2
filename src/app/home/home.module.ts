@@ -7,6 +7,10 @@ import { HomePage } from './home.page';
 import { HomePageRoutingModule } from './home-routing.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { CountdownEnergyComponent } from '../shared/ui/countdown-energy/countdown-energy.component';
+import { LiveActivityTickerComponent } from '../shared/engagement/live-activity-ticker.component';
+import { RewardProgressComponent } from '../shared/engagement/reward-progress.component';
+import { TrustStatsComponent } from '../shared/engagement/trust-stats.component';
+import { NextPrizePollComponent } from '../shared/engagement/next-prize-poll.component';
 
 
 @NgModule({
@@ -17,6 +21,10 @@ import { CountdownEnergyComponent } from '../shared/ui/countdown-energy/countdow
     HomePageRoutingModule,
     TranslateModule,
     CountdownEnergyComponent,
+    LiveActivityTickerComponent,
+    RewardProgressComponent,
+    TrustStatsComponent,
+    NextPrizePollComponent,
   ],
   declarations: [HomePage]
 })

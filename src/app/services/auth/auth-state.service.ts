@@ -23,6 +23,8 @@ export interface MeDto {
   lastName?: string;
   phone?: string;
   region?: string | null;
+  adultConfirmed?: boolean;
+  showInLiveFeed?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })

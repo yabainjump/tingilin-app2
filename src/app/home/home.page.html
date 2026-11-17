@@ -84,6 +84,12 @@
 
     <!-- CONTENT -->
     <div class="content">
+      <!-- Activite en direct (achats recents, prenom + initiale seulement) -->
+      <app-live-activity-ticker class="home-ticker"></app-live-activity-ticker>
+
+      <!-- Progression vers le prochain ticket gratuit -->
+      <app-reward-progress *ngIf="isLoggedIn"></app-reward-progress>
+
       <div
         class="offline-empty"
         *ngIf="(isOffline$ | async) && !showEndingSoonSkeleton && !heroCards.length && !featured && !liveRows.length"
@@ -184,6 +190,9 @@
           </div>
         </ng-template>
       </div>
+
+      <!-- Preuves de confiance: lots remis, valeur, tirages verifiables -->
+      <app-trust-stats (click)="openLiveDraws()"></app-trust-stats>
 
       <!-- Live Draws -->
       <h2 class="live-title">{{ 'HOME_PAGE.LIVE_DRAWS' | translate }}</h2>
@@ -309,6 +318,9 @@
           <ion-skeleton-text animated class="sk-line sm"></ion-skeleton-text>
         </div>
       </ng-template>
+
+      <!-- Les joueurs choisissent le prochain lot -->
+      <app-next-prize-poll [loggedIn]="isLoggedIn"></app-next-prize-poll>
 
       <div class="bottom-spacer"></div>
     </div>

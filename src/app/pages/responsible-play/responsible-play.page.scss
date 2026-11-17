@@ -1,0 +1,258 @@
+.rp-bg {
+  --background: var(--app-bg);
+}
+
+.screen {
+  width: min(100%, 720px);
+  margin: 0 auto;
+  color: var(--app-ink);
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: calc(env(safe-area-inset-top) + 12px) 16px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--app-surface);
+}
+
+.top-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid var(--app-border);
+  background: var(--app-surface-2);
+  color: var(--app-ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.top-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.spacer {
+  width: 40px;
+}
+
+.body {
+  padding: 16px 16px 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.intro,
+.muted,
+.hint,
+.card p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--app-muted);
+  line-height: 1.45;
+}
+
+.card {
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  h2 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 800;
+  }
+}
+
+.grow {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.age {
+  flex-direction: row;
+  align-items: flex-start;
+  border-color: var(--app-warning);
+  background: var(--app-warning-soft);
+
+  > ion-icon {
+    font-size: 22px;
+    color: var(--app-warning);
+    flex: 0 0 auto;
+  }
+}
+
+.current-head,
+.current-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.current-foot {
+  margin-top: 6px;
+  color: var(--app-muted);
+  font-size: 12px;
+}
+
+.bar {
+  margin-top: 8px;
+  height: 10px;
+  border-radius: 99px;
+  background: var(--app-surface-2);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--app-primary);
+  transition: width 0.5s var(--app-ease-out, ease-out);
+
+  &.full {
+    background: var(--app-danger);
+  }
+}
+
+.pending {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--app-surface-2);
+  font-size: 12.5px;
+
+  > ion-icon {
+    font-size: 18px;
+    color: var(--app-primary);
+    flex: 0 0 auto;
+  }
+}
+
+.segment,
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  button {
+    flex: 1 1 auto;
+    min-height: 40px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid var(--app-border);
+    background: var(--app-surface-2);
+    color: var(--app-ink);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    &.active {
+      border-color: var(--app-primary);
+      background: var(--app-primary);
+      color: var(--app-on-primary, #fff);
+    }
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--app-muted);
+
+  input {
+    height: 46px;
+    padding: 0 12px;
+    border-radius: 12px;
+    border: 1px solid var(--app-border);
+    background: var(--app-surface-2);
+    color: var(--app-ink);
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  input[aria-invalid='true'] {
+    border-color: var(--app-danger);
+  }
+}
+
+.btn-primary,
+.btn-secondary {
+  min-height: 46px;
+  border-radius: 999px;
+  border: 0;
+  font: inherit;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-primary {
+  background: var(--app-primary);
+  color: var(--app-on-primary, #fff);
+
+  &[disabled] {
+    opacity: 0.55;
+  }
+}
+
+.btn-secondary {
+  align-self: flex-start;
+  padding: 0 16px;
+  min-height: 40px;
+  background: var(--app-surface);
+  color: var(--app-ink);
+  border: 1px solid var(--app-border);
+}
+
+.link {
+  align-self: center;
+  border: 0;
+  background: none;
+  color: var(--app-primary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 4px;
+
+  &.danger {
+    color: var(--app-danger);
+  }
+}
+
+.toggle-card {
+  flex-direction: row;
+  align-items: center;
+}
+
+.tips ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: var(--app-muted);
+  line-height: 1.5;
+}
+
+.sk {
+  height: 46px;
+  border-radius: 12px;
+}

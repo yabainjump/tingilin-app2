@@ -80,16 +80,40 @@ describe('RegisterPage', () => {
       password: 'Strong@123',
       referralCode: 'ABCD12',
       terms: true,
+      adult: true,
     });
     component.selectedRegion = 'LITTORAL';
 
     await component.submit();
     await fixture.whenStable();
 
-    expect(authService.register).toHaveBeenCalled();
+    expect(authService.register).toHaveBeenCalledWith(
+      jasmine.objectContaining({ isAdult: true }),
+    );
     expect(router.navigate).toHaveBeenCalledWith(['/onboarding'], {
       replaceUrl: true,
       queryParams: { redirect: '/raffle-details/test-raffle' },
     });
+  });
+
+  it('refuses to register without the 18+ declaration', async () => {
+    component.form.patchValue({
+      lastName: 'Doe',
+      firstName: 'Jane',
+      username: 'janedoe',
+      email: 'jane@example.com',
+      countryCode: '+237',
+      phone: '699123456',
+      country: 'CM',
+      city: 'Douala',
+      password: 'Strong@123',
+      terms: true,
+      adult: false,
+    });
+    component.selectedRegion = 'LITTORAL';
+
+    await component.submit();
+
+    expect(authService.register).not.toHaveBeenCalled();
   });
 });

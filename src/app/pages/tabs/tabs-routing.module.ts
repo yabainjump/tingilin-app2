@@ -107,6 +107,15 @@ const routes: Routes = [
           ),
       },
 
+      {
+        path: 'responsible-play',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('../responsible-play/responsible-play.module').then(
+            (m) => m.ResponsiblePlayPageModule,
+          ),
+      },
+
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
   },

@@ -262,6 +262,16 @@
         </div>
       </ng-template>
 
+      <!-- JEU RESPONSABLE: limite de depense, visibilite, 18+ -->
+      <a class="responsible-link" routerLink="/tabs/responsible-play">
+        <ion-icon name="shield-half-outline" aria-hidden="true"></ion-icon>
+        <span class="grow">
+          <strong>{{ 'RESPONSIBLE_PLAY.TITLE' | translate }}</strong>
+          <small>{{ 'RESPONSIBLE_PLAY.PROFILE_LINK_HINT' | translate }}</small>
+        </span>
+        <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+      </a>
+
       <!-- LOGOUT -->
       <div class="logout-wrap">
         <button class="logout" type="button" (click)="logout()">
