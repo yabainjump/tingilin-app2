@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Petite icone de barre d'etat (blanc sur transparent): un ticket. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M3,6C3,5.45 3.45,5 4,5L20,5C20.55,5 21,5.45 21,6L21,9.5C19.62,9.5 18.5,10.62 18.5,12C18.5,13.38 19.62,14.5 21,14.5L21,18C21,18.55 20.55,19 20,19L4,19C3.45,19 3,18.55 3,18L3,14.5C4.38,14.5 5.5,13.38 5.5,12C5.5,10.62 4.38,9.5 3,9.5ZM14,7L15.5,7L15.5,8.5L14,8.5ZM14,10L15.5,10L15.5,11.25L14,11.25ZM14,12.75L15.5,12.75L15.5,14L14,14ZM14,15.5L15.5,15.5L15.5,17L14,17Z" />
+</vector>

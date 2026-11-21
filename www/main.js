@@ -63,7 +63,7 @@ const routes = [{
 }, {
   path: 'tabs',
   canActivate: [_guard_auth_guard__WEBPACK_IMPORTED_MODULE_1__.AuthGuard, _guard_region_guard__WEBPACK_IMPORTED_MODULE_3__.RegionGuard],
-  loadChildren: () => Promise.all(/*! import() */[__webpack_require__.e("common"), __webpack_require__.e("src_app_pages_tabs_tabs_module_ts")]).then(__webpack_require__.bind(__webpack_require__, /*! ./pages/tabs/tabs.module */ 9660)).then(m => m.TabsPageModule)
+  loadChildren: () => __webpack_require__.e(/*! import() */ "src_app_pages_tabs_tabs_module_ts").then(__webpack_require__.bind(__webpack_require__, /*! ./pages/tabs/tabs.module */ 9660)).then(m => m.TabsPageModule)
 },
 // { path: 'tabs', loadChildren: () => import('./pages/tabs/tabs.module').then(m => m.TabsPageModule) },
 // redirects (évite les doublons)
@@ -98,7 +98,7 @@ const routes = [{
 }, {
   path: 'support',
   canActivate: [_guard_auth_guard__WEBPACK_IMPORTED_MODULE_1__.AuthGuard, _guard_region_guard__WEBPACK_IMPORTED_MODULE_3__.RegionGuard],
-  loadChildren: () => __webpack_require__.e(/*! import() */ "src_app_pages_support_support_module_ts").then(__webpack_require__.bind(__webpack_require__, /*! ./pages/support/support.module */ 6230)).then(m => m.SupportPageModule)
+  loadChildren: () => Promise.all(/*! import() */[__webpack_require__.e("common"), __webpack_require__.e("src_app_pages_support_support_module_ts")]).then(__webpack_require__.bind(__webpack_require__, /*! ./pages/support/support.module */ 6230)).then(m => m.SupportPageModule)
 }, {
   path: 'raffle-details/:id',
   loadChildren: () => Promise.all(/*! import() */[__webpack_require__.e("default-src_app_services_winners_winners-live-socket_service_ts-src_app_shared_utils_media-ur-aabc18"), __webpack_require__.e("default-src_app_shared_ui_countdown-energy_countdown-energy_component_ts"), __webpack_require__.e("default-src_app_services_referral_referral-api_service_ts-src_app_services_responsible-play_r-3dae35"), __webpack_require__.e("common"), __webpack_require__.e("src_app_pages_raffle-details_raffle-details_module_ts")]).then(__webpack_require__.bind(__webpack_require__, /*! ./pages/raffle-details/raffle-details.module */ 1378)).then(m => m.RaffleDetailsPageModule)
@@ -109,7 +109,7 @@ const routes = [{
 }, {
   path: 'participations',
   canActivate: [_guard_auth_guard__WEBPACK_IMPORTED_MODULE_1__.AuthGuard, _guard_region_guard__WEBPACK_IMPORTED_MODULE_3__.RegionGuard],
-  loadChildren: () => __webpack_require__.e(/*! import() */ "src_app_pages_participations_participations_module_ts").then(__webpack_require__.bind(__webpack_require__, /*! ./pages/participations/participations.module */ 8204)).then(m => m.ParticipationsPageModule)
+  loadChildren: () => Promise.all(/*! import() */[__webpack_require__.e("common"), __webpack_require__.e("src_app_pages_participations_participations_module_ts")]).then(__webpack_require__.bind(__webpack_require__, /*! ./pages/participations/participations.module */ 8204)).then(m => m.ParticipationsPageModule)
 }, {
   path: 'ticket-details/:raffleId',
   canActivate: [_guard_auth_guard__WEBPACK_IMPORTED_MODULE_1__.AuthGuard, _guard_region_guard__WEBPACK_IMPORTED_MODULE_3__.RegionGuard],
@@ -117,7 +117,7 @@ const routes = [{
 }, {
   path: 'notifications',
   canActivate: [_guard_auth_guard__WEBPACK_IMPORTED_MODULE_1__.AuthGuard, _guard_region_guard__WEBPACK_IMPORTED_MODULE_3__.RegionGuard],
-  loadChildren: () => Promise.all(/*! import() */[__webpack_require__.e("default-src_app_pages_notifications_notifications_module_ts"), __webpack_require__.e("common")]).then(__webpack_require__.bind(__webpack_require__, /*! ./pages/notifications/notifications.module */ 5746)).then(m => m.NotificationsPageModule)
+  loadChildren: () => Promise.all(/*! import() */[__webpack_require__.e("common"), __webpack_require__.e("src_app_pages_notifications_notifications_module_ts")]).then(__webpack_require__.bind(__webpack_require__, /*! ./pages/notifications/notifications.module */ 5746)).then(m => m.NotificationsPageModule)
 }, {
   path: '**',
   redirectTo: 'landing'
@@ -167,10 +167,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_i18n_language_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./services/i18n/language.service */ 9785);
 /* harmony import */ var _services_offline_network_status_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./services/offline/network-status.service */ 9669);
 /* harmony import */ var _services_offline_offline_action_queue_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./services/offline/offline-action-queue.service */ 2616);
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/common */ 3683);
-/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @ionic/angular */ 1507);
-/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @ngx-translate/core */ 8503);
+/* harmony import */ var _services_push_push_notifications_service__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./services/push/push-notifications.service */ 5174);
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/common */ 3683);
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @ionic/angular */ 1507);
+/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @ngx-translate/core */ 8503);
 var _staticBlock;
+
 
 
 
@@ -282,12 +284,13 @@ function AppComponent_div_3_Template(rf, ctx) {
   }
 }
 class AppComponent {
-  constructor(loading, authState, language, networkStatus, offlineQueue, router, document) {
+  constructor(loading, authState, language, networkStatus, offlineQueue, push, router, document) {
     this.loading = loading;
     this.authState = authState;
     this.language = language;
     this.networkStatus = networkStatus;
     this.offlineQueue = offlineQueue;
+    this.push = push;
     this.router = router;
     this.document = document;
     this.loading$ = this.loading.loading$;
@@ -297,6 +300,8 @@ class AppComponent {
   ngOnInit() {
     this.language.init();
     this.authState.bootstrap();
+    // Push FCM (Android natif uniquement, no-op sur le web). Aucun prompt OS ici.
+    void this.push.init();
     this.bannerStateSub = (0,rxjs__WEBPACK_IMPORTED_MODULE_3__.combineLatest)([this.networkStatus.online$, this.offlineQueue.pendingCount$, this.networkStatus.constrained$]).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_6__.map)(([online, pending, constrained]) => ({
       online,
       pending,
@@ -366,7 +371,7 @@ class AppComponent {
     this.bannerHideTimeout = undefined;
   }
   static #_ = _staticBlock = () => (this.ɵfac = function AppComponent_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || AppComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdirectiveInject"](_core_loading_loading_service__WEBPACK_IMPORTED_MODULE_8__.LoadingService), _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdirectiveInject"](_services_auth_auth_state_service__WEBPACK_IMPORTED_MODULE_9__.AuthStateService), _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdirectiveInject"](_services_i18n_language_service__WEBPACK_IMPORTED_MODULE_10__.LanguageService), _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdirectiveInject"](_services_offline_network_status_service__WEBPACK_IMPORTED_MODULE_11__.NetworkStatusService), _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdirectiveInject"](_services_offline_offline_action_queue_service__WEBPACK_IMPORTED_MODULE_12__.OfflineActionQueueService), _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_1__.Router), _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdirectiveInject"](_angular_common__WEBPACK_IMPORTED_MODULE_0__.DOCUMENT));
+    return new (__ngFactoryType__ || AppComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdirectiveInject"](_core_loading_loading_service__WEBPACK_IMPORTED_MODULE_8__.LoadingService), _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdirectiveInject"](_services_auth_auth_state_service__WEBPACK_IMPORTED_MODULE_9__.AuthStateService), _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdirectiveInject"](_services_i18n_language_service__WEBPACK_IMPORTED_MODULE_10__.LanguageService), _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdirectiveInject"](_services_offline_network_status_service__WEBPACK_IMPORTED_MODULE_11__.NetworkStatusService), _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdirectiveInject"](_services_offline_offline_action_queue_service__WEBPACK_IMPORTED_MODULE_12__.OfflineActionQueueService), _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdirectiveInject"](_services_push_push_notifications_service__WEBPACK_IMPORTED_MODULE_13__.PushNotificationsService), _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_1__.Router), _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdirectiveInject"](_angular_common__WEBPACK_IMPORTED_MODULE_0__.DOCUMENT));
   }, this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdefineComponent"]({
     type: AppComponent,
     selectors: [["app-root"]],
@@ -391,7 +396,7 @@ class AppComponent {
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵproperty"]("ngIf", _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵpipeBind1"](4, 4, ctx.bannerState$));
       }
     },
-    dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_13__.NgIf, _ionic_angular__WEBPACK_IMPORTED_MODULE_14__.IonApp, _ionic_angular__WEBPACK_IMPORTED_MODULE_14__.IonProgressBar, _ionic_angular__WEBPACK_IMPORTED_MODULE_14__.IonRouterOutlet, _angular_common__WEBPACK_IMPORTED_MODULE_13__.AsyncPipe, _ngx_translate_core__WEBPACK_IMPORTED_MODULE_15__.TranslatePipe],
+    dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_14__.NgIf, _ionic_angular__WEBPACK_IMPORTED_MODULE_15__.IonApp, _ionic_angular__WEBPACK_IMPORTED_MODULE_15__.IonProgressBar, _ionic_angular__WEBPACK_IMPORTED_MODULE_15__.IonRouterOutlet, _angular_common__WEBPACK_IMPORTED_MODULE_14__.AsyncPipe, _ngx_translate_core__WEBPACK_IMPORTED_MODULE_16__.TranslatePipe],
     styles: [".connectivity-banner[_ngcontent-%COMP%] {\n  position: fixed;\n  top: calc(env(safe-area-inset-top) + 12px);\n  left: 50%;\n  right: auto;\n  width: min(520px, 100% - 24px);\n  transform: translateX(-50%);\n  z-index: 1200;\n  display: grid;\n  grid-template-columns: 34px 1fr;\n  column-gap: 12px;\n  align-items: center;\n  padding: 12px 14px 12px 12px;\n  border: 1px solid var(--app-border);\n  border-radius: 18px;\n  color: var(--app-ink);\n  background: var(--app-surface);\n  box-shadow: none;\n  -webkit-backdrop-filter: none;\n          backdrop-filter: none;\n  pointer-events: none;\n}\n\n.connectivity-banner.offline[_ngcontent-%COMP%] {\n  background: var(--app-danger);\n  color: var(--app-on-danger);\n}\n\n.connectivity-banner.pending[_ngcontent-%COMP%] {\n  background: var(--app-success);\n  color: var(--app-on-success);\n}\n\n.connectivity-banner.constrained[_ngcontent-%COMP%] {\n  background: var(--app-warning);\n  color: var(--app-on-warning);\n}\n\n.connectivity-banner[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-size: 13px;\n  font-weight: 700;\n  letter-spacing: 0.02em;\n  display: block;\n}\n\n.connectivity-banner[_ngcontent-%COMP%]   .body[_ngcontent-%COMP%] {\n  font-size: 12px;\n  opacity: 0.92;\n  display: block;\n  line-height: 1.35;\n  text-wrap: balance;\n}\n\n.banner-copy[_ngcontent-%COMP%] {\n  min-width: 0;\n}\n\n.status-icon[_ngcontent-%COMP%] {\n  width: 22px;\n  height: 22px;\n  border-radius: 50%;\n  border: 2px solid currentColor;\n  border-top-color: transparent;\n  box-shadow: none;\n}\n\n.status-icon.syncing[_ngcontent-%COMP%] {\n  animation: _ngcontent-%COMP%_connectivity-spin 1s linear infinite;\n}\n\n@keyframes _ngcontent-%COMP%_connectivity-spin {\n  from {\n    transform: rotate(0deg);\n  }\n  to {\n    transform: rotate(360deg);\n  }\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvYXBwLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0UsZUFBQTtFQUNBLDBDQUFBO0VBQ0EsU0FBQTtFQUNBLFdBQUE7RUFDQSw4QkFBQTtFQUNBLDJCQUFBO0VBQ0EsYUFBQTtFQUNBLGFBQUE7RUFDQSwrQkFBQTtFQUNBLGdCQUFBO0VBQ0EsbUJBQUE7RUFDQSw0QkFBQTtFQUNBLG1DQUFBO0VBQ0EsbUJBQUE7RUFDQSxxQkFBQTtFQUNBLDhCQUFBO0VBQ0EsZ0JBQUE7RUFDQSw2QkFBQTtVQUFBLHFCQUFBO0VBQ0Esb0JBQUE7QUFDRjs7QUFFQTtFQUNFLDZCQUFBO0VBQ0EsMkJBQUE7QUFDRjs7QUFFQTtFQUNFLDhCQUFBO0VBQ0EsNEJBQUE7QUFDRjs7QUFFQTtFQUNFLDhCQUFBO0VBQ0EsNEJBQUE7QUFDRjs7QUFFQTtFQUNFLGVBQUE7RUFDQSxnQkFBQTtFQUNBLHNCQUFBO0VBQ0EsY0FBQTtBQUNGOztBQUVBO0VBQ0UsZUFBQTtFQUNBLGFBQUE7RUFDQSxjQUFBO0VBQ0EsaUJBQUE7RUFDQSxrQkFBQTtBQUNGOztBQUVBO0VBQ0UsWUFBQTtBQUNGOztBQUVBO0VBQ0UsV0FBQTtFQUNBLFlBQUE7RUFDQSxrQkFBQTtFQUNBLDhCQUFBO0VBQ0EsNkJBQUE7RUFDQSxnQkFBQTtBQUNGOztBQUVBO0VBQ0UsK0NBQUE7QUFDRjs7QUFFQTtFQUNFO0lBQ0UsdUJBQUE7RUFDRjtFQUVBO0lBQ0UseUJBQUE7RUFBRjtBQUNGIiwic291cmNlc0NvbnRlbnQiOlsiLmNvbm5lY3Rpdml0eS1iYW5uZXIge1xyXG4gIHBvc2l0aW9uOiBmaXhlZDtcclxuICB0b3A6IGNhbGMoZW52KHNhZmUtYXJlYS1pbnNldC10b3ApICsgMTJweCk7XHJcbiAgbGVmdDogNTAlO1xyXG4gIHJpZ2h0OiBhdXRvO1xyXG4gIHdpZHRoOiBtaW4oNTIwcHgsIGNhbGMoMTAwJSAtIDI0cHgpKTtcclxuICB0cmFuc2Zvcm06IHRyYW5zbGF0ZVgoLTUwJSk7XHJcbiAgei1pbmRleDogMTIwMDtcclxuICBkaXNwbGF5OiBncmlkO1xyXG4gIGdyaWQtdGVtcGxhdGUtY29sdW1uczogMzRweCAxZnI7XHJcbiAgY29sdW1uLWdhcDogMTJweDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIHBhZGRpbmc6IDEycHggMTRweCAxMnB4IDEycHg7XHJcbiAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tYXBwLWJvcmRlcik7XHJcbiAgYm9yZGVyLXJhZGl1czogMThweDtcclxuICBjb2xvcjogdmFyKC0tYXBwLWluayk7XHJcbiAgYmFja2dyb3VuZDogdmFyKC0tYXBwLXN1cmZhY2UpO1xyXG4gIGJveC1zaGFkb3c6IG5vbmU7XHJcbiAgYmFja2Ryb3AtZmlsdGVyOiBub25lO1xyXG4gIHBvaW50ZXItZXZlbnRzOiBub25lO1xyXG59XHJcblxyXG4uY29ubmVjdGl2aXR5LWJhbm5lci5vZmZsaW5lIHtcclxuICBiYWNrZ3JvdW5kOiB2YXIoLS1hcHAtZGFuZ2VyKTtcclxuICBjb2xvcjogdmFyKC0tYXBwLW9uLWRhbmdlcik7XHJcbn1cclxuXHJcbi5jb25uZWN0aXZpdHktYmFubmVyLnBlbmRpbmcge1xyXG4gIGJhY2tncm91bmQ6IHZhcigtLWFwcC1zdWNjZXNzKTtcclxuICBjb2xvcjogdmFyKC0tYXBwLW9uLXN1Y2Nlc3MpO1xyXG59XHJcblxyXG4uY29ubmVjdGl2aXR5LWJhbm5lci5jb25zdHJhaW5lZCB7XHJcbiAgYmFja2dyb3VuZDogdmFyKC0tYXBwLXdhcm5pbmcpO1xyXG4gIGNvbG9yOiB2YXIoLS1hcHAtb24td2FybmluZyk7XHJcbn1cclxuXHJcbi5jb25uZWN0aXZpdHktYmFubmVyIC50aXRsZSB7XHJcbiAgZm9udC1zaXplOiAxM3B4O1xyXG4gIGZvbnQtd2VpZ2h0OiA3MDA7XHJcbiAgbGV0dGVyLXNwYWNpbmc6IDAuMDJlbTtcclxuICBkaXNwbGF5OiBibG9jaztcclxufVxyXG5cclxuLmNvbm5lY3Rpdml0eS1iYW5uZXIgLmJvZHkge1xyXG4gIGZvbnQtc2l6ZTogMTJweDtcclxuICBvcGFjaXR5OiAwLjkyO1xyXG4gIGRpc3BsYXk6IGJsb2NrO1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjM1O1xyXG4gIHRleHQtd3JhcDogYmFsYW5jZTtcclxufVxyXG5cclxuLmJhbm5lci1jb3B5IHtcclxuICBtaW4td2lkdGg6IDA7XHJcbn1cclxuXHJcbi5zdGF0dXMtaWNvbiB7XHJcbiAgd2lkdGg6IDIycHg7XHJcbiAgaGVpZ2h0OiAyMnB4O1xyXG4gIGJvcmRlci1yYWRpdXM6IDUwJTtcclxuICBib3JkZXI6IDJweCBzb2xpZCBjdXJyZW50Q29sb3I7XHJcbiAgYm9yZGVyLXRvcC1jb2xvcjogdHJhbnNwYXJlbnQ7XHJcbiAgYm94LXNoYWRvdzogbm9uZTtcclxufVxyXG5cclxuLnN0YXR1cy1pY29uLnN5bmNpbmcge1xyXG4gIGFuaW1hdGlvbjogY29ubmVjdGl2aXR5LXNwaW4gMXMgbGluZWFyIGluZmluaXRlO1xyXG59XHJcblxyXG5Aa2V5ZnJhbWVzIGNvbm5lY3Rpdml0eS1zcGluIHtcclxuICBmcm9tIHtcclxuICAgIHRyYW5zZm9ybTogcm90YXRlKDBkZWcpO1xyXG4gIH1cclxuXHJcbiAgdG8ge1xyXG4gICAgdHJhbnNmb3JtOiByb3RhdGUoMzYwZGVnKTtcclxuICB9XHJcbn1cclxuIl0sInNvdXJjZVJvb3QiOiIifQ== */"]
   }));
 }
@@ -829,7 +834,8 @@ _staticBlock();
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   AuthStateService: () => (/* binding */ AuthStateService)
+/* harmony export */   AuthStateService: () => (/* binding */ AuthStateService),
+/* harmony export */   pushPrefsOf: () => (/* binding */ pushPrefsOf)
 /* harmony export */ });
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! rxjs */ 5797);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ 9452);
@@ -906,6 +912,28 @@ class AuthStateService {
   clear() {
     this.meSubject.next(null);
   }
+  /**
+   * PATCH /users/me { pushReminders?, pushNewRaffles? } puis mise a jour du
+   * cache local (seulement si la session n'a pas change entre-temps).
+   */
+  updatePushPrefs(patch) {
+    const requestSessionVersion = this.sessionVersion;
+    return this.auth.updatePushPrefs(patch).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_4__.map)(() => {
+      const current = this.meSubject.value;
+      if (!current || requestSessionVersion !== this.sessionVersion) {
+        return null;
+      }
+      const prefs = {
+        ...pushPrefsOf(current),
+        ...patch
+      };
+      this.meSubject.next({
+        ...current,
+        pushPrefs: prefs
+      });
+      return prefs;
+    }));
+  }
   // PATCH /users/me { region } puis mise a jour du cache local.
   updateRegion(region) {
     return this.auth.updateRegion(region).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_4__.map)(() => {
@@ -929,7 +957,14 @@ class AuthStateService {
     providedIn: 'root'
   }));
 }
+/** Valeurs effectives (meme regle que l'API: absent = active). */
 _staticBlock();
+function pushPrefsOf(me) {
+  return {
+    reminders: me?.pushPrefs?.reminders !== false,
+    newRaffles: me?.pushPrefs?.newRaffles !== false
+  };
+}
 
 /***/ },
 
@@ -944,7 +979,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AuthTokenStorageService: () => (/* binding */ AuthTokenStorageService)
 /* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var _capacitor_preferences__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @capacitor/preferences */ 6493);
 /* harmony import */ var _capacitor_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @capacitor/core */ 4070);
 /* harmony import */ var capacitor_secure_storage_plugin__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! capacitor-secure-storage-plugin */ 2994);
@@ -964,13 +999,13 @@ class AuthTokenStorageService {
   }
   init() {
     var _this = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this.initialized || !_this.isNative) {
         _this.initialized = true;
         return;
       }
       yield Promise.all(_this.managedKeys.map(/*#__PURE__*/function () {
-        var _ref = (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (key) {
+        var _ref = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (key) {
           try {
             const {
               value
@@ -1059,7 +1094,8 @@ _staticBlock();
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   AuthInterceptor: () => (/* binding */ AuthInterceptor)
+/* harmony export */   AuthInterceptor: () => (/* binding */ AuthInterceptor),
+/* harmony export */   BYPASS_AUTH_INTERCEPTOR: () => (/* binding */ BYPASS_AUTH_INTERCEPTOR)
 /* harmony export */ });
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/common/http */ 3855);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ 7919);
@@ -1077,6 +1113,12 @@ var _staticBlock;
 
 
 
+/**
+ * Requete qui porte deja son propre en-tete Authorization et ne doit jamais
+ * declencher de refresh ni de logout sur 401 (ex: desinscription du token push
+ * envoyee pendant le logout, alors que la session est en train d'etre videe).
+ */
+const BYPASS_AUTH_INTERCEPTOR = new _angular_common_http__WEBPACK_IMPORTED_MODULE_0__.HttpContextToken(() => false);
 class AuthInterceptor {
   constructor(auth) {
     this.auth = auth;
@@ -1085,7 +1127,7 @@ class AuthInterceptor {
     this.refresh$ = null;
   }
   intercept(req, next) {
-    const isAuthEndpoint = req.url.includes('/auth/login') || req.url.includes('/auth/google') || req.url.includes('/auth/register') || req.url.includes('/auth/forgot-password') || req.url.includes('/auth/reset-password') || req.url.includes('/auth/logout') || req.url.includes('/auth/refresh');
+    const isAuthEndpoint = req.context.get(BYPASS_AUTH_INTERCEPTOR) || req.url.includes('/auth/login') || req.url.includes('/auth/google') || req.url.includes('/auth/register') || req.url.includes('/auth/forgot-password') || req.url.includes('/auth/reset-password') || req.url.includes('/auth/logout') || req.url.includes('/auth/refresh');
     const token = this.auth.getAccessToken();
     if (!isAuthEndpoint && !token && this.auth.hasRefreshSession()) {
       return this.handle401(req, next);
@@ -1200,6 +1242,10 @@ class AuthService {
     // s'y abonnent pour se vider et eviter toute fuite entre comptes.
     this.sessionReset = new rxjs__WEBPACK_IMPORTED_MODULE_1__.Subject();
     this.sessionReset$ = this.sessionReset.asObservable();
+    // Hooks synchrones executes au debut de logout(), AVANT l'effacement des
+    // jetons (ex: desinscription du token push avec l'access token encore
+    // valide). Ils ne doivent jamais bloquer ni faire echouer la deconnexion.
+    this.preLogoutHooks = new Set();
   }
   login(email, password) {
     return this.http.post(`${this.baseUrl}/auth/login`, {
@@ -1239,6 +1285,12 @@ class AuthService {
       region
     }, this.authRequestOptions());
   }
+  updatePushPrefs(patch) {
+    const body = {};
+    if (typeof patch.reminders === 'boolean') body.pushReminders = patch.reminders;
+    if (typeof patch.newRaffles === 'boolean') body.pushNewRaffles = patch.newRaffles;
+    return this.http.patch(`${this.baseUrl}/users/me`, body, this.authRequestOptions());
+  }
   /** Lien "Confirmer mon email" (public: le jeton du lien suffit). */
   verifyEmail(token) {
     return this.http.post(`${this.baseUrl}/auth/verify-email`, {
@@ -1267,9 +1319,23 @@ class AuthService {
       newPassword
     });
   }
+  /** Enregistre un hook pre-logout; renvoie la fonction de desinscription. */
+  registerPreLogoutHook(hook) {
+    this.preLogoutHooks.add(hook);
+    return () => this.preLogoutHooks.delete(hook);
+  }
   logout() {
     const token = this.getAccessToken();
     const refreshToken = this.getRefreshToken();
+    for (const hook of Array.from(this.preLogoutHooks)) {
+      try {
+        hook({
+          accessToken: token
+        });
+      } catch {
+        // Un hook defaillant ne doit jamais empecher la deconnexion.
+      }
+    }
     this.http.post(`${this.baseUrl}/auth/logout`, refreshToken ? {
       refresh_token: refreshToken
     } : {}, {
@@ -1419,7 +1485,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   GoogleSignInError: () => (/* binding */ GoogleSignInError),
 /* harmony export */   GoogleSignInService: () => (/* binding */ GoogleSignInService)
 /* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var _capgo_capacitor_social_login__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @capgo/capacitor-social-login */ 429);
 /* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/environments/environment */ 5312);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ 4205);
@@ -1444,7 +1510,7 @@ class GoogleSignInService {
   }
   initialize() {
     var _this = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this.isConfigured()) return;
       if (_this.initialization) return _this.initialization;
       _this.initialization = _capgo_capacitor_social_login__WEBPACK_IMPORTED_MODULE_1__.SocialLogin.initialize({
@@ -1465,7 +1531,7 @@ class GoogleSignInService {
   }
   signIn() {
     var _this2 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this2.isConfigured()) {
         throw new GoogleSignInError('NOT_CONFIGURED');
       }
@@ -1595,6 +1661,171 @@ _staticBlock();
 
 /***/ },
 
+/***/ 7316
+/*!*********************************************************************!*\
+  !*** ./src/app/services/notifications/notifications-api.service.ts ***!
+  \*********************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   NotificationsApiService: () => (/* binding */ NotificationsApiService)
+/* harmony export */ });
+/* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! src/environments/environment */ 5312);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ 5429);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ 7919);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ 1318);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ 271);
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/core */ 4205);
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/common/http */ 3855);
+/* harmony import */ var _offline_offline_action_queue_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../offline/offline-action-queue.service */ 2616);
+/* harmony import */ var _offline_network_status_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../offline/network-status.service */ 9669);
+var _staticBlock;
+
+
+
+
+
+
+class NotificationsApiService {
+  constructor(http, offlineQueue, networkStatus) {
+    this.http = http;
+    this.offlineQueue = offlineQueue;
+    this.networkStatus = networkStatus;
+    this.base = `${src_environments_environment__WEBPACK_IMPORTED_MODULE_0__.environment.apiBaseUrl}`;
+  }
+  me(page = 1, limit = 20, unreadOnly = false) {
+    const u = unreadOnly ? '1' : '0';
+    return this.http.get(`${this.base}/notifications/me?page=${page}&limit=${limit}&unreadOnly=${u}`);
+  }
+  unreadCount() {
+    return this.http.get(`${this.base}/notifications/unread-count`);
+  }
+  markRead(id) {
+    if (this.networkStatus.isOffline()) {
+      return (0,rxjs__WEBPACK_IMPORTED_MODULE_1__.from)(this.offlineQueue.enqueueNotificationMarkRead(id)).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_4__.map)(() => ({
+        queued: true
+      })));
+    }
+    return this.http.patch(`${this.base}/notifications/${id}/read`, {}).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_3__.catchError)(error => {
+      if (Number(error?.status ?? 0) !== 0) {
+        return (0,rxjs__WEBPACK_IMPORTED_MODULE_2__.throwError)(() => error);
+      }
+      return (0,rxjs__WEBPACK_IMPORTED_MODULE_1__.from)(this.offlineQueue.enqueueNotificationMarkRead(id)).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_4__.map)(() => ({
+        queued: true
+      })));
+    }));
+  }
+  markAllRead() {
+    if (this.networkStatus.isOffline()) {
+      return (0,rxjs__WEBPACK_IMPORTED_MODULE_1__.from)(this.offlineQueue.enqueueNotificationMarkAllRead()).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_4__.map)(() => ({
+        queued: true
+      })));
+    }
+    return this.http.patch(`${this.base}/notifications/read-all`, {}).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_3__.catchError)(error => {
+      if (Number(error?.status ?? 0) !== 0) {
+        return (0,rxjs__WEBPACK_IMPORTED_MODULE_2__.throwError)(() => error);
+      }
+      return (0,rxjs__WEBPACK_IMPORTED_MODULE_1__.from)(this.offlineQueue.enqueueNotificationMarkAllRead()).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_4__.map)(() => ({
+        queued: true
+      })));
+    }));
+  }
+  static #_ = _staticBlock = () => (this.ɵfac = function NotificationsApiService_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || NotificationsApiService)(_angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵinject"](_angular_common_http__WEBPACK_IMPORTED_MODULE_6__.HttpClient), _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵinject"](_offline_offline_action_queue_service__WEBPACK_IMPORTED_MODULE_7__.OfflineActionQueueService), _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵinject"](_offline_network_status_service__WEBPACK_IMPORTED_MODULE_8__.NetworkStatusService));
+  }, this.ɵprov = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵdefineInjectable"]({
+    token: NotificationsApiService,
+    factory: NotificationsApiService.ɵfac,
+    providedIn: 'root'
+  }));
+}
+_staticBlock();
+
+/***/ },
+
+/***/ 2050
+/*!***********************************************************************!*\
+  !*** ./src/app/services/notifications/notifications-state.service.ts ***!
+  \***********************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   NotificationsStateService: () => (/* binding */ NotificationsStateService)
+/* harmony export */ });
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ 5797);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ 6196);
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ 4205);
+/* harmony import */ var _notifications_api_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./notifications-api.service */ 7316);
+/* harmony import */ var _auth_auth_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../auth/auth.service */ 1339);
+
+var _staticBlock;
+
+
+
+
+class NotificationsStateService {
+  constructor(api, auth) {
+    this.api = api;
+    this.auth = auth;
+    this._unread = new rxjs__WEBPACK_IMPORTED_MODULE_1__.BehaviorSubject(0);
+    this.unreadCount$ = this._unread.asObservable();
+    this.refreshInFlight = null;
+    // Changement de compte: on remet le compteur a zero pour eviter d'afficher
+    // les non-lus du compte precedent.
+    this.auth.sessionReset$.subscribe(() => this._unread.next(0));
+  }
+  refresh() {
+    var _this = this;
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      if (!_this.auth.isLoggedIn()) {
+        _this._unread.next(0);
+        return;
+      }
+      // Deduplication: si un rafraichissement est deja en vol, on partage sa reponse
+      // au lieu de doubler la requete.
+      if (_this.refreshInFlight) return _this.refreshInFlight;
+      _this.refreshInFlight = _this.doRefresh().finally(() => {
+        _this.refreshInFlight = null;
+      });
+      return _this.refreshInFlight;
+    })();
+  }
+  doRefresh() {
+    var _this2 = this;
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      try {
+        const res = yield (0,rxjs__WEBPACK_IMPORTED_MODULE_2__.firstValueFrom)(_this2.api.unreadCount());
+        _this2._unread.next(res.count || 0);
+      } catch {
+        // ignore
+      }
+    })();
+  }
+  setLocal(count) {
+    this._unread.next(Math.max(0, Number(count || 0)));
+  }
+  markOneReadLocal() {
+    this._unread.next(Math.max(0, this._unread.value - 1));
+  }
+  markAllReadLocal() {
+    this._unread.next(0);
+  }
+  static #_ = _staticBlock = () => (this.ɵfac = function NotificationsStateService_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || NotificationsStateService)(_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵinject"](_notifications_api_service__WEBPACK_IMPORTED_MODULE_4__.NotificationsApiService), _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵinject"](_auth_auth_service__WEBPACK_IMPORTED_MODULE_5__.AuthService));
+  }, this.ɵprov = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵdefineInjectable"]({
+    token: NotificationsStateService,
+    factory: NotificationsStateService.ɵfac,
+    providedIn: 'root'
+  }));
+}
+_staticBlock();
+
+/***/ },
+
 /***/ 9669
 /*!************************************************************!*\
   !*** ./src/app/services/offline/network-status.service.ts ***!
@@ -1677,7 +1908,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   OfflineActionQueueService: () => (/* binding */ OfflineActionQueueService)
 /* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ 5797);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ 6196);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ 271);
@@ -1723,7 +1954,7 @@ class OfflineActionQueueService {
   /** Vide la file (memoire + stockage) lors d'un changement de session. */
   clearForSession() {
     var _this = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this.sessionEpoch++; // invalide tout flush() en cours (anti-course)
       _this.queueSubject.next([]);
       try {
@@ -1735,7 +1966,7 @@ class OfflineActionQueueService {
   }
   init() {
     var _this2 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this2.isInitialized) return;
       _this2.isInitialized = true;
       const stored = yield _this2.storage.getJson(_this2.storageKey);
@@ -1747,7 +1978,7 @@ class OfflineActionQueueService {
   }
   enqueueNotificationMarkRead(id) {
     var _this3 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this3.enqueue({
         id: _this3.makeId(),
         type: 'notifications.mark-read',
@@ -1761,7 +1992,7 @@ class OfflineActionQueueService {
   }
   enqueueNotificationMarkAllRead() {
     var _this4 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const nextQueue = _this4.queueSubject.value.filter(item => item.type !== 'notifications.mark-read');
       _this4.queueSubject.next(nextQueue);
       yield _this4.persist();
@@ -1775,7 +2006,7 @@ class OfflineActionQueueService {
   }
   flush() {
     var _this5 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this5.isInitialized || _this5.isFlushing || _this5.networkStatus.isOffline()) {
         return;
       }
@@ -1804,7 +2035,7 @@ class OfflineActionQueueService {
   }
   enqueue(action) {
     var _this6 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const queue = [..._this6.queueSubject.value];
       const existingIndex = action.dedupeKey ? queue.findIndex(item => item.dedupeKey === action.dedupeKey) : -1;
       if (existingIndex >= 0) {
@@ -1818,7 +2049,7 @@ class OfflineActionQueueService {
   }
   process(action) {
     var _this7 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       try {
         switch (action.type) {
           case 'notifications.mark-read':
@@ -1848,7 +2079,7 @@ class OfflineActionQueueService {
   }
   persist() {
     var _this8 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this8.storage.setJson(_this8.storageKey, _this8.queueSubject.value);
     })();
   }
@@ -1867,6 +2098,494 @@ _staticBlock();
 
 /***/ },
 
+/***/ 142
+/*!*************************************************!*\
+  !*** ./src/app/services/push/push-deep-link.ts ***!
+  \*************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   PUSH_FALLBACK_ROUTE: () => (/* binding */ PUSH_FALLBACK_ROUTE),
+/* harmony export */   PUSH_TOKEN_RE: () => (/* binding */ PUSH_TOKEN_RE),
+/* harmony export */   isValidPushToken: () => (/* binding */ isValidPushToken),
+/* harmony export */   safePushRoute: () => (/* binding */ safePushRoute)
+/* harmony export */ });
+/** Route de repli quand le deepLink d'une notification est absent ou suspect. */
+const PUSH_FALLBACK_ROUTE = '/tabs/notifications';
+// Uniquement des routes internes sous /tabs: pas de schema (https:, javascript:),
+// pas d'URL protocole-relative (//evil), pas de '.', '%', '?', '#', ni '\'.
+const PUSH_DEEP_LINK_RE = /^\/tabs\/[A-Za-z0-9/_-]{0,120}$/;
+/**
+ * Le deepLink vient du payload push: donnee non fiable. On ne navigue que vers
+ * une route interne attendue, sinon vers la liste des notifications.
+ */
+function safePushRoute(raw) {
+  if (typeof raw !== 'string') return PUSH_FALLBACK_ROUTE;
+  const value = raw.trim();
+  if (!PUSH_DEEP_LINK_RE.test(value)) return PUSH_FALLBACK_ROUTE;
+  // Segments vides ("/tabs//x") refuses: aucun usage legitime.
+  if (value.includes('//')) return PUSH_FALLBACK_ROUTE;
+  return value;
+}
+/** Format du token FCM accepte par l'API (meme regle que le DTO serveur). */
+const PUSH_TOKEN_RE = /^[A-Za-z0-9:_-]{32,4096}$/;
+function isValidPushToken(token) {
+  return typeof token === 'string' && PUSH_TOKEN_RE.test(token);
+}
+
+/***/ },
+
+/***/ 5174
+/*!*************************************************************!*\
+  !*** ./src/app/services/push/push-notifications.service.ts ***!
+  \*************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   PUSH_CHANNEL_ID: () => (/* binding */ PUSH_CHANNEL_ID),
+/* harmony export */   PUSH_OPTIN_DISMISS_KEY: () => (/* binding */ PUSH_OPTIN_DISMISS_KEY),
+/* harmony export */   PUSH_OPTIN_SNOOZE_MS: () => (/* binding */ PUSH_OPTIN_SNOOZE_MS),
+/* harmony export */   PushNotificationsService: () => (/* binding */ PushNotificationsService),
+/* harmony export */   normalizePermission: () => (/* binding */ normalizePermission),
+/* harmony export */   shouldShowPushOptin: () => (/* binding */ shouldShowPushOptin)
+/* harmony export */ });
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ 3855);
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ 5422);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ 5797);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ 6196);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ 3617);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs */ 4876);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs */ 1817);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! rxjs */ 1567);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! rxjs */ 271);
+/* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! src/environments/environment */ 5312);
+/* harmony import */ var _auth_auth_interceptor__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../auth/auth.interceptor */ 5951);
+/* harmony import */ var _push_deep_link__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./push-deep-link */ 142);
+/* harmony import */ var _push_platform__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./push-platform */ 1356);
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/core */ 4205);
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/core */ 2481);
+/* harmony import */ var _auth_auth_service__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../auth/auth.service */ 1339);
+/* harmony import */ var _auth_auth_state_service__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../auth/auth-state.service */ 6247);
+/* harmony import */ var _notifications_notifications_state_service__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../notifications/notifications-state.service */ 2050);
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @ionic/angular */ 1507);
+/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @ngx-translate/core */ 8503);
+
+var _staticBlock;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const PUSH_CHANNEL_ID = 'tinguilin_default';
+const PUSH_OPTIN_DISMISS_KEY = 'tinguilin_push_optin_dismissed_at';
+const PUSH_OPTIN_SNOOZE_MS = 7 * 24 * 60 * 60 * 1000;
+const ROUTER_READY_TIMEOUT_MS = 8000;
+function normalizePermission(value) {
+  return value === 'granted' || value === 'denied' || value === 'prompt' || value === 'prompt-with-rationale' ? value : 'unsupported';
+}
+/** Bandeau d'opt-in: natif + Firebase dispo, connecte, jamais demande, pas reporte < 7 j. */
+function shouldShowPushOptin(input) {
+  if (!input.available || !input.loggedIn) return false;
+  if (input.permission !== 'prompt' && input.permission !== 'prompt-with-rationale') {
+    return false;
+  }
+  const at = input.dismissedAt;
+  if (at !== null && Number.isFinite(at) && input.now - at < PUSH_OPTIN_SNOOZE_MS) {
+    return false;
+  }
+  return true;
+}
+function userKeyOf(me) {
+  if (!me) return null;
+  return String(me.id ?? me._id ?? me.email ?? '') || null;
+}
+function shortText(value, max) {
+  return typeof value === 'string' ? value.trim().slice(0, max) : '';
+}
+/**
+ * Notifications push FCM (Android natif uniquement).
+ * - Ne declenche JAMAIS le prompt OS tout seul: seulement via requestAndEnable().
+ * - Le token n'est envoye a l'API que pour un utilisateur connecte, et
+ *   desinscrit (serveur + FCM) avant l'effacement des jetons au logout.
+ * - Les deepLinks recus sont filtres (safePushRoute) avant toute navigation.
+ */
+class PushNotificationsService {
+  constructor(platform, http, auth, authState, notificationsState, router, zone, toast, translate) {
+    this.platform = platform;
+    this.http = http;
+    this.auth = auth;
+    this.authState = authState;
+    this.notificationsState = notificationsState;
+    this.router = router;
+    this.zone = zone;
+    this.toast = toast;
+    this.translate = translate;
+    this.baseUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_10__.environment.apiBaseUrl;
+    this.permissionSubject = new rxjs__WEBPACK_IMPORTED_MODULE_3__.BehaviorSubject('unsupported');
+    this.permission$ = this.permissionSubject.asObservable();
+    this.initPromise = null;
+    this.available = false;
+    /** Token FCM courant (memoire uniquement). */
+    this.token = null;
+    this.currentUserKey = null;
+    /** Dernier couple (utilisateur, token) envoye a l'API, pour eviter les doublons. */
+    this.postedFor = null;
+  }
+  /** true sur Android natif avec Firebase configure (apres init()). */
+  get isAvailable() {
+    return this.available;
+  }
+  get permission() {
+    return this.permissionSubject.value;
+  }
+  /** Idempotent. A appeler une fois au demarrage de l'app. */
+  init() {
+    if (!this.initPromise) {
+      this.initPromise = this.doInit().catch(() => {
+        console.warn('[push] init failed');
+      });
+    }
+    return this.initPromise;
+  }
+  /**
+   * Relit l'autorisation OS (l'utilisateur a pu la changer dans les Parametres
+   * Android) et, si elle vient d'etre accordee, enregistre l'appareil.
+   */
+  refreshPermission() {
+    var _this = this;
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      const state = yield _this.checkPermission();
+      if (state === 'granted' && _this.currentUserKey && !_this.token) {
+        yield _this.safeRegister();
+      }
+      return state;
+    })();
+  }
+  checkPermission() {
+    var _this2 = this;
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      if (!_this2.available) {
+        _this2.permissionSubject.next('unsupported');
+        return 'unsupported';
+      }
+      try {
+        const res = yield _this2.platform.push.checkPermissions();
+        const state = normalizePermission(res?.receive);
+        _this2.permissionSubject.next(state);
+        return state;
+      } catch {
+        _this2.permissionSubject.next('unsupported');
+        return 'unsupported';
+      }
+    })();
+  }
+  /** Action explicite de l'utilisateur: prompt OS (Android 13+) puis enregistrement. */
+  requestAndEnable() {
+    var _this3 = this;
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      yield _this3.init();
+      if (!_this3.available) return 'unsupported';
+      try {
+        let state = yield _this3.checkPermission();
+        if (state === 'prompt' || state === 'prompt-with-rationale') {
+          const res = yield _this3.platform.push.requestPermissions();
+          state = normalizePermission(res?.receive);
+          _this3.permissionSubject.next(state);
+        }
+        if (state !== 'granted') return state === 'unsupported' ? 'unsupported' : 'denied';
+        yield _this3.platform.push.register();
+        return 'granted';
+      } catch {
+        console.warn('[push] enable failed');
+        return 'error';
+      }
+    })();
+  }
+  getOptinDismissedAt() {
+    var _this4 = this;
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      try {
+        const raw = yield _this4.platform.prefs.get(PUSH_OPTIN_DISMISS_KEY);
+        const at = Number(raw);
+        return raw && Number.isFinite(at) && at > 0 ? at : null;
+      } catch {
+        return null;
+      }
+    })();
+  }
+  dismissOptin() {
+    var _this5 = this;
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (now = Date.now()) {
+      try {
+        yield _this5.platform.prefs.set(PUSH_OPTIN_DISMISS_KEY, String(now));
+      } catch {
+        // Pas grave: le bandeau reviendra simplement plus tot.
+      }
+    }).apply(this, arguments);
+  }
+  doInit() {
+    var _this6 = this;
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      if (!_this6.platform.isNative()) return;
+      _this6.available = yield _this6.platform.isConfigured().catch(() => false);
+      if (!_this6.available) {
+        _this6.permissionSubject.next('unsupported');
+        return;
+      }
+      try {
+        yield _this6.platform.push.createChannel({
+          id: PUSH_CHANNEL_ID,
+          name: 'Tinguilin',
+          importance: 4,
+          // IMPORTANCE_HIGH
+          visibility: 1,
+          // VISIBILITY_PUBLIC
+          sound: 'default'
+        });
+      } catch {
+        console.warn('[push] channel creation failed');
+      }
+      // Les callbacks natifs arrivent hors zone Angular.
+      yield _this6.platform.push.addListener('registration', t => _this6.zone.run(() => _this6.onRegistration(t)));
+      yield _this6.platform.push.addListener('registrationError', () =>
+      // Volontairement sans detail: pas de donnees personnelles dans les logs.
+      console.warn('[push] registration error'));
+      yield _this6.platform.push.addListener('pushNotificationReceived', n => _this6.zone.run(() => void _this6.onForeground(n)));
+      // Retenu par le plugin jusqu'a consommation: couvre le demarrage a froid.
+      yield _this6.platform.push.addListener('pushNotificationActionPerformed', a => _this6.zone.run(() => void _this6.navigateSafely(a?.notification?.data?.deepLink)));
+      _this6.auth.registerPreLogoutHook(ctx => _this6.onPreLogout(ctx));
+      // Connexion au demarrage, login, inscription, Google, changement de compte:
+      // le profil /auth/me change -> on (re)enregistre si deja autorise.
+      _this6.authState.me$.pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_9__.map)(userKeyOf), (0,rxjs__WEBPACK_IMPORTED_MODULE_7__.distinctUntilChanged)()).subscribe(key => {
+        _this6.currentUserKey = key;
+        if (key) void _this6.registerIfGranted();
+      });
+      // Retour depuis les Parametres Android: l'autorisation a pu changer.
+      _this6.platform.onResume(() => _this6.zone.run(() => void _this6.refreshPermission()));
+      yield _this6.checkPermission();
+    })();
+  }
+  registerIfGranted() {
+    var _this7 = this;
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      const state = yield _this7.checkPermission();
+      if (state !== 'granted') return; // jamais de prompt automatique
+      yield _this7.safeRegister();
+    })();
+  }
+  safeRegister() {
+    var _this8 = this;
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      try {
+        yield _this8.platform.push.register();
+      } catch {
+        console.warn('[push] register failed');
+      }
+    })();
+  }
+  onRegistration(t) {
+    const value = t?.value;
+    if (!(0,_push_deep_link__WEBPACK_IMPORTED_MODULE_12__.isValidPushToken)(value)) {
+      console.warn('[push] invalid token ignored');
+      return;
+    }
+    this.token = value;
+    this.postToken();
+  }
+  postToken() {
+    const token = this.token;
+    const userKey = this.currentUserKey;
+    if (!token || !userKey || !this.auth.isLoggedIn()) return;
+    if (this.postedFor?.userKey === userKey && this.postedFor.token === token) return;
+    const sent = {
+      userKey,
+      token
+    };
+    this.postedFor = sent;
+    this.http.post(`${this.baseUrl}/notifications/devices`, {
+      token,
+      platform: this.platform.platform()
+    }).subscribe({
+      error: () => {
+        if (this.postedFor === sent) this.postedFor = null; // retentera au prochain register
+        console.warn('[push] device registration failed');
+      }
+    });
+  }
+  /** Synchrone, appele par AuthService.logout() avant l'effacement des jetons. */
+  onPreLogout(ctx) {
+    const token = this.token;
+    this.token = null;
+    this.postedFor = null;
+    if (token && ctx.accessToken) {
+      this.http.post(`${this.baseUrl}/notifications/devices/unregister`, {
+        token
+      }, {
+        headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__.HttpHeaders({
+          Authorization: `Bearer ${ctx.accessToken}`
+        }),
+        // Ne pas tenter de refresh / relogout si ce 401 arrive apres coup.
+        context: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__.HttpContext().set(_auth_auth_interceptor__WEBPACK_IMPORTED_MODULE_11__.BYPASS_AUTH_INTERCEPTOR, true)
+      }).subscribe({
+        error: () => undefined
+      });
+    }
+    this.platform.push.unregister().catch(() => undefined);
+  }
+  onForeground(n) {
+    var _this9 = this;
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      void _this9.notificationsState.refresh().catch(() => undefined);
+      const header = shortText(n?.title, 80);
+      const message = shortText(n?.body, 240);
+      if (!header && !message) return;
+      const route = (0,_push_deep_link__WEBPACK_IMPORTED_MODULE_12__.safePushRoute)(n?.data?.deepLink);
+      // Ionic rend header/message en texte (innerHTMLTemplatesEnabled = false).
+      const t = yield _this9.toast.create({
+        header: header || undefined,
+        message: message || undefined,
+        duration: 6000,
+        position: 'top',
+        buttons: [{
+          text: _this9.translate.instant('PUSH.VIEW'),
+          handler: () => {
+            void _this9.navigateSafely(route);
+          }
+        }]
+      });
+      yield t.present();
+    })();
+  }
+  navigateSafely(rawDeepLink) {
+    var _this0 = this;
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      const route = (0,_push_deep_link__WEBPACK_IMPORTED_MODULE_12__.safePushRoute)(rawDeepLink);
+      yield _this0.whenRouterReady();
+      try {
+        const ok = yield _this0.router.navigateByUrl(route);
+        if (!ok && route !== '/tabs/home') yield _this0.router.navigateByUrl('/tabs/home');
+      } catch {
+        yield _this0.router.navigateByUrl('/tabs/home').catch(() => false);
+      }
+    })();
+  }
+  /** Demarrage a froid: attendre la premiere navigation (gardes compris). */
+  whenRouterReady() {
+    var _this1 = this;
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      if (_this1.router.navigated) return;
+      yield (0,rxjs__WEBPACK_IMPORTED_MODULE_4__.firstValueFrom)((0,rxjs__WEBPACK_IMPORTED_MODULE_5__.merge)(_this1.router.events.pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_8__.filter)(e => e instanceof _angular_router__WEBPACK_IMPORTED_MODULE_2__.NavigationEnd)), (0,rxjs__WEBPACK_IMPORTED_MODULE_6__.timer)(ROUTER_READY_TIMEOUT_MS)));
+    })();
+  }
+  static #_ = _staticBlock = () => (this.ɵfac = function PushNotificationsService_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || PushNotificationsService)(_angular_core__WEBPACK_IMPORTED_MODULE_14__["ɵɵinject"](_push_platform__WEBPACK_IMPORTED_MODULE_13__.PUSH_PLATFORM), _angular_core__WEBPACK_IMPORTED_MODULE_14__["ɵɵinject"](_angular_common_http__WEBPACK_IMPORTED_MODULE_1__.HttpClient), _angular_core__WEBPACK_IMPORTED_MODULE_14__["ɵɵinject"](_auth_auth_service__WEBPACK_IMPORTED_MODULE_16__.AuthService), _angular_core__WEBPACK_IMPORTED_MODULE_14__["ɵɵinject"](_auth_auth_state_service__WEBPACK_IMPORTED_MODULE_17__.AuthStateService), _angular_core__WEBPACK_IMPORTED_MODULE_14__["ɵɵinject"](_notifications_notifications_state_service__WEBPACK_IMPORTED_MODULE_18__.NotificationsStateService), _angular_core__WEBPACK_IMPORTED_MODULE_14__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_2__.Router), _angular_core__WEBPACK_IMPORTED_MODULE_14__["ɵɵinject"](_angular_core__WEBPACK_IMPORTED_MODULE_15__.NgZone), _angular_core__WEBPACK_IMPORTED_MODULE_14__["ɵɵinject"](_ionic_angular__WEBPACK_IMPORTED_MODULE_19__.ToastController), _angular_core__WEBPACK_IMPORTED_MODULE_14__["ɵɵinject"](_ngx_translate_core__WEBPACK_IMPORTED_MODULE_20__.TranslateService));
+  }, this.ɵprov = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_14__["ɵɵdefineInjectable"]({
+    token: PushNotificationsService,
+    factory: PushNotificationsService.ɵfac,
+    providedIn: 'root'
+  }));
+}
+_staticBlock();
+
+/***/ },
+
+/***/ 1356
+/*!************************************************!*\
+  !*** ./src/app/services/push/push-platform.ts ***!
+  \************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   PUSH_PLATFORM: () => (/* binding */ PUSH_PLATFORM),
+/* harmony export */   capacitorPushPlatform: () => (/* binding */ capacitorPushPlatform)
+/* harmony export */ });
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ 4205);
+/* harmony import */ var _capacitor_app__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @capacitor/app */ 9326);
+/* harmony import */ var _capacitor_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @capacitor/core */ 4070);
+/* harmony import */ var _capacitor_preferences__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @capacitor/preferences */ 6493);
+/* harmony import */ var _capacitor_push_notifications__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @capacitor/push-notifications */ 2132);
+
+
+
+
+
+
+const PushConfig = (0,_capacitor_core__WEBPACK_IMPORTED_MODULE_3__.registerPlugin)('TinguilinPushConfig');
+const capacitorPushPlatform = {
+  isNative: () => _capacitor_core__WEBPACK_IMPORTED_MODULE_3__.Capacitor.isNativePlatform(),
+  platform: () => {
+    const p = _capacitor_core__WEBPACK_IMPORTED_MODULE_3__.Capacitor.getPlatform();
+    return p === 'android' || p === 'ios' ? p : 'web';
+  },
+  isConfigured: function () {
+    var _ref = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      // Seul Android est configure (FCM). iOS: pas de projet ni de config APNs/FCM.
+      if (_capacitor_core__WEBPACK_IMPORTED_MODULE_3__.Capacitor.getPlatform() !== 'android') return false;
+      try {
+        const res = yield PushConfig.isConfigured();
+        return res?.configured === true;
+      } catch {
+        // APK plus ancien sans le plugin local: on ne prend aucun risque.
+        return false;
+      }
+    });
+    return function isConfigured() {
+      return _ref.apply(this, arguments);
+    };
+  }(),
+  push: _capacitor_push_notifications__WEBPACK_IMPORTED_MODULE_5__.PushNotifications,
+  onResume: cb => {
+    _capacitor_app__WEBPACK_IMPORTED_MODULE_2__.App.addListener('resume', cb).catch(() => undefined);
+  },
+  prefs: {
+    get: function () {
+      var _ref2 = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (key) {
+        return (yield _capacitor_preferences__WEBPACK_IMPORTED_MODULE_4__.Preferences.get({
+          key
+        })).value;
+      });
+      return function get(_x) {
+        return _ref2.apply(this, arguments);
+      };
+    }(),
+    set: function () {
+      var _ref3 = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (key, value) {
+        yield _capacitor_preferences__WEBPACK_IMPORTED_MODULE_4__.Preferences.set({
+          key,
+          value
+        });
+      });
+      return function set(_x2, _x3) {
+        return _ref3.apply(this, arguments);
+      };
+    }()
+  }
+};
+const PUSH_PLATFORM = new _angular_core__WEBPACK_IMPORTED_MODULE_1__.InjectionToken('PUSH_PLATFORM', {
+  providedIn: 'root',
+  factory: () => capacitorPushPlatform
+});
+
+/***/ },
+
 /***/ 6857
 /*!*************************************************!*\
   !*** ./src/app/services/theme/theme.service.ts ***!
@@ -1878,7 +2597,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ThemeService: () => (/* binding */ ThemeService)
 /* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ 4205);
 /* harmony import */ var _shared_storage_app_storage_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../shared/storage/app-storage.service */ 2450);
 
@@ -1907,7 +2626,7 @@ class ThemeService {
   }
   init() {
     var _this = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const stored = yield _this.storage.get(STORAGE_KEY);
       if (stored === 'light' || stored === 'dark' || stored === 'system') {
         _this.mode = stored;
@@ -1918,7 +2637,7 @@ class ThemeService {
   }
   set(mode) {
     var _this2 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this2.mode = mode;
       yield _this2.storage.set(STORAGE_KEY, mode);
       _this2.apply();
@@ -2105,7 +2824,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AppStorageService: () => (/* binding */ AppStorageService)
 /* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var _capacitor_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @capacitor/core */ 4070);
 /* harmony import */ var _capacitor_preferences__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @capacitor/preferences */ 6493);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ 4205);
@@ -2121,7 +2840,7 @@ class AppStorageService {
   }
   get(key) {
     var _this = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this.memory.has(key)) {
         return _this.memory.get(key) ?? null;
       }
@@ -2141,7 +2860,7 @@ class AppStorageService {
   }
   set(key, value) {
     var _this2 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this2.memory.set(key, value);
       if (!_this2.isNative) {
         localStorage.setItem(key, value);
@@ -2155,7 +2874,7 @@ class AppStorageService {
   }
   remove(key) {
     var _this3 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this3.memory.delete(key);
       if (!_this3.isNative) {
         localStorage.removeItem(key);
@@ -2168,7 +2887,7 @@ class AppStorageService {
   }
   getJson(key) {
     var _this4 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const raw = yield _this4.get(key);
       if (!raw) return null;
       try {
@@ -2180,7 +2899,7 @@ class AppStorageService {
   }
   setJson(key, value) {
     var _this5 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this5.set(key, JSON.stringify(value));
     })();
   }

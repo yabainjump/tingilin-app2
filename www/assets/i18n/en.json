@@ -685,5 +685,30 @@
     "NO_CODE": "Your claim code is on its way. If nothing arrives in a few minutes, contact us.",
     "DELIVERED_TITLE": "Prize handed over ✅",
     "DELIVERED_ON": "Handed over on {{date}}"
+  },
+  "PUSH": {
+    "VIEW": "View",
+    "ENABLED_TOAST": "Notifications enabled ✓",
+    "DENIED_TOAST": "Notifications not allowed. You can enable them in Android Settings > Apps > Tingilin > Notifications.",
+    "ERROR_TOAST": "Unable to enable notifications right now. Please try again later."
+  },
+  "PUSH_OPTIN": {
+    "TITLE": "Never miss a draw",
+    "TEXT": "Turn on notifications: reminder 10 min before the draw, results and prizes.",
+    "ENABLE": "Enable",
+    "LATER": "Later"
+  },
+  "PROFILE_NOTIFICATIONS": {
+    "TITLE": "Notifications",
+    "REMINDERS": "Draw reminders and results",
+    "NEW_RAFFLES": "New raffles",
+    "ALWAYS_ON": "Prizes and payments are always notified.",
+    "PERMISSION_LABEL": "Phone permission",
+    "STATE_GRANTED": "Enabled",
+    "STATE_PROMPT": "Not enabled yet",
+    "STATE_DENIED": "Blocked",
+    "ENABLE": "Enable notifications",
+    "DENIED_HELP": "Notifications are blocked on this phone. To enable them: Android Settings > Apps > Tingilin > Notifications.",
+    "SAVE_FAILED": "Unable to save your preference. Please try again."
   }
 }

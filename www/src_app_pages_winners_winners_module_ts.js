@@ -100,7 +100,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   WinnersPage: () => (/* binding */ WinnersPage)
 /* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ 9240);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ 9475);
 /* harmony import */ var src_app_services_winners_winners_api_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/services/winners/winners-api.service */ 5580);
@@ -895,7 +895,7 @@ class WinnersPage {
         this.activeScanIndex = Math.min(2, this.scanTickets.length - 1);
       },
       error: function () {
-        var _ref = (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+        var _ref = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
           const t = yield _this.toast.create({
             message: _this.translate.instant('WINNERS_PAGE.TOAST_LOAD_FAILED'),
             duration: 1400
@@ -1001,7 +1001,7 @@ class WinnersPage {
   }
   shareLive() {
     var _this2 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const url = _this2.shareService.liveShareUrl();
       const mode = yield _this2.shareService.share({
         title: _this2.translate.instant('WINNERS_PAGE.SHARE_TITLE'),
@@ -1019,7 +1019,7 @@ class WinnersPage {
   }
   seeResults() {
     var _this3 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const t = yield _this3.toast.create({
         message: _this3.translate.instant('WINNERS_PAGE.TOAST_RESULTS_SOON'),
         duration: 1200
@@ -1046,7 +1046,7 @@ class WinnersPage {
         this.proofOpen = true;
       },
       error: function () {
-        var _ref2 = (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+        var _ref2 = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
           const t = yield _this4.toast.create({
             message: _this4.translate.instant('WINNERS_PAGE.PROOF_ERROR'),
             duration: 1600
@@ -1061,7 +1061,7 @@ class WinnersPage {
   }
   copyProofValue(value) {
     var _this5 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const v = String(value ?? '').trim();
       if (!v || !navigator?.clipboard?.writeText) return;
       try {
@@ -1084,7 +1084,7 @@ class WinnersPage {
   /** Fiche gagnant: preuve de remise + verification du tirage sur le telephone. */
   openWinner(w) {
     var _this6 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!w?.raffleId) return;
       const modal = yield _this6.modals.create({
         component: src_app_shared_engagement_winner_proof_modal_component__WEBPACK_IMPORTED_MODULE_4__.WinnerProofModalComponent,
@@ -1180,7 +1180,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   WinnerProofModalComponent: () => (/* binding */ WinnerProofModalComponent)
 /* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common */ 3683);
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic/angular */ 1507);
 /* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ngx-translate/core */ 8503);
@@ -1411,7 +1411,7 @@ class WinnerProofModalComponent {
   }
   verify() {
     var _this = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this.winner?.raffleId || !(0,src_app_shared_utils_provably_fair_verify__WEBPACK_IMPORTED_MODULE_5__.isWebCryptoAvailable)()) {
         _this.state = 'ERROR';
         return;
@@ -1548,7 +1548,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   sha256Hex: () => (/* binding */ sha256Hex),
 /* harmony export */   verifyDrawLocally: () => (/* binding */ verifyDrawLocally)
 /* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 
 /**
  * Verification INDEPENDANTE d'un tirage, executee sur le telephone du joueur
@@ -1567,7 +1567,7 @@ function sha256Hex(_x) {
   return _sha256Hex.apply(this, arguments);
 }
 function _sha256Hex() {
-  _sha256Hex = (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (value) {
+  _sha256Hex = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (value) {
     return toHex(yield crypto.subtle.digest('SHA-256', encoder.encode(value)));
   });
   return _sha256Hex.apply(this, arguments);
@@ -1581,7 +1581,7 @@ function hmacSha256Hex(_x2, _x3) {
  * tant que n * 16 < 2^53, tres largement au-dessus du nombre de tickets.
  */
 function _hmacSha256Hex() {
-  _hmacSha256Hex = (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (key, message) {
+  _hmacSha256Hex = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (key, message) {
     const cryptoKey = yield crypto.subtle.importKey('raw', encoder.encode(key), {
       name: 'HMAC',
       hash: 'SHA-256'
@@ -1604,7 +1604,7 @@ function verifyDrawLocally(_x4) {
   return _verifyDrawLocally.apply(this, arguments);
 }
 function _verifyDrawLocally() {
-  _verifyDrawLocally = (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (input) {
+  _verifyDrawLocally = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (input) {
     const seed = String(input.serverSeed ?? '');
     const serials = (input.orderedSerials ?? []).map(s => String(s ?? ''));
     const empty = {

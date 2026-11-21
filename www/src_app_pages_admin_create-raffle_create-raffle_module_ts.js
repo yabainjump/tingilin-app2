@@ -146,7 +146,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   CreateRafflePage: () => (/* binding */ CreateRafflePage)
 /* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ 4456);
 /* harmony import */ var _capacitor_camera__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @capacitor/camera */ 2601);
 /* harmony import */ var _capacitor_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @capacitor/core */ 4070);
@@ -314,7 +314,7 @@ class CreateRafflePage {
   }
   showHelp() {
     var _this = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const t = yield _this.toast.create({
         message: _this.translate.instant('CREATE_RAFFLE_PAGE.TOAST_HELP'),
         duration: 2400,
@@ -325,7 +325,7 @@ class CreateRafflePage {
   }
   pickImage() {
     var _this2 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       try {
         // ✅ Web: ne pas appeler requestPermissions (pas implémenté)
         if (_capacitor_core__WEBPACK_IMPORTED_MODULE_3__.Capacitor.getPlatform() !== 'web') {
@@ -393,7 +393,7 @@ class CreateRafflePage {
   }
   submit() {
     var _this3 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this3.submitting) return;
       if (_this3.form.invalid) {
         _this3.form.markAllAsTouched();
@@ -706,7 +706,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ImageCompressionError: () => (/* binding */ ImageCompressionError),
 /* harmony export */   compressImageFile: () => (/* binding */ compressImageFile)
 /* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 
 class ImageCompressionError extends Error {
   constructor(code) {
@@ -723,7 +723,7 @@ function loadImage(_x) {
   return _loadImage.apply(this, arguments);
 }
 function _loadImage() {
-  _loadImage = (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (source) {
+  _loadImage = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (source) {
     const objectUrl = URL.createObjectURL(source);
     const image = new Image();
     try {
@@ -753,7 +753,7 @@ function compressImageFile(_x2) {
   return _compressImageFile.apply(this, arguments);
 }
 function _compressImageFile() {
-  _compressImageFile = (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (source, options = {}) {
+  _compressImageFile = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (source, options = {}) {
     const maxWidth = Math.max(320, options.maxWidth ?? 1600);
     const maxHeight = Math.max(320, options.maxHeight ?? 1600);
     const maxSourceBytes = Math.max(1024 * 1024, options.maxSourceBytes ?? 20 * 1024 * 1024);

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController, ToastController } from '@ionic/angular';
 import { finalize, forkJoin, of, catchError } from 'rxjs';
@@ -12,6 +12,7 @@ import {
   ProfileStats,
   ProfileUser,
 } from 'src/app/services/profile/profile-api.service';
+import { PushPrefsCardComponent } from './push-prefs-card.component';
 
 @Component({
   selector: 'app-profile',
@@ -28,6 +29,8 @@ export class ProfilePage {
   stats: ProfileStats | null = null;
   history: ProfileHistoryItem[] = [];
 
+  @ViewChild(PushPrefsCardComponent) pushCard?: PushPrefsCardComponent;
+
   constructor(
     private api: ProfileApiService,
     private auth: AuthService,
@@ -40,6 +43,8 @@ export class ProfilePage {
 
   ionViewWillEnter() {
     this.loadAll();
+    // L'autorisation OS a pu changer dans les Parametres Android.
+    void this.pushCard?.refresh();
   }
 
   loadAll() {

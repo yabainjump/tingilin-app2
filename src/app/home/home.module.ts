@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { EmailVerifyBannerComponent } from '../shared/engagement/email-verify-banner.component';
+import { PushOptinBannerComponent } from '../shared/engagement/push-optin-banner.component';
 import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
@@ -27,6 +28,7 @@ import { NextPrizePollComponent } from '../shared/engagement/next-prize-poll.com
     TrustStatsComponent,
     NextPrizePollComponent,
     EmailVerifyBannerComponent,
+    PushOptinBannerComponent,
   ],
   declarations: [HomePage]
 })

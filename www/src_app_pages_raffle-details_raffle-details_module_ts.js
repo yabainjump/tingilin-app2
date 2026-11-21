@@ -102,7 +102,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   RaffleDetailsPage: () => (/* binding */ RaffleDetailsPage)
 /* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ 6196);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ 9240);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ 9475);
@@ -485,7 +485,7 @@ class RaffleDetailsPage {
   }
   goToPayment() {
     var _this = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const raffleId = _this.currentRaffleId;
       if (!raffleId) return;
       if (!_this.auth.isLoggedIn()) {
@@ -536,7 +536,7 @@ class RaffleDetailsPage {
         this.startCountdown(this.resolveEndAt(r));
       },
       error: function () {
-        var _ref = (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+        var _ref = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
           const t = yield _this2.toast.create({
             message: _this2.translate.instant('RAFFLE_DETAILS_PAGE.TOAST_NOT_FOUND'),
             duration: 1500
@@ -675,7 +675,7 @@ class RaffleDetailsPage {
   toggleFav() {}
   share() {
     var _this3 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const raffleId = _this3.currentRaffleId;
       if (!raffleId) return;
       const title = _this3.raffle?.title || _this3.translate.instant('RAFFLE_DETAILS_PAGE.SHARE_FALLBACK_TITLE');
@@ -740,7 +740,7 @@ class RaffleDetailsPage {
   }
   useFreeTicket() {
     var _this4 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (retried = false) {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (retried = false) {
       const raffleId = _this4.currentRaffleId;
       if (!raffleId) return;
       if (!_this4.auth.isLoggedIn()) {
@@ -806,7 +806,7 @@ class RaffleDetailsPage {
   }
   promptAuthBeforePurchase(raffleId) {
     var _this5 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const redirect = `/tabs/raffle-details/${encodeURIComponent(raffleId)}`;
       const alert = yield _this5.alertCtrl.create({
         header: _this5.translate.instant('RAFFLE_DETAILS_PAGE.AUTH_REQUIRED_HEADER'),

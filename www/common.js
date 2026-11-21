@@ -54,169 +54,6 @@ _staticBlock();
 
 /***/ },
 
-/***/ 7316
-/*!*********************************************************************!*\
-  !*** ./src/app/services/notifications/notifications-api.service.ts ***!
-  \*********************************************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   NotificationsApiService: () => (/* binding */ NotificationsApiService)
-/* harmony export */ });
-/* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! src/environments/environment */ 5312);
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ 5429);
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ 7919);
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ 1318);
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ 271);
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/core */ 4205);
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/common/http */ 3855);
-/* harmony import */ var _offline_offline_action_queue_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../offline/offline-action-queue.service */ 2616);
-/* harmony import */ var _offline_network_status_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../offline/network-status.service */ 9669);
-var _staticBlock;
-
-
-
-
-
-
-class NotificationsApiService {
-  constructor(http, offlineQueue, networkStatus) {
-    this.http = http;
-    this.offlineQueue = offlineQueue;
-    this.networkStatus = networkStatus;
-    this.base = `${src_environments_environment__WEBPACK_IMPORTED_MODULE_0__.environment.apiBaseUrl}`;
-  }
-  me(page = 1, limit = 20, unreadOnly = false) {
-    const u = unreadOnly ? '1' : '0';
-    return this.http.get(`${this.base}/notifications/me?page=${page}&limit=${limit}&unreadOnly=${u}`);
-  }
-  unreadCount() {
-    return this.http.get(`${this.base}/notifications/unread-count`);
-  }
-  markRead(id) {
-    if (this.networkStatus.isOffline()) {
-      return (0,rxjs__WEBPACK_IMPORTED_MODULE_1__.from)(this.offlineQueue.enqueueNotificationMarkRead(id)).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_4__.map)(() => ({
-        queued: true
-      })));
-    }
-    return this.http.patch(`${this.base}/notifications/${id}/read`, {}).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_3__.catchError)(error => {
-      if (Number(error?.status ?? 0) !== 0) {
-        return (0,rxjs__WEBPACK_IMPORTED_MODULE_2__.throwError)(() => error);
-      }
-      return (0,rxjs__WEBPACK_IMPORTED_MODULE_1__.from)(this.offlineQueue.enqueueNotificationMarkRead(id)).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_4__.map)(() => ({
-        queued: true
-      })));
-    }));
-  }
-  markAllRead() {
-    if (this.networkStatus.isOffline()) {
-      return (0,rxjs__WEBPACK_IMPORTED_MODULE_1__.from)(this.offlineQueue.enqueueNotificationMarkAllRead()).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_4__.map)(() => ({
-        queued: true
-      })));
-    }
-    return this.http.patch(`${this.base}/notifications/read-all`, {}).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_3__.catchError)(error => {
-      if (Number(error?.status ?? 0) !== 0) {
-        return (0,rxjs__WEBPACK_IMPORTED_MODULE_2__.throwError)(() => error);
-      }
-      return (0,rxjs__WEBPACK_IMPORTED_MODULE_1__.from)(this.offlineQueue.enqueueNotificationMarkAllRead()).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_4__.map)(() => ({
-        queued: true
-      })));
-    }));
-  }
-  static #_ = _staticBlock = () => (this.ɵfac = function NotificationsApiService_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || NotificationsApiService)(_angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵinject"](_angular_common_http__WEBPACK_IMPORTED_MODULE_6__.HttpClient), _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵinject"](_offline_offline_action_queue_service__WEBPACK_IMPORTED_MODULE_7__.OfflineActionQueueService), _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵinject"](_offline_network_status_service__WEBPACK_IMPORTED_MODULE_8__.NetworkStatusService));
-  }, this.ɵprov = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵdefineInjectable"]({
-    token: NotificationsApiService,
-    factory: NotificationsApiService.ɵfac,
-    providedIn: 'root'
-  }));
-}
-_staticBlock();
-
-/***/ },
-
-/***/ 2050
-/*!***********************************************************************!*\
-  !*** ./src/app/services/notifications/notifications-state.service.ts ***!
-  \***********************************************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   NotificationsStateService: () => (/* binding */ NotificationsStateService)
-/* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ 5797);
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ 6196);
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ 4205);
-/* harmony import */ var _notifications_api_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./notifications-api.service */ 7316);
-/* harmony import */ var _auth_auth_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../auth/auth.service */ 1339);
-
-var _staticBlock;
-
-
-
-
-class NotificationsStateService {
-  constructor(api, auth) {
-    this.api = api;
-    this.auth = auth;
-    this._unread = new rxjs__WEBPACK_IMPORTED_MODULE_1__.BehaviorSubject(0);
-    this.unreadCount$ = this._unread.asObservable();
-    this.refreshInFlight = null;
-    // Changement de compte: on remet le compteur a zero pour eviter d'afficher
-    // les non-lus du compte precedent.
-    this.auth.sessionReset$.subscribe(() => this._unread.next(0));
-  }
-  refresh() {
-    var _this = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
-      if (!_this.auth.isLoggedIn()) {
-        _this._unread.next(0);
-        return;
-      }
-      // Deduplication: si un rafraichissement est deja en vol, on partage sa reponse
-      // au lieu de doubler la requete.
-      if (_this.refreshInFlight) return _this.refreshInFlight;
-      _this.refreshInFlight = _this.doRefresh().finally(() => {
-        _this.refreshInFlight = null;
-      });
-      return _this.refreshInFlight;
-    })();
-  }
-  doRefresh() {
-    var _this2 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
-      try {
-        const res = yield (0,rxjs__WEBPACK_IMPORTED_MODULE_2__.firstValueFrom)(_this2.api.unreadCount());
-        _this2._unread.next(res.count || 0);
-      } catch {
-        // ignore
-      }
-    })();
-  }
-  setLocal(count) {
-    this._unread.next(Math.max(0, Number(count || 0)));
-  }
-  markOneReadLocal() {
-    this._unread.next(Math.max(0, this._unread.value - 1));
-  }
-  markAllReadLocal() {
-    this._unread.next(0);
-  }
-  static #_ = _staticBlock = () => (this.ɵfac = function NotificationsStateService_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || NotificationsStateService)(_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵinject"](_notifications_api_service__WEBPACK_IMPORTED_MODULE_4__.NotificationsApiService), _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵinject"](_auth_auth_service__WEBPACK_IMPORTED_MODULE_5__.AuthService));
-  }, this.ɵprov = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵdefineInjectable"]({
-    token: NotificationsStateService,
-    factory: NotificationsStateService.ɵfac,
-    providedIn: 'root'
-  }));
-}
-_staticBlock();
-
-/***/ },
-
 /***/ 2068
 /*!*********************************************************!*\
   !*** ./src/app/services/profile/profile-api.service.ts ***!
@@ -356,7 +193,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   RafflesPublicApiService: () => (/* binding */ RafflesPublicApiService)
 /* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ 5429);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ 9452);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ 7919);
@@ -423,7 +260,7 @@ class RafflesPublicApiService {
   }
   persistRaffle(id, raffle) {
     var _this = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this.storage.setJson(`${_this.storagePrefix}${id}`, {
         savedAt: new Date().toISOString(),
         value: raffle
@@ -455,7 +292,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ResponsiblePlayGuardService: () => (/* binding */ ResponsiblePlayGuardService)
 /* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ 6196);
 /* harmony import */ var _responsible_play_api_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./responsible-play-api.service */ 6980);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ 4205);
@@ -489,7 +326,7 @@ class ResponsiblePlayGuardService {
   }
   handlePurchaseError(err) {
     var _this = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const code = (0,_responsible_play_api_service__WEBPACK_IMPORTED_MODULE_2__.apiErrorCode)(err);
       if (code === _responsible_play_api_service__WEBPACK_IMPORTED_MODULE_2__.AGE_CONFIRMATION_REQUIRED) {
         return (yield _this.askAdultConfirmation()) ? 'RETRY' : 'HANDLED';
@@ -504,7 +341,7 @@ class ResponsiblePlayGuardService {
   /** Vrai si le joueur a confirme ses 18 ans (et que l'API l'a enregistre). */
   askAdultConfirmation() {
     var _this2 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const t = k => _this2.translate.instant(`RESPONSIBLE_PLAY.${k}`);
       const alert = yield _this2.alerts.create({
         header: t('AGE_TITLE'),
@@ -540,7 +377,7 @@ class ResponsiblePlayGuardService {
   }
   showLimitReached(serverMessage) {
     var _this3 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const t = k => _this3.translate.instant(`RESPONSIBLE_PLAY.${k}`);
       const alert = yield _this3.alerts.create({
         header: t('LIMIT_REACHED_TITLE'),
@@ -584,7 +421,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ShareService: () => (/* binding */ ShareService)
 /* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/environments/environment */ 5312);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ 4205);
 
@@ -594,7 +431,7 @@ var _staticBlock;
 class ShareService {
   share(payload) {
     var _this = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const title = String(payload.title ?? '').trim();
       const text = String(payload.text ?? '').trim();
       const url = String(payload.url ?? '').trim();
@@ -654,7 +491,7 @@ class ShareService {
     return value.startsWith('/') ? value : `/${value}`;
   }
   copyToClipboard(value) {
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const text = String(value ?? '').trim();
       if (!text) return;
       if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
@@ -747,6 +584,119 @@ class WinnersApiService {
     token: WinnersApiService,
     factory: WinnersApiService.ɵfac,
     providedIn: 'root'
+  }));
+}
+_staticBlock();
+
+/***/ },
+
+/***/ 6619
+/*!****************************************************************!*\
+  !*** ./src/app/shared/ui/empty-state/empty-state.component.ts ***!
+  \****************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   EmptyStateComponent: () => (/* binding */ EmptyStateComponent)
+/* harmony export */ });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ 2481);
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common */ 3683);
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic/angular */ 1507);
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ 4205);
+var _staticBlock;
+
+
+
+
+
+
+function EmptyStateComponent_p_6_Template(rf, ctx) {
+  if (rf & 1) {
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "p");
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+  }
+  if (rf & 2) {
+    const ctx_r0 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx_r0.description);
+  }
+}
+function EmptyStateComponent_button_7_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r2 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "button", 6);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function EmptyStateComponent_button_7_Template_button_click_0_listener() {
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵrestoreView"](_r2);
+      const ctx_r0 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+      return _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵresetView"](ctx_r0.action.emit());
+    });
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "span");
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](3, "ion-icon", 7);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+  }
+  if (rf & 2) {
+    const ctx_r0 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx_r0.actionLabel);
+  }
+}
+class EmptyStateComponent {
+  constructor() {
+    this.icon = 'sparkles-outline';
+    this.title = '';
+    this.description = '';
+    this.actionLabel = '';
+    this.compact = false;
+    this.action = new _angular_core__WEBPACK_IMPORTED_MODULE_0__.EventEmitter();
+  }
+  static #_ = _staticBlock = () => (this.ɵfac = function EmptyStateComponent_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || EmptyStateComponent)();
+  }, this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({
+    type: EmptyStateComponent,
+    selectors: [["app-empty-state"]],
+    inputs: {
+      icon: "icon",
+      title: "title",
+      description: "description",
+      actionLabel: "actionLabel",
+      compact: "compact"
+    },
+    outputs: {
+      action: "action"
+    },
+    decls: 8,
+    vars: 6,
+    consts: [["role", "status", 1, "empty-state"], ["aria-hidden", "true", 1, "icon-shell"], [1, "icon-glow"], [3, "name"], [4, "ngIf"], ["type", "button", 3, "click", 4, "ngIf"], ["type", "button", 3, "click"], ["name", "arrow-forward-outline"]],
+    template: function EmptyStateComponent_Template(rf, ctx) {
+      if (rf & 1) {
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "section", 0)(1, "div", 1);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](2, "div", 2)(3, "ion-icon", 3);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "h2");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](5);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](6, EmptyStateComponent_p_6_Template, 2, 1, "p", 4)(7, EmptyStateComponent_button_7_Template, 4, 1, "button", 5);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+      }
+      if (rf & 2) {
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("compact", ctx.compact);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("name", ctx.icon);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx.title);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.description);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.actionLabel);
+      }
+    },
+    dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_1__.CommonModule, _angular_common__WEBPACK_IMPORTED_MODULE_1__.NgIf, _ionic_angular__WEBPACK_IMPORTED_MODULE_2__.IonicModule, _ionic_angular__WEBPACK_IMPORTED_MODULE_2__.IonIcon],
+    styles: ["[_nghost-%COMP%] {\n  display: block;\n}\n\n.empty-state[_ngcontent-%COMP%] {\n  width: 100%;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  padding: clamp(34px, 9vw, 56px) 22px;\n  text-align: center;\n  border: 1px dashed var(--app-border-strong);\n  border-radius: 28px;\n  background: var(--app-surface-2);\n}\n\n.empty-state.compact[_ngcontent-%COMP%] {\n  padding: 26px 18px;\n  border-radius: 22px;\n}\n\n.empty-state.compact[_ngcontent-%COMP%]   .icon-shell[_ngcontent-%COMP%] {\n  width: 60px;\n  height: 60px;\n  margin-bottom: 14px;\n  border-radius: 20px;\n}\n\n.empty-state.compact[_ngcontent-%COMP%]   .icon-shell[_ngcontent-%COMP%]   ion-icon[_ngcontent-%COMP%] {\n  font-size: 26px;\n}\n\n.icon-shell[_ngcontent-%COMP%] {\n  position: relative;\n  width: 72px;\n  height: 72px;\n  display: grid;\n  place-items: center;\n  margin-bottom: 18px;\n  border: 1px solid var(--app-border-strong);\n  border-radius: 24px;\n  color: var(--app-primary);\n  background: transparent;\n  box-shadow: none;\n}\n\n.icon-shell[_ngcontent-%COMP%]   ion-icon[_ngcontent-%COMP%] {\n  position: relative;\n  z-index: 1;\n  font-size: 30px;\n}\n\n.icon-glow[_ngcontent-%COMP%] {\n  display: none;\n}\n\nh2[_ngcontent-%COMP%] {\n  margin: 0;\n  color: var(--app-ink);\n  font-size: 1.05rem;\n  line-height: 1.3;\n}\n\np[_ngcontent-%COMP%] {\n  max-width: 320px;\n  margin: 8px 0 0;\n  color: var(--app-muted);\n  font-size: 0.86rem;\n  line-height: 1.6;\n}\n\nbutton[_ngcontent-%COMP%] {\n  min-height: 44px;\n  margin-top: 20px;\n  padding: 0 18px;\n  display: inline-flex;\n  align-items: center;\n  gap: 8px;\n  border: 0;\n  border-radius: 15px;\n  color: var(--app-on-primary);\n  background: var(--app-primary);\n  box-shadow: var(--app-shadow-brand);\n  font-weight: 750;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvc2hhcmVkL3VpL2VtcHR5LXN0YXRlL2VtcHR5LXN0YXRlLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0UsY0FBQTtBQUNGOztBQUVBO0VBQ0UsV0FBQTtFQUNBLGFBQUE7RUFDQSxzQkFBQTtFQUNBLG1CQUFBO0VBQ0EsdUJBQUE7RUFDQSxvQ0FBQTtFQUNBLGtCQUFBO0VBQ0EsMkNBQUE7RUFDQSxtQkFBQTtFQUNBLGdDQUFBO0FBQ0Y7O0FBRUE7RUFDRSxrQkFBQTtFQUNBLG1CQUFBO0FBQ0Y7O0FBRUE7RUFDRSxXQUFBO0VBQ0EsWUFBQTtFQUNBLG1CQUFBO0VBQ0EsbUJBQUE7QUFDRjs7QUFFQTtFQUNFLGVBQUE7QUFDRjs7QUFFQTtFQUNFLGtCQUFBO0VBQ0EsV0FBQTtFQUNBLFlBQUE7RUFDQSxhQUFBO0VBQ0EsbUJBQUE7RUFDQSxtQkFBQTtFQUNBLDBDQUFBO0VBQ0EsbUJBQUE7RUFDQSx5QkFBQTtFQUNBLHVCQUFBO0VBQ0EsZ0JBQUE7QUFDRjs7QUFFQTtFQUNFLGtCQUFBO0VBQ0EsVUFBQTtFQUNBLGVBQUE7QUFDRjs7QUFFQTtFQUNFLGFBQUE7QUFDRjs7QUFFQTtFQUNFLFNBQUE7RUFDQSxxQkFBQTtFQUNBLGtCQUFBO0VBQ0EsZ0JBQUE7QUFDRjs7QUFFQTtFQUNFLGdCQUFBO0VBQ0EsZUFBQTtFQUNBLHVCQUFBO0VBQ0Esa0JBQUE7RUFDQSxnQkFBQTtBQUNGOztBQUVBO0VBQ0UsZ0JBQUE7RUFDQSxnQkFBQTtFQUNBLGVBQUE7RUFDQSxvQkFBQTtFQUNBLG1CQUFBO0VBQ0EsUUFBQTtFQUNBLFNBQUE7RUFDQSxtQkFBQTtFQUNBLDRCQUFBO0VBQ0EsOEJBQUE7RUFDQSxtQ0FBQTtFQUNBLGdCQUFBO0FBQ0YiLCJzb3VyY2VzQ29udGVudCI6WyI6aG9zdCB7XHJcbiAgZGlzcGxheTogYmxvY2s7XHJcbn1cclxuXHJcbi5lbXB0eS1zdGF0ZSB7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xyXG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XHJcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XHJcbiAgcGFkZGluZzogY2xhbXAoMzRweCwgOXZ3LCA1NnB4KSAyMnB4O1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICBib3JkZXI6IDFweCBkYXNoZWQgdmFyKC0tYXBwLWJvcmRlci1zdHJvbmcpO1xyXG4gIGJvcmRlci1yYWRpdXM6IDI4cHg7XHJcbiAgYmFja2dyb3VuZDogdmFyKC0tYXBwLXN1cmZhY2UtMik7XHJcbn1cclxuXHJcbi5lbXB0eS1zdGF0ZS5jb21wYWN0IHtcclxuICBwYWRkaW5nOiAyNnB4IDE4cHg7XHJcbiAgYm9yZGVyLXJhZGl1czogMjJweDtcclxufVxyXG5cclxuLmVtcHR5LXN0YXRlLmNvbXBhY3QgLmljb24tc2hlbGwge1xyXG4gIHdpZHRoOiA2MHB4O1xyXG4gIGhlaWdodDogNjBweDtcclxuICBtYXJnaW4tYm90dG9tOiAxNHB4O1xyXG4gIGJvcmRlci1yYWRpdXM6IDIwcHg7XHJcbn1cclxuXHJcbi5lbXB0eS1zdGF0ZS5jb21wYWN0IC5pY29uLXNoZWxsIGlvbi1pY29uIHtcclxuICBmb250LXNpemU6IDI2cHg7XHJcbn1cclxuXHJcbi5pY29uLXNoZWxsIHtcclxuICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgd2lkdGg6IDcycHg7XHJcbiAgaGVpZ2h0OiA3MnB4O1xyXG4gIGRpc3BsYXk6IGdyaWQ7XHJcbiAgcGxhY2UtaXRlbXM6IGNlbnRlcjtcclxuICBtYXJnaW4tYm90dG9tOiAxOHB4O1xyXG4gIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWFwcC1ib3JkZXItc3Ryb25nKTtcclxuICBib3JkZXItcmFkaXVzOiAyNHB4O1xyXG4gIGNvbG9yOiB2YXIoLS1hcHAtcHJpbWFyeSk7XHJcbiAgYmFja2dyb3VuZDogdHJhbnNwYXJlbnQ7XHJcbiAgYm94LXNoYWRvdzogbm9uZTtcclxufVxyXG5cclxuLmljb24tc2hlbGwgaW9uLWljb24ge1xyXG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxuICB6LWluZGV4OiAxO1xyXG4gIGZvbnQtc2l6ZTogMzBweDtcclxufVxyXG5cclxuLmljb24tZ2xvdyB7XHJcbiAgZGlzcGxheTogbm9uZTtcclxufVxyXG5cclxuaDIge1xyXG4gIG1hcmdpbjogMDtcclxuICBjb2xvcjogdmFyKC0tYXBwLWluayk7XHJcbiAgZm9udC1zaXplOiAxLjA1cmVtO1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjM7XHJcbn1cclxuXHJcbnAge1xyXG4gIG1heC13aWR0aDogMzIwcHg7XHJcbiAgbWFyZ2luOiA4cHggMCAwO1xyXG4gIGNvbG9yOiB2YXIoLS1hcHAtbXV0ZWQpO1xyXG4gIGZvbnQtc2l6ZTogMC44NnJlbTtcclxuICBsaW5lLWhlaWdodDogMS42O1xyXG59XHJcblxyXG5idXR0b24ge1xyXG4gIG1pbi1oZWlnaHQ6IDQ0cHg7XHJcbiAgbWFyZ2luLXRvcDogMjBweDtcclxuICBwYWRkaW5nOiAwIDE4cHg7XHJcbiAgZGlzcGxheTogaW5saW5lLWZsZXg7XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuICBnYXA6IDhweDtcclxuICBib3JkZXI6IDA7XHJcbiAgYm9yZGVyLXJhZGl1czogMTVweDtcclxuICBjb2xvcjogdmFyKC0tYXBwLW9uLXByaW1hcnkpO1xyXG4gIGJhY2tncm91bmQ6IHZhcigtLWFwcC1wcmltYXJ5KTtcclxuICBib3gtc2hhZG93OiB2YXIoLS1hcHAtc2hhZG93LWJyYW5kKTtcclxuICBmb250LXdlaWdodDogNzUwO1xyXG59XHJcbiJdLCJzb3VyY2VSb290IjoiIn0= */"],
+    changeDetection: 0
   }));
 }
 _staticBlock();
@@ -1217,7 +1167,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   r: () => (/* binding */ resetContentScrollY),
 /* harmony export */   s: () => (/* binding */ scrollToTop)
 /* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var _helpers_DEn3pfjm_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./helpers-DEn3pfjm.js */ 6341);
 /* harmony import */ var _index_C8IsBmNU_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index-C8IsBmNU.js */ 6922);
 
@@ -1249,7 +1199,7 @@ const isIonContent = el => el.tagName === ION_CONTENT_TAG_NAME;
  * or a selector within the host, if supplied through `scrollTarget`.
  */
 const getScrollElement = /*#__PURE__*/function () {
-  var _ref = (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (el) {
+  var _ref = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (el) {
     if (isIonContent(el)) {
       yield new Promise(resolve => (0,_helpers_DEn3pfjm_js__WEBPACK_IMPORTED_MODULE_1__.c)(el, resolve));
       return el.getScrollElement();
@@ -1522,7 +1472,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   c: () => (/* binding */ createKeyboardController)
 /* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var _index_ZjP4CjeZ_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./index-ZjP4CjeZ.js */ 575);
 /* harmony import */ var _keyboard_CUw4ekVy_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./keyboard-CUw4ekVy.js */ 2954);
 
@@ -1573,7 +1523,7 @@ const getResizeContainerHeight = resizeMode => {
  * @param keyboardChangeCallback A function to call when the keyboard opens or closes.
  */
 const createKeyboardController = /*#__PURE__*/function () {
-  var _ref = (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (keyboardChangeCallback) {
+  var _ref = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (keyboardChangeCallback) {
     let keyboardWillShowHandler;
     let keyboardWillHideHandler;
     let keyboardVisible;
@@ -1583,7 +1533,7 @@ const createKeyboardController = /*#__PURE__*/function () {
      */
     let initialResizeContainerHeight;
     const init = /*#__PURE__*/function () {
-      var _ref2 = (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      var _ref2 = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
         const resizeOptions = yield _keyboard_CUw4ekVy_js__WEBPACK_IMPORTED_MODULE_2__.K.getResizeMode();
         const resizeMode = resizeOptions === undefined ? undefined : resizeOptions.mode;
         keyboardWillShowHandler = () => {
@@ -1885,7 +1835,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   c: () => (/* binding */ createLockController)
 /* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 
 /*!
  * (C) Ionic http://ionicframework.com - MIT License
@@ -1911,7 +1861,7 @@ const createLockController = () => {
    * ```
    */
   const lock = /*#__PURE__*/function () {
-    var _ref = (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    var _ref = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const p = waitPromise;
       let resolve;
       waitPromise = new Promise(r => resolve = r);

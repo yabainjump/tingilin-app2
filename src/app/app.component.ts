@@ -14,6 +14,7 @@ import {
 import { LanguageService } from './services/i18n/language.service';
 import { NetworkStatusService } from './services/offline/network-status.service';
 import { OfflineActionQueueService } from './services/offline/offline-action-queue.service';
+import { PushNotificationsService } from './services/push/push-notifications.service';
 
 type ConnectivityBannerState = {
   offline: boolean;
@@ -43,6 +44,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private language: LanguageService,
     private networkStatus: NetworkStatusService,
     private offlineQueue: OfflineActionQueueService,
+    private push: PushNotificationsService,
     private router: Router,
     @Inject(DOCUMENT) private document: Document,
   ) {}
@@ -50,6 +52,8 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.language.init();
     this.authState.bootstrap();
+    // Push FCM (Android natif uniquement, no-op sur le web). Aucun prompt OS ici.
+    void this.push.init();
     this.bannerStateSub = combineLatest([
       this.networkStatus.online$,
       this.offlineQueue.pendingCount$,

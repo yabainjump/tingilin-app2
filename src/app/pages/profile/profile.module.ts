@@ -9,6 +9,7 @@ import { ProfileRoutingModule } from './profile-routing.module';
 import { ProfilePage } from './profile.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { EmptyStateComponent } from '../../shared/ui/empty-state/empty-state.component';
+import { PushPrefsCardComponent } from './push-prefs-card.component';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { EmptyStateComponent } from '../../shared/ui/empty-state/empty-state.com
     IonicModule,
     ProfileRoutingModule,
     TranslateModule,
-    EmptyStateComponent
+    EmptyStateComponent,
+    PushPrefsCardComponent,
   ],
   declarations: [ProfilePage]
 })

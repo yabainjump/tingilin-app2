@@ -98,7 +98,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ForgotPasswordPage: () => (/* binding */ ForgotPasswordPage)
 /* harmony export */ });
-/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ 4456);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ 9475);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ 2481);
@@ -140,7 +140,7 @@ class ForgotPasswordPage {
   ngOnDestroy() {}
   submit() {
     var _this = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this.loading) return;
       if (_this.form.invalid) {
         _this.form.markAllAsTouched();
@@ -158,7 +158,7 @@ class ForgotPasswordPage {
       };
       _this.auth.forgotPassword(payload).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_2__.finalize)(() => _this.loading = false)).subscribe({
         next: function () {
-          var _ref = (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (res) {
+          var _ref = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (res) {
             const cooldownSeconds = Math.max(0, Number(res?.retryAfterSeconds ?? 0) || 0);
             yield _this.showToast(_this.translate.instant(cooldownSeconds > 0 ? 'FORGOT_PASSWORD_PAGE.TOAST_CODE_ALREADY_SENT' : 'FORGOT_PASSWORD_PAGE.TOAST_CHECK_EMAIL_HINT', cooldownSeconds > 0 ? {
               seconds: cooldownSeconds
@@ -175,7 +175,7 @@ class ForgotPasswordPage {
           };
         }(),
         error: function () {
-          var _ref2 = (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (err) {
+          var _ref2 = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (err) {
             const msg = err?.error?.message;
             yield _this.showToast(Array.isArray(msg) ? msg.join(', ') : msg || _this.translate.instant('FORGOT_PASSWORD_PAGE.TOAST_ERROR'));
           });
@@ -191,7 +191,7 @@ class ForgotPasswordPage {
   }
   showToast(message) {
     var _this2 = this;
-    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const t = yield _this2.toast.create({
         message,
         duration: 2400,

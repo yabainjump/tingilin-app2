@@ -26,6 +26,13 @@ export interface MeDto {
   adultConfirmed?: boolean;
   emailVerified?: boolean;
   showInLiveFeed?: boolean;
+  /** Preferences push optionnelles (gains/paiements: toujours notifies). */
+  pushPrefs?: PushPrefs;
+}
+
+export interface PushPrefs {
+  reminders: boolean;
+  newRaffles: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -109,6 +116,25 @@ export class AuthStateService {
     this.meSubject.next(null);
   }
 
+  /**
+   * PATCH /users/me { pushReminders?, pushNewRaffles? } puis mise a jour du
+   * cache local (seulement si la session n'a pas change entre-temps).
+   */
+  updatePushPrefs(patch: Partial<PushPrefs>): Observable<PushPrefs | null> {
+    const requestSessionVersion = this.sessionVersion;
+    return this.auth.updatePushPrefs(patch).pipe(
+      map(() => {
+        const current = this.meSubject.value;
+        if (!current || requestSessionVersion !== this.sessionVersion) {
+          return null;
+        }
+        const prefs: PushPrefs = { ...pushPrefsOf(current), ...patch };
+        this.meSubject.next({ ...current, pushPrefs: prefs });
+        return prefs;
+      }),
+    );
+  }
+
   // PATCH /users/me { region } puis mise a jour du cache local.
   updateRegion(region: UserRegion): Observable<MeDto | null> {
     return this.auth.updateRegion(region).pipe(
@@ -124,4 +150,12 @@ export class AuthStateService {
       }),
     );
   }
+}
+
+/** Valeurs effectives (meme regle que l'API: absent = active). */
+export function pushPrefsOf(me: MeDto | null | undefined): PushPrefs {
+  return {
+    reminders: me?.pushPrefs?.reminders !== false,
+    newRaffles: me?.pushPrefs?.newRaffles !== false,
+  };
 }

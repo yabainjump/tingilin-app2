@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "8658779271",
+    "project_id": "tinguilin-3de51",
+    "storage_bucket": "tinguilin-3de51.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8658779271:android:b322a29e71d64c492e8c22",
+        "android_client_info": {
+          "package_name": "com.tinguilin.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXSwUQ_-3LTk-4OJtw_s5c7bBx_htJB0M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

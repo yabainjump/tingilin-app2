@@ -708,5 +708,30 @@
     "NO_CODE": "Ton code de retrait arrive. Si rien d’ici quelques minutes, contacte-nous.",
     "DELIVERED_TITLE": "Lot remis ✅",
     "DELIVERED_ON": "Remis le {{date}}"
+  },
+  "PUSH": {
+    "VIEW": "Voir",
+    "ENABLED_TOAST": "Notifications activées ✓",
+    "DENIED_TOAST": "Notifications non autorisées. Tu peux les activer dans Paramètres Android > Applications > Tingilin > Notifications.",
+    "ERROR_TOAST": "Impossible d’activer les notifications pour le moment. Réessaie plus tard."
+  },
+  "PUSH_OPTIN": {
+    "TITLE": "Ne rate aucun tirage",
+    "TEXT": "Active les notifications : rappel 10 min avant le tirage, résultat et gains.",
+    "ENABLE": "Activer",
+    "LATER": "Plus tard"
+  },
+  "PROFILE_NOTIFICATIONS": {
+    "TITLE": "Notifications",
+    "REMINDERS": "Rappels et résultats des tirages",
+    "NEW_RAFFLES": "Nouvelles tombolas",
+    "ALWAYS_ON": "Les gains et paiements sont toujours notifiés.",
+    "PERMISSION_LABEL": "Autorisation du téléphone",
+    "STATE_GRANTED": "Activées",
+    "STATE_PROMPT": "Pas encore activées",
+    "STATE_DENIED": "Bloquées",
+    "ENABLE": "Activer les notifications",
+    "DENIED_HELP": "Les notifications sont bloquées sur ce téléphone. Pour les activer : Paramètres Android > Applications > Tingilin > Notifications.",
+    "SAVE_FAILED": "Impossible d’enregistrer ta préférence. Réessaie."
   }
 }

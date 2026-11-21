@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  HttpContextToken,
   HttpInterceptor,
   HttpRequest,
   HttpHandler,
@@ -9,6 +10,13 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError, switchMap, finalize, shareReplay, map, tap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+
+/**
+ * Requete qui porte deja son propre en-tete Authorization et ne doit jamais
+ * declencher de refresh ni de logout sur 401 (ex: desinscription du token push
+ * envoyee pendant le logout, alors que la session est en train d'etre videe).
+ */
+export const BYPASS_AUTH_INTERCEPTOR = new HttpContextToken<boolean>(() => false);
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -23,6 +31,7 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
     const isAuthEndpoint =
+      req.context.get(BYPASS_AUTH_INTERCEPTOR) ||
       req.url.includes('/auth/login') ||
       req.url.includes('/auth/google') ||
       req.url.includes('/auth/register') ||

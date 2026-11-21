@@ -43,6 +43,13 @@ export interface ForgotPasswordResponse {
     | 'USER_NOT_FOUND';
 }
 
+/** Contexte passe aux hooks pre-logout (jeton d'acces encore en memoire). */
+export interface PreLogoutContext {
+  accessToken: string | null;
+}
+
+export type PreLogoutHook = (ctx: PreLogoutContext) => void;
+
 /** Code de parrainage tel que l'API l'attend (A-Z/0-9, 4 a 16, MaxLength de l API), sinon ''. */
 export function normalizeReferralCode(value: unknown): string {
   const code = String(typeof value === 'string' ? value : '').trim().toUpperCase();
@@ -67,6 +74,11 @@ export class AuthService {
   // s'y abonnent pour se vider et eviter toute fuite entre comptes.
   private readonly sessionReset = new Subject<void>();
   readonly sessionReset$ = this.sessionReset.asObservable();
+
+  // Hooks synchrones executes au debut de logout(), AVANT l'effacement des
+  // jetons (ex: desinscription du token push avec l'access token encore
+  // valide). Ils ne doivent jamais bloquer ni faire echouer la deconnexion.
+  private readonly preLogoutHooks = new Set<PreLogoutHook>();
 
   constructor(
     private http: HttpClient,
@@ -142,6 +154,17 @@ export class AuthService {
       );
   }
 
+  updatePushPrefs(patch: { reminders?: boolean; newRaffles?: boolean }) {
+    const body: { pushReminders?: boolean; pushNewRaffles?: boolean } = {};
+    if (typeof patch.reminders === 'boolean') body.pushReminders = patch.reminders;
+    if (typeof patch.newRaffles === 'boolean') body.pushNewRaffles = patch.newRaffles;
+    return this.http.patch<unknown>(
+      `${this.baseUrl}/users/me`,
+      body,
+      this.authRequestOptions(),
+    );
+  }
+
   /** Lien "Confirmer mon email" (public: le jeton du lien suffit). */
   verifyEmail(token: string) {
     return this.http.post<{ ok: boolean; emailVerified: boolean }>(
@@ -198,9 +221,22 @@ export class AuthService {
     );
   }
 
+  /** Enregistre un hook pre-logout; renvoie la fonction de desinscription. */
+  registerPreLogoutHook(hook: PreLogoutHook): () => void {
+    this.preLogoutHooks.add(hook);
+    return () => this.preLogoutHooks.delete(hook);
+  }
+
   logout(): void {
     const token = this.getAccessToken();
     const refreshToken = this.getRefreshToken();
+    for (const hook of Array.from(this.preLogoutHooks)) {
+      try {
+        hook({ accessToken: token });
+      } catch {
+        // Un hook defaillant ne doit jamais empecher la deconnexion.
+      }
+    }
     this.http
       .post(
         `${this.baseUrl}/auth/logout`,

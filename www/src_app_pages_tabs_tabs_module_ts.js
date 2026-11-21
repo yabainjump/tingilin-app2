@@ -53,10 +53,10 @@ const routes = [{
     loadChildren: () => Promise.all(/*! import() */[__webpack_require__.e("common"), __webpack_require__.e("src_app_pages_payment-confirmation_payment-confirmation_module_ts-src_app_services_responsibl-43c141")]).then(__webpack_require__.bind(__webpack_require__, /*! ../payment-confirmation/payment-confirmation.module */ 7180)).then(m => m.PaymentConfirmationPageModule)
   }, {
     path: 'notifications',
-    loadChildren: () => __webpack_require__.e(/*! import() */ "default-src_app_pages_notifications_notifications_module_ts").then(__webpack_require__.bind(__webpack_require__, /*! ../notifications/notifications.module */ 5746)).then(m => m.NotificationsPageModule)
+    loadChildren: () => Promise.all(/*! import() */[__webpack_require__.e("common"), __webpack_require__.e("src_app_pages_notifications_notifications_module_ts")]).then(__webpack_require__.bind(__webpack_require__, /*! ../notifications/notifications.module */ 5746)).then(m => m.NotificationsPageModule)
   }, {
     path: 'participations',
-    loadChildren: () => __webpack_require__.e(/*! import() */ "src_app_pages_participations_participations_module_ts").then(__webpack_require__.bind(__webpack_require__, /*! ../participations/participations.module */ 8204)).then(m => m.ParticipationsPageModule)
+    loadChildren: () => Promise.all(/*! import() */[__webpack_require__.e("common"), __webpack_require__.e("src_app_pages_participations_participations_module_ts")]).then(__webpack_require__.bind(__webpack_require__, /*! ../participations/participations.module */ 8204)).then(m => m.ParticipationsPageModule)
   }, {
     path: 'ticket-details/:raffleId',
     loadChildren: () => Promise.all(/*! import() */[__webpack_require__.e("common"), __webpack_require__.e("src_app_pages_ticket-details_ticket-details_module_ts-src_app_shared_utils_media-url_ts")]).then(__webpack_require__.bind(__webpack_require__, /*! ../ticket-details/ticket-details.module */ 7390)).then(m => m.TicketDetailsPageModule)

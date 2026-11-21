@@ -9,6 +9,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!-- Notifications push (FCM): icone, couleur et canal par defaut
+             quand le message n'en precise pas (app en arriere-plan).
+             La permission POST_NOTIFICATIONS (Android 13+) est fusionnee
+             depuis firebase-messaging via @capacitor/push-notifications. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_stat_tinguilin" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/tinguilin_notification_color" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="tinguilin_default" />
+
         <activity
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
             android:name=".MainActivity"
