@@ -98,7 +98,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   LoginPage: () => (/* binding */ LoginPage)
 /* harmony export */ });
-/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ 4456);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ 6196);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ 9475);
@@ -181,7 +181,7 @@ class LoginPage {
   }
   submit() {
     var _this = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this.loading) return;
       if (_this.form.invalid) {
         _this.form.markAllAsTouched();
@@ -198,7 +198,7 @@ class LoginPage {
           void _this.router.navigateByUrl(_this.safeRedirectUrl());
         },
         error: function () {
-          var _ref = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (err) {
+          var _ref = (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (err) {
             yield _this.showToast(_this.readError(err) || _this.translate.instant('LOGIN_PAGE.TOAST_INVALID_CREDENTIALS'));
           });
           return function error(_x) {
@@ -210,12 +210,17 @@ class LoginPage {
   }
   signInWithGoogle() {
     var _this2 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this2.googleLoading) return;
       _this2.googleLoading = true;
       try {
         const idToken = yield _this2.googleSignIn.signIn();
-        yield (0,rxjs__WEBPACK_IMPORTED_MODULE_2__.firstValueFrom)(_this2.auth.loginWithGoogle(idToken));
+        // Un lien de parrainage peut mener ici (?ref=CODE): on le transmet pour
+        // qu'un nouveau compte Google soit rattache a son parrain.
+        const referralCode = _this2.route.snapshot.queryParamMap.get('ref') ?? _this2.route.snapshot.queryParamMap.get('referralCode') ?? undefined;
+        yield (0,rxjs__WEBPACK_IMPORTED_MODULE_2__.firstValueFrom)(_this2.auth.loginWithGoogle(idToken, {
+          referralCode: referralCode ?? undefined
+        }));
         yield _this2.router.navigateByUrl(_this2.safeRedirectUrl());
       } catch (err) {
         if (_this2.googleSignIn.isUserCancellation(err)) return;
@@ -238,7 +243,7 @@ class LoginPage {
   }
   showToast(message) {
     var _this3 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const t = yield _this3.toast.create({
         message,
         duration: 2200,

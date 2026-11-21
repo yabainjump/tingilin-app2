@@ -126,11 +126,12 @@
     "ALREADY": "Already have an account?",
     "LOGIN_LINK": "Sign in",
     "TOAST_INVALID_FORM": "Please check your fields. Password: 8+ chars, 1 uppercase, 1 special character.",
-    "TOAST_CREATED": "Account created. Welcome to Tinguilin",
+    "TOAST_CREATED": "Account created. Welcome to Tinguilin! Confirm your email with the link we just sent you.",
     "TOAST_CREATE_FAILED": "Could not create account.",
     "ADULT": "I am 18 or older. Gambling is forbidden to minors.",
     "TOAST_ADULT_REQUIRED": "You must be 18 or older to create an account.",
-    "REFERRAL_WELCOME_HINT": "🎁 With this code you get 1 free ticket after your first purchase."
+    "REFERRAL_WELCOME_HINT": "🎁 With this code you get 1 free ticket after your first purchase.",
+    "GOOGLE_SIGNUP": "Sign up with Google"
   },
   "TABS": {
     "HOME": "Home",
@@ -653,5 +654,36 @@
     "TIP_1": "Only play with money you can afford to lose.",
     "TIP_2": "Don't try to win back what you lost.",
     "TIP_3": "Take breaks and talk to someone close if gambling becomes a worry."
+  },
+  "VERIFY_EMAIL_PAGE": {
+    "LOADING": "Confirming your email…",
+    "SUCCESS_TITLE": "Email confirmed 🎉",
+    "SUCCESS_TEXT": "Thanks! Taking you to the home page…",
+    "SUCCESS_TEXT_LOGIN": "Thanks! Log in to reach the home page.",
+    "INVALID_TITLE": "Invalid or expired link",
+    "INVALID_TEXT": "This link no longer works. From the home page, tap “Resend” to get a new one.",
+    "GO_HOME": "Go to home",
+    "GO_LOGIN": "Log in"
+  },
+  "EMAIL_VERIFY_BANNER": {
+    "TITLE": "Confirm your email address",
+    "TEXT": "We sent a link to {{email}}.",
+    "RESEND": "Resend",
+    "SENT": "Sent ✓",
+    "TOAST_SENT": "New link sent to {{email}}. Check your spam folder too.",
+    "TOAST_FAILED": "Could not send the email right now. Please try later.",
+    "ALREADY": "Your email is already confirmed ✓"
+  },
+  "WINNER_CLAIM": {
+    "TITLE": "Your claim code",
+    "SUBTITLE": "Show it to the Tinguilin agent when you collect your prize.",
+    "TOGGLE": "Show or hide the code",
+    "STEP_1": "We contact you to arrange the handover.",
+    "STEP_2": "Bring an ID in your name.",
+    "STEP_3": "Give this code to the agent and get your prize.",
+    "SECRET": "Keep this code secret. Tinguilin will never ask for it by phone, SMS or WhatsApp.",
+    "NO_CODE": "Your claim code is on its way. If nothing arrives in a few minutes, contact us.",
+    "DELIVERED_TITLE": "Prize handed over ✅",
+    "DELIVERED_ON": "Handed over on {{date}}"
   }
 }

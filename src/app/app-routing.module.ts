@@ -41,6 +41,14 @@ const routes: Routes = [
           ),
       },
       {
+        // Lien "Confirmer mon email" recu a l'inscription (public).
+        path: 'verify-email',
+        loadChildren: () =>
+          import('./pages/auth/verify-email/verify-email.module').then(
+            (m) => m.VerifyEmailPageModule,
+          ),
+      },
+      {
         path: 'forgot-password-sent',
         loadChildren: () =>
           import('./pages/auth/forgot-password-sent/forgot-password-sent.module').then(

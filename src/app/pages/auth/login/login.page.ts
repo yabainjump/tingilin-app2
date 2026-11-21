@@ -80,7 +80,15 @@ export class LoginPage {
     this.googleLoading = true;
     try {
       const idToken = await this.googleSignIn.signIn();
-      await firstValueFrom(this.auth.loginWithGoogle(idToken));
+      // Un lien de parrainage peut mener ici (?ref=CODE): on le transmet pour
+      // qu'un nouveau compte Google soit rattache a son parrain.
+      const referralCode =
+        this.route.snapshot.queryParamMap.get('ref') ??
+        this.route.snapshot.queryParamMap.get('referralCode') ??
+        undefined;
+      await firstValueFrom(
+        this.auth.loginWithGoogle(idToken, { referralCode: referralCode ?? undefined }),
+      );
       await this.router.navigateByUrl(this.safeRedirectUrl());
     } catch (err) {
       if (this.googleSignIn.isUserCancellation(err)) return;

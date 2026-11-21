@@ -1,0 +1,86 @@
+.verify {
+  --background: var(--app-bg);
+  color: var(--app-ink);
+}
+
+.wrap {
+  max-width: 420px;
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 32px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 14px;
+}
+
+.badge {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  color: var(--app-primary);
+  font-size: 54px;
+  margin-bottom: 6px;
+
+  &.ok {
+    color: var(--app-success);
+    animation: pop 0.35s ease-out;
+  }
+
+  &.ko {
+    color: var(--app-danger, #dc2626);
+  }
+
+  ion-spinner {
+    width: 44px;
+    height: 44px;
+    color: var(--app-primary);
+  }
+}
+
+h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+p {
+  margin: 0;
+  color: var(--app-muted);
+  line-height: 1.5;
+}
+
+.primary {
+  margin-top: 10px;
+  width: 100%;
+  border: 0;
+  border-radius: var(--app-radius-pill, 999px);
+  padding: 15px 18px;
+  background: var(--app-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge.ok {
+    animation: none;
+  }
+}

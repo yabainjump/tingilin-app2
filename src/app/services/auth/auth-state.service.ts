@@ -24,6 +24,7 @@ export interface MeDto {
   phone?: string;
   region?: string | null;
   adultConfirmed?: boolean;
+  emailVerified?: boolean;
   showInLiveFeed?: boolean;
 }
 

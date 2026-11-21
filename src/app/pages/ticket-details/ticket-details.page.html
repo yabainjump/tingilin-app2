@@ -44,6 +44,12 @@
       </div>
     </section>
 
+    <!-- Code de retrait du lot (gagnant uniquement) -->
+    <app-winner-claim-card
+      *ngIf="hasWinningTicket"
+      [raffleId]="raffleId"
+    ></app-winner-claim-card>
+
     <!-- Stats -->
     <section class="stats">      <div class="stat-card">
         <div class="lbl">{{ 'TICKET_DETAILS_PAGE.TOTAL_SPENT' | translate }}</div>

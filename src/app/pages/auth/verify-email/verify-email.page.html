@@ -1,0 +1,30 @@
+<ion-content [fullscreen]="true" class="verify">
+  <div class="wrap" role="status" aria-live="polite">
+    <ng-container [ngSwitch]="state">
+      <ng-container *ngSwitchCase="'LOADING'">
+        <div class="badge"><ion-spinner name="crescent"></ion-spinner></div>
+        <h1>{{ 'VERIFY_EMAIL_PAGE.LOADING' | translate }}</h1>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'SUCCESS'">
+        <div class="badge ok"><ion-icon name="checkmark-circle"></ion-icon></div>
+        <h1>{{ 'VERIFY_EMAIL_PAGE.SUCCESS_TITLE' | translate }}</h1>
+        <p>
+          {{ (loggedIn ? 'VERIFY_EMAIL_PAGE.SUCCESS_TEXT' : 'VERIFY_EMAIL_PAGE.SUCCESS_TEXT_LOGIN') | translate }}
+        </p>
+        <button class="primary" type="button" (click)="continue()">
+          {{ (loggedIn ? 'VERIFY_EMAIL_PAGE.GO_HOME' : 'VERIFY_EMAIL_PAGE.GO_LOGIN') | translate }}
+        </button>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'INVALID'">
+        <div class="badge ko"><ion-icon name="alert-circle"></ion-icon></div>
+        <h1>{{ 'VERIFY_EMAIL_PAGE.INVALID_TITLE' | translate }}</h1>
+        <p>{{ 'VERIFY_EMAIL_PAGE.INVALID_TEXT' | translate }}</p>
+        <button class="primary" type="button" (click)="continue()">
+          {{ (loggedIn ? 'VERIFY_EMAIL_PAGE.GO_HOME' : 'VERIFY_EMAIL_PAGE.GO_LOGIN') | translate }}
+        </button>
+      </ng-container>
+    </ng-container>
+  </div>
+</ion-content>

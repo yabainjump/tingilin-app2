@@ -98,7 +98,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PaymentConfirmationPage: () => (/* binding */ PaymentConfirmationPage)
 /* harmony export */ });
-/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var src_app_shared_utils_mobile_operator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/app/shared/utils/mobile-operator */ 3541);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ 6196);
 /* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/environments/environment */ 5312);
@@ -652,7 +652,7 @@ class PaymentConfirmationPage {
     // Une seule relance automatique apres la confirmation 18+.
     this.ageRetryDone = false;
     this.pageLoading = true;
-    this.visibilityHandler = /*#__PURE__*/(0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    this.visibilityHandler = /*#__PURE__*/(0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // Quand l’onglet redevient visible, on verify
       if (document.visibilityState === 'visible' && _this.transactionId) {
         yield _this.verifyPayment();
@@ -661,7 +661,7 @@ class PaymentConfirmationPage {
   }
   ionViewWillEnter() {
     var _this2 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this2.stopVerificationPolling();
       _this2.stopHostedCheckoutFallback(false);
       _this2.stopSuccessNavigation();
@@ -709,7 +709,7 @@ class PaymentConfirmationPage {
   }
   confirmPayment() {
     var _this3 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this3.loading) return;
       if (!_this3.raffleId) return;
       if (!_this3.auth.isLoggedIn()) {
@@ -827,6 +827,13 @@ class PaymentConfirmationPage {
         _this3.directChargePending = false;
         _this3.paymentOverlayState = 'FAILED';
         _this3.paymentOverlayVisible = true;
+        // 400 = refus definitif, aucun prelevement engage (l'API clot la
+        // tentative): le prochain essai doit partir avec une nouvelle cle, sinon
+        // il retomberait sur la tentative close. Les 409/5xx gardent la cle
+        // pour retrouver un paiement peut-etre en cours.
+        if (status === 400) {
+          _this3.intentKey = _this3.buildIntentKey();
+        }
         if (status === 409) {
           yield _this3.presentToast(message || 'Une tentative de paiement identique existe deja. Patiente quelques secondes puis reessaie.');
           return;
@@ -839,7 +846,7 @@ class PaymentConfirmationPage {
   }
   prefillPayerProfile() {
     var _this4 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       try {
         const me = yield (0,rxjs__WEBPACK_IMPORTED_MODULE_2__.firstValueFrom)(_this4.auth.me());
         const email = String(me?.email ?? '').trim();
@@ -861,7 +868,7 @@ class PaymentConfirmationPage {
   }
   verifyPayment() {
     var _this5 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (silent = false) {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (silent = false) {
       if (!_this5.transactionId) return;
       if (_this5.verificationInFlight) return _this5.paymentStatus;
       _this5.verificationInFlight = true;
@@ -917,7 +924,7 @@ class PaymentConfirmationPage {
   }
   presentToast(message) {
     var _this6 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const t = yield _this6.toastCtrl.create({
         message,
         duration: 1800,
@@ -1004,7 +1011,7 @@ class PaymentConfirmationPage {
     }
     this.expirationTimer = setTimeout(() => void this.expirePaymentWaiting(), remainingMs);
     const _poll = /*#__PURE__*/function () {
-      var _ref2 = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      var _ref2 = (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
         if (!_this7.directChargePending || !_this7.transactionId) return;
         if (Date.now() >= deadline) {
           yield _this7.expirePaymentWaiting();
@@ -1063,7 +1070,7 @@ class PaymentConfirmationPage {
   }
   launchHostedCheckoutAfterGracePeriod() {
     var _this8 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this8.paymentLink || !_this8.directChargePending) return;
       _this8.stopHostedCheckoutFallback(false);
       _this8.fallbackCountdownSeconds = 0;
@@ -1088,7 +1095,7 @@ class PaymentConfirmationPage {
   }
   expirePaymentWaiting() {
     var _this9 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this9.directChargePending || !_this9.transactionId) return;
       _this9.stopVerificationPolling();
       _this9.stopHostedCheckoutFallback();

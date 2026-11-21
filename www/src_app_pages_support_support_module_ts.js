@@ -100,7 +100,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   SupportPage: () => (/* binding */ SupportPage)
 /* harmony export */ });
-/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/environments/environment */ 5312);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ 4205);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ 2481);
@@ -351,7 +351,7 @@ class SupportPage {
   }
   contactSupport(categoryId) {
     var _this = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const category = categoryId && categoryId !== 'all' ? _this.categories.find(item => item.id === categoryId) : _this.categories.find(item => item.id === _this.selectedCategoryId);
       const categoryLabel = category && category.id !== 'all' ? _this.categoryLabel(category.id) : _this.translate.instant('SUPPORT_PAGE.MAIL_BODY_GENERAL_SUPPORT');
       const message = [_this.translate.instant('SUPPORT_PAGE.MAIL_BODY_HELLO'), '', _this.translate.instant('SUPPORT_PAGE.MAIL_BODY_NEED_HELP'), categoryLabel, '', _this.translate.instant('SUPPORT_PAGE.MAIL_BODY_DESCRIBE')].join('\n');

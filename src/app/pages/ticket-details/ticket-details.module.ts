@@ -1,3 +1,4 @@
+import { WinnerClaimCardComponent } from 'src/app/shared/engagement/winner-claim-card.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -15,7 +16,8 @@ import { TranslateModule } from '@ngx-translate/core';
     FormsModule,
     IonicModule,
     TicketDetailsPageRoutingModule,
-    TranslateModule
+    TranslateModule,
+    WinnerClaimCardComponent,
   ],
   declarations: [TicketDetailsPage]
 })

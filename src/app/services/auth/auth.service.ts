@@ -43,6 +43,12 @@ export interface ForgotPasswordResponse {
     | 'USER_NOT_FOUND';
 }
 
+/** Code de parrainage tel que l'API l'attend (A-Z/0-9, 4 a 16, MaxLength de l API), sinon ''. */
+export function normalizeReferralCode(value: unknown): string {
+  const code = String(typeof value === 'string' ? value : '').trim().toUpperCase();
+  return /^[A-Z0-9-]{4,16}$/.test(code) ? code : '';
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly baseUrl = environment.apiBaseUrl;
@@ -101,9 +107,22 @@ export class AuthService {
   // Connexion Google: POST /auth/google avec l'idToken Google Sign-In.
   // Meme contrat de reponse que /auth/login (refresh token en cookie sur web,
   // dans la reponse sur natif via X-Client-Platform: native).
-  loginWithGoogle(idToken: string, region?: UserRegion) {
-    const body: { idToken: string; region?: UserRegion } = { idToken };
-    if (region) body.region = region;
+  // Depuis l'inscription, on transmet aussi le code de parrainage et la
+  // declaration 18+ (sinon le filleul Google n'etait pas rattache a son parrain).
+  loginWithGoogle(
+    idToken: string,
+    opts: { region?: UserRegion; referralCode?: string; isAdult?: boolean } = {},
+  ) {
+    const body: {
+      idToken: string;
+      region?: UserRegion;
+      referralCode?: string;
+      isAdult?: boolean;
+    } = { idToken };
+    if (opts.region) body.region = opts.region;
+    const referralCode = normalizeReferralCode(opts.referralCode);
+    if (referralCode) body.referralCode = referralCode;
+    if (opts.isAdult === true) body.isAdult = true;
     return this.http
       .post<AuthTokenResponse>(`${this.baseUrl}/auth/google`, body, this.authRequestOptions())
       .pipe(
@@ -121,6 +140,23 @@ export class AuthService {
         { region },
         this.authRequestOptions(),
       );
+  }
+
+  /** Lien "Confirmer mon email" (public: le jeton du lien suffit). */
+  verifyEmail(token: string) {
+    return this.http.post<{ ok: boolean; emailVerified: boolean }>(
+      `${this.baseUrl}/auth/verify-email`,
+      { token },
+      this.authRequestOptions(),
+    );
+  }
+
+  resendEmailVerification() {
+    return this.http.post<{ ok: boolean; alreadyVerified: boolean; email?: string }>(
+      `${this.baseUrl}/auth/resend-verification`,
+      {},
+      { headers: this.authHeaders() },
+    );
   }
 
   me<T = any>(): Observable<T> {

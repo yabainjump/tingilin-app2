@@ -126,11 +126,12 @@
     "ALREADY": "Déjà un compte ?",
     "LOGIN_LINK": "Se connecter",
     "TOAST_INVALID_FORM": "Vérifie les champs. Mot de passe: 8+ caractères, 1 majuscule, 1 caractère spécial.",
-    "TOAST_CREATED": "Compte créé. Bienvenue sur Tinguilin",
+    "TOAST_CREATED": "Compte créé. Bienvenue sur Tinguilin ! Confirme ton email avec le lien qu’on vient de t’envoyer.",
     "TOAST_CREATE_FAILED": "Impossible de créer le compte.",
     "ADULT": "J'ai 18 ans ou plus. Les jeux d'argent sont interdits aux mineurs.",
     "TOAST_ADULT_REQUIRED": "Tu dois avoir 18 ans ou plus pour créer un compte.",
-    "REFERRAL_WELCOME_HINT": "🎁 Avec ce code, tu reçois 1 ticket gratuit après ton premier achat."
+    "REFERRAL_WELCOME_HINT": "🎁 Avec ce code, tu reçois 1 ticket gratuit après ton premier achat.",
+    "GOOGLE_SIGNUP": "S’inscrire avec Google"
   },
   "TABS": {
     "HOME": "Accueil",
@@ -676,5 +677,36 @@
     "TIP_1": "Ne joue que l'argent que tu peux te permettre de perdre.",
     "TIP_2": "Ne cherche pas à « te refaire » après une perte.",
     "TIP_3": "Fais des pauses et parle à un proche si le jeu devient un souci."
+  },
+  "VERIFY_EMAIL_PAGE": {
+    "LOADING": "Confirmation de ton email…",
+    "SUCCESS_TITLE": "Email confirmé 🎉",
+    "SUCCESS_TEXT": "Merci ! On t’emmène sur l’accueil…",
+    "SUCCESS_TEXT_LOGIN": "Merci ! Connecte-toi pour retrouver l’accueil.",
+    "INVALID_TITLE": "Lien invalide ou expiré",
+    "INVALID_TEXT": "Ce lien ne fonctionne plus. Depuis l’accueil, appuie sur « Renvoyer » pour recevoir un nouveau lien.",
+    "GO_HOME": "Aller à l’accueil",
+    "GO_LOGIN": "Se connecter"
+  },
+  "EMAIL_VERIFY_BANNER": {
+    "TITLE": "Confirme ton adresse email",
+    "TEXT": "On t’a envoyé un lien à {{email}}.",
+    "RESEND": "Renvoyer",
+    "SENT": "Envoyé ✓",
+    "TOAST_SENT": "Nouveau lien envoyé à {{email}}. Pense à vérifier tes spams.",
+    "TOAST_FAILED": "Impossible d’envoyer l’email pour le moment. Réessaie plus tard.",
+    "ALREADY": "Ton email est déjà confirmé ✓"
+  },
+  "WINNER_CLAIM": {
+    "TITLE": "Ton code de retrait",
+    "SUBTITLE": "Présente-le à l’agent Tinguilin à la remise de ton lot.",
+    "TOGGLE": "Afficher ou masquer le code",
+    "STEP_1": "Nous te contactons pour fixer la remise.",
+    "STEP_2": "Viens avec ta pièce d’identité à ton nom.",
+    "STEP_3": "Donne ce code à l’agent : ton lot t’est remis.",
+    "SECRET": "Garde ce code secret. Tinguilin ne te le demandera jamais par téléphone, SMS ou WhatsApp.",
+    "NO_CODE": "Ton code de retrait arrive. Si rien d’ici quelques minutes, contacte-nous.",
+    "DELIVERED_TITLE": "Lot remis ✅",
+    "DELIVERED_ON": "Remis le {{date}}"
   }
 }

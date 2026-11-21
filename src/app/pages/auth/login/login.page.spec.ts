@@ -77,7 +77,7 @@ describe('LoginPage', () => {
 
     await component.signInWithGoogle();
 
-    expect(auth.loginWithGoogle).toHaveBeenCalledOnceWith('google.id.token');
+    expect(auth.loginWithGoogle).toHaveBeenCalledOnceWith('google.id.token', { referralCode: undefined });
     expect(router.navigateByUrl).toHaveBeenCalledOnceWith('/home');
     expect(component.googleLoading).toBeFalse();
   });

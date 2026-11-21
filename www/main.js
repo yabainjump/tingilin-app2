@@ -50,6 +50,10 @@ const routes = [{
     path: 'forgot-password',
     loadChildren: () => __webpack_require__.e(/*! import() */ "src_app_pages_auth_forgot-password_forgot-password_module_ts").then(__webpack_require__.bind(__webpack_require__, /*! ./pages/auth/forgot-password/forgot-password.module */ 1641)).then(m => m.ForgotPasswordPageModule)
   }, {
+    // Lien "Confirmer mon email" recu a l'inscription (public).
+    path: 'verify-email',
+    loadChildren: () => __webpack_require__.e(/*! import() */ "src_app_pages_auth_verify-email_verify-email_module_ts").then(__webpack_require__.bind(__webpack_require__, /*! ./pages/auth/verify-email/verify-email.module */ 8683)).then(m => m.VerifyEmailPageModule)
+  }, {
     path: 'forgot-password-sent',
     loadChildren: () => __webpack_require__.e(/*! import() */ "src_app_pages_auth_forgot-password-sent_forgot-password-sent_module_ts").then(__webpack_require__.bind(__webpack_require__, /*! ./pages/auth/forgot-password-sent/forgot-password-sent.module */ 6151)).then(m => m.ForgotPasswordSentPageModule)
   }]
@@ -940,7 +944,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AuthTokenStorageService: () => (/* binding */ AuthTokenStorageService)
 /* harmony export */ });
-/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var _capacitor_preferences__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @capacitor/preferences */ 6493);
 /* harmony import */ var _capacitor_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @capacitor/core */ 4070);
 /* harmony import */ var capacitor_secure_storage_plugin__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! capacitor-secure-storage-plugin */ 2994);
@@ -960,13 +964,13 @@ class AuthTokenStorageService {
   }
   init() {
     var _this = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this.initialized || !_this.isNative) {
         _this.initialized = true;
         return;
       }
       yield Promise.all(_this.managedKeys.map(/*#__PURE__*/function () {
-        var _ref = (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (key) {
+        var _ref = (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (key) {
           try {
             const {
               value
@@ -1157,7 +1161,8 @@ function isSessionRejected(error) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   AuthService: () => (/* binding */ AuthService)
+/* harmony export */   AuthService: () => (/* binding */ AuthService),
+/* harmony export */   normalizeReferralCode: () => (/* binding */ normalizeReferralCode)
 /* harmony export */ });
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/common/http */ 3855);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ 819);
@@ -1174,6 +1179,11 @@ var _staticBlock;
 
 
 
+/** Code de parrainage tel que l'API l'attend (A-Z/0-9, 4 a 16, MaxLength de l API), sinon ''. */
+function normalizeReferralCode(value) {
+  const code = String(typeof value === 'string' ? value : '').trim().toUpperCase();
+  return /^[A-Z0-9-]{4,16}$/.test(code) ? code : '';
+}
 class AuthService {
   constructor(http, tokenStorage) {
     this.http = http;
@@ -1209,11 +1219,16 @@ class AuthService {
   // Connexion Google: POST /auth/google avec l'idToken Google Sign-In.
   // Meme contrat de reponse que /auth/login (refresh token en cookie sur web,
   // dans la reponse sur natif via X-Client-Platform: native).
-  loginWithGoogle(idToken, region) {
+  // Depuis l'inscription, on transmet aussi le code de parrainage et la
+  // declaration 18+ (sinon le filleul Google n'etait pas rattache a son parrain).
+  loginWithGoogle(idToken, opts = {}) {
     const body = {
       idToken
     };
-    if (region) body.region = region;
+    if (opts.region) body.region = opts.region;
+    const referralCode = normalizeReferralCode(opts.referralCode);
+    if (referralCode) body.referralCode = referralCode;
+    if (opts.isAdult === true) body.isAdult = true;
     return this.http.post(`${this.baseUrl}/auth/google`, body, this.authRequestOptions()).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_2__.tap)(res => {
       this.setTokens(res.access_token, res.refresh_token);
       this.sessionReset.next();
@@ -1223,6 +1238,17 @@ class AuthService {
     return this.http.patch(`${this.baseUrl}/users/me`, {
       region
     }, this.authRequestOptions());
+  }
+  /** Lien "Confirmer mon email" (public: le jeton du lien suffit). */
+  verifyEmail(token) {
+    return this.http.post(`${this.baseUrl}/auth/verify-email`, {
+      token
+    }, this.authRequestOptions());
+  }
+  resendEmailVerification() {
+    return this.http.post(`${this.baseUrl}/auth/resend-verification`, {}, {
+      headers: this.authHeaders()
+    });
   }
   me() {
     return this.http.get(`${this.baseUrl}/auth/me`, {
@@ -1393,7 +1419,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   GoogleSignInError: () => (/* binding */ GoogleSignInError),
 /* harmony export */   GoogleSignInService: () => (/* binding */ GoogleSignInService)
 /* harmony export */ });
-/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var _capgo_capacitor_social_login__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @capgo/capacitor-social-login */ 429);
 /* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/environments/environment */ 5312);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ 4205);
@@ -1418,7 +1444,7 @@ class GoogleSignInService {
   }
   initialize() {
     var _this = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this.isConfigured()) return;
       if (_this.initialization) return _this.initialization;
       _this.initialization = _capgo_capacitor_social_login__WEBPACK_IMPORTED_MODULE_1__.SocialLogin.initialize({
@@ -1439,7 +1465,7 @@ class GoogleSignInService {
   }
   signIn() {
     var _this2 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this2.isConfigured()) {
         throw new GoogleSignInError('NOT_CONFIGURED');
       }
@@ -1651,7 +1677,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   OfflineActionQueueService: () => (/* binding */ OfflineActionQueueService)
 /* harmony export */ });
-/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ 5797);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ 6196);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ 271);
@@ -1697,7 +1723,7 @@ class OfflineActionQueueService {
   /** Vide la file (memoire + stockage) lors d'un changement de session. */
   clearForSession() {
     var _this = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this.sessionEpoch++; // invalide tout flush() en cours (anti-course)
       _this.queueSubject.next([]);
       try {
@@ -1709,7 +1735,7 @@ class OfflineActionQueueService {
   }
   init() {
     var _this2 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this2.isInitialized) return;
       _this2.isInitialized = true;
       const stored = yield _this2.storage.getJson(_this2.storageKey);
@@ -1721,7 +1747,7 @@ class OfflineActionQueueService {
   }
   enqueueNotificationMarkRead(id) {
     var _this3 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this3.enqueue({
         id: _this3.makeId(),
         type: 'notifications.mark-read',
@@ -1735,7 +1761,7 @@ class OfflineActionQueueService {
   }
   enqueueNotificationMarkAllRead() {
     var _this4 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const nextQueue = _this4.queueSubject.value.filter(item => item.type !== 'notifications.mark-read');
       _this4.queueSubject.next(nextQueue);
       yield _this4.persist();
@@ -1749,7 +1775,7 @@ class OfflineActionQueueService {
   }
   flush() {
     var _this5 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this5.isInitialized || _this5.isFlushing || _this5.networkStatus.isOffline()) {
         return;
       }
@@ -1778,7 +1804,7 @@ class OfflineActionQueueService {
   }
   enqueue(action) {
     var _this6 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const queue = [..._this6.queueSubject.value];
       const existingIndex = action.dedupeKey ? queue.findIndex(item => item.dedupeKey === action.dedupeKey) : -1;
       if (existingIndex >= 0) {
@@ -1792,7 +1818,7 @@ class OfflineActionQueueService {
   }
   process(action) {
     var _this7 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       try {
         switch (action.type) {
           case 'notifications.mark-read':
@@ -1822,7 +1848,7 @@ class OfflineActionQueueService {
   }
   persist() {
     var _this8 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this8.storage.setJson(_this8.storageKey, _this8.queueSubject.value);
     })();
   }
@@ -1852,7 +1878,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ThemeService: () => (/* binding */ ThemeService)
 /* harmony export */ });
-/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ 4205);
 /* harmony import */ var _shared_storage_app_storage_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../shared/storage/app-storage.service */ 2450);
 
@@ -1881,7 +1907,7 @@ class ThemeService {
   }
   init() {
     var _this = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const stored = yield _this.storage.get(STORAGE_KEY);
       if (stored === 'light' || stored === 'dark' || stored === 'system') {
         _this.mode = stored;
@@ -1892,7 +1918,7 @@ class ThemeService {
   }
   set(mode) {
     var _this2 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this2.mode = mode;
       yield _this2.storage.set(STORAGE_KEY, mode);
       _this2.apply();
@@ -2079,7 +2105,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AppStorageService: () => (/* binding */ AppStorageService)
 /* harmony export */ });
-/* harmony import */ var D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var _capacitor_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @capacitor/core */ 4070);
 /* harmony import */ var _capacitor_preferences__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @capacitor/preferences */ 6493);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ 4205);
@@ -2095,7 +2121,7 @@ class AppStorageService {
   }
   get(key) {
     var _this = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this.memory.has(key)) {
         return _this.memory.get(key) ?? null;
       }
@@ -2115,7 +2141,7 @@ class AppStorageService {
   }
   set(key, value) {
     var _this2 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this2.memory.set(key, value);
       if (!_this2.isNative) {
         localStorage.setItem(key, value);
@@ -2129,7 +2155,7 @@ class AppStorageService {
   }
   remove(key) {
     var _this3 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this3.memory.delete(key);
       if (!_this3.isNative) {
         localStorage.removeItem(key);
@@ -2142,7 +2168,7 @@ class AppStorageService {
   }
   getJson(key) {
     var _this4 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const raw = yield _this4.get(key);
       if (!raw) return null;
       try {
@@ -2154,7 +2180,7 @@ class AppStorageService {
   }
   setJson(key, value) {
     var _this5 = this;
-    return (0,D_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,d_personnel_Tinguilin_tingilin_app_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       yield _this5.set(key, JSON.stringify(value));
     })();
   }

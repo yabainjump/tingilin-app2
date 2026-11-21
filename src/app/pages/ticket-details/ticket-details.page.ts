@@ -66,6 +66,12 @@ export class TicketDetailsPage {
     return !['CLOSED', 'DRAWN', 'FINISHED', 'ENDED'].includes(st);
   }
 
+  get hasWinningTicket(): boolean {
+    return this.tickets.some(
+      (t) => String(t?.status ?? '').toUpperCase() === 'WINNER',
+    );
+  }
+
   get raffleShortId(): string {
     return this.raffleId ? `#${this.raffleId.slice(-8).toUpperCase()}` : '—';
   }

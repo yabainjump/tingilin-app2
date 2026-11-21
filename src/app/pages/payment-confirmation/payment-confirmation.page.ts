@@ -328,6 +328,14 @@ export class PaymentConfirmationPage {
       this.paymentOverlayState = 'FAILED';
       this.paymentOverlayVisible = true;
 
+      // 400 = refus definitif, aucun prelevement engage (l'API clot la
+      // tentative): le prochain essai doit partir avec une nouvelle cle, sinon
+      // il retomberait sur la tentative close. Les 409/5xx gardent la cle
+      // pour retrouver un paiement peut-etre en cours.
+      if (status === 400) {
+        this.intentKey = this.buildIntentKey();
+      }
+
       if (status === 409) {
         await this.presentToast(
           message ||

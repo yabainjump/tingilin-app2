@@ -3,9 +3,13 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
-import { finalize } from 'rxjs';
+import { finalize, firstValueFrom } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../services/auth/auth.service';
+import {
+  GoogleSignInError,
+  GoogleSignInService,
+} from '../../../services/auth/google-sign-in.service';
 import { UserRegion } from '../../../shared/region-picker/regions';
 
 const PASSWORD_RULE = /^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/;
@@ -55,7 +59,48 @@ export class RegisterPage implements OnInit {
     private router: Router,
     private toast: ToastController,
     private translate: TranslateService,
+    private googleSignIn: GoogleSignInService,
   ) {}
+
+  googleLoading = false;
+
+  /**
+   * Inscription Google depuis ce formulaire: seule la case 18+ est exigee
+   * (Google fournit nom et email). Le code de parrainage saisi et la region
+   * choisie sont transmis pour ne pas les perdre.
+   */
+  async signUpWithGoogle(): Promise<void> {
+    if (this.googleLoading || this.loading) return;
+    if (this.form.controls.adult.value !== true) {
+      this.form.controls.adult.markAsTouched();
+      await this.showToast(this.translate.instant('REGISTER_PAGE.TOAST_ADULT_REQUIRED'));
+      return;
+    }
+
+    this.googleLoading = true;
+    try {
+      const idToken = await this.googleSignIn.signIn();
+      await firstValueFrom(
+        this.auth.loginWithGoogle(idToken, {
+          region: this.selectedRegion ?? undefined,
+          referralCode: String(this.form.controls.referralCode.value ?? ''),
+          isAdult: true,
+        }),
+      );
+      await this.router.navigateByUrl(this.redirectAfterOnboarding || '/home', {
+        replaceUrl: true,
+      });
+    } catch (err) {
+      if (this.googleSignIn.isUserCancellation(err)) return;
+      const message =
+        err instanceof GoogleSignInError && err.code === 'NOT_CONFIGURED'
+          ? this.translate.instant('LOGIN_PAGE.TOAST_GOOGLE_NOT_CONFIGURED')
+          : this.translate.instant('LOGIN_PAGE.TOAST_GOOGLE_FAILED');
+      await this.showToast(message);
+    } finally {
+      this.googleLoading = false;
+    }
+  }
 
   ngOnInit(): void {
     const ref = String(

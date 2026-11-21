@@ -88,6 +88,7 @@
       <app-live-activity-ticker class="home-ticker"></app-live-activity-ticker>
 
       <!-- Progression vers le prochain ticket gratuit -->
+      <app-email-verify-banner *ngIf="isLoggedIn"></app-email-verify-banner>
       <app-reward-progress *ngIf="isLoggedIn"></app-reward-progress>
 
       <div
