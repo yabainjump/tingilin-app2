@@ -59,6 +59,13 @@ const routes: Routes = [
   },
 
   {
+    // Reglement du jeu: public (landing, inscription, liens publicitaires).
+    path: 'reglement',
+    loadChildren: () =>
+      import('./pages/rules/rules.module').then((m) => m.RulesPageModule),
+  },
+
+  {
     path: 'onboarding',
     loadChildren: () =>
       import('./pages/onboarding/onboarding.module').then(

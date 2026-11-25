@@ -1,0 +1,44 @@
+<ion-content class="rules-bg" [fullscreen]="true">
+  <div class="screen">
+    <div class="topbar">
+      <button class="top-btn" type="button" (click)="back()" [attr.aria-label]="'COMMON.BACK' | translate">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <h1 class="top-title">{{ 'RULES_PAGE.TITLE' | translate }}</h1>
+      <div class="spacer"></div>
+    </div>
+
+    <div class="body">
+      <section class="card hero">
+        <span class="badge">18+</span>
+        <p class="intro">{{ 'RULES_PAGE.INTRO' | translate }}</p>
+        <p class="version">{{ 'RULES_PAGE.VERSION' | translate }}</p>
+      </section>
+
+      <section class="card" *ngFor="let s of sections; let i = index; trackBy: trackByTitle">
+        <h2><span class="num">{{ i + 1 }}</span>{{ s.title }}</h2>
+        <ul>
+          <li *ngFor="let item of s.items">{{ item }}</li>
+        </ul>
+      </section>
+
+      <section class="card links">
+        <a routerLink="/tabs/responsible-play">
+          <ion-icon name="shield-half-outline" aria-hidden="true"></ion-icon>
+          <span>{{ 'RESPONSIBLE_PLAY.TITLE' | translate }}</span>
+          <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+        </a>
+        <a routerLink="/tabs/winners">
+          <ion-icon name="trophy-outline" aria-hidden="true"></ion-icon>
+          <span>{{ 'RULES_PAGE.WINNERS_LINK' | translate }}</span>
+          <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+        </a>
+        <a routerLink="/support">
+          <ion-icon name="help-buoy-outline" aria-hidden="true"></ion-icon>
+          <span>{{ 'RULES_PAGE.SUPPORT_LINK' | translate }}</span>
+          <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+        </a>
+      </section>
+    </div>
+  </div>
+</ion-content>

@@ -153,7 +153,10 @@
 
       <div class="terms">
         <ion-checkbox [formControl]="form.controls.terms"></ion-checkbox>
-        <div class="terms-text">{{ 'REGISTER_PAGE.TERMS' | translate }}</div>
+        <div class="terms-text">
+          {{ 'REGISTER_PAGE.TERMS' | translate }}
+          <a class="link" routerLink="/reglement">{{ 'REGISTER_PAGE.RULES_LINK' | translate }}</a>
+        </div>
       </div>
 
       <div class="terms adult">

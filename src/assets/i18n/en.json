@@ -36,7 +36,7 @@
   "LANDING": {
     "CONNECTION": "Login",
     "NEW_CONCEPT": "New Concept",
-    "HERO_TITLE": "Your next iPhone\nfor the price of a cookie",
+    "HERO_TITLE": "Win big prizes\nfor the price of a cookie",
     "HERO_SUBTITLE": "Win big, spend little.",
     "HOW_TITLE": "How does it work?",
     "HOW_TAG": "Simple & Fast",
@@ -56,20 +56,20 @@
     "TICKET_PRICE": "Ticket price",
     "PARTICIPATE": "Join now",
     "SECURE_PAYMENT": "SECURE PAYMENT",
-    "CERTIFIED_WINNERS": "CERTIFIED WINNERS",
+    "CERTIFIED_WINNERS": "VERIFIABLE DRAWS",
     "PRIVATE_DATA": "PRIVATE DATA",
     "PAYMENT_TITLE": "100% Mobile Money payments",
-    "BOOST_TITLE": "Why is Tinguilin already booming?",
+    "BOOST_TITLE": "Why choose Tinguilin?",
     "BOOST_SUBTITLE": "More excitement, more transparency, and premium prizes within one ticket.",
     "BOOST_CARD_1_TITLE": "Frequent draws",
     "BOOST_CARD_1_DESC": "Regular opportunities to test your luck.",
     "BOOST_CARD_2_TITLE": "Premium rewards",
-    "BOOST_CARD_2_DESC": "Smartphones, gadgets, and carefully selected rewards.",
+    "BOOST_CARD_2_DESC": "Earbuds, speakers, tech accessories and many more prizes.",
     "BOOST_CARD_3_TITLE": "Real-time tracking",
     "BOOST_CARD_3_DESC": "Follow your entries and monitor draws smoothly.",
     "COMMUNITY_KICKER": "Growing community",
-    "COMMUNITY_STAT": "12K+ registered users",
-    "COMMUNITY_SUB": "Winners already every week",
+    "COMMUNITY_STAT": "1,000+ registered users",
+    "COMMUNITY_SUB": "Verifiable draws, published winners",
     "START_NOW": "Start now"
   },
   "LOGIN_PAGE": {
@@ -121,7 +121,7 @@
     "COUNTRY_PLACEHOLDER": "Ivory Coast",
     "CITY_PLACEHOLDER": "Abidjan",
     "PASSWORD_HINT": "8+ chars, 1 uppercase, 1 special character.",
-    "TERMS": "I accept the terms of use and privacy policy.",
+    "TERMS": "I accept the game rules, including how my data is used.",
     "SUBMIT": "Create account",
     "ALREADY": "Already have an account?",
     "LOGIN_LINK": "Sign in",
@@ -131,7 +131,8 @@
     "ADULT": "I am 18 or older. Gambling is forbidden to minors.",
     "TOAST_ADULT_REQUIRED": "You must be 18 or older to create an account.",
     "REFERRAL_WELCOME_HINT": "🎁 With this code you get 1 free ticket after your first purchase.",
-    "GOOGLE_SIGNUP": "Sign up with Google"
+    "GOOGLE_SIGNUP": "Sign up with Google",
+    "RULES_LINK": "Read the rules"
   },
   "TABS": {
     "HOME": "Home",
@@ -710,5 +711,98 @@
     "ENABLE": "Enable notifications",
     "DENIED_HELP": "Notifications are blocked on this phone. To enable them: Android Settings > Apps > Tingilin > Notifications.",
     "SAVE_FAILED": "Unable to save your preference. Please try again."
+  },
+  "RULES_PAGE": {
+    "TITLE": "Game rules",
+    "PROFILE_LINK_HINT": "Draws, tickets, prize handover, 18+",
+    "LANDING_NOTICE": "For ages 18 and over only. Winning is not guaranteed.",
+    "WINNERS_LINK": "See winners and verify draws",
+    "SUPPORT_LINK": "A question? Contact support",
+    "INTRO": "These rules apply to every raffle on Tinguilin (tinguilin.yaba-in.com). By creating an account or taking part, you accept them.",
+    "VERSION": "Version of 21 November 2026",
+    "SECTIONS": [
+      {
+        "title": "Who can take part",
+        "items": [
+          "Participation is reserved for people aged 18 or over. You must confirm your age before any purchase or free ticket.",
+          "Each player uses a single personal account with accurate information.",
+          "In case of fraud, identity theft or abuse, Tinguilin may suspend the account and cancel its entries."
+        ]
+      },
+      {
+        "title": "Raffles",
+        "items": [
+          "Each raffle page shows the prize, the ticket price in FCFA, the total number of tickets, the end date and its specific rules.",
+          "Tickets are on sale until the end date, or until every ticket is sold.",
+          "The ticket price is shown before payment and does not change during your purchase."
+        ]
+      },
+      {
+        "title": "Buying a ticket",
+        "items": [
+          "Payment is made with Orange Money or MTN Mobile Money, through our payment provider.",
+          "Your tickets are created only once the operator confirms the payment. You then receive a notification.",
+          "A player can buy at most 200 tickets per raffle.",
+          "After several failed payments, purchases may be temporarily blocked.",
+          "A ticket is personal: it cannot be exchanged, transferred or resold. If Tinguilin cancels a raffle, paid tickets are refunded."
+        ]
+      },
+      {
+        "title": "Free tickets",
+        "items": [
+          "Referral: your referee gets 1 free ticket on their first paid purchase, and you get 1 free ticket for every 5 referees who made a paid purchase.",
+          "Loyalty: you get 1 free ticket for every 10 raffles you entered with a paid ticket.",
+          "A free ticket gives exactly the same chances as a paid one. It cannot be converted into money."
+        ]
+      },
+      {
+        "title": "The draw",
+        "items": [
+          "The draw runs automatically at the raffle end date, even if not every ticket is sold. A raffle with no tickets ends without a winner.",
+          "There is one winner per raffle. Each valid ticket is one chance: more tickets mean more chances, never certainty.",
+          "The draw is verifiable: a secret fingerprint is fixed before the first ticket is sold and revealed after the draw. Anyone can recompute the result from the Winners page."
+        ]
+      },
+      {
+        "title": "Winning and collecting the prize",
+        "items": [
+          "The winner is notified in the app and by email.",
+          "They receive a 6-digit pickup code, shown on the winning ticket and sent by email. This code is personal: never share it.",
+          "The prize is handed over in person. The winner shows the code to a Tinguilin team member, who checks it. The code works only once.",
+          "The place and date of the handover are agreed with the winner by the Tinguilin team.",
+          "The prize cannot be exchanged or converted into money."
+        ]
+      },
+      {
+        "title": "Publishing winners",
+        "items": [
+          "After validation, the winner’s name, profile photo and prize may be shown on the Winners page, with a photo of the handover.",
+          "You can hide your activity from the live feed in Responsible play."
+        ]
+      },
+      {
+        "title": "Playing responsibly",
+        "items": [
+          "Taking part involves a risk of loss: winning is never guaranteed. Only play with money you can afford to lose.",
+          "You can set a spending limit per day, week or month. Lowering it applies immediately; raising or removing it applies after 24 hours.",
+          "If playing becomes a problem, take a break and talk to someone you trust."
+        ]
+      },
+      {
+        "title": "Personal data",
+        "items": [
+          "We use your name, email, phone number, region, tickets and payments to manage your account, payments, draws, prize handovers and notifications.",
+          "You can choose which notifications you receive from your profile.",
+          "For any request about your data, contact support."
+        ]
+      },
+      {
+        "title": "Changes and contact",
+        "items": [
+          "Tinguilin may update these rules. The current version is always shown on this page. A raffle in progress stays subject to the rules shown when you bought your ticket.",
+          "For any question or complaint, contact support from the app."
+        ]
+      }
+    ]
   }
 }

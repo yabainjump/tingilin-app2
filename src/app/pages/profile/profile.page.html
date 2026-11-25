@@ -275,6 +275,16 @@
         <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
       </a>
 
+      <!-- REGLEMENT DU JEU -->
+      <a class="responsible-link" routerLink="/reglement">
+        <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+        <span class="grow">
+          <strong>{{ 'RULES_PAGE.TITLE' | translate }}</strong>
+          <small>{{ 'RULES_PAGE.PROFILE_LINK_HINT' | translate }}</small>
+        </span>
+        <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+      </a>
+
       <!-- LOGOUT -->
       <div class="logout-wrap">
         <button class="logout" type="button" (click)="logout()">

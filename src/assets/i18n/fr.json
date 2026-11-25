@@ -56,20 +56,20 @@
     "TICKET_PRICE": "Prix du ticket",
     "PARTICIPATE": "Participer",
     "SECURE_PAYMENT": "PAIEMENT SÉCURISÉ",
-    "CERTIFIED_WINNERS": "GAGNANTS CERTIFIÉS",
+    "CERTIFIED_WINNERS": "TIRAGES VÉRIFIABLES",
     "PRIVATE_DATA": "DONNÉES PRIVÉES",
     "PAYMENT_TITLE": "Paiements 100% Mobile Money",
-    "BOOST_TITLE": "Pourquoi Tinguilin cartonne déjà ?",
+    "BOOST_TITLE": "Pourquoi choisir Tinguilin ?",
     "BOOST_SUBTITLE": "Plus d’émotion, plus de transparence, et des prix premium à portée de ticket.",
     "BOOST_CARD_1_TITLE": "Tirages réguliers",
     "BOOST_CARD_1_DESC": "Des opportunités fréquentes pour tenter votre chance.",
     "BOOST_CARD_2_TITLE": "Lots premium",
-    "BOOST_CARD_2_DESC": "Smartphones, gadgets et récompenses soigneusement sélectionnées.",
+    "BOOST_CARD_2_DESC": "Écouteurs, enceintes, accessoires high-tech et bien d’autres lots.",
     "BOOST_CARD_3_TITLE": "Suivi en temps réel",
     "BOOST_CARD_3_DESC": "Visualisez vos participations et suivez les tirages sans friction.",
     "COMMUNITY_KICKER": "Communauté en croissance",
-    "COMMUNITY_STAT": "12K+ utilisateurs inscrits",
-    "COMMUNITY_SUB": "Déjà des gagnants chaque semaine",
+    "COMMUNITY_STAT": "1 000+ utilisateurs inscrits",
+    "COMMUNITY_SUB": "Des tirages vérifiables, des gagnants publiés",
     "START_NOW": "Commencer maintenant"
   },
   "LOGIN_PAGE": {
@@ -121,7 +121,7 @@
     "COUNTRY_PLACEHOLDER": "Côte d'Ivoire",
     "CITY_PLACEHOLDER": "Abidjan",
     "PASSWORD_HINT": "8+ caractères, 1 majuscule, 1 caractère spécial.",
-    "TERMS": "J'accepte les conditions générales d'utilisation et la politique de confidentialité.",
+    "TERMS": "J’accepte le règlement du jeu, y compris l’utilisation de mes données.",
     "SUBMIT": "Créer un compte",
     "ALREADY": "Déjà un compte ?",
     "LOGIN_LINK": "Se connecter",
@@ -131,7 +131,8 @@
     "ADULT": "J'ai 18 ans ou plus. Les jeux d'argent sont interdits aux mineurs.",
     "TOAST_ADULT_REQUIRED": "Tu dois avoir 18 ans ou plus pour créer un compte.",
     "REFERRAL_WELCOME_HINT": "🎁 Avec ce code, tu reçois 1 ticket gratuit après ton premier achat.",
-    "GOOGLE_SIGNUP": "S’inscrire avec Google"
+    "GOOGLE_SIGNUP": "S’inscrire avec Google",
+    "RULES_LINK": "Lire le règlement"
   },
   "TABS": {
     "HOME": "Accueil",
@@ -733,5 +734,98 @@
     "ENABLE": "Activer les notifications",
     "DENIED_HELP": "Les notifications sont bloquées sur ce téléphone. Pour les activer : Paramètres Android > Applications > Tingilin > Notifications.",
     "SAVE_FAILED": "Impossible d’enregistrer ta préférence. Réessaie."
+  },
+  "RULES_PAGE": {
+    "TITLE": "Règlement du jeu",
+    "PROFILE_LINK_HINT": "Tirage, tickets, remise des lots, 18+",
+    "LANDING_NOTICE": "Réservé aux 18 ans et plus. Gain non garanti.",
+    "WINNERS_LINK": "Voir les gagnants et vérifier les tirages",
+    "SUPPORT_LINK": "Une question ? Contacter le support",
+    "INTRO": "Ce règlement s’applique à toutes les tombolas organisées sur Tinguilin (tinguilin.yaba-in.com). En créant un compte ou en participant, tu l’acceptes.",
+    "VERSION": "Version du 21 novembre 2026",
+    "SECTIONS": [
+      {
+        "title": "Qui peut participer",
+        "items": [
+          "La participation est réservée aux personnes âgées de 18 ans ou plus. Tu dois confirmer ton âge avant tout achat ou ticket gratuit.",
+          "Chaque joueur utilise un seul compte personnel, avec des informations exactes.",
+          "En cas de fraude, d’usurpation d’identité ou d’abus, Tinguilin peut suspendre le compte concerné et annuler ses participations."
+        ]
+      },
+      {
+        "title": "Les tombolas",
+        "items": [
+          "Chaque tombola indique sur sa page : le lot, le prix du ticket en FCFA, le nombre total de tickets, la date de fin et ses règles particulières.",
+          "Les tickets sont en vente jusqu’à la date de fin, ou jusqu’à ce que tous les tickets soient vendus.",
+          "Le prix du ticket est affiché avant le paiement et ne change pas pendant ton achat."
+        ]
+      },
+      {
+        "title": "Acheter un ticket",
+        "items": [
+          "Le paiement se fait par Orange Money ou MTN Mobile Money, via notre prestataire de paiement.",
+          "Tes tickets sont créés uniquement après la confirmation du paiement par l’opérateur. Tu reçois alors une notification.",
+          "Un joueur peut acheter au maximum 200 tickets par tombola.",
+          "Après plusieurs paiements échoués, l’achat peut être temporairement bloqué.",
+          "Un ticket est personnel : il ne peut être ni échangé, ni transféré, ni revendu. Si Tinguilin annule une tombola, les tickets payés sont remboursés."
+        ]
+      },
+      {
+        "title": "Les tickets gratuits",
+        "items": [
+          "Parrainage : ton filleul reçoit 1 ticket gratuit à son premier achat payant, et tu reçois 1 ticket gratuit tous les 5 filleuls qui ont fait un achat payant.",
+          "Fidélité : tu reçois 1 ticket gratuit toutes les 10 tombolas auxquelles tu as participé avec un ticket payant.",
+          "Un ticket gratuit donne exactement les mêmes chances qu’un ticket payé. Il ne peut pas être converti en argent."
+        ]
+      },
+      {
+        "title": "Le tirage",
+        "items": [
+          "Le tirage est automatique à la date de fin de la tombola, même si tous les tickets ne sont pas vendus. Une tombola sans aucun ticket se termine sans gagnant.",
+          "Il y a un seul gagnant par tombola. Chaque ticket valide représente une chance : plus de tickets donnent plus de chances, mais jamais la certitude de gagner.",
+          "Le tirage est vérifiable : une empreinte secrète est fixée avant la vente du premier ticket, puis révélée après le tirage. N’importe qui peut recalculer le résultat depuis la page Gagnants."
+        ]
+      },
+      {
+        "title": "Gagner et récupérer son lot",
+        "items": [
+          "Le gagnant est prévenu dans l’application et par email.",
+          "Il reçoit un code de retrait à 6 chiffres, visible sur son ticket gagnant et envoyé par email. Ce code est personnel : ne le partage avec personne.",
+          "Le lot est remis en main propre. Le gagnant présente son code à un membre de l’équipe Tinguilin, qui le vérifie. Le code ne sert qu’une seule fois.",
+          "Le lieu et la date de remise sont convenus avec le gagnant par l’équipe Tinguilin.",
+          "Le lot ne peut être ni échangé, ni converti en argent."
+        ]
+      },
+      {
+        "title": "Publication des gagnants",
+        "items": [
+          "Après validation, le nom, la photo de profil et le lot du gagnant peuvent être affichés sur la page Gagnants, avec une photo de la remise du lot.",
+          "Tu peux masquer ton activité du fil en direct depuis la page Jeu responsable."
+        ]
+      },
+      {
+        "title": "Jouer de façon responsable",
+        "items": [
+          "Participer comporte un risque de perte : le gain n’est jamais garanti. Ne joue que l’argent que tu peux te permettre de perdre.",
+          "Tu peux fixer une limite de dépense par jour, par semaine ou par mois. Une baisse s’applique tout de suite, une hausse ou une suppression après 24 heures.",
+          "Si le jeu devient un problème, fais une pause et parles-en à un proche."
+        ]
+      },
+      {
+        "title": "Données personnelles",
+        "items": [
+          "Nous utilisons ton nom, ton email, ton téléphone, ta région, tes tickets et tes paiements pour gérer ton compte, les paiements, les tirages, la remise des lots et les notifications.",
+          "Tu peux choisir les notifications que tu reçois depuis ton profil.",
+          "Pour toute demande sur tes données, contacte le support."
+        ]
+      },
+      {
+        "title": "Modifications et contact",
+        "items": [
+          "Tinguilin peut modifier ce règlement. La version en vigueur est toujours affichée sur cette page. Une tombola en cours reste soumise aux règles affichées au moment de ton achat.",
+          "Pour toute question ou réclamation, contacte le support depuis l’application."
+        ]
+      }
+    ]
   }
 }

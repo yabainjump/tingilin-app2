@@ -39,7 +39,7 @@
         <div class="price-badge">
           <div class="price-badge-inner">
             <div class="price-badge-top">PRIX</div>
-            <div class="price-badge-mid">{{ ticketPrice }}</div>
+            <div class="price-badge-mid">{{ startingPrice }}</div>
             <div class="price-badge-bot">FCFA</div>
           </div>
         </div>
@@ -91,7 +91,8 @@
   </section>
 
   <!-- PRODUCT OF THE DAY -->
-  <section class="pod">
+  <!-- Vraie tombola en cours (masque s'il n'y en a aucune). -->
+  <section class="pod" *ngIf="featured as f">
     <div class="pod-head">
       <div class="live-dot">
         <span class="ping"></span>
@@ -102,13 +103,11 @@
 
     <div class="pod-card">
       <div class="pod-media">
-        <div class="pod-img"></div>
-        <div class="pod-brand">Apple</div>
+        <img class="pod-img" *ngIf="f.imageUrl" [src]="f.imageUrl" [alt]="f.title" loading="lazy" />
 
         <div class="pod-overlay">
           <div class="pod-overlay-inner">
-            <div class="pod-value">Valeur réelle: 950,000 FCFA</div>
-            <div class="pod-name">iPhone 15 Pro Max</div>
+            <div class="pod-name">{{ f.title }}</div>
           </div>
         </div>
       </div>
@@ -129,19 +128,19 @@
 
         <div class="meta-row">
           <div class="meta-muted">
-            {{ sold }} {{ 'LANDING.SOLD' | translate }}
+            {{ f.sold ?? 0 }} {{ 'LANDING.SOLD' | translate }}
           </div>
           <div class="meta-strong">
-            {{ total }} {{ 'LANDING.TOTAL_TICKETS' | translate }}
+            {{ f.total ?? 0 }} {{ 'LANDING.TOTAL_TICKETS' | translate }}
           </div>
         </div>
 
-        <a class="cta" routerLink="/auth/register">
+        <a class="cta" [routerLink]="['/raffle-details', f.id]">
           <div class="cta-left">
             <div class="cta-kicker">
               {{ 'LANDING.TICKET_PRICE' | translate }}
             </div>
-            <div class="cta-price">{{ ticketPrice }} FCFA</div>
+            <div class="cta-price">{{ f.ticketPrice ?? 0 }} FCFA</div>
           </div>
           <div class="cta-right">
             {{ 'LANDING.PARTICIPATE' | translate }}
@@ -252,6 +251,11 @@
       </a>
     </div>
   </section>
+
+  <p class="legal-line">
+    {{ 'RULES_PAGE.LANDING_NOTICE' | translate }}
+    <a routerLink="/reglement">{{ 'RULES_PAGE.TITLE' | translate }}</a>
+  </p>
 
   <!-- espace pour ne pas être caché par le footer -->
   <div class="spacer"></div>
