@@ -148,7 +148,7 @@ export class SupportPage {
     return this.expandedFaqId === faqId;
   }
 
-  readonly whatsappNumber = '237694949617';
+  readonly whatsappNumber = '237';
 
   async contactSupport(categoryId?: SupportCategoryId): Promise<void> {
     const category =

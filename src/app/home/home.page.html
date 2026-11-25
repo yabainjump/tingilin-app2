@@ -87,10 +87,17 @@
       <!-- Activite en direct (achats recents, prenom + initiale seulement) -->
       <app-live-activity-ticker class="home-ticker"></app-live-activity-ticker>
 
-      <!-- Progression vers le prochain ticket gratuit -->
-      <app-email-verify-banner *ngIf="isLoggedIn"></app-email-verify-banner>
+      <!-- Rappels du jour (verification email + tickets gratuits): 10 s a la
+           premiere ouverture de l'accueil de la journee, puis fondu -->
+      <div
+        class="daily-nudges"
+        *ngIf="isLoggedIn && showDailyNudges"
+        [class.leaving]="dailyNudgesLeaving"
+      >
+        <app-email-verify-banner></app-email-verify-banner>
+        <app-reward-progress></app-reward-progress>
+      </div>
       <app-push-optin-banner *ngIf="isLoggedIn"></app-push-optin-banner>
-      <app-reward-progress *ngIf="isLoggedIn"></app-reward-progress>
 
       <div
         class="offline-empty"
@@ -193,8 +200,10 @@
         </ng-template>
       </div>
 
-      <!-- Preuves de confiance: lots remis, valeur, tirages verifiables -->
-      <app-trust-stats (click)="openLiveDraws()"></app-trust-stats>
+      <!-- Preuves de confiance (lots remis, valeur, tirages verifiables):
+           masquees sur l'accueil pour le moment, a reactiver en remettant
+           <app-trust-stats (click)="openLiveDraws()"></app-trust-stats> -->
+
 
       <!-- Live Draws -->
       <h2 class="live-title">{{ 'HOME_PAGE.LIVE_DRAWS' | translate }}</h2>

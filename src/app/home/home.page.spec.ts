@@ -48,4 +48,22 @@ describe('HomePage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('shows the daily nudges for 10 s, fading out at the end', () => {
+    jasmine.clock().install();
+    try {
+      component.startDailyNudges();
+      expect(component.showDailyNudges).toBeTrue();
+      expect(component.dailyNudgesLeaving).toBeFalse();
+
+      jasmine.clock().tick(9_600);
+      expect(component.dailyNudgesLeaving).toBeTrue();
+      expect(component.showDailyNudges).toBeTrue();
+
+      jasmine.clock().tick(400);
+      expect(component.showDailyNudges).toBeFalse();
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
 });

@@ -891,3 +891,17 @@
   display: block;
   margin: 10px 0 2px;
 }
+
+/* Rappels du jour: fondu de sortie (400 ms = DAILY_NUDGES_FADE_MS) */
+.home .daily-nudges {
+  transition: opacity 400ms ease, transform 400ms ease;
+
+  &.leaving {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}

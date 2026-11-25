@@ -15,6 +15,11 @@ import { environment } from 'src/environments/environment';
 import { AuthService } from '../services/auth/auth.service';
 import { AuthStateService } from '../services/auth/auth-state.service';
 import { NetworkStatusService } from '../services/offline/network-status.service';
+import {
+  DAILY_NUDGES_FADE_MS,
+  DAILY_NUDGES_VISIBLE_MS,
+  claimDailyNudges,
+} from './daily-nudges';
 
 type HomeCategory = { id: string; label: string };
 type DrawLoadReason = 'init' | 'refresh' | 'category' | 'background';
@@ -37,10 +42,16 @@ export class HomePage implements OnInit, OnDestroy {
   @ViewChild(RewardProgressComponent) private rewards?: RewardProgressComponent;
   isLoggedIn = false;
 
+  /** Rappels du jour (verif email + tickets gratuits), 10 s par jour. */
+  showDailyNudges = false;
+  dailyNudgesLeaving = false;
+  private dailyNudgesTimers: ReturnType<typeof setTimeout>[] = [];
+
   ionViewWillEnter(): void {
     this.isLoggedIn = this.auth.isLoggedIn();
     // Les compteurs bougent apres chaque achat: on les relit a chaque retour.
     if (this.hasEnteredView) this.rewards?.reload();
+    if (this.isLoggedIn && claimDailyNudges()) this.startDailyNudges();
     this.startClock();
     this.startAutoRefresh();
     this.notifState.refresh();
@@ -94,6 +105,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.clearDailyNudgesTimers();
     this.stopClock();
     this.stopAutoRefresh();
     this.raffleRefreshSub?.unsubscribe();
@@ -248,6 +260,28 @@ export class HomePage implements OnInit, OnDestroy {
 
   retryLoad(): void {
     this.loadAll('refresh');
+  }
+
+  /** Affiche les rappels, puis fondu et masquage au bout de 10 s. */
+  startDailyNudges(): void {
+    this.clearDailyNudgesTimers();
+    this.showDailyNudges = true;
+    this.dailyNudgesLeaving = false;
+    this.dailyNudgesTimers = [
+      setTimeout(
+        () => (this.dailyNudgesLeaving = true),
+        DAILY_NUDGES_VISIBLE_MS - DAILY_NUDGES_FADE_MS,
+      ),
+      setTimeout(() => {
+        this.showDailyNudges = false;
+        this.dailyNudgesLeaving = false;
+      }, DAILY_NUDGES_VISIBLE_MS),
+    ];
+  }
+
+  private clearDailyNudgesTimers(): void {
+    this.dailyNudgesTimers.forEach((t) => clearTimeout(t));
+    this.dailyNudgesTimers = [];
   }
 
   private clockSub?: Subscription;
