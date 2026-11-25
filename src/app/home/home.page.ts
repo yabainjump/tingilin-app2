@@ -42,6 +42,43 @@ export class HomePage implements OnInit, OnDestroy {
   @ViewChild(RewardProgressComponent) private rewards?: RewardProgressComponent;
   isLoggedIn = false;
 
+  /** Delai avant d'afficher "Aucun tirage pour le moment" (en ligne). */
+  readonly noDrawsDelayMs = 15_000;
+  noDrawsGraceElapsed = false;
+  refreshingDraws = false;
+  private noDrawsTimer?: ReturnType<typeof setTimeout>;
+
+  /**
+   * Vrai apres 15 s sans aucune tombola a afficher, si l'appareil est en
+   * ligne. Hors ligne, c'est le bloc "Connexion indisponible" qui s'affiche.
+   */
+  get showNoDraws(): boolean {
+    return (
+      this.noDrawsGraceElapsed &&
+      !this.networkStatus.isOffline() &&
+      !this.featured &&
+      !this.heroCards.length &&
+      !this.liveRows.length
+    );
+  }
+
+  /** Bouton "Actualiser" du message "Aucun tirage". */
+  refreshNoDraws(): void {
+    if (this.refreshingDraws) return;
+    this.refreshingDraws = true;
+    this.loadHeader();
+    this.loadCategories();
+    this.loadDraws('refresh', () => (this.refreshingDraws = false), false);
+  }
+
+  private armNoDrawsTimer(): void {
+    if (this.noDrawsGraceElapsed || this.noDrawsTimer) return;
+    this.noDrawsTimer = setTimeout(() => {
+      this.noDrawsGraceElapsed = true;
+      this.noDrawsTimer = undefined;
+    }, this.noDrawsDelayMs);
+  }
+
   /** Rappels du jour (verif email + tickets gratuits), 10 s par jour. */
   showDailyNudges = false;
   dailyNudgesLeaving = false;
@@ -52,6 +89,7 @@ export class HomePage implements OnInit, OnDestroy {
     // Les compteurs bougent apres chaque achat: on les relit a chaque retour.
     if (this.hasEnteredView) this.rewards?.reload();
     if (this.isLoggedIn && claimDailyNudges()) this.startDailyNudges();
+    this.armNoDrawsTimer();
     this.startClock();
     this.startAutoRefresh();
     this.notifState.refresh();
@@ -106,6 +144,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.clearDailyNudgesTimers();
+    if (this.noDrawsTimer) clearTimeout(this.noDrawsTimer);
     this.stopClock();
     this.stopAutoRefresh();
     this.raffleRefreshSub?.unsubscribe();

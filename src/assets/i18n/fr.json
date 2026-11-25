@@ -156,7 +156,10 @@
     "VERIFIED_DRAW": "Tirage vérifié",
     "BUY_TICKET": "Acheter un ticket",
     "TIME_REMAINING": "Temps restant:",
-    "ENDED": "Terminé"
+    "ENDED": "Terminé",
+    "NO_DRAWS_TITLE": "Aucun tirage pour le moment",
+    "NO_DRAWS_COPY": "De nouveaux lots arrivent bientôt. Revenez plus tard ou actualisez.",
+    "NO_DRAWS_REFRESH": "Actualiser"
   },
   "PROFILE_PAGE": {
     "BALANCE_CURRENT": "SOLDE ACTUEL",

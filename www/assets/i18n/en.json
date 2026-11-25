@@ -156,7 +156,10 @@
     "VERIFIED_DRAW": "Verified Draw",
     "BUY_TICKET": "Buy Ticket",
     "TIME_REMAINING": "Time remaining:",
-    "ENDED": "Ended"
+    "ENDED": "Ended",
+    "NO_DRAWS_TITLE": "No draws right now",
+    "NO_DRAWS_COPY": "New prizes are coming soon. Come back later or refresh.",
+    "NO_DRAWS_REFRESH": "Refresh"
   },
   "PROFILE_PAGE": {
     "BALANCE_CURRENT": "CURRENT BALANCE",

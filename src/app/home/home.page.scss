@@ -892,6 +892,68 @@
   margin: 10px 0 2px;
 }
 
+/* Aucun tirage (en ligne) — volontairement different du bloc hors ligne
+   (bordure orange "Connexion indisponible") : carte neutre, accent primaire. */
+.home .no-draws {
+  margin: 14px 0 22px;
+  padding: 26px 20px 22px;
+  border-radius: 22px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  box-shadow: var(--app-shadow-sm);
+  text-align: center;
+}
+
+.home .no-draws-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 12px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--app-primary-soft);
+  color: var(--app-primary);
+  font-size: 28px;
+}
+
+.home .no-draws-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--app-ink);
+}
+
+.home .no-draws-copy {
+  margin-top: 6px;
+  color: var(--app-muted);
+  line-height: 1.45;
+}
+
+.home .no-draws-refresh {
+  margin-top: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--app-primary);
+  color: var(--app-on-primary);
+  font-weight: 700;
+
+  ion-icon,
+  ion-spinner {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+    color: inherit;
+  }
+
+  &:disabled {
+    opacity: 0.75;
+  }
+}
+
 /* Rappels du jour: fondu de sortie (400 ms = DAILY_NUDGES_FADE_MS) */
 .home .daily-nudges {
   transition: opacity 400ms ease, transform 400ms ease;

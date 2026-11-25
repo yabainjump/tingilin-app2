@@ -114,6 +114,9 @@
         </button>
       </div>
 
+      <!-- Aucun tirage (en ligne): apres 15 s sans aucune tombola. Distinct
+           du bloc hors connexion ci-dessus, jamais affiche hors ligne. -->
+      <ng-container *ngIf="!showNoDraws; else noDraws">
       <!-- Ending Soon -->
       <div class="section-head">
         <h2>
@@ -328,6 +331,33 @@
           <ion-skeleton-text animated class="sk-line lg"></ion-skeleton-text>
           <ion-skeleton-text animated class="sk-line sm"></ion-skeleton-text>
         </div>
+      </ng-template>
+      </ng-container>
+
+      <ng-template #noDraws>
+        <section class="no-draws" role="status">
+          <div class="no-draws-icon" aria-hidden="true">
+            <ion-icon name="hourglass-outline"></ion-icon>
+          </div>
+          <div class="no-draws-title">
+            {{ 'HOME_PAGE.NO_DRAWS_TITLE' | translate }}
+          </div>
+          <div class="no-draws-copy">
+            {{ 'HOME_PAGE.NO_DRAWS_COPY' | translate }}
+          </div>
+          <button
+            type="button"
+            class="no-draws-refresh"
+            (click)="refreshNoDraws()"
+            [disabled]="refreshingDraws"
+          >
+            <ion-spinner *ngIf="refreshingDraws; else refreshIcon" name="crescent"></ion-spinner>
+            <ng-template #refreshIcon>
+              <ion-icon name="refresh-outline" aria-hidden="true"></ion-icon>
+            </ng-template>
+            <span>{{ 'HOME_PAGE.NO_DRAWS_REFRESH' | translate }}</span>
+          </button>
+        </section>
       </ng-template>
 
       <!-- Les joueurs choisissent le prochain lot -->
